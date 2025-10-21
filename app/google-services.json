@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "335834703367",
+    "project_id": "monasterio-las-huelgas",
+    "storage_bucket": "monasterio-las-huelgas.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:335834703367:android:aa38651a92eb4156882ca2",
+        "android_client_info": {
+          "package_name": "com.nextapp.monasterio"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCLO2yAb4owcH2wkJX8tqIZP5eD2r-gsKU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

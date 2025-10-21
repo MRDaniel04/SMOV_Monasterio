@@ -1,4 +1,4 @@
-package com.example.smov_monasterio
+package com.example.monasterio
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

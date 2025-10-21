@@ -1,4 +1,4 @@
-package com.example.smov_monasterio
+package com.example.monasterio
 
 import org.junit.Test
 

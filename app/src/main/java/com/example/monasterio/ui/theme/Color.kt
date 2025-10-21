@@ -1,4 +1,4 @@
-package com.example.smov_monasterio.ui.theme
+package com.example.monasterio.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
