@@ -1,4 +1,4 @@
-package com.example.monasterio.ui.theme
+package com.nextapp.monasterio.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

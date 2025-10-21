@@ -1,4 +1,4 @@
-package com.example.monasterio.ui.theme
+package com.nextapp.monasterio.ui.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme

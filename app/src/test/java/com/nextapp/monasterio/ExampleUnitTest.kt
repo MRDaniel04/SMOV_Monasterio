@@ -1,4 +1,4 @@
-package com.example.monasterio
+package com.nextapp.monasterio
 
 import org.junit.Test
 
