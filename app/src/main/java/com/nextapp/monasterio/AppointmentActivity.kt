@@ -9,7 +9,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.example.smov_monasterio.ui.theme.Smov_monasterioTheme
+import com.nextapp.monasterio.ui.theme.Smov_monasterioTheme
 
 class AppointmentActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
