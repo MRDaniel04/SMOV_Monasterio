@@ -7,4 +7,8 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="MonasteryRed">#FFA90A0A</color>
+    <color name="MonasteryOrange">#FFF09A38</color>
+    <color name="MonasteryBlue">#FF303F9F</color>
 </resources>

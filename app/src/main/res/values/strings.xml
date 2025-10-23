@@ -1,3 +1,10 @@
 <resources>
-    <string name="app_name">SMOV_Monasterio</string>
+    <string name="app_name">Monasterio Huelgas</string>
+    <string name="title_inicio">Inicio</string>
+    <string name="virtual_visit">VISITA VIRTUAL</string>
+    <string name="book_appointment">RESERVA CITA</string>
+    <string name="monastery_name">Santa María\nla Real de Huelgas</string>
+    <string name="edit_mode">Modo edición</string>
+    <string name="navigation_drawer_open">Abrir menú</string>
+    <string name="navigation_drawer_close">Cerrar menú</string>
 </resources>
