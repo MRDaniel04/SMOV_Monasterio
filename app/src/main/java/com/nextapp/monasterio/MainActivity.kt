@@ -21,7 +21,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
-import com.example.smov_monasterio.ui.theme.*
+import com.nextapp.monasterio.ui.theme.Black
+import com.nextapp.monasterio.ui.theme.MonasteryBlue
+import com.nextapp.monasterio.ui.theme.MonasteryOrange
+import com.nextapp.monasterio.ui.theme.MonasteryRed
+import com.nextapp.monasterio.ui.theme.Smov_monasterioTheme
+import com.nextapp.monasterio.ui.theme.White
 import kotlinx.coroutines.launch
 
 
