@@ -1,6 +1,5 @@
 package com.nextapp.monasterio
 
-import com.nextapp.monasterio.R
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
@@ -31,6 +30,17 @@ import com.nextapp.monasterio.ui.theme.*
 import com.nextapp.monasterio.ui.virtualvisit.VirtualVisitActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.layout.Column
+import androidx.compose.ui.draw.rotate
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.Color
 
 // --- 1. Definimos las "rutas" para nuestra navegación ---
 object AppRoutes {
@@ -102,7 +112,6 @@ fun MonasteryAppScreen() {
                         actionIconContentColor = White
                     ),
                     navigationIcon = {
-                        // El icono de hamburguesa siempre abre el menú
                         IconButton(onClick = {
                             scope.launch {
                                 drawerState.apply {
@@ -110,10 +119,19 @@ fun MonasteryAppScreen() {
                                 }
                             }
                         }) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.ic_menu_24),
-                                contentDescription = stringResource(id = R.string.navigation_drawer_open)
-                            )
+                            if (drawerState.isOpen) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.menu_close), // <-- Icono 'X' (Cerrar)
+                                    contentDescription = stringResource(id = R.string.navigation_drawer_close)
+                                )
+                            } else {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.ic_menu_24), // <-- Icono Hamburguesa (Abrir)
+                                    contentDescription = stringResource(id = R.string.navigation_drawer_open)
+                                )
+                            }
+                            // --- FIN DEL CAMBIO ---
+
                         }
                     },
                     actions = {
@@ -372,15 +390,103 @@ fun HomeScreenContent(modifier: Modifier = Modifier) {
 
 @Composable
 fun InfoScreen() {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Text(text = "Contenido de Información General", style = MaterialTheme.typography.headlineMedium)
+    // Columna principal que ocupa toda la pantalla
+    Column(
+        modifier = Modifier.fillMaxSize()
+    ) {
+
+        // --- 1. CONTENIDO PRINCIPAL (SCROLLABLE) ---
+        // Esta columna ocupa todo el espacio MENOS el recuadro de abajo
+        Column(
+            modifier = Modifier
+                .weight(1f) // Esto empuja el Card de abajo al fondo
+                .padding(16.dp)
+                .verticalScroll(rememberScrollState()) // Permite scroll si el contenido es largo
+        ) {
+            // Aquí puedes empezar a añadir el contenido que quieras
+            Text(
+                text = "Información General",
+                style = MaterialTheme.typography.headlineMedium
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = "Aquí irá todo el texto y las imágenes sobre la información general del monasterio. " +
+                        "Este contenido puede ser muy largo y el usuario podrá hacer scroll, " +
+                        "pero el recuadro de datos de abajo se quedará siempre fijo.",
+                style = MaterialTheme.typography.bodyLarge
+            )
+        }
+
+        // --- 2. RECUADRO ROJO DE INFORMACIÓN ---
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp, vertical = 16.dp),
+            shape = RoundedCornerShape(8.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = MonasteryRed // El color rojo de tu tema
+            ),
+            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp)
+            ) {
+                // Título del recuadro
+                Text(
+                    text = stringResource(id = R.string.general_info),
+                    style = MaterialTheme.typography.titleLarge,
+                    color = White,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Fila de Localización
+                InfoRow(
+                    iconResId = R.drawable.location,
+                    text = stringResource(id = R.string.info_location)
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                // Fila de Horarios
+                InfoRow(
+                    iconResId = R.drawable.ic_time_24, // Reusamos el icono del reloj
+                    text = stringResource(id = R.string.info_hours)
+                )
+            }
+        }
     }
 }
 
 @Composable
 fun HistoriaScreen() {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Text(text = "Contenido de Historia", style = MaterialTheme.typography.headlineMedium)
+    // Usamos una Columna con scroll por si el contenido es muy largo
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState()) // Permite hacer scroll
+            .padding(16.dp)
+    ) {
+        // Aquí creamos cada uno de los desplegables
+        ExpandableHistoryCard(
+            title = stringResource(id = R.string.history_1800),
+            content = stringResource(id = R.string.history_content_placeholder)
+        )
+
+        ExpandableHistoryCard(
+            title = stringResource(id = R.string.history_1900),
+            content = stringResource(id = R.string.history_content_placeholder)
+        )
+
+        ExpandableHistoryCard(
+            title = stringResource(id = R.string.history_1950),
+            content = stringResource(id = R.string.history_content_placeholder)
+        )
+
+        ExpandableHistoryCard(
+            title = stringResource(id = R.string.history_actualidad),
+            content = stringResource(id = R.string.history_content_placeholder)
+        )
     }
 }
 
@@ -402,5 +508,89 @@ fun PerfilScreen() {
 fun AjustesScreen() {
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Text(text = "Contenido de Ajustes", style = MaterialTheme.typography.headlineMedium)
+    }
+}
+
+/**
+ * Una fila de icono + texto para el recuadro de información.
+ */
+@Composable
+fun InfoRow(
+    iconResId: Int,
+    text: String
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            painter = painterResource(id = iconResId),
+            contentDescription = null,
+            tint = White, // Icono en color blanco
+            modifier = Modifier.size(24.dp)
+        )
+        Spacer(modifier = Modifier.width(16.dp))
+        Text(
+            text = text,
+            color = White, // Texto en color blanco
+            style = MaterialTheme.typography.bodyLarge
+        )
+    }
+}
+
+/**
+ * Un Card de historial expandible que muestra/oculta contenido.
+ * @param title El texto del título (ej: "1800").
+ * @param content El texto a mostrar cuando se expande.
+ */
+@Composable
+fun ExpandableHistoryCard(
+    title: String,
+    content: String
+) {
+    // 1. Estado para saber si el card está expandido o no
+    var expanded by remember { mutableStateOf(false) }
+
+    // 2. Estado para animar la rotación de la flecha
+    val rotationAngle by animateFloatAsState(
+        targetValue = if (expanded) 180f else 0f,
+        label = "rotation"
+    )
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp)
+    ) {
+        // 3. La fila superior (título + flecha) que es clickeable
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { expanded = !expanded } // Cambia el estado al hacer clic
+                .padding(vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier.weight(1f) // Ocupa todo el espacio disponible
+            )
+            Icon(
+                painter = painterResource(id = R.drawable.arrow_down),
+                contentDescription = "Expandir/Colapsar",
+                modifier = Modifier.rotate(rotationAngle) // Gira la flecha
+            )
+        }
+
+        // Línea divisoria
+        HorizontalDivider(thickness = 1.dp, color = Color.Gray)
+
+        // 4. El contenido que aparece y desaparece con animación
+        AnimatedVisibility(visible = expanded) {
+            Text(
+                text = content,
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)
+            )
+        }
     }
 }
