@@ -19,7 +19,7 @@
         </intent-filter>
     </activity>
     <activity
-        android:name="com.nextapp.monasterio.VirtualVisitActivity"
+        android:name="com.nextapp.monasterio.ui.virtualvisit.VirtualVisitActivity"
         android:theme="@style/Theme.SMOV_Monasterio" />
     <activity
         android:name="com.nextapp.monasterio.AppointmentActivity"

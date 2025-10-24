@@ -1,4 +1,4 @@
-package com.nextapp.monasterio
+package com.nextapp.monasterio.ui.virtualvisit
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -18,8 +18,8 @@ class VirtualVisitActivity : ComponentActivity() {
             Smov_monasterioTheme {
                 // Contenido simple de marcador de posición
                 Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
+                    modifier = Modifier.Companion.fillMaxSize(),
+                    contentAlignment = Alignment.Companion.Center
                 ) {
                     Text(
                         text = "Pantalla de Visita Virtual",

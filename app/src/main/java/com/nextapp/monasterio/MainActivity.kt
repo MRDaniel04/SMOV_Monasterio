@@ -28,6 +28,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.nextapp.monasterio.ui.theme.*
+import com.nextapp.monasterio.ui.virtualvisit.VirtualVisitActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
