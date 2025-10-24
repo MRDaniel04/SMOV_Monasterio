@@ -1,15 +1,18 @@
-package com.example.smov_monasterio
+package com.nextapp.monasterio
 
+import com.nextapp.monasterio.R
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -19,22 +22,29 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
-import com.nextapp.monasterio.ui.theme.Black
-import com.nextapp.monasterio.ui.theme.MonasteryBlue
-import com.nextapp.monasterio.ui.theme.MonasteryOrange
-import com.nextapp.monasterio.ui.theme.MonasteryRed
-import com.nextapp.monasterio.ui.theme.Smov_monasterioTheme
-import com.nextapp.monasterio.ui.theme.White
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.nextapp.monasterio.ui.theme.*
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import androidx.compose.foundation.clickable
-import androidx.compose.ui.Alignment
 
+// --- 1. Definimos las "rutas" para nuestra navegación ---
+object AppRoutes {
+    const val INICIO = "inicio"
+    const val INFO = "info"
+    const val HISTORIA = "historia"
+    const val GALERIA = "galeria"
+    const val PERFIL = "perfil"
+    const val AJUSTES = "ajustes"
+}
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            // Aplica el tema de tu app (definido en ui.theme/Theme.kt)
             Smov_monasterioTheme {
                 MonasteryAppScreen()
             }
@@ -46,86 +56,44 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MonasteryAppScreen() {
     val context = LocalContext.current
+    val navController = rememberNavController()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+
+    // --- 2. Estado para guardar el título actual ---
+    val currentTitle = remember { mutableStateOf(context.getString(R.string.title_inicio)) }
+
+    // --- 3. Escuchamos los cambios de navegación para actualizar el título ---
+    LaunchedEffect(navController) {
+        navController.currentBackStackEntryFlow.collect { backStackEntry ->
+            val route = backStackEntry.destination.route
+            currentTitle.value = when (route) {
+                AppRoutes.INFO -> context.getString(R.string.title_info_general)
+                AppRoutes.HISTORIA -> context.getString(R.string.title_history)
+                AppRoutes.GALERIA -> context.getString(R.string.title_gallery)
+                AppRoutes.PERFIL -> context.getString(R.string.title_profile)
+                AppRoutes.AJUSTES -> context.getString(R.string.title_settings)
+                else -> context.getString(R.string.title_inicio)
+            }
+        }
+    }
 
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
-            // --- INICIO DEL CÓDIGO NUEVO DEL MENÚ ---
-            ModalDrawerSheet(
-                modifier = Modifier.fillMaxHeight(), // Ocupa toda la altura
-                drawerContainerColor = MonasteryRed, // Fondo rojo
-                drawerContentColor = White // Color de texto/iconos
-            ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp)
-                ) {
-                    // 1. Icono superior para cerrar
-                    IconButton(onClick = { scope.launch { drawerState.close() } }) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_menu_24), // Puedes cambiarlo por un icono de 'cerrar'
-                            contentDescription = stringResource(id = R.string.navigation_drawer_close)
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.height(32.dp))
-
-                    // 2. Lista de Opciones
-                    DrawerMenuItem(
-                        text = stringResource(id = R.string.title_inicio),
-                        onClick = {
-                            // Cierra el menú
-                            scope.launch { drawerState.close() }
-                            // No hace nada más porque ya estamos en Inicio
-                        }
-                    )
-                    DrawerMenuItem(
-                        text = stringResource(id = R.string.menu_info),
-                        onClick = {
-                            // TODO: Navegar a pantalla de Información
-                            Toast.makeText(context, "Próximamente: Info", Toast.LENGTH_SHORT).show()
-                        }
-                    )
-                    DrawerMenuItem(
-                        text = stringResource(id = R.string.menu_history),
-                        onClick = {
-                            // TODO: Navegar a pantalla de Historia
-                            Toast.makeText(context, "Próximamente: Historia", Toast.LENGTH_SHORT).show()
-                        }
-                    )
-                    DrawerMenuItem(
-                        text = stringResource(id = R.string.menu_gallery),
-                        onClick = {
-                            // TODO: Navegar a pantalla de Galería
-                            Toast.makeText(context, "Próximamente: Galería", Toast.LENGTH_SHORT).show()
-                        }
-                    )
-                    DrawerMenuItem(
-                        text = stringResource(id = R.string.menu_profile),
-                        onClick = {
-                            // TODO: Navegar a pantalla de Perfil
-                            Toast.makeText(context, "Próximamente: Perfil", Toast.LENGTH_SHORT).show()
-                        }
-                    )
-                    DrawerMenuItem(
-                        text = stringResource(id = R.string.menu_settings),
-                        onClick = {
-                            // TODO: Navegar a pantalla de Ajustes
-                            Toast.makeText(context, "Próximamente: Ajustes", Toast.LENGTH_SHORT).show()
-                        }
-                    )
-                }
-            }
-            // --- FIN DEL CÓDIGO NUEVO DEL MENÚ ---
+            // --- 4. Pasamos el navegador y el scope al contenido del menú ---
+            AppDrawerContent(
+                navController = navController,
+                scope = scope,
+                drawerState = drawerState
+            )
         }
     ) {
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { Text(stringResource(id = R.string.title_inicio)) },
+                    // --- 5. El título ahora es dinámico ---
+                    title = { Text(currentTitle.value) },
                     colors = TopAppBarDefaults.topAppBarColors(
                         containerColor = MonasteryRed,
                         titleContentColor = White,
@@ -133,7 +101,7 @@ fun MonasteryAppScreen() {
                         actionIconContentColor = White
                     ),
                     navigationIcon = {
-                        // Icono de hamburguesa
+                        // El icono de hamburguesa siempre abre el menú
                         IconButton(onClick = {
                             scope.launch {
                                 drawerState.apply {
@@ -148,7 +116,7 @@ fun MonasteryAppScreen() {
                         }
                     },
                     actions = {
-                        // Icono de lápiz (edición)
+                        // El lápiz de edición se queda
                         IconButton(onClick = {
                             Toast.makeText(context, "Modo edición (próximamente)", Toast.LENGTH_SHORT).show()
                         }) {
@@ -161,22 +129,151 @@ fun MonasteryAppScreen() {
                 )
             }
         ) { paddingValues ->
-            HomeScreenContent(
+            // --- 6. Aquí está el "marco de fotos" (NavHost) ---
+            AppNavigationHost(
+                navController = navController,
                 modifier = Modifier.padding(paddingValues)
             )
         }
     }
 }
 
+// --- 7. El Host de Navegación (El "marco") ---
+@Composable
+fun AppNavigationHost(
+    navController: NavHostController,
+    modifier: Modifier = Modifier
+) {
+    NavHost(
+        navController = navController,
+        startDestination = AppRoutes.INICIO, // Empezamos en "inicio"
+        modifier = modifier
+    ) {
+        // Cada "composable" es una "foto" para el marco
+        composable(AppRoutes.INICIO) {
+            HomeScreenContent() // La pantalla de inicio que ya tenías
+        }
+        composable(AppRoutes.INFO) {
+            InfoScreen() // Nueva pantalla
+        }
+        composable(AppRoutes.HISTORIA) {
+            HistoriaScreen() // Nueva pantalla
+        }
+        composable(AppRoutes.GALERIA) {
+            GaleriaScreen() // Nueva pantalla
+        }
+        composable(AppRoutes.PERFIL) {
+            PerfilScreen() // Nueva pantalla
+        }
+        composable(AppRoutes.AJUSTES) {
+            AjustesScreen() // Nueva pantalla
+        }
+    }
+}
+
+// --- 8. El contenido del menú lateral (actualizado) ---
+@Composable
+fun AppDrawerContent(
+    navController: NavHostController,
+    scope: CoroutineScope,
+    drawerState: DrawerState
+) {
+    // Función helper para navegar y cerrar el menú
+    val navigateTo: (String) -> Unit = { route ->
+        navController.navigate(route) {
+            // Esto evita que se acumulen pantallas en el historial
+            popUpTo(navController.graph.findStartDestination().id)
+            launchSingleTop = true
+        }
+        // Cierra el menú
+        scope.launch { drawerState.close() }
+    }
+
+    ModalDrawerSheet(
+        modifier = Modifier.fillMaxHeight(),
+        drawerContainerColor = MonasteryRed,
+        drawerContentColor = White
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
+        ) {
+            IconButton(onClick = { scope.launch { drawerState.close() } }) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_menu_24),
+                    contentDescription = stringResource(id = R.string.navigation_drawer_close)
+                )
+            }
+            Spacer(modifier = Modifier.height(32.dp))
+
+            // Usamos la función helper
+            DrawerMenuItem(
+                text = stringResource(id = R.string.title_inicio),
+                onClick = { navigateTo(AppRoutes.INICIO) }
+            )
+            DrawerMenuItem(
+                text = stringResource(id = R.string.menu_info),
+                onClick = { navigateTo(AppRoutes.INFO) }
+            )
+            DrawerMenuItem(
+                text = stringResource(id = R.string.menu_history),
+                onClick = { navigateTo(AppRoutes.HISTORIA) }
+            )
+            DrawerMenuItem(
+                text = stringResource(id = R.string.menu_gallery),
+                onClick = { navigateTo(AppRoutes.GALERIA) }
+            )
+            DrawerMenuItem(
+                text = stringResource(id = R.string.menu_profile),
+                onClick = { navigateTo(AppRoutes.PERFIL) }
+            )
+            DrawerMenuItem(
+                text = stringResource(id = R.string.menu_settings),
+                onClick = { navigateTo(AppRoutes.AJUSTES) }
+            )
+        }
+    }
+}
+
+
+// --- 9. Las funciones que ya tenías (no cambian) ---
+
+// Esta es la plantilla para cada fila del menú
+@Composable
+fun DrawerMenuItem(
+    text: String,
+    onClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
+            .padding(vertical = 12.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            painter = painterResource(id = R.drawable.arrow_right),
+            contentDescription = null,
+            modifier = Modifier.size(20.dp)
+        )
+        Spacer(modifier = Modifier.width(16.dp))
+        Text(
+            text = text,
+            color = White,
+            style = MaterialTheme.typography.bodyMedium // Usa el estilo del tema
+        )
+    }
+}
+
+// Esta es tu pantalla de inicio
 @Composable
 fun HomeScreenContent(modifier: Modifier = Modifier) {
     val context = LocalContext.current
 
     ConstraintLayout(modifier = modifier.fillMaxSize()) {
-        // 1. Referencias para los elementos
         val (background, crest, title, btnVisit, btnBook) = createRefs()
 
-        // 2. Imagen de fondo
         Image(
             painter = painterResource(id = R.drawable.monastery_background),
             contentDescription = null,
@@ -190,8 +287,6 @@ fun HomeScreenContent(modifier: Modifier = Modifier) {
                 height = androidx.constraintlayout.compose.Dimension.fillToConstraints
             }
         )
-
-        // 3. Escudo
         Image(
             painter = painterResource(id = R.drawable.escudo),
             contentDescription = "Escudo",
@@ -202,8 +297,6 @@ fun HomeScreenContent(modifier: Modifier = Modifier) {
                     start.linkTo(parent.start, margin = 24.dp)
                 }
         )
-
-        // 4. Título
         Text(
             text = stringResource(id = R.string.monastery_name),
             color = White,
@@ -225,8 +318,6 @@ fun HomeScreenContent(modifier: Modifier = Modifier) {
                 width = androidx.constraintlayout.compose.Dimension.fillToConstraints
             }
         )
-
-        // 5. Botón Visita Virtual
         Button(
             onClick = {
                 context.startActivity(Intent(context, VirtualVisitActivity::class.java))
@@ -249,8 +340,6 @@ fun HomeScreenContent(modifier: Modifier = Modifier) {
             )
             Text(stringResource(id = R.string.virtual_visit))
         }
-
-        // 6. Botón Reserva Cita
         Button(
             onClick = {
                 context.startActivity(Intent(context, AppointmentActivity::class.java))
@@ -276,29 +365,41 @@ fun HomeScreenContent(modifier: Modifier = Modifier) {
     }
 }
 
+
+// --- 10. Contenido de las nuevas pantallas (Marcadores de posición) ---
+// Puedes mover estas funciones a sus propios archivos .kt si quieres organizar mejor
+
 @Composable
-fun DrawerMenuItem(
-    text: String,
-    onClick: () -> Unit
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = onClick) // Hace que toda la fila sea clickeable
-            .padding(vertical = 12.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Icon(
-            painter = painterResource(id = R.drawable.arrow_right), // El nuevo icono de triángulo
-            contentDescription = null,
-            modifier = Modifier.size(20.dp)
-        )
-        Spacer(modifier = Modifier.width(16.dp))
-        Text(
-            text = text,
-            color = White,
-            // fontSize = 18.sp, // Ya no es necesario si usas el estilo
-            style = MaterialTheme.typography.bodyMedium
-        )
+fun InfoScreen() {
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Text(text = "Contenido de Información General", style = MaterialTheme.typography.headlineMedium)
+    }
+}
+
+@Composable
+fun HistoriaScreen() {
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Text(text = "Contenido de Historia", style = MaterialTheme.typography.headlineMedium)
+    }
+}
+
+@Composable
+fun GaleriaScreen() {
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Text(text = "Contenido de Galería", style = MaterialTheme.typography.headlineMedium)
+    }
+}
+
+@Composable
+fun PerfilScreen() {
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Text(text = "Contenido de Perfil", style = MaterialTheme.typography.headlineMedium)
+    }
+}
+
+@Composable
+fun AjustesScreen() {
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Text(text = "Contenido de Ajustes", style = MaterialTheme.typography.headlineMedium)
     }
 }

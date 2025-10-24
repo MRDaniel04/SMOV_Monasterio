@@ -6,7 +6,7 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import com.example.smov_monasterio.R
+import com.nextapp.monasterio.R
 
 // 1. Define tu nueva familia de fuentes apuntando a los archivos en res/font/
 // Asegúrate de que los nombres (ej: R.font.cactus_classical_serif_regular)

@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.smov_monasterio"
+    namespace = "com.nextapp.monasterio"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.example.smov_monasterio"
+        applicationId = "com.nextapp.monasterio"
         minSdk = 24
         targetSdk = 36
         versionCode = 1
@@ -58,4 +58,5 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     //Practica
     implementation(libs.constraintlayout.compose)
+    implementation(libs.navigation.compose)
 }

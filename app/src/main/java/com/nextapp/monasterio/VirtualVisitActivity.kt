@@ -1,4 +1,4 @@
-package com.example.smov_monasterio
+package com.nextapp.monasterio
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

@@ -12,4 +12,9 @@
     <string name="menu_gallery">Galería</string>
     <string name="menu_profile">Perfil</string>
     <string name="menu_settings">Ajustes</string>
+    <string name="title_info_general">Información General</string>
+    <string name="title_history">Historia</string>
+    <string name="title_gallery">Galería</string>
+    <string name="title_profile">Perfil</string>
+    <string name="title_settings">Ajustes</string>
 </resources>
