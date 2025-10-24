@@ -7,4 +7,9 @@
     <string name="edit_mode">Modo edición</string>
     <string name="navigation_drawer_open">Abrir menú</string>
     <string name="navigation_drawer_close">Cerrar menú</string>
+    <string name="menu_info">Información monasterio</string>
+    <string name="menu_history">Historia</string>
+    <string name="menu_gallery">Galería</string>
+    <string name="menu_profile">Perfil</string>
+    <string name="menu_settings">Ajustes</string>
 </resources>

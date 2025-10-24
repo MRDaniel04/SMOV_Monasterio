@@ -11,13 +11,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -28,6 +26,8 @@ import com.nextapp.monasterio.ui.theme.MonasteryRed
 import com.nextapp.monasterio.ui.theme.Smov_monasterioTheme
 import com.nextapp.monasterio.ui.theme.White
 import kotlinx.coroutines.launch
+import androidx.compose.foundation.clickable
+import androidx.compose.ui.Alignment
 
 
 class MainActivity : ComponentActivity() {
@@ -52,11 +52,74 @@ fun MonasteryAppScreen() {
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
-            ModalDrawerSheet {
-                // Contenido del menú lateral
-                Text("Opción 1", modifier = Modifier.padding(16.dp))
-                Text("Opción 2", modifier = Modifier.padding(16.dp))
+            // --- INICIO DEL CÓDIGO NUEVO DEL MENÚ ---
+            ModalDrawerSheet(
+                modifier = Modifier.fillMaxHeight(), // Ocupa toda la altura
+                drawerContainerColor = MonasteryRed, // Fondo rojo
+                drawerContentColor = White // Color de texto/iconos
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp)
+                ) {
+                    // 1. Icono superior para cerrar
+                    IconButton(onClick = { scope.launch { drawerState.close() } }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_menu_24), // Puedes cambiarlo por un icono de 'cerrar'
+                            contentDescription = stringResource(id = R.string.navigation_drawer_close)
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(32.dp))
+
+                    // 2. Lista de Opciones
+                    DrawerMenuItem(
+                        text = stringResource(id = R.string.title_inicio),
+                        onClick = {
+                            // Cierra el menú
+                            scope.launch { drawerState.close() }
+                            // No hace nada más porque ya estamos en Inicio
+                        }
+                    )
+                    DrawerMenuItem(
+                        text = stringResource(id = R.string.menu_info),
+                        onClick = {
+                            // TODO: Navegar a pantalla de Información
+                            Toast.makeText(context, "Próximamente: Info", Toast.LENGTH_SHORT).show()
+                        }
+                    )
+                    DrawerMenuItem(
+                        text = stringResource(id = R.string.menu_history),
+                        onClick = {
+                            // TODO: Navegar a pantalla de Historia
+                            Toast.makeText(context, "Próximamente: Historia", Toast.LENGTH_SHORT).show()
+                        }
+                    )
+                    DrawerMenuItem(
+                        text = stringResource(id = R.string.menu_gallery),
+                        onClick = {
+                            // TODO: Navegar a pantalla de Galería
+                            Toast.makeText(context, "Próximamente: Galería", Toast.LENGTH_SHORT).show()
+                        }
+                    )
+                    DrawerMenuItem(
+                        text = stringResource(id = R.string.menu_profile),
+                        onClick = {
+                            // TODO: Navegar a pantalla de Perfil
+                            Toast.makeText(context, "Próximamente: Perfil", Toast.LENGTH_SHORT).show()
+                        }
+                    )
+                    DrawerMenuItem(
+                        text = stringResource(id = R.string.menu_settings),
+                        onClick = {
+                            // TODO: Navegar a pantalla de Ajustes
+                            Toast.makeText(context, "Próximamente: Ajustes", Toast.LENGTH_SHORT).show()
+                        }
+                    )
+                }
             }
+            // --- FIN DEL CÓDIGO NUEVO DEL MENÚ ---
         }
     ) {
         Scaffold(
@@ -210,5 +273,32 @@ fun HomeScreenContent(modifier: Modifier = Modifier) {
             )
             Text(stringResource(id = R.string.book_appointment))
         }
+    }
+}
+
+@Composable
+fun DrawerMenuItem(
+    text: String,
+    onClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick) // Hace que toda la fila sea clickeable
+            .padding(vertical = 12.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            painter = painterResource(id = R.drawable.arrow_right), // El nuevo icono de triángulo
+            contentDescription = null,
+            modifier = Modifier.size(20.dp)
+        )
+        Spacer(modifier = Modifier.width(16.dp))
+        Text(
+            text = text,
+            color = White,
+            // fontSize = 18.sp, // Ya no es necesario si usas el estilo
+            style = MaterialTheme.typography.bodyMedium
+        )
     }
 }
