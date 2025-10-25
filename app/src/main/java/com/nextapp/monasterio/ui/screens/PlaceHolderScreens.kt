@@ -23,10 +23,3 @@ fun PerfilScreen() {
         Text(text = "Contenido de Perfil", style = MaterialTheme.typography.headlineMedium)
     }
 }
-
-@Composable
-fun AjustesScreen() {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Text(text = "Contenido de Ajustes", style = MaterialTheme.typography.headlineMedium)
-    }
-}

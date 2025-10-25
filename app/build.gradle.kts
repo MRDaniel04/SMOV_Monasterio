@@ -60,4 +60,5 @@ dependencies {
     //Practica
     implementation(libs.constraintlayout.compose)
     implementation(libs.navigation.compose)
+    implementation (libs.androidx.appcompat)
 }

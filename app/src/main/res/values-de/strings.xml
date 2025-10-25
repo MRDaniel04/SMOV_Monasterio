@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Kloster Huelgas</string>
+    <string name="title_inicio">Startseite</string>
+    <string name="virtual_visit">VIRTUELLER BESUCH</string>
+    <string name="book_appointment">TERMIN BUCHEN</string>
+    <string name="monastery_name">Santa María\nla Real de Huelgas</string>
+    <string name="edit_mode">Bearbeiten</string>
+    <string name="navigation_drawer_open">Menü öffnen</string>
+    <string name="navigation_drawer_close">Menü schließen</string>
+    <string name="menu_info">Klosterinformationen</string>
+    <string name="menu_history">Geschichte</string>
+    <string name="menu_gallery">Galerie</string>
+    <string name="menu_profile">Profil</string>
+    <string name="menu_settings">Einstellungen</string>
+    <string name="title_info_general">Allgemeine Informationen</string>
+    <string name="title_history">Geschichte</string>
+    <string name="title_gallery">Galerie</string>
+    <string name="title_profile">Profil</string>
+    <string name="title_settings">Einstellungen</string>
+
+    <string name="info_location">Straße: …</string>
+
+    <string name="info_hours">Öffnungszeiten: XX:XX - YY:YY</string>
+    <string name="general_info">Allgemeine Informationen:</string>
+
+    <string name="history_1800">1800</string>
+    <string name="history_1900">1900-1950</string>
+    <string name="history_1950">1950-2000</string>
+    <string name="history_actualidad">Heute</string>
+
+    <string name="history_content_placeholder">Mauris vel nisi id metus vestibulum vehicula nec ac orci. Curabitur massa diam, fermentum sit amet augue sit, volutpat efficitur enim. Phasellus a cursus orci, id laoreet dolor. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</string>
+</resources>
