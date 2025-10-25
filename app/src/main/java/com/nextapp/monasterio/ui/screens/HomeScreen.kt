@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.nextapp.monasterio.AppointmentActivity
 import com.nextapp.monasterio.R
-import com.nextapp.monasterio.VirtualVisitActivity
+import com.nextapp.monasterio.ui.virtualvisit.VirtualVisitActivity
 import com.nextapp.monasterio.ui.theme.Black
 import com.nextapp.monasterio.ui.theme.MonasteryBlue
 import com.nextapp.monasterio.ui.theme.MonasteryOrange
