@@ -12,14 +12,19 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
-import com.nextapp.monasterio.AppointmentActivity
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.nextapp.monasterio.AppRoutes
 import com.nextapp.monasterio.R
 import com.nextapp.monasterio.ui.virtualvisit.VirtualVisitActivity
 import com.nextapp.monasterio.ui.theme.Black
@@ -28,7 +33,7 @@ import com.nextapp.monasterio.ui.theme.MonasteryOrange
 import com.nextapp.monasterio.ui.theme.White
 
 @Composable
-fun HomeScreenContent(modifier: Modifier = Modifier) {
+fun HomeScreenContent(navController:NavController, modifier: Modifier = Modifier) {
     val context = LocalContext.current
 
     ConstraintLayout(modifier = modifier.fillMaxSize()) {
@@ -48,35 +53,13 @@ fun HomeScreenContent(modifier: Modifier = Modifier) {
             }
         )
         Image(
-            painter = painterResource(id = R.drawable.escudo),
+            painter = painterResource(id = R.drawable.huelgas_inicio),
             contentDescription = "Escudo",
             modifier = Modifier
-                .size(80.dp)
+                .size(395.dp)
                 .constrainAs(crest) {
-                    top.linkTo(parent.top, margin = 32.dp)
-                    start.linkTo(parent.start, margin = 24.dp)
+                    top.linkTo(parent.top, margin = 24.dp)
                 }
-        )
-        Text(
-            text = stringResource(id = R.string.monastery_name),
-            color = White,
-            fontSize = 28.sp,
-            fontWeight = FontWeight.Bold,
-            lineHeight = 32.sp,
-            style = LocalTextStyle.current.copy(
-                shadow = androidx.compose.ui.graphics.Shadow(
-                    color = Black,
-                    offset = androidx.compose.ui.geometry.Offset(2f, 2f),
-                    blurRadius = 4f
-                )
-            ),
-            modifier = Modifier.constrainAs(title) {
-                top.linkTo(crest.top)
-                bottom.linkTo(crest.bottom)
-                start.linkTo(crest.end, margin = 16.dp)
-                end.linkTo(parent.end, margin = 24.dp)
-                width = androidx.constraintlayout.compose.Dimension.fillToConstraints
-            }
         )
         Button(
             onClick = {
@@ -86,7 +69,7 @@ fun HomeScreenContent(modifier: Modifier = Modifier) {
             shape = RoundedCornerShape(20.dp),
             modifier = Modifier
                 .constrainAs(btnVisit) {
-                    bottom.linkTo(btnBook.top, margin = 16.dp)
+                    bottom.linkTo(btnBook.top, margin = 72.dp)
                     start.linkTo(parent.start, margin = 40.dp)
                     end.linkTo(parent.end, margin = 40.dp)
                     width = androidx.constraintlayout.compose.Dimension.fillToConstraints
@@ -96,19 +79,22 @@ fun HomeScreenContent(modifier: Modifier = Modifier) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_map_24),
                 contentDescription = null,
-                modifier = Modifier.padding(end = 8.dp)
+                modifier = Modifier.padding(end = 16.dp).size(48.dp)
             )
-            Text(stringResource(id = R.string.virtual_visit))
+            Text(
+                stringResource(id = R.string.virtual_visit),
+                fontSize = 22.sp
+            )
         }
         Button(
             onClick = {
-                context.startActivity(Intent(context, AppointmentActivity::class.java))
+                navController.navigate(AppRoutes.OPCIONES_RESERVA)
             },
             colors = ButtonDefaults.buttonColors(containerColor = MonasteryBlue),
             shape = RoundedCornerShape(20.dp),
             modifier = Modifier
                 .constrainAs(btnBook) {
-                    bottom.linkTo(parent.bottom, margin = 80.dp)
+                    bottom.linkTo(parent.bottom, margin = 186.dp)
                     start.linkTo(parent.start, margin = 40.dp)
                     end.linkTo(parent.end, margin = 40.dp)
                     width = androidx.constraintlayout.compose.Dimension.fillToConstraints
@@ -118,9 +104,20 @@ fun HomeScreenContent(modifier: Modifier = Modifier) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_time_24),
                 contentDescription = null,
-                modifier = Modifier.padding(end = 8.dp)
+                modifier = Modifier.padding(end = 16.dp).size(48.dp)
+
             )
-            Text(stringResource(id = R.string.book_appointment))
+            Text(
+                stringResource(id = R.string.book_appointment),
+                fontSize = 22.sp
+            )
         }
     }
+}
+
+@Preview
+@Composable
+fun PreviewHomeScreen(){
+    val fakeNavController = rememberNavController()
+    HomeScreenContent(navController=fakeNavController)
 }

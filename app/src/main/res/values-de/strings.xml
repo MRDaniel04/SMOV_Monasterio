@@ -28,6 +28,6 @@
     <string name="history_1900">1900-1950</string>
     <string name="history_1950">1950-2000</string>
     <string name="history_actualidad">Heute</string>
-
+    <string name="title_appointment">Termin vereinbaren</string>
     <string name="history_content_placeholder">Mauris vel nisi id metus vestibulum vehicula nec ac orci. Curabitur massa diam, fermentum sit amet augue sit, volutpat efficitur enim. Phasellus a cursus orci, id laoreet dolor. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</string>
 </resources>

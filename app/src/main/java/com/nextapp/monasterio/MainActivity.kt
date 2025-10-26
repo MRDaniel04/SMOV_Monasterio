@@ -50,6 +50,8 @@ fun MonasteryAppScreen() {
                 AppRoutes.GALERIA -> context.getString(R.string.title_gallery)
                 AppRoutes.PERFIL -> context.getString(R.string.title_profile)
                 AppRoutes.AJUSTES -> context.getString(R.string.title_settings)
+                AppRoutes.OPCIONES_RESERVA -> context.getString(R.string.title_appointment)
+                AppRoutes.RESERVA -> context.getString(R.string.title_appointment)
                 else -> context.getString(R.string.title_inicio)
             }
         }
@@ -68,7 +70,7 @@ fun MonasteryAppScreen() {
     ) {
         Scaffold(
             topBar = {
-                TopAppBar(
+                CenterAlignedTopAppBar(
                     title = { Text(currentTitle.value) },
                     colors = TopAppBarDefaults.topAppBarColors(
                         containerColor = MonasteryRed,

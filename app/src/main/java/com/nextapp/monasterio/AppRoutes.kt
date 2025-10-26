@@ -11,4 +11,6 @@ object AppRoutes {
     const val GALERIA = "galeria"
     const val PERFIL = "perfil"
     const val AJUSTES = "ajustes"
+    const val OPCIONES_RESERVA = "opciones_reserva"
+    const val RESERVA = "reserva"
 }

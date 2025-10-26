@@ -32,12 +32,14 @@ fun AppNavigationHost(
         startDestination = AppRoutes.INICIO,
         modifier = modifier
     ) {
-        composable(AppRoutes.INICIO)   { HomeScreenContent() }
+        composable(AppRoutes.INICIO)   { HomeScreenContent(navController = navController) }
         composable(AppRoutes.INFO)     { InfoScreen() }
         composable(AppRoutes.HISTORIA) { HistoriaScreen() }
         composable(AppRoutes.GALERIA)  { GaleriaScreen() }
         composable(AppRoutes.PERFIL)   { PerfilScreen() }
         composable(AppRoutes.AJUSTES)  { AjustesScreen() }
+        composable(AppRoutes.OPCIONES_RESERVA) {OpcionesReservaScreen(navController = navController)}
+        composable( AppRoutes.RESERVA ) {ReservaScreen()}
     }
 }
 
