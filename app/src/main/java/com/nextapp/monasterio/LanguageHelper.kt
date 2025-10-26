@@ -11,7 +11,10 @@ object LanguageHelper {
     private const val PREF_KEY_LANGUAGE = "language_code"
 
     private fun getPrefs(context: Context): SharedPreferences {
-        return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        // --- INICIO DE LA CORRECCIÓN ---
+        // Usa SIEMPRE el contexto de la aplicación para evitar inconsistencias
+        return context.applicationContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        // --- FIN DE LA CORRECCIÓN ---
     }
 
     // 1. Carga el idioma guardado al iniciar la app
@@ -21,12 +24,11 @@ object LanguageHelper {
             val appLocale = LocaleListCompat.forLanguageTags(language)
             AppCompatDelegate.setApplicationLocales(appLocale)
         }
-        // Si es null, usará el idioma del sistema (que cargará tu 'values' español por defecto)
     }
 
     // 2. Guarda el nuevo idioma cuando el usuario lo cambia
     fun saveLocale(context: Context, language: String) {
-        getPrefs(context).edit().putString(PREF_KEY_LANGUAGE, language).apply()
+        getPrefs(context).edit().putString(PREF_KEY_LANGUAGE, language).commit()
         val appLocale = LocaleListCompat.forLanguageTags(language)
         AppCompatDelegate.setApplicationLocales(appLocale)
     }

@@ -16,8 +16,9 @@ import com.nextapp.monasterio.ui.navigation.AppDrawerContent
 import com.nextapp.monasterio.ui.navigation.AppNavigationHost
 import com.nextapp.monasterio.ui.theme.*
 import kotlinx.coroutines.launch
+import androidx.appcompat.app.AppCompatActivity
 
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         LanguageHelper.loadLocale(this)

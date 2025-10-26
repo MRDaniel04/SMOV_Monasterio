@@ -61,4 +61,5 @@ dependencies {
     implementation(libs.constraintlayout.compose)
     implementation(libs.navigation.compose)
     implementation (libs.androidx.appcompat)
+    implementation (libs.google.material)
 }

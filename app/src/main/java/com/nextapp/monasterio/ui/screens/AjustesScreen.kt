@@ -14,12 +14,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.nextapp.monasterio.LanguageHelper // Importa el Helper que creamos
+import com.nextapp.monasterio.LanguageHelper
+import com.nextapp.monasterio.R
+import androidx.compose.ui.res.stringResource
+import androidx.appcompat.app.AppCompatActivity
 
 @Composable
 fun AjustesScreen() {
     // Obtenemos el contexto como ComponentActivity para poder llamar a .recreate()
-    val context = LocalContext.current as ComponentActivity
+    val context = LocalContext.current as AppCompatActivity
 
     Column(
         modifier = Modifier
@@ -28,7 +31,7 @@ fun AjustesScreen() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Seleccionar Idioma", // Puedes cambiar esto por un string resource
+            text = stringResource(id = R.string.language_select),
             style = MaterialTheme.typography.headlineMedium
         )
         Spacer(modifier = Modifier.height(32.dp))
