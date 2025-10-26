@@ -14,6 +14,8 @@ navigationCompose = "2.9.5"
 foundation = "1.9.4"
 appcompat = "1.7.0"
 material = "1.12.0"
+firebase-gservices = "4.4.4"
+firebase-bom = "33.1.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -36,11 +38,13 @@ navigation-compose = { module = "androidx.navigation:navigation-compose", versio
 androidx-compose-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "foundation" }
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
 google-material = { module = "com.google.android.material:material", version.ref = "material" }
+firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase-bom" }
+firebase-firestore = { module = "com.google.firebase:firebase-firestore-ktx" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-
+firebase-gservices = { id = "com.google.gms.google-services", version.ref = "firebase-gservices" }
 
 
