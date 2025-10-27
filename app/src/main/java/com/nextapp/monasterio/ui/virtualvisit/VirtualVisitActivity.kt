@@ -8,7 +8,6 @@ import com.nextapp.monasterio.ui.theme.Smov_monasterioTheme
 class VirtualVisitActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContent {
             Smov_monasterioTheme {
                 VirtualVisitScreen()
