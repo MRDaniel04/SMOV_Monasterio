@@ -63,7 +63,7 @@ fun HomeScreenContent(navController:NavController, modifier: Modifier = Modifier
         )
         Button(
             onClick = {
-                context.startActivity(Intent(context, VirtualVisitActivity::class.java))
+                navController.navigate(AppRoutes.VIRTUAL_VISIT)
             },
             colors = ButtonDefaults.buttonColors(containerColor = MonasteryOrange),
             shape = RoundedCornerShape(20.dp),
@@ -79,7 +79,9 @@ fun HomeScreenContent(navController:NavController, modifier: Modifier = Modifier
             Icon(
                 painter = painterResource(id = R.drawable.ic_map_24),
                 contentDescription = null,
-                modifier = Modifier.padding(end = 16.dp).size(48.dp)
+                modifier = Modifier
+                    .padding(end = 16.dp)
+                    .size(48.dp)
             )
             Text(
                 stringResource(id = R.string.virtual_visit),

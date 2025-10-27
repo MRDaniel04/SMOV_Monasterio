@@ -20,6 +20,7 @@ import com.nextapp.monasterio.ui.theme.MonasteryRed
 import com.nextapp.monasterio.ui.theme.White
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import com.nextapp.monasterio.ui.virtualvisit.VirtualVisitScreen
 
 // --- 7. El Host de Navegación (El "marco") ---
 @Composable
@@ -40,6 +41,7 @@ fun AppNavigationHost(
         composable(AppRoutes.AJUSTES)  { AjustesScreen() }
         composable(AppRoutes.OPCIONES_RESERVA) {OpcionesReservaScreen(navController = navController)}
         composable( AppRoutes.RESERVA ) {ReservaScreen()}
+        composable(AppRoutes.VIRTUAL_VISIT) { VirtualVisitScreen() }
     }
 }
 

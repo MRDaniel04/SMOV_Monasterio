@@ -65,4 +65,7 @@ dependencies {
     implementation (libs.google.material)
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.firestore)
+    implementation("com.caverock:androidsvg:1.4")
+    implementation("androidx.core:core-ktx:1.12.0")
+
 }
