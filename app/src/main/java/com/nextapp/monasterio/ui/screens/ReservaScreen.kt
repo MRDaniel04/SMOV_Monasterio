@@ -20,6 +20,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import com.nextapp.monasterio.AppRoutes
 import com.nextapp.monasterio.R
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -27,7 +29,7 @@ import java.util.Locale
 
 
 @Composable
-fun ReservaScreen(){
+fun ReservaScreen(navController: NavController){
 
     var nombre by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
@@ -120,7 +122,7 @@ fun ReservaScreen(){
             value = fecha,
             onValueChange = {},
             readOnly = true,
-            placeholder = {"Selecciona una fecha"},
+            placeholder = {Text("Selecciona una fecha")},
             trailingIcon = {
                 IconButton(onClick = {mostrarSelectorFecha = true}) {
                     Icon(painterResource(R.drawable.calendario),"Seleccionar Fecha")
@@ -185,7 +187,7 @@ fun ReservaScreen(){
         }
         Spacer(modifier = Modifier.height(48.dp))
         Button(
-            onClick = {},
+            onClick = {navController.navigate(AppRoutes.CONFIRMACION_RESERVA)},
             modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp),

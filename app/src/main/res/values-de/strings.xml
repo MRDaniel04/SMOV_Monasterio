@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Kloster Huelgas</string>
+    <string name="app_name">Museum360</string>
     <string name="title_inicio">Startseite</string>
     <string name="virtual_visit">VIRTUELLER BESUCH</string>
     <string name="book_appointment">TERMIN BUCHEN</string>

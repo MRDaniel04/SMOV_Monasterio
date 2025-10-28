@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Huelgas Monastery</string>
+    <string name="app_name">Museum360</string>
     <string name="title_inicio">Home</string>
     <string name="virtual_visit">VIRTUAL VISIT</string>
     <string name="book_appointment">BOOK APPOINTMENT</string>

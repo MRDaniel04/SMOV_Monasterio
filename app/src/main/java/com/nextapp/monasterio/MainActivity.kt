@@ -17,9 +17,11 @@ import com.nextapp.monasterio.ui.navigation.AppNavigationHost
 import com.nextapp.monasterio.ui.theme.*
 import kotlinx.coroutines.launch
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         super.onCreate(savedInstanceState)
         LanguageHelper.loadLocale(this)
         setContent {
@@ -53,6 +55,7 @@ fun MonasteryAppScreen() {
                 AppRoutes.AJUSTES -> context.getString(R.string.title_settings)
                 AppRoutes.OPCIONES_RESERVA -> context.getString(R.string.title_appointment)
                 AppRoutes.RESERVA -> context.getString(R.string.title_appointment)
+                AppRoutes.CONFIRMACION_RESERVA -> context.getString(R.string.title_appointment)
                 else -> context.getString(R.string.title_inicio)
             }
         }

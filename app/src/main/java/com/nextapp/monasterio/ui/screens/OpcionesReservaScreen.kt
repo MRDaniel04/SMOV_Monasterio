@@ -25,7 +25,7 @@ fun OpcionesReservaScreen(navController: NavController){
         verticalArrangement = Arrangement.Center
     ){
         Button(
-            onClick = {navController.navigate(AppRoutes.RESERVA)},
+            onClick = {},
             enabled = true,
             shape = RoundedCornerShape(16.dp),
             colors = ButtonDefaults.buttonColors(
@@ -55,8 +55,8 @@ fun OpcionesReservaScreen(navController: NavController){
         }
         Spacer(Modifier.height(48.dp))
         Button(
-            onClick = {},
-            enabled = false,
+            onClick = {navController.navigate(AppRoutes.RESERVA)},
+            enabled = true,
             shape = RoundedCornerShape(16.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color(0xFF303F9F),
@@ -78,7 +78,7 @@ fun OpcionesReservaScreen(navController: NavController){
                 )
                 Spacer(Modifier.width(32.dp))
                 Text(
-                    text = "No Disponible",
+                    text = "Reservar Cita",
                     fontSize = 22.sp,
                     fontFamily = FontFamily.Serif,
                     fontWeight = FontWeight.Bold
@@ -111,7 +111,7 @@ fun OpcionesReservaScreen(navController: NavController){
                 )
                 Spacer(Modifier.width(32.dp))
                 Text(
-                    text = "No Disponible",
+                    text = "Reservar Cita",
                     fontSize = 22.sp,
                     fontFamily = FontFamily.Serif,
                     fontWeight = FontWeight.Bold

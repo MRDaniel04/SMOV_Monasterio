@@ -40,7 +40,8 @@ fun AppNavigationHost(
         composable(AppRoutes.PERFIL)   { PerfilScreen() }
         composable(AppRoutes.AJUSTES)  { AjustesScreen() }
         composable(AppRoutes.OPCIONES_RESERVA) {OpcionesReservaScreen(navController = navController)}
-        composable( AppRoutes.RESERVA ) {ReservaScreen()}
+        composable( AppRoutes.RESERVA ) {ReservaScreen(navController = navController)}
+        composable(AppRoutes.CONFIRMACION_RESERVA) {ConfirmacionReservaScreen()}
         composable(AppRoutes.VIRTUAL_VISIT) { VirtualVisitScreen() }
     }
 }
