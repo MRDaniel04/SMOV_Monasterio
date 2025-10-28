@@ -29,6 +29,21 @@
     <string name="history_1950">1950-2000</string>
     <string name="history_actualidad">Heute</string>
     <string name="title_appointment">Termin vereinbaren</string>
+    <string name="option_appointment">Termin vereinbaren</string>
+    <string name="name_appointment">Name</string>
+    <string name="email_appointment">E-Mail</string>
+    <string name="date_appointment">Datum</string>
+    <string name="hour_appointment">Stunde</string>
+    <string name="placeholdername_appointment">Geben Sie Ihren vollständigen Namen ein</string>
+    <string name="placeholderemail_appointment">Geben Sie Ihre E-Mail-Adresse ein</string>
+    <string name="placeholderdate_appointment">Datum auswählen</string>
+    <string name="placeholderhour_appointment">Wählen Sie eine Uhrzeit</string>
+    <string name="datepicker_ok">Ok</string>
+    <string name="datepicker_cancel">Stornieren</string>
+    <string name="confirm_button">BESTÄTIGEN</string>
+    <string name="contentimage_confirmation">Bestätigt</string>
+    <string name="confirmation_appointment">TERMIN BESTÄTIGT!</string>
+    <string name="details_appointment">Ihr Besuch wurde erfolgreich bestätigt. Sie erhalten weitere Informationen per E-Mail.</string>
     <string name="history_content_placeholder">Mauris vel nisi id metus vestibulum vehicula nec ac orci. Curabitur massa diam, fermentum sit amet augue sit, volutpat efficitur enim. Phasellus a cursus orci, id laoreet dolor. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</string>
     <string name="language_select">Sprache auswählen</string>
 </resources>

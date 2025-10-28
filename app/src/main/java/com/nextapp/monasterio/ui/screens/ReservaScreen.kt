@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -76,12 +77,12 @@ fun ReservaScreen(navController: NavController){
         horizontalAlignment = AbsoluteAlignment.Left,
         verticalArrangement = Arrangement.Center
     ){
-        Text("Nombre", style = MaterialTheme.typography.bodyLarge)
+        Text(stringResource(R.string.name_appointment), style = MaterialTheme.typography.bodyLarge)
         Spacer(modifier = Modifier.height(16.dp))
         TextField(
             value = nombre,
             onValueChange = {nombre=it},
-            placeholder = {Text("Introduce tu nombre completo")},
+            placeholder = {Text(stringResource(R.string.placeholdername_appointment))},
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(8.dp),
             colors = TextFieldDefaults.colors(
@@ -96,12 +97,12 @@ fun ReservaScreen(navController: NavController){
             singleLine = true,
         )
         Spacer(modifier = Modifier.height(32.dp))
-        Text("Correo Electrónico",style = MaterialTheme.typography.bodyLarge)
+        Text(stringResource(R.string.email_appointment),style = MaterialTheme.typography.bodyLarge)
         Spacer(modifier = Modifier.height(16.dp))
         TextField(
             value = email,
             onValueChange = {email=it},
-            placeholder = {Text("ej: tu@email.com")},
+            placeholder = {Text(stringResource(R.string.placeholderemail_appointment))},
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(8.dp),
             colors = TextFieldDefaults.colors(
@@ -116,16 +117,16 @@ fun ReservaScreen(navController: NavController){
             singleLine = true,
         )
         Spacer(modifier = Modifier.height(32.dp))
-        Text("Fecha",style = MaterialTheme.typography.bodyLarge)
+        Text(stringResource(R.string.date_appointment),style = MaterialTheme.typography.bodyLarge)
         Spacer(modifier = Modifier.height(16.dp))
         TextField(
             value = fecha,
             onValueChange = {},
             readOnly = true,
-            placeholder = {Text("Selecciona una fecha")},
+            placeholder = {Text(stringResource(R.string.placeholderdate_appointment))},
             trailingIcon = {
                 IconButton(onClick = {mostrarSelectorFecha = true}) {
-                    Icon(painterResource(R.drawable.calendario),"Seleccionar Fecha")
+                    Icon(painterResource(R.drawable.calendario),stringResource(R.string.placeholderdate_appointment))
                 }
             },
             modifier = Modifier.fillMaxWidth(),
@@ -140,16 +141,16 @@ fun ReservaScreen(navController: NavController){
             )
         )
         Spacer(modifier = Modifier.height(32.dp))
-        Text("Hora",style = MaterialTheme.typography.bodyLarge)
+        Text(stringResource(R.string.hour_appointment),style = MaterialTheme.typography.bodyLarge)
         Spacer(modifier = Modifier.height(16.dp))
         Box {
             TextField(
                 value = hora,
                 onValueChange = {},
                 readOnly = true,
-                placeholder = { Text("Selecciona una hora") },
+                placeholder = { Text(stringResource(R.string.placeholderhour_appointment)) },
                 trailingIcon = {
-                    Icon(painterResource(R.drawable.ic_time_24), "Selecciona una fecha")
+                    Icon(painterResource(R.drawable.ic_time_24), stringResource(R.string.placeholderhour_appointment))
                 },
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(8.dp),
@@ -195,7 +196,7 @@ fun ReservaScreen(navController: NavController){
                 containerColor = colorResource(R.color.MonasteryBlue)
             )
         ) {
-            Text("CONFIRMAR", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 24.sp)
+            Text(stringResource(R.string.confirm_button), color = Color.White, fontWeight = FontWeight.Bold, fontSize = 24.sp)
         }
     }
     if (mostrarSelectorFecha) {
@@ -210,10 +211,10 @@ fun ReservaScreen(navController: NavController){
                             fecha = formatoFecha.format(selectedDate)
                         }
                     }
-                ) { Text("OK") }
+                ) { Text(stringResource(R.string.datepicker_ok)) }
             },
             dismissButton = {
-                TextButton(onClick = { mostrarSelectorFecha = false }) { Text("Cancelar") }
+                TextButton(onClick = { mostrarSelectorFecha = false }) { Text(stringResource(R.string.datepicker_cancel)) }
             }
         ) {
             DatePicker(

@@ -10,6 +10,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -38,12 +39,12 @@ fun ConfirmacionReservaScreen(){
             Spacer(modifier = Modifier.weight(0.35f))
             Image(
                 painter = painterResource(id = R.drawable.check_confirmacion),
-                contentDescription = "Confirmado",
+                contentDescription = stringResource(R.string.contentimage_confirmation),
                 modifier = Modifier.size(210.dp)
             )
             Spacer(modifier = Modifier.height(24.dp))
             Text(
-                text = "¡CITA CONFIRMADA!",
+                text = stringResource(R.string.confirmation_appointment),
                 color = Color.White,
                 fontSize = 32.sp,
                 fontWeight = FontWeight.Bold,
@@ -51,7 +52,7 @@ fun ConfirmacionReservaScreen(){
             )
             Spacer(modifier = Modifier.height(24.dp))
             Text(
-                text = "Tu visita ha sido confirmada con éxito. Recibirás al correo electrónico los detalles.",
+                text = stringResource(R.string.details_appointment),
                 color = Color.White,
                 fontSize = 16.sp,
                 textAlign = TextAlign.Center
