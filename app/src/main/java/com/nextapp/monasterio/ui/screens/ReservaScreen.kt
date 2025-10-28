@@ -27,6 +27,7 @@ import com.nextapp.monasterio.R
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
+import android.util.Patterns
 
 
 @Composable
@@ -36,6 +37,9 @@ fun ReservaScreen(navController: NavController){
     var email by remember { mutableStateOf("") }
     var fecha by remember { mutableStateOf("") }
     var hora by remember { mutableStateOf("") }
+
+    var nombreError by remember {mutableStateOf<String?>(null)}
+    var emailError by remember {mutableStateOf<String?>(null)}
 
     var mostrarSelectorFecha by remember { mutableStateOf(false) }
     var formatoFecha = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
@@ -81,7 +85,10 @@ fun ReservaScreen(navController: NavController){
         Spacer(modifier = Modifier.height(16.dp))
         TextField(
             value = nombre,
-            onValueChange = {nombre=it},
+            onValueChange = {
+                nombre = it
+                nombreError = null
+            },
             placeholder = {Text(stringResource(R.string.placeholdername_appointment))},
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(8.dp),
@@ -95,13 +102,22 @@ fun ReservaScreen(navController: NavController){
             ),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
             singleLine = true,
+            isError = nombreError != null,
+            supportingText = {
+                if(nombreError!= null){
+                    Text(text = nombreError!!, color=MaterialTheme.colorScheme.error)
+                }
+            }
         )
         Spacer(modifier = Modifier.height(32.dp))
         Text(stringResource(R.string.email_appointment),style = MaterialTheme.typography.bodyLarge)
         Spacer(modifier = Modifier.height(16.dp))
         TextField(
             value = email,
-            onValueChange = {email=it},
+            onValueChange = {
+                email = it
+                emailError = null
+            },
             placeholder = {Text(stringResource(R.string.placeholderemail_appointment))},
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(8.dp),
@@ -113,8 +129,14 @@ fun ReservaScreen(navController: NavController){
                 unfocusedIndicatorColor = Color.Transparent,
                 disabledIndicatorColor = Color.Transparent,
             ),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
             singleLine = true,
+            isError = emailError !=null,
+            supportingText = {
+                if(emailError!= null){
+                    Text(text = emailError!!, color=MaterialTheme.colorScheme.error)
+                }
+            }
         )
         Spacer(modifier = Modifier.height(32.dp))
         Text(stringResource(R.string.date_appointment),style = MaterialTheme.typography.bodyLarge)
@@ -188,7 +210,26 @@ fun ReservaScreen(navController: NavController){
         }
         Spacer(modifier = Modifier.height(48.dp))
         Button(
-            onClick = {navController.navigate(AppRoutes.CONFIRMACION_RESERVA)},
+            onClick = {
+                val nombreLimpio = nombre.trim()
+                val contieneDigitos = nombreLimpio.any{it.isDigit()}
+                if(nombreLimpio.isEmpty()){
+                    nombreError = "El nombre es obligatorio"
+                } else if (contieneDigitos){
+                    nombreError = "El nombre no puede contener dígitos"
+                }
+
+                val emailLimpio = email.trim()
+                if(emailLimpio.isEmpty()){
+                    emailError = "El email es obligatorio"
+                } else if(!Patterns.EMAIL_ADDRESS.matcher(emailLimpio).matches()){
+                    emailError = "El formato del email no es válido"
+                }
+
+                if (emailError == null && nombreError == null){
+                    navController.navigate(AppRoutes.CONFIRMACION_RESERVA)
+                }
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp),
