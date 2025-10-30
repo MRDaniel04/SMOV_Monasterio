@@ -11,6 +11,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.nextapp.monasterio.AppRoutes
@@ -41,7 +43,22 @@ fun AppNavigationHost(
         composable(AppRoutes.AJUSTES)  { AjustesScreen() }
         composable(AppRoutes.OPCIONES_RESERVA) {OpcionesReservaScreen(navController = navController)}
         composable( AppRoutes.RESERVA ) {ReservaScreen(navController = navController)}
-        composable(AppRoutes.CONFIRMACION_RESERVA) {ConfirmacionReservaScreen()}
+        composable(
+            route= AppRoutes.CONFIRMACION_RESERVA + "/{nombre}/{email}/{fecha}/{hora}",
+            arguments = listOf(
+                navArgument("nombre") { type = NavType.StringType },
+                navArgument("email") { type = NavType.StringType },
+                navArgument("fecha") { type = NavType.StringType },
+                navArgument("hora") { type = NavType.StringType }
+            ),
+            content={ backStackEntry ->
+                val nombre = backStackEntry.arguments?.getString("nombre") ?: ""
+                val email = backStackEntry.arguments?.getString("email") ?: ""
+                val fecha = backStackEntry.arguments?.getString("fecha") ?: ""
+                val hora = backStackEntry.arguments?.getString("hora") ?: ""
+                ConfirmacionReservaScreen(navController = navController,nombre=nombre,email=email,fecha=fecha,hora=hora)
+            }
+        )
         composable(AppRoutes.VIRTUAL_VISIT) { VirtualVisitScreen() }
     }
 }

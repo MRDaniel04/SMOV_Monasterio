@@ -42,8 +42,8 @@
     <string name="datepicker_cancel">Cancel</string>
     <string name="confirm_button">CONFIRM</string>
     <string name="contentimage_confirmation">Confirmed</string>
-    <string name="confirmation_appointment">APPOINTMENT CONFIRMED!</string>
-    <string name="details_appointment">Your visit has been successfully confirmed. You\'ll receive details by email.</string>
+    <string name="confirmation_appointment">ALMOST READY!!</string>
+    <string name="details_appointment">Your booking request is ready. Please click \'send\' in the email application that just opened to finalize your request. We will reply to that email to confirm availability..</string>
     <string name="history_content_placeholder">Mauris vel nisi id metus vestibulum vehicula nec ac orci. Curabitur massa diam, fermentum sit amet augue sit, volutpat efficitur enim. Phasellus a cursus orci, id laoreet dolor. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</string>
     <string name="language_select">Select language</string>
 </resources>

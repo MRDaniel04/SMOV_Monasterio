@@ -1,5 +1,7 @@
 package com.nextapp.monasterio.ui.screens
 
+import android.content.Context
+import android.content.Intent
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Arrangement
@@ -11,7 +13,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.AbsoluteAlignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
@@ -28,11 +29,17 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 import android.util.Patterns
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.platform.LocalContext
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 @Composable
 fun ReservaScreen(navController: NavController){
 
+    val contexto=LocalContext.current
+    
     var nombre by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var fecha by remember { mutableStateOf("") }
@@ -43,9 +50,11 @@ fun ReservaScreen(navController: NavController){
 
     var mostrarSelectorFecha by remember { mutableStateOf(false) }
     var formatoFecha = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
+    var fechaError by remember {mutableStateOf<String?>(null)}
 
     var mostrarSelectorHora by remember { mutableStateOf(false) }
     var horasDisponibles = listOf("17:00","18:00","19:00")
+    var horaError by remember {mutableStateOf<String?>(null)}
 
     val misFechasSeleccionables = object : SelectableDates{
         override fun isSelectableDate(utcTimeMillis: Long): Boolean {
@@ -78,7 +87,7 @@ fun ReservaScreen(navController: NavController){
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 24.dp),
-        horizontalAlignment = AbsoluteAlignment.Left,
+        horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.Center
     ){
         Text(stringResource(R.string.name_appointment), style = MaterialTheme.typography.bodyLarge)
@@ -143,7 +152,7 @@ fun ReservaScreen(navController: NavController){
         Spacer(modifier = Modifier.height(16.dp))
         TextField(
             value = fecha,
-            onValueChange = {},
+            onValueChange = { fechaError = null },
             readOnly = true,
             placeholder = {Text(stringResource(R.string.placeholderdate_appointment))},
             trailingIcon = {
@@ -160,7 +169,13 @@ fun ReservaScreen(navController: NavController){
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
                 disabledIndicatorColor = Color.Transparent,
-            )
+            ),
+            isError = fechaError !=null,
+            supportingText = {
+                if(fechaError!= null){
+                    Text(text = fechaError!!, color=MaterialTheme.colorScheme.error)
+                }
+            }
         )
         Spacer(modifier = Modifier.height(32.dp))
         Text(stringResource(R.string.hour_appointment),style = MaterialTheme.typography.bodyLarge)
@@ -168,7 +183,7 @@ fun ReservaScreen(navController: NavController){
         Box {
             TextField(
                 value = hora,
-                onValueChange = {},
+                onValueChange = { horaError=null },
                 readOnly = true,
                 placeholder = { Text(stringResource(R.string.placeholderhour_appointment)) },
                 trailingIcon = {
@@ -186,6 +201,12 @@ fun ReservaScreen(navController: NavController){
                 ),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
                 singleLine = true,
+                isError = horaError !=null,
+                supportingText = {
+                    if(horaError!= null){
+                        Text(text = horaError!!, color=MaterialTheme.colorScheme.error)
+                    }
+                }
             )
             Box(
                 modifier = Modifier
@@ -201,6 +222,7 @@ fun ReservaScreen(navController: NavController){
                     DropdownMenuItem(
                         text = {Text(timeSlot)},
                         onClick = {
+                            horaError=null
                             hora=timeSlot
                             mostrarSelectorHora = false
                         }
@@ -212,11 +234,12 @@ fun ReservaScreen(navController: NavController){
         Button(
             onClick = {
                 val nombreLimpio = nombre.trim()
-                val contieneDigitos = nombreLimpio.any{it.isDigit()}
+                val nombreRegex = Regex("^[\\p{L} ]+\$")
+                val contieneDigitosValidos = nombreRegex.matches(nombreLimpio)
                 if(nombreLimpio.isEmpty()){
                     nombreError = "El nombre es obligatorio"
-                } else if (contieneDigitos){
-                    nombreError = "El nombre no puede contener dígitos"
+                } else if (!contieneDigitosValidos){
+                    nombreError = "El nombre no puede contener simbolos válidos"
                 }
 
                 val emailLimpio = email.trim()
@@ -226,8 +249,16 @@ fun ReservaScreen(navController: NavController){
                     emailError = "El formato del email no es válido"
                 }
 
-                if (emailError == null && nombreError == null){
-                    navController.navigate(AppRoutes.CONFIRMACION_RESERVA)
+                if(fecha==""){
+                    fechaError = "Se debe seleccionar una fecha"
+                }
+
+                if (hora==""){
+                    horaError = "Se debe seleccionar una hora"
+                }
+
+                if (emailError == null && nombreError == null && fecha!="" && hora!="") {
+                        navController.navigate(AppRoutes.CONFIRMACION_RESERVA+"/$nombre/$email/$fecha/$hora")
                 }
             },
             modifier = Modifier
@@ -246,6 +277,7 @@ fun ReservaScreen(navController: NavController){
             confirmButton = {
                 TextButton(
                     onClick = {
+                        fechaError=null
                         mostrarSelectorFecha = false
                         val selectedDate = estadoSelectorFecha.selectedDateMillis
                         if (selectedDate != null) {
@@ -264,3 +296,5 @@ fun ReservaScreen(navController: NavController){
         }
     }
 }
+
+

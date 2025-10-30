@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Museo360</string>
+    <string name="app_name">Santa María\nla Real de Huelgas</string>
     <string name="title_inicio">Inicio</string>
     <string name="virtual_visit">VISITA VIRTUAL</string>
     <string name="book_appointment">RESERVA CITA</string>
@@ -26,11 +26,11 @@
     <string name="history_actualidad">Actualidad</string>
     <string name="title_appointment">Reservar Cita</string>
     <string name="option_appointment">Reservar Cita</string>
-    <string name="name_appointment">Nombre</string>
+    <string name="name_appointment">Nombre y apellidos</string>
     <string name="email_appointment">Correo electrónico</string>
     <string name="date_appointment">Fecha</string>
     <string name="hour_appointment">Hora</string>
-    <string name="placeholdername_appointment">Introduce tu nombre completo</string>
+    <string name="placeholdername_appointment">Introduce tu nombre y apellidos</string>
     <string name="placeholderemail_appointment">Introduce tu correo electrónico</string>
     <string name="placeholderdate_appointment">Selecciona una fecha</string>
     <string name="placeholderhour_appointment">Selecciona una hora</string>
@@ -38,8 +38,8 @@
     <string name="datepicker_cancel">Cancelar</string>
     <string name="confirm_button">CONFIRMAR</string>
     <string name="contentimage_confirmation">Confirmado</string>
-    <string name="confirmation_appointment">¡CITA CONFIRMADA!</string>
-    <string name="details_appointment">Tu visita ha sido confirmada con éxito.Recibirás al correo electrónico los detalles.</string>
+    <string name="confirmation_appointment">¡CASI LISTO!</string>
+    <string name="details_appointment">Tu solicitud de reserva está preparada. Por favor, pulsa \'enviar\' en la aplicación de correo que se acaba de abrir para finalizar tu solicitud. Te responderemos a ese correo para confirmar la disponibilidad.</string>
     <string name="history_content_placeholder">Mauris vel nisi id metus vestibulum vehicula nec ac orci. Curabitur massa diam, fermentum sit amet augue sit, volutpat efficitur enim. Phasellus a cursus orci, id laoreet dolor. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</string>
     <string name="language_select">Seleccionar Idioma</string>
 </resources>
