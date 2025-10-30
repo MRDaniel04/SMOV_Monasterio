@@ -237,24 +237,24 @@ fun ReservaScreen(navController: NavController){
                 val nombreRegex = Regex("^[\\p{L} ]+\$")
                 val contieneDigitosValidos = nombreRegex.matches(nombreLimpio)
                 if(nombreLimpio.isEmpty()){
-                    nombreError = "El nombre es obligatorio"
+                    nombreError = contexto.getString(R.string.compulsory_name)
                 } else if (!contieneDigitosValidos){
-                    nombreError = "El nombre no puede contener simbolos válidos"
+                    nombreError = contexto.getString(R.string.valid_name)
                 }
 
                 val emailLimpio = email.trim()
                 if(emailLimpio.isEmpty()){
-                    emailError = "El email es obligatorio"
+                    emailError = contexto.getString(R.string.compulsory_email)
                 } else if(!Patterns.EMAIL_ADDRESS.matcher(emailLimpio).matches()){
-                    emailError = "El formato del email no es válido"
+                    emailError = contexto.getString(R.string.valid_email)
                 }
 
                 if(fecha==""){
-                    fechaError = "Se debe seleccionar una fecha"
+                    fechaError = contexto.getString(R.string.date_no_selected)
                 }
 
                 if (hora==""){
-                    horaError = "Se debe seleccionar una hora"
+                    horaError = contexto.getString(R.string.hour_no_selected)
                 }
 
                 if (emailError == null && nombreError == null && fecha!="" && hora!="") {

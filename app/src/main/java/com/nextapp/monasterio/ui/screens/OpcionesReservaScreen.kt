@@ -26,7 +26,7 @@ import com.nextapp.monasterio.R
 fun OpcionesReservaScreen(navController: NavController){
 
     val contexto= LocalContext.current
-    val numerodetelefono="687639612"
+    val numerodetelefono="+34687639612"
 
     Column(
         modifier = Modifier.fillMaxSize().padding(horizontal = 24.dp),

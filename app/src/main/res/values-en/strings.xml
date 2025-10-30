@@ -38,12 +38,21 @@
     <string name="placeholderemail_appointment">Enter your email address</string>
     <string name="placeholderdate_appointment">Select a date</string>
     <string name="placeholderhour_appointment">Select a time</string>
+    <string name="compulsory_name">Name is required</string>
+    <string name="valid_name">The name contains an invalid symbol</string>
+    <string name="compulsory_email">Email is required</string>
+    <string name="valid_email">The email format is invalid</string>
+    <string name="date_no_selected">A date must be selected</string>
+    <string name="hour_no_selected">A time must be selected</string>
     <string name="datepicker_ok">Ok</string>
     <string name="datepicker_cancel">Cancel</string>
     <string name="confirm_button">CONFIRM</string>
     <string name="contentimage_confirmation">Confirmed</string>
     <string name="confirmation_appointment">ALMOST READY!!</string>
     <string name="details_appointment">Your booking request is ready. Please click \'send\' in the email application that just opened to finalize your request. We will reply to that email to confirm availability..</string>
+    <string name="email_subject">View Reservation Request - %1$s</string>
+    <string name="email_message">Hello,\n\nI would like to request a reservation for a visit to the monastery with the following details:\n\n* Name: %1$s\n* Email: %2$s\n* Date of visit: %3$s\n* Time of visit: %4$s\n\nI look forward to your kind confirmation.\n\nThank you very much,\nSincerely,\n\n%1$s</string>
+    <string name="email_error">No email app was found</string>
     <string name="history_content_placeholder">Mauris vel nisi id metus vestibulum vehicula nec ac orci. Curabitur massa diam, fermentum sit amet augue sit, volutpat efficitur enim. Phasellus a cursus orci, id laoreet dolor. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</string>
     <string name="language_select">Select language</string>
 </resources>

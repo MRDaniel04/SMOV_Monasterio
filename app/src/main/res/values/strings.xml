@@ -34,12 +34,21 @@
     <string name="placeholderemail_appointment">Introduce tu correo electrónico</string>
     <string name="placeholderdate_appointment">Selecciona una fecha</string>
     <string name="placeholderhour_appointment">Selecciona una hora</string>
+    <string name="compulsory_name">El nombre es obligatorio</string>
+    <string name="valid_name">El nombre contiene algún simbolo no válido</string>
+    <string name="compulsory_email">El email es obligatorio</string>
+    <string name="valid_email">El formato del email no es válido</string>
+    <string name="date_no_selected">Se debe seleccionar una fecha</string>
+    <string name="hour_no_selected">Se debe seleccionar una hora</string>
     <string name="datepicker_ok">Ok</string>
     <string name="datepicker_cancel">Cancelar</string>
     <string name="confirm_button">CONFIRMAR</string>
     <string name="contentimage_confirmation">Confirmado</string>
     <string name="confirmation_appointment">¡CASI LISTO!</string>
     <string name="details_appointment">Tu solicitud de reserva está preparada. Por favor, pulsa \'enviar\' en la aplicación de correo que se acaba de abrir para finalizar tu solicitud. Te responderemos a ese correo para confirmar la disponibilidad.</string>
+    <string name="email_subject">Solicitud de Reserva de Vista - %1$s</string>
+    <string name="email_message">Hola,\n\nMe gustaría solicitar una reserva para una visita al monasterio con los siguientes datos:\n\n* Nombre: %1$s\n* Email: %2$s\n* Fecha de la visita: %3$s\n* Hora de la visita: %4$s\n\nQuedo a la espera de su amable confirmación.\n\nMuchas gracias,\nAtentamente,\n\n%1$s</string>
+    <string name="email_error">No se encontró ninguna app de correo</string>
     <string name="history_content_placeholder">Mauris vel nisi id metus vestibulum vehicula nec ac orci. Curabitur massa diam, fermentum sit amet augue sit, volutpat efficitur enim. Phasellus a cursus orci, id laoreet dolor. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</string>
     <string name="language_select">Seleccionar Idioma</string>
 </resources>

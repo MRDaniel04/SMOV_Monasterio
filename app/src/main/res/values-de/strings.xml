@@ -38,12 +38,21 @@
     <string name="placeholderemail_appointment">Geben Sie Ihre E-Mail-Adresse ein</string>
     <string name="placeholderdate_appointment">Datum auswählen</string>
     <string name="placeholderhour_appointment">Wählen Sie eine Uhrzeit</string>
+    <string name="compulsory_name">Name erforderlich</string>
+    <string name="valid_name">Der Name enthält ein ungültiges Symbol</string>
+    <string name="compulsory_email">E-Mail-Adresse erforderlich</string>
+    <string name="valid_email">Das E-Mail-Format ist ungültig.</string>
+    <string name="date_no_selected">Ein Datum muss ausgewählt werden.</string>
+    <string name="hour_no_selected">Es muss ein Zeitpunkt ausgewählt werden.</string>
     <string name="datepicker_ok">Ok</string>
     <string name="datepicker_cancel">Stornieren</string>
     <string name="confirm_button">BESTÄTIGEN</string>
     <string name="contentimage_confirmation">Bestätigt</string>
     <string name="confirmation_appointment">FAST FERTIG!!</string>
     <string name="details_appointment">Ihre Buchungsanfrage ist fertig. Bitte klicken Sie in der soeben geöffneten E-Mail-Anwendung auf „Senden“, um Ihre Anfrage abzuschließen. Wir werden Ihnen die Verfügbarkeit per E-Mail bestätigen..</string>
+    <string name="email_subject">Reservierungsanfrage ansehen - %1$s</string>
+    <string name="email_message">Hallo,\n\nich möchte hiermit eine Reservierung für einen Besuch im Kloster anfragen. Bitte geben Sie folgende Daten an:\n\n* Name: %1$s\n* E-Mail: %2$s\n* Besuchsdatum: %3$s\n* Besuchszeit: %4$s\n\nIch freue mich auf Ihre Bestätigung.\n\nVielen Dank,\nMit freundlichen Grüßen,\n\n%1$s</string>
+    <string name="email_error">Es wurde keine E-Mail-App gefunden.</string>
     <string name="history_content_placeholder">Mauris vel nisi id metus vestibulum vehicula nec ac orci. Curabitur massa diam, fermentum sit amet augue sit, volutpat efficitur enim. Phasellus a cursus orci, id laoreet dolor. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</string>
     <string name="language_select">Sprache auswählen</string>
 </resources>
