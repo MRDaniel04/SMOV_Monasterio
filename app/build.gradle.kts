@@ -63,8 +63,12 @@ dependencies {
     implementation(libs.navigation.compose)
     implementation (libs.androidx.appcompat)
     implementation (libs.google.material)
+
+    // Firebase
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.firestore)
+    implementation("com.google.firebase:firebase-auth-ktx")
+
     implementation("com.caverock:androidsvg:1.4")
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("com.google.android.material:material:1.10.0")
