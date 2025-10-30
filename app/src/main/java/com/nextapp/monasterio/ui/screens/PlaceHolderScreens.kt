@@ -17,9 +17,9 @@ fun GaleriaScreen() {
     }
 }
 
-@Composable
+/*@Composable
 fun PerfilScreen() {
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Text(text = "Contenido de Perfil", style = MaterialTheme.typography.headlineMedium)
     }
-}
+}*/

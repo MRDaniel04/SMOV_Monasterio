@@ -39,7 +39,7 @@ fun AppNavigationHost(
         composable(AppRoutes.INFO)     { InfoScreen() }
         composable(AppRoutes.HISTORIA) { HistoriaScreen() }
         composable(AppRoutes.GALERIA)  { GaleriaScreen() }
-        composable(AppRoutes.PERFIL)   { PerfilScreen() }
+        composable(AppRoutes.PERFIL)   { ProfileScreen() }
         composable(AppRoutes.AJUSTES)  { AjustesScreen() }
         composable(AppRoutes.OPCIONES_RESERVA) {OpcionesReservaScreen(navController = navController)}
         composable( AppRoutes.RESERVA ) {ReservaScreen(navController = navController)}
