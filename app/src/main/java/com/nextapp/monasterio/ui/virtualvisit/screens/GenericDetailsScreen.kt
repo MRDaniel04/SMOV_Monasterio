@@ -1,5 +1,15 @@
 package com.nextapp.monasterio.ui.virtualvisit.screens
 
+/**
+ * 🔹 Pantalla genérica de detalle.
+ *
+ * Se usa como plantilla para mostrar información al seleccionar
+ * una figura o un pin. Muestra un título central configurable.
+ *
+ * Ideal para pruebas, demostraciones o como base para vistas de detalle reales.
+ *
+ */
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Text

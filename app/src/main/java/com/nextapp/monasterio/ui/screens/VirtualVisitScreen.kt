@@ -1,4 +1,15 @@
 package com.nextapp.monasterio.ui.screens
+/**
+ * 🔹 Pantalla principal del módulo de "Visita Virtual".
+ *
+ * Contiene un `NavHost` interno que gestiona la navegación local entre:
+ *   - `PlanoInteractivoScreen`: vista principal del plano con zonas y pines.
+ *   - `FiguraDetalleScreen`: detalle mostrado al tocar una figura del plano.
+ *   - `PinDetalleScreen`: detalle mostrado al tocar un pin interactivo.
+ *
+ * Este módulo se integra en la navegación general de la app mediante la ruta `AppRoutes.VIRTUAL_VISIT`.
+ */
+
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController

@@ -1,5 +1,23 @@
 package com.nextapp.monasterio.ui.virtualvisit.screens
 
+/**
+ * 🔹 Pantalla interactiva del plano.
+ *
+ * Muestra una imagen del plano del monasterio con zonas táctiles y pines interactivos.
+ * Al pulsar sobre una figura (Path) o un pin, se realiza una acción (navegación o feedback visual).
+ *
+ * Se apoya en:
+ *   - `DebugPhotoView`: para manejar el lienzo interactivo y los toques.
+ *   - `PlanoData`: donde se definen las coordenadas y el Path del plano.
+ *   - `PathUtils`: utilidades matemáticas para detección de toques.
+ *
+ * Navegación:
+ *   - Figura → DetalleFiguraScreen
+ *   - Pin → DetallePinScreen
+ *
+ */
+
+
 import com.nextapp.monasterio.ui.virtualvisit.data.PlanoData
 import com.nextapp.monasterio.ui.virtualvisit.utils.isPointInPath
 import com.nextapp.monasterio.ui.virtualvisit.utils.isPointInPinArea

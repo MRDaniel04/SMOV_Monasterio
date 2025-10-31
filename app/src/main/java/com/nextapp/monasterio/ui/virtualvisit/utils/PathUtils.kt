@@ -1,5 +1,19 @@
 package com.nextapp.monasterio.ui.virtualvisit.utils
 
+/**
+ * 🔹 Conjunto de funciones utilitarias para la lógica geométrica del plano.
+ *
+ * Incluye:
+ *   - `isPointInPath`: comprueba si un toque cae dentro de una figura (Path).
+ *   - `isPointInPinArea`: detecta si el toque cae dentro del área de un pin.
+ *   - `createPathFromPoints`: genera un Path a partir de coordenadas normalizadas.
+ *
+ * Estas utilidades permiten mantener la lógica matemática separada de la UI.
+ *
+ */
+
+
+
 import android.graphics.Path
 import android.graphics.RectF
 import android.graphics.Region

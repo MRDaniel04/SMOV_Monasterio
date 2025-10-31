@@ -1,5 +1,20 @@
 package com.nextapp.monasterio.ui.virtualvisit.components
 
+/**
+ * 🔹 Vista personalizada basada en `PhotoView`.
+ *
+ * Extiende `PhotoView` para permitir:
+ *   - Dibujar zonas interactivas (`Path`) sobre una imagen.
+ *   - Mostrar pines (iconos) en coordenadas normalizadas (0–1).
+ *   - Detectar toques dentro de figuras o áreas de pines.
+ *
+ * Esta clase es el "motor visual" de la visita virtual.
+ * Es independiente y reutilizable en otros planos.
+ *
+ */
+
+
+
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet

@@ -1,4 +1,18 @@
 package com.nextapp.monasterio.ui.virtualvisit.data
+/**
+ * 🔹 Modelo base para cualquier elemento interactivo del plano.
+ *
+ * Define una jerarquía común:
+ *   - `InteractiveFigure`: figuras irregulares definidas por Path.
+ *   - `InteractivePin`: pines con posición y área de toque.
+ *
+ * Permite tratar figuras y pines de forma unificada y escalable.
+ * Ideal para listas dinámicas o carga desde JSON / base de datos.
+ *
+ *
+ */
+
+
 
 import android.graphics.Path
 

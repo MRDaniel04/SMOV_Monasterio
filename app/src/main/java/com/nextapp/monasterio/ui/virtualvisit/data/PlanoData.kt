@@ -1,5 +1,19 @@
 package com.nextapp.monasterio.ui.virtualvisit.data
 
+/**
+ * 🔹 Define la información base del plano del monasterio.
+ *
+ * Contiene:
+ *   - Coordenadas normalizadas (0–1) para construir el Path del monasterio.
+ *   - Transformaciones de posición y escala del Path.
+ *   - Posición y radio del pin principal.
+ *
+ * Este archivo puede ampliarse con más planos (ej: iglesia, claustro, jardines...).
+ *
+ */
+
+
+
 import android.graphics.Matrix
 import android.graphics.Path
 import com.nextapp.monasterio.ui.virtualvisit.utils.createPathFromPoints
