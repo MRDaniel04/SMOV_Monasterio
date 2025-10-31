@@ -26,7 +26,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.nextapp.monasterio.AppRoutes
 import com.nextapp.monasterio.R
-import com.nextapp.monasterio.ui.virtualvisit.VirtualVisitActivity
 import com.nextapp.monasterio.ui.theme.Black
 import com.nextapp.monasterio.ui.theme.MonasteryBlue
 import com.nextapp.monasterio.ui.theme.MonasteryOrange

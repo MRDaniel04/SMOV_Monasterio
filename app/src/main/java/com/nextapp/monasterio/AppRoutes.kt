@@ -14,6 +14,5 @@ object AppRoutes {
     const val OPCIONES_RESERVA = "opciones_reserva"
     const val RESERVA = "reserva"
     const val CONFIRMACION_RESERVA = "confirmacion_reserva"
-
     const val VIRTUAL_VISIT = "virtual_visit"
 }

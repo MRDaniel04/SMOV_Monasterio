@@ -73,4 +73,8 @@ dependencies {
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("com.google.android.material:material:1.10.0")
 
+    // Plano Interactivo
+    implementation("com.github.chrisbanes:PhotoView:2.3.0")
+
+
 }

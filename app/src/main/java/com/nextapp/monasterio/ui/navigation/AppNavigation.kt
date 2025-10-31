@@ -17,12 +17,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.nextapp.monasterio.AppRoutes
 import com.nextapp.monasterio.R
-import com.nextapp.monasterio.ui.screens.* // Importa todas tus pantallas
+import com.nextapp.monasterio.ui.screens.*
 import com.nextapp.monasterio.ui.theme.MonasteryRed
 import com.nextapp.monasterio.ui.theme.White
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import com.nextapp.monasterio.ui.virtualvisit.VirtualVisitScreen
+import com.nextapp.monasterio.ui.screens.VirtualVisitScreen
 
 // --- 7. El Host de Navegación (El "marco") ---
 @Composable
