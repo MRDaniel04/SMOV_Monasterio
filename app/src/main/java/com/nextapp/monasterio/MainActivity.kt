@@ -56,6 +56,7 @@ fun MonasteryAppScreen() {
                 AppRoutes.OPCIONES_RESERVA -> context.getString(R.string.title_appointment)
                 AppRoutes.RESERVA -> context.getString(R.string.title_appointment)
                 AppRoutes.CONFIRMACION_RESERVA -> context.getString(R.string.title_appointment)
+                AppRoutes.VIRTUAL_VISIT -> context.getString(R.string.title_monasterio)
                 else -> context.getString(R.string.title_inicio)
             }
         }

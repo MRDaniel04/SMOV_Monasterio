@@ -55,4 +55,6 @@
     <string name="email_error">No email app was found</string>
     <string name="history_content_placeholder">Mauris vel nisi id metus vestibulum vehicula nec ac orci. Curabitur massa diam, fermentum sit amet augue sit, volutpat efficitur enim. Phasellus a cursus orci, id laoreet dolor. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</string>
     <string name="language_select">Select language</string>
+    <string name="title_monasterio">Monastery</string>
+
 </resources>

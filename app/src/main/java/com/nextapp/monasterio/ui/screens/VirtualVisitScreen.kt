@@ -5,41 +5,54 @@ package com.nextapp.monasterio.ui.screens
  * Contiene un `NavHost` interno que gestiona la navegación local entre:
  *   - `PlanoInteractivoScreen`: vista principal del plano con zonas y pines.
  *   - `FiguraDetalleScreen`: detalle mostrado al tocar una figura del plano.
+ *   - `IglesiaDetalleScreen`: detalle mostrado al tocar la figura de la iglesia.
  *   - `PinDetalleScreen`: detalle mostrado al tocar un pin interactivo.
  *
  * Este módulo se integra en la navegación general de la app mediante la ruta `AppRoutes.VIRTUAL_VISIT`.
  */
 
-
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.nextapp.monasterio.ui.virtualvisit.screens.PlanoInteractivoScreen
 import com.nextapp.monasterio.ui.virtualvisit.screens.FiguraDetalleScreen
 import com.nextapp.monasterio.ui.virtualvisit.screens.PinDetalleScreen
+import com.nextapp.monasterio.ui.virtualvisit.screens.IglesiaDetalleScreen
 
 object VirtualVisitRoutes {
     const val PLANO = "plano"
-    const val DETALLE_FIGURA = "detalle_figura"
+    const val DETALLE_MONASTERIO = "detalle_monasterio"
+    const val DETALLE_IGLESIA = "detalle_iglesia"
     const val DETALLE_PIN = "detalle_pin"
 }
 
 @Composable
 fun VirtualVisitScreen(navController: NavHostController? = null) {
     // Este NavHost es interno SOLO para la sección de visita virtual
-    val localNavController = androidx.navigation.compose.rememberNavController()
+    val localNavController = rememberNavController()
 
     NavHost(
         navController = localNavController,
         startDestination = VirtualVisitRoutes.PLANO
     ) {
+        // 🔹 Pantalla principal del plano interactivo
         composable(VirtualVisitRoutes.PLANO) {
             PlanoInteractivoScreen(navController = localNavController)
         }
-        composable(VirtualVisitRoutes.DETALLE_FIGURA) {
+
+        // 🔹 Detalle del monasterio
+        composable(VirtualVisitRoutes.DETALLE_MONASTERIO) {
             FiguraDetalleScreen()
         }
+
+        // 🔹 Detalle de la iglesia
+        composable(VirtualVisitRoutes.DETALLE_IGLESIA) {
+            IglesiaDetalleScreen()
+        }
+
+        // 🔹 Detalle del pin interactivo
         composable(VirtualVisitRoutes.DETALLE_PIN) {
             PinDetalleScreen()
         }

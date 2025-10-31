@@ -27,16 +27,18 @@ import com.nextapp.monasterio.ui.virtualvisit.utils.isPointInPinArea
 @Composable
 fun PlanoInteractivoScreen(navController: NavController) {
     val context = LocalContext.current
-    val data = PlanoData.monasterio
 
-    var highlightColor by remember { mutableStateOf(Color.Transparent) }
+    var highlightMonasterio by remember { mutableStateOf(Color.Transparent) }
+    var highlightIglesia by remember { mutableStateOf(Color.Transparent) }
+    var activePath by remember { mutableStateOf(PlanoData.monasterio.path) }
     var isPinPressed by remember { mutableStateOf(false) }
+
     val planoBackgroundColor = Color(0xFFF5F5F5)
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(planoBackgroundColor) // Fondo detrás del plano
+            .background(planoBackgroundColor)
     ) {
         var photoViewRef by remember { mutableStateOf<DebugPhotoView?>(null) }
 
@@ -45,32 +47,57 @@ fun PlanoInteractivoScreen(navController: NavController) {
             factory = { ctx ->
                 DebugPhotoView(ctx).apply {
                     setImageResource(R.drawable.plano_monasterio)
-                    interactivePath = data.path
+
+                    interactivePath = activePath
+
                     pins = listOf(
                         DebugPhotoView.PinData(
-                            x = data.pinX,
-                            y = data.pinY,
+                            x = PlanoData.monasterio.pinX,
+                            y = PlanoData.monasterio.pinY,
                             iconId = R.drawable.pin3,
                             isPressed = isPinPressed
                         )
                     )
+
                     setOnPhotoTapListener { _, x, y ->
                         when {
-                            isPointInPath(x, y, data.path) -> {
-                                highlightColor = Color.Yellow
+                            // --- Tocar MONASTERIO ---
+                            isPointInPath(x, y, PlanoData.monasterio.path) -> {
+                                activePath = PlanoData.monasterio.path
+                                highlightMonasterio = Color.Yellow.copy(alpha = 0.5f)
+                                highlightIglesia = Color.Transparent
+
                                 Handler(Looper.getMainLooper()).postDelayed({
-                                    highlightColor = Color.Transparent
-                                    navController.navigate("detalle_figura")
-                                }, 100)
+                                    highlightMonasterio = Color.Transparent
+                                    navController.navigate("detalle_monasterio")
+                                }, 200)
                             }
 
-                            isPointInPinArea(x, y, data.pinX, data.pinY, data.pinTapRadiusNormalized) -> {
+                            // --- Tocar IGLESIA ---
+                            isPointInPath(x, y, PlanoData.iglesia.path) -> {
+                                activePath = PlanoData.iglesia.path
+                                highlightIglesia = Color.Yellow.copy(alpha = 0.5f)
+                                highlightMonasterio = Color.Transparent
+
+                                Handler(Looper.getMainLooper()).postDelayed({
+                                    highlightIglesia = Color.Transparent
+                                    navController.navigate("detalle_iglesia")
+                                }, 200)
+                            }
+
+                            // --- Tocar PIN ---
+                            isPointInPinArea(
+                                x, y,
+                                PlanoData.monasterio.pinX,
+                                PlanoData.monasterio.pinY,
+                                PlanoData.monasterio.pinTapRadiusNormalized
+                            ) -> {
                                 isPinPressed = true
                                 Toast.makeText(context, "Pin pulsado", Toast.LENGTH_SHORT).show()
                                 Handler(Looper.getMainLooper()).postDelayed({
                                     isPinPressed = false
                                     navController.navigate("detalle_pin")
-                                }, 100)
+                                }, 200)
                             }
 
                             else -> Toast.makeText(context, "Fuera del área interactiva", Toast.LENGTH_SHORT).show()
@@ -81,23 +108,28 @@ fun PlanoInteractivoScreen(navController: NavController) {
                 }
             },
             update = {
-                it.highlightColor = highlightColor.toArgb()
+                // 🔹 Actualiza el path activo y el color del resaltado
+                it.interactivePath = activePath
+                it.highlightColor = (
+                        if (highlightMonasterio != Color.Transparent)
+                            highlightMonasterio
+                        else highlightIglesia
+                        ).toArgb()
+
                 it.invalidate()
             }
         )
 
-        // 🎛️ Botones de control con fondo circular semitransparente
+        // 🎛️ Controles de zoom y reajuste
         Column(
             modifier = Modifier
                 .align(Alignment.CenterEnd)
                 .padding(end = 16.dp, bottom = 80.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            // Botón Aumentar
             FloatingActionButton(onClick = {
                 photoViewRef?.let {
-                    val currentScale = it.scale
-                    val newScale = (currentScale + 0.2f).coerceAtMost(it.maximumScale)
+                    val newScale = (it.scale + 0.2f).coerceAtMost(it.maximumScale)
                     it.setScale(newScale, true)
                 }
             }) {
@@ -116,11 +148,9 @@ fun PlanoInteractivoScreen(navController: NavController) {
                 }
             }
 
-            // Botón Disminuir
             FloatingActionButton(onClick = {
                 photoViewRef?.let {
-                    val currentScale = it.scale
-                    val newScale = (currentScale - 0.2f).coerceAtLeast(it.minimumScale)
+                    val newScale = (it.scale - 0.2f).coerceAtLeast(it.minimumScale)
                     it.setScale(newScale, true)
                 }
             }) {
@@ -139,12 +169,11 @@ fun PlanoInteractivoScreen(navController: NavController) {
                 }
             }
 
-            // Botón Reajustar
             FloatingActionButton(onClick = {
-                photoViewRef?.let {
-                    it.setScale(1f, true)
-                    it.setTranslationX(0f)
-                    it.setTranslationY(0f)
+                photoViewRef?.apply {
+                    setScale(1f, true)
+                    setTranslationX(0f)
+                    setTranslationY(0f)
                 }
             }) {
                 Box(
