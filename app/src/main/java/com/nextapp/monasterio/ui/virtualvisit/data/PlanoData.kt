@@ -60,6 +60,12 @@ object PlanoData {
         val pinTapRadiusNormalized = 0.03f
     }
 
+    object pin2 {
+        val pinX = 0.70f
+        val pinY = 0.45f
+        val pinTapRadiusNormalized = 0.05f
+    }
+
 
     object iglesia {
         // 🔹 Ajustes de posición y escala del path sobre el plano general

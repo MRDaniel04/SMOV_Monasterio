@@ -16,16 +16,14 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.nextapp.monasterio.ui.virtualvisit.screens.PlanoInteractivoScreen
-import com.nextapp.monasterio.ui.virtualvisit.screens.FiguraDetalleScreen
-import com.nextapp.monasterio.ui.virtualvisit.screens.PinDetalleScreen
-import com.nextapp.monasterio.ui.virtualvisit.screens.IglesiaDetalleScreen
+import com.nextapp.monasterio.ui.virtualvisit.screens.*
 
 object VirtualVisitRoutes {
     const val PLANO = "plano"
     const val DETALLE_MONASTERIO = "detalle_monasterio"
     const val DETALLE_IGLESIA = "detalle_iglesia"
     const val DETALLE_PIN = "detalle_pin"
+    const val DETALLE_PIN2 = "detalle_pin2"
 }
 
 @Composable
@@ -56,5 +54,10 @@ fun VirtualVisitScreen(navController: NavHostController? = null) {
         composable(VirtualVisitRoutes.DETALLE_PIN) {
             PinDetalleScreen()
         }
+
+        composable(VirtualVisitRoutes.DETALLE_PIN2) {
+            PinDetalleScreen2()
+        }
+
     }
 }

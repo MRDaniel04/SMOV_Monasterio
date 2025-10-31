@@ -34,6 +34,7 @@ fun PlanoInteractivoScreen(navController: NavController) {
     var isPinPressed by remember { mutableStateOf(false) }
 
     val planoBackgroundColor = Color(0xFFF5F5F5)
+    val initialZoom = 1.5f // 🔹 Zoom inicial deseado para el plano.
 
     Box(
         modifier = Modifier
@@ -48,12 +49,23 @@ fun PlanoInteractivoScreen(navController: NavController) {
                 DebugPhotoView(ctx).apply {
                     setImageResource(R.drawable.plano_monasterio)
 
+                    // 🔹 Aplica el zoom inicial cuando la imagen ya está cargada
+                    post {
+                        setScale(initialZoom, true)
+                    }
+
                     interactivePath = activePath
 
                     pins = listOf(
                         DebugPhotoView.PinData(
                             x = PlanoData.monasterio.pinX,
                             y = PlanoData.monasterio.pinY,
+                            iconId = R.drawable.pin3,
+                            isPressed = isPinPressed
+                        ),
+                        DebugPhotoView.PinData(
+                            x = PlanoData.pin2.pinX,
+                            y = PlanoData.pin2.pinY,
                             iconId = R.drawable.pin3,
                             isPressed = isPinPressed
                         )
@@ -85,7 +97,7 @@ fun PlanoInteractivoScreen(navController: NavController) {
                                 }, 200)
                             }
 
-                            // --- Tocar PIN ---
+                            // --- Tocar PIN 1 ---
                             isPointInPinArea(
                                 x, y,
                                 PlanoData.monasterio.pinX,
@@ -93,10 +105,25 @@ fun PlanoInteractivoScreen(navController: NavController) {
                                 PlanoData.monasterio.pinTapRadiusNormalized
                             ) -> {
                                 isPinPressed = true
-                                Toast.makeText(context, "Pin pulsado", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(context, "Pin 1 pulsado", Toast.LENGTH_SHORT).show()
                                 Handler(Looper.getMainLooper()).postDelayed({
                                     isPinPressed = false
                                     navController.navigate("detalle_pin")
+                                }, 200)
+                            }
+
+                            // --- Tocar PIN 2 ---
+                            isPointInPinArea(
+                                x, y,
+                                PlanoData.pin2.pinX,
+                                PlanoData.pin2.pinY,
+                                PlanoData.pin2.pinTapRadiusNormalized
+                            ) -> {
+                                isPinPressed = true
+                                Toast.makeText(context, "Pin 2 pulsado", Toast.LENGTH_SHORT).show()
+                                Handler(Looper.getMainLooper()).postDelayed({
+                                    isPinPressed = false
+                                    navController.navigate("detalle_pin2")
                                 }, 200)
                             }
 
@@ -108,14 +135,12 @@ fun PlanoInteractivoScreen(navController: NavController) {
                 }
             },
             update = {
-                // 🔹 Actualiza el path activo y el color del resaltado
                 it.interactivePath = activePath
                 it.highlightColor = (
                         if (highlightMonasterio != Color.Transparent)
                             highlightMonasterio
                         else highlightIglesia
                         ).toArgb()
-
                 it.invalidate()
             }
         )
@@ -127,6 +152,7 @@ fun PlanoInteractivoScreen(navController: NavController) {
                 .padding(end = 16.dp, bottom = 80.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
+            // 🔍 Aumentar
             FloatingActionButton(onClick = {
                 photoViewRef?.let {
                     val newScale = (it.scale + 0.2f).coerceAtMost(it.maximumScale)
@@ -148,6 +174,7 @@ fun PlanoInteractivoScreen(navController: NavController) {
                 }
             }
 
+            // 🔎 Disminuir
             FloatingActionButton(onClick = {
                 photoViewRef?.let {
                     val newScale = (it.scale - 0.2f).coerceAtLeast(it.minimumScale)
@@ -169,9 +196,10 @@ fun PlanoInteractivoScreen(navController: NavController) {
                 }
             }
 
+            // ♻️ Reajustar (vuelve al zoom inicial configurado)
             FloatingActionButton(onClick = {
                 photoViewRef?.apply {
-                    setScale(1f, true)
+                    setScale(initialZoom, true)
                     setTranslationX(0f)
                     setTranslationY(0f)
                 }
