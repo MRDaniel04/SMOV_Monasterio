@@ -2,7 +2,7 @@ package com.nextapp.monasterio.ui.virtualvisit.data
 
 import android.graphics.Path
 
-/*
+
 // 🔹 Clase base: cualquier elemento interactivo (una figura o un pin)
 sealed class InteractiveItem {
     abstract val id: String          // Ejemplo: "pin1" o "salaA"
@@ -28,4 +28,3 @@ data class InteractivePin(
     val tapRadius: Float,            // Radio de detección del toque
     val detailRoute: String          // Pantalla a la que lleva
 ) : InteractiveItem()
-*/
