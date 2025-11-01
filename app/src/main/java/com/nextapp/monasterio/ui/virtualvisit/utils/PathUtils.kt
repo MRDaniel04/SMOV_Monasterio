@@ -103,3 +103,10 @@ fun createPathFromPoints(points: List<Pair<Float, Float>>, close: Boolean = true
     if (close) path.close()
     return path
 }
+
+
+fun mergePaths(vararg paths: Path): Path {
+    val result = Path()
+    paths.forEach { result.addPath(it) }
+    return result
+}

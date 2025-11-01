@@ -3,6 +3,7 @@ package com.nextapp.monasterio.ui.virtualvisit.data
 import android.graphics.Matrix
 import com.nextapp.monasterio.R
 import com.nextapp.monasterio.ui.virtualvisit.utils.createPathFromPoints
+import com.nextapp.monasterio.ui.virtualvisit.utils.mergePaths
 
 object PlanoData {
 
@@ -88,7 +89,62 @@ object PlanoData {
                 ),
                 colorResaltado = 0x804CAF50.toInt(), // verde semitransparente
                 destino = "detalle_colegio"
+            ),
+
+            FiguraData(
+                id = "arco_mudejar",
+                nombre = "Arco Mudéjar",
+                path = mergePaths(
+                    createTransformedPath(
+                        coords = listOf(
+                            0.53f to 1.15f,
+                            0.9f to 0.68f,
+                            0.47f to 0.05f,
+                            0.08f to 0.53f,
+                            0.53f to 1.15f,
+                        ),
+                        offsetX = 0.37f,
+                        offsetY = 0.65f,
+                        scale = 0.06f
+                    ),
+                    createTransformedPath(
+                        coords = listOf(
+                            0.52f to 0.98f,
+                            0.75f to 0.7f,
+                            0.47f to 0.23f,
+                            0.19f to 0.54f,
+                            0.52f to 0.98f
+                        ),
+                        offsetX = 0.37f,
+                        offsetY = 0.65f,
+                        scale = 0.06f
+                    )
+                ),
+                colorResaltado = 0x809C27B0.toInt(),
+                destino = "detalle_arco_mudejar"
+            ),
+
+                    // 🔹 FIGURA: CLAUSTRO
+            FiguraData(
+                id = "claustro",
+                nombre = "Claustro",
+                path = createTransformedPath(
+                    coords = listOf(
+                        0.000000f to 0.457f,  // V1
+                        0.43f to 1.08f,  // V2
+                        0.945f to 0.565f,  // V3
+                        0.53f to -0.072f   // V4
+                    ),
+                    // Estos valores son una estimación inicial — ajústalos visualmente si hace falta:
+                    offsetX = 0.513f,   // posición X estimada en el plano (ajustar si no queda bien)
+                    offsetY = 0.335f,   // posición Y estimada en el plano (ajustar si no queda bien)
+                    scale = 0.15f       // escala estimada (ajustar para que el polygon se visualice con el tamaño correcto)
+                ),
+                colorResaltado = 0x80FFEB3B.toInt(), // amarillo/ámbar semitransparente (puedes cambiar)
+                destino = "detalle_claustro"
             )
+
+
         )
     }
 

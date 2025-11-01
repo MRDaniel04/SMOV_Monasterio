@@ -1,6 +1,5 @@
 package com.nextapp.monasterio.ui.virtualvisit.screens
 
-import android.graphics.Path
 import android.os.Handler
 import android.os.Looper
 import android.widget.Toast
@@ -29,10 +28,9 @@ import com.nextapp.monasterio.ui.virtualvisit.utils.isPointInPinArea
 fun PlanoInteractivoScreen(navController: NavController) {
     val context = LocalContext.current
 
-    // 🔹 Mostrar el colegio al inicio para verificar su posición
-    var activeHighlight by remember { mutableStateOf<Color?>(Color(0x804CAF50)) } // verde semitransparente
-    var activePath by remember { mutableStateOf<Path?>(PlanoData.figuras.find { it.id == "colegio" }?.path) }
-
+    // 🔹 Estado para resaltar figuras y pines
+    var activePath by remember { mutableStateOf<android.graphics.Path?>(null) }
+    var activeHighlight by remember { mutableStateOf<Color?>(null) }
     var isPinPressed by remember { mutableStateOf(false) }
 
     val planoBackgroundColor = Color(0xFFF5F5F5)
@@ -83,14 +81,31 @@ fun PlanoInteractivoScreen(navController: NavController) {
 
                                 Handler(Looper.getMainLooper()).postDelayed({
                                     activeHighlight = null
-                                    navController.navigate(figura.destino)
+
+                                    // Navegación segura (evita crash si el destino no existe)
+                                    figura.destino?.let { destino ->
+                                        try {
+                                            navController.navigate(destino)
+                                        } catch (e: Exception) {
+                                            Toast.makeText(
+                                                context,
+                                                "Pantalla no encontrada: $destino",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                        }
+                                    } ?: Toast.makeText(
+                                        context,
+                                        "Destino no asignado a ${figura.nombre}",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
                                 }, 200)
                             }
 
                             // --- PIN TOCADO ---
                             pin != null -> {
                                 isPinPressed = true
-                                Toast.makeText(context, "${pin.id} pulsado", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(context, "${pin.id} pulsado", Toast.LENGTH_SHORT)
+                                    .show()
 
                                 Handler(Looper.getMainLooper()).postDelayed({
                                     isPinPressed = false
@@ -98,6 +113,7 @@ fun PlanoInteractivoScreen(navController: NavController) {
                                 }, 200)
                             }
 
+                            // --- NADA TOCADO ---
                             else -> Toast.makeText(
                                 context,
                                 "Fuera del área interactiva",
