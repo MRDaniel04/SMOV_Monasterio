@@ -29,7 +29,8 @@
     <string name="history_1950">1950-2000</string>
     <string name="history_actualidad">Present Day</string>
     <string name="title_appointment">Book Appointment</string>
-    <string name="option_appointment">Book Appointment</string>
+    <string name="option_phone_appointment">Book by phone</string>
+    <string name="option_online_appointment">Book online</string>
     <string name="name_appointment">Name</string>
     <string name="email_appointment">Email</string>
     <string name="date_appointment">Date</string>

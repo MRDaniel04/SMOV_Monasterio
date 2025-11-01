@@ -59,7 +59,7 @@ fun OpcionesReservaScreen(navController: NavController){
                 )
                 Spacer(Modifier.width(32.dp))
                 Text(
-                    text = stringResource(R.string.option_appointment),
+                    text = stringResource(R.string.option_phone_appointment),
                     fontSize = 22.sp,
                     fontFamily = FontFamily.Serif,
                     fontWeight = FontWeight.Bold
@@ -91,7 +91,7 @@ fun OpcionesReservaScreen(navController: NavController){
                 )
                 Spacer(Modifier.width(32.dp))
                 Text(
-                    text = stringResource(R.string.option_appointment),
+                    text = stringResource(R.string.option_online_appointment),
                     fontSize = 22.sp,
                     fontFamily = FontFamily.Serif,
                     fontWeight = FontWeight.Bold
@@ -99,37 +99,5 @@ fun OpcionesReservaScreen(navController: NavController){
             }
         }
         Spacer(Modifier.height(48.dp))
-        Button(
-            onClick = {},
-            enabled = false,
-            shape = RoundedCornerShape(16.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFFA16B23),
-                contentColor = Color.Black,
-                disabledContainerColor = Color(0xFFA16B23).copy(alpha = 0.7f),
-                disabledContentColor = Color.Black.copy(alpha = 0.8f)
-            ),
-            modifier = Modifier.fillMaxWidth().height(120.dp),
-            contentPadding = PaddingValues(horizontal = 16.dp)
-        ){
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Absolute.Left,
-                modifier = Modifier.fillMaxWidth(),
-            ){
-                Icon(
-                    painter = painterResource(R.drawable.mail),
-                    contentDescription = null,
-                    modifier = Modifier.size(96.dp)
-                )
-                Spacer(Modifier.width(32.dp))
-                Text(
-                    text = stringResource(R.string.option_appointment),
-                    fontSize = 22.sp,
-                    fontFamily = FontFamily.Serif,
-                    fontWeight = FontWeight.Bold
-                )
-            }
-        }
     }
 }
