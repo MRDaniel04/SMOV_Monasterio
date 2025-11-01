@@ -9,13 +9,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 
 /**
  * 🔹 Pantalla de detalle específica para la figura del Colegio.
  * Muestra información general o específica del área tocada en el plano.
  */
 @Composable
-fun ColegioDetalleScreen() {
+fun ColegioDetalleScreen(navController: NavHostController) {
     Column(
         modifier = Modifier
             .fillMaxSize()

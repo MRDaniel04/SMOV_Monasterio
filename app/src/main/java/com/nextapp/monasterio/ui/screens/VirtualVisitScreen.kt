@@ -1,15 +1,4 @@
 package com.nextapp.monasterio.ui.screens
-/**
- * 🔹 Pantalla principal del módulo de "Visita Virtual".
- *
- * Contiene un `NavHost` interno que gestiona la navegación local entre:
- *   - `PlanoInteractivoScreen`: vista principal del plano con zonas y pines.
- *   - `FiguraDetalleScreen`: detalle mostrado al tocar una figura del plano.
- *   - `IglesiaDetalleScreen`: detalle mostrado al tocar la figura de la iglesia.
- *   - `PinDetalleScreen`: detalle mostrado al tocar un pin interactivo.
- *
- * Este módulo se integra en la navegación general de la app mediante la ruta `AppRoutes.VIRTUAL_VISIT`.
- */
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
@@ -18,6 +7,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.nextapp.monasterio.ui.virtualvisit.screens.*
 
+/**
+ * 🔹 Pantalla principal del módulo de "Visita Virtual".
+ *
+ * Contiene un `NavHost` interno que gestiona la navegación local entre:
+ *   - `PlanoInteractivoScreen`: vista principal del plano con zonas y pines.
+ *   - Distintas pantallas de detalle según figura o pin seleccionado.
+ */
 object VirtualVisitRoutes {
     const val PLANO = "plano"
     const val DETALLE_MONASTERIO = "detalle_monasterio"
@@ -27,57 +23,55 @@ object VirtualVisitRoutes {
     const val DETALLE_CLAUSTRO = "detalle_claustro"
     const val DETALLE_PIN = "detalle_pin"
     const val DETALLE_PIN2 = "detalle_pin2"
-
-
 }
 
 @Composable
 fun VirtualVisitScreen(navController: NavHostController? = null) {
-    // Este NavHost es interno SOLO para la sección de visita virtual
+    // 🔸 NavController interno del módulo "Visita Virtual"
     val localNavController = rememberNavController()
 
     NavHost(
         navController = localNavController,
         startDestination = VirtualVisitRoutes.PLANO
     ) {
-        // 🔹 Pantalla principal del plano interactivo
+        // 🗺️ Pantalla principal del plano interactivo
         composable(VirtualVisitRoutes.PLANO) {
             PlanoInteractivoScreen(navController = localNavController)
         }
 
-        // 🔹 Detalle del monasterio
+        // 🏛️ Detalle del monasterio
         composable(VirtualVisitRoutes.DETALLE_MONASTERIO) {
-            FiguraDetalleScreen()
+            MonasterioDetalleScreen(navController = localNavController)
         }
 
-        // 🔹 Detalle de la iglesia
+        // ⛪ Detalle de la iglesia
         composable(VirtualVisitRoutes.DETALLE_IGLESIA) {
-            IglesiaDetalleScreen()
+            IglesiaDetalleScreen(navController = localNavController)
         }
 
-        // 🔹 Detalle del colegio
+        // 🏫 Detalle del colegio
         composable(VirtualVisitRoutes.DETALLE_COLEGIO) {
-            ColegioDetalleScreen()
+            ColegioDetalleScreen(navController = localNavController)
         }
 
-        // 🔹 Detalle del arco mudejar
+        // 🧱 Detalle del arco mudéjar
         composable(VirtualVisitRoutes.DETALLE_ARCO_MUDEJAR) {
-            ArcoMudejarDetalleScreen()
+            ArcoMudejarDetalleScreen(navController = localNavController)
         }
 
-        // 🔹 Detalle del claustro
+        // 🌿 Detalle del claustro
         composable(VirtualVisitRoutes.DETALLE_CLAUSTRO) {
-            ClaustroDetalleScreen()
+            ClaustroDetalleScreen(navController = localNavController)
         }
 
-        // 🔹 Detalle del pin interactivo
+        // 📍 Detalle del primer pin interactivo
         composable(VirtualVisitRoutes.DETALLE_PIN) {
-            PinDetalleScreen()
+            PinDetalleScreen(navController = localNavController)
         }
 
+        // 📍 Detalle del segundo pin (si lo tienes)
         composable(VirtualVisitRoutes.DETALLE_PIN2) {
-            PinDetalleScreen2()
+            PinDetalleScreen2(navController = localNavController)
         }
-
     }
 }

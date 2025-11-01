@@ -9,13 +9,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+
 
 /**
  * 🔹 Pantalla de detalle específica para la figura del Arco Mudejar.
  * Muestra información general o específica del área tocada en el plano.
  */
 @Composable
-fun ArcoMudejarDetalleScreen() {
+fun ArcoMudejarDetalleScreen(navController: NavHostController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
