@@ -1,16 +1,13 @@
 package com.nextapp.monasterio.ui.virtualvisit.data
 
 /**
- * 🔹 Estructuras de datos para definir figuras y pines interactivos.
- *
- * Actualmente vacías, pero preparadas para:
- *   - Guardar información sobre cada figura (id, nombre, descripción, ruta).
- *   - Guardar información sobre cada pin (posición, icono, destino).
- *
- * Se usarán cuando se escale el sistema a múltiples planos o pines dinámicos.
- *
+ * 🔹 Representa un pin interactivo sobre el plano
  */
-
-
-class PinData {
-}
+data class PinData(
+    val id: String,
+    val x: Float,
+    val y: Float,
+    val tapRadius: Float,
+    val iconRes: Int,
+    val destino: String // ruta a navegar
+)

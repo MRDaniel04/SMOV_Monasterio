@@ -1,5 +1,6 @@
 package com.nextapp.monasterio.ui.virtualvisit.screens
 
+import android.graphics.Path
 import android.os.Handler
 import android.os.Looper
 import android.widget.Toast
@@ -28,13 +29,14 @@ import com.nextapp.monasterio.ui.virtualvisit.utils.isPointInPinArea
 fun PlanoInteractivoScreen(navController: NavController) {
     val context = LocalContext.current
 
-    var highlightMonasterio by remember { mutableStateOf(Color.Transparent) }
-    var highlightIglesia by remember { mutableStateOf(Color.Transparent) }
-    var activePath by remember { mutableStateOf(PlanoData.monasterio.path) }
+    // 🔹 Mostrar el colegio al inicio para verificar su posición
+    var activeHighlight by remember { mutableStateOf<Color?>(Color(0x804CAF50)) } // verde semitransparente
+    var activePath by remember { mutableStateOf<Path?>(PlanoData.figuras.find { it.id == "colegio" }?.path) }
+
     var isPinPressed by remember { mutableStateOf(false) }
 
     val planoBackgroundColor = Color(0xFFF5F5F5)
-    val initialZoom = 1.5f // 🔹 Zoom inicial deseado para el plano.
+    val initialZoom = 1.5f // Zoom inicial del plano
 
     Box(
         modifier = Modifier
@@ -43,91 +45,64 @@ fun PlanoInteractivoScreen(navController: NavController) {
     ) {
         var photoViewRef by remember { mutableStateOf<DebugPhotoView?>(null) }
 
+        // 🖼️ Componente principal del plano interactivo
         AndroidView(
             modifier = Modifier.fillMaxSize(),
             factory = { ctx ->
                 DebugPhotoView(ctx).apply {
+                    // Imagen base del plano
                     setImageResource(R.drawable.plano_monasterio)
 
-                    // 🔹 Aplica el zoom inicial cuando la imagen ya está cargada
+                    // Aplica zoom inicial tras la carga
                     post {
                         setScale(initialZoom, true)
                     }
 
-                    interactivePath = activePath
-
-                    pins = listOf(
+                    // Asigna los pines desde la lista dinámica
+                    pins = PlanoData.pines.map {
                         DebugPhotoView.PinData(
-                            x = PlanoData.monasterio.pinX,
-                            y = PlanoData.monasterio.pinY,
-                            iconId = R.drawable.pin3,
-                            isPressed = isPinPressed
-                        ),
-                        DebugPhotoView.PinData(
-                            x = PlanoData.pin2.pinX,
-                            y = PlanoData.pin2.pinY,
-                            iconId = R.drawable.pin3,
+                            x = it.x,
+                            y = it.y,
+                            iconId = it.iconRes,
                             isPressed = isPinPressed
                         )
-                    )
+                    }
 
+                    // 🔹 Detección de toques en figuras o pines
                     setOnPhotoTapListener { _, x, y ->
+                        val figura = PlanoData.figuras.find { isPointInPath(x, y, it.path) }
+                        val pin = PlanoData.pines.find {
+                            isPointInPinArea(x, y, it.x, it.y, it.tapRadius)
+                        }
+
                         when {
-                            // --- Tocar MONASTERIO ---
-                            isPointInPath(x, y, PlanoData.monasterio.path) -> {
-                                activePath = PlanoData.monasterio.path
-                                highlightMonasterio = Color.Yellow.copy(alpha = 0.5f)
-                                highlightIglesia = Color.Transparent
+                            // --- FIGURA TOCADA ---
+                            figura != null -> {
+                                activePath = figura.path
+                                activeHighlight = Color(figura.colorResaltado)
 
                                 Handler(Looper.getMainLooper()).postDelayed({
-                                    highlightMonasterio = Color.Transparent
-                                    navController.navigate("detalle_monasterio")
+                                    activeHighlight = null
+                                    navController.navigate(figura.destino)
                                 }, 200)
                             }
 
-                            // --- Tocar IGLESIA ---
-                            isPointInPath(x, y, PlanoData.iglesia.path) -> {
-                                activePath = PlanoData.iglesia.path
-                                highlightIglesia = Color.Yellow.copy(alpha = 0.5f)
-                                highlightMonasterio = Color.Transparent
-
-                                Handler(Looper.getMainLooper()).postDelayed({
-                                    highlightIglesia = Color.Transparent
-                                    navController.navigate("detalle_iglesia")
-                                }, 200)
-                            }
-
-                            // --- Tocar PIN 1 ---
-                            isPointInPinArea(
-                                x, y,
-                                PlanoData.monasterio.pinX,
-                                PlanoData.monasterio.pinY,
-                                PlanoData.monasterio.pinTapRadiusNormalized
-                            ) -> {
+                            // --- PIN TOCADO ---
+                            pin != null -> {
                                 isPinPressed = true
-                                Toast.makeText(context, "Pin 1 pulsado", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(context, "${pin.id} pulsado", Toast.LENGTH_SHORT).show()
+
                                 Handler(Looper.getMainLooper()).postDelayed({
                                     isPinPressed = false
-                                    navController.navigate("detalle_pin")
+                                    navController.navigate(pin.destino)
                                 }, 200)
                             }
 
-                            // --- Tocar PIN 2 ---
-                            isPointInPinArea(
-                                x, y,
-                                PlanoData.pin2.pinX,
-                                PlanoData.pin2.pinY,
-                                PlanoData.pin2.pinTapRadiusNormalized
-                            ) -> {
-                                isPinPressed = true
-                                Toast.makeText(context, "Pin 2 pulsado", Toast.LENGTH_SHORT).show()
-                                Handler(Looper.getMainLooper()).postDelayed({
-                                    isPinPressed = false
-                                    navController.navigate("detalle_pin2")
-                                }, 200)
-                            }
-
-                            else -> Toast.makeText(context, "Fuera del área interactiva", Toast.LENGTH_SHORT).show()
+                            else -> Toast.makeText(
+                                context,
+                                "Fuera del área interactiva",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     }
 
@@ -136,23 +111,19 @@ fun PlanoInteractivoScreen(navController: NavController) {
             },
             update = {
                 it.interactivePath = activePath
-                it.highlightColor = (
-                        if (highlightMonasterio != Color.Transparent)
-                            highlightMonasterio
-                        else highlightIglesia
-                        ).toArgb()
+                it.highlightColor = activeHighlight?.toArgb() ?: Color.Transparent.toArgb()
                 it.invalidate()
             }
         )
 
-        // 🎛️ Controles de zoom y reajuste
+        // 🎛️ Controles flotantes (zoom y reajuste)
         Column(
             modifier = Modifier
                 .align(Alignment.CenterEnd)
                 .padding(end = 16.dp, bottom = 80.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            // 🔍 Aumentar
+            // 🔍 Aumentar zoom
             FloatingActionButton(onClick = {
                 photoViewRef?.let {
                     val newScale = (it.scale + 0.2f).coerceAtMost(it.maximumScale)
@@ -174,7 +145,7 @@ fun PlanoInteractivoScreen(navController: NavController) {
                 }
             }
 
-            // 🔎 Disminuir
+            // 🔎 Disminuir zoom
             FloatingActionButton(onClick = {
                 photoViewRef?.let {
                     val newScale = (it.scale - 0.2f).coerceAtLeast(it.minimumScale)
@@ -196,7 +167,7 @@ fun PlanoInteractivoScreen(navController: NavController) {
                 }
             }
 
-            // ♻️ Reajustar (vuelve al zoom inicial configurado)
+            // ♻️ Reajustar (volver al zoom inicial)
             FloatingActionButton(onClick = {
                 photoViewRef?.apply {
                     setScale(initialZoom, true)

@@ -22,6 +22,7 @@ object VirtualVisitRoutes {
     const val PLANO = "plano"
     const val DETALLE_MONASTERIO = "detalle_monasterio"
     const val DETALLE_IGLESIA = "detalle_iglesia"
+    const val DETALLE_COLEGIO = "detalle-colegio"
     const val DETALLE_PIN = "detalle_pin"
     const val DETALLE_PIN2 = "detalle_pin2"
 }
@@ -48,6 +49,11 @@ fun VirtualVisitScreen(navController: NavHostController? = null) {
         // 🔹 Detalle de la iglesia
         composable(VirtualVisitRoutes.DETALLE_IGLESIA) {
             IglesiaDetalleScreen()
+        }
+
+        // 🔹 Detalle del colegio
+        composable(VirtualVisitRoutes.DETALLE_COLEGIO) {
+            ColegioDetalleScreen()
         }
 
         // 🔹 Detalle del pin interactivo
