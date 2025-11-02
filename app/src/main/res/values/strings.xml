@@ -25,7 +25,8 @@
     <string name="history_1950">1950-2000</string>
     <string name="history_actualidad">Actualidad</string>
     <string name="title_appointment">Reservar Cita</string>
-    <string name="option_appointment">Reservar Cita</string>
+    <string name="option_phone_appointment">Reservar por teléfono</string>
+    <string name="option_online_appointment">Reservar online</string>
     <string name="name_appointment">Nombre y apellidos</string>
     <string name="email_appointment">Correo electrónico</string>
     <string name="date_appointment">Fecha</string>
