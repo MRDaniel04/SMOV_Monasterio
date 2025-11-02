@@ -15,6 +15,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat.startActivity
@@ -49,7 +50,7 @@ fun OpcionesReservaScreen(navController: NavController){
         ){
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Absolute.Left,
+                horizontalArrangement = Arrangement.Center,
                 modifier = Modifier.fillMaxWidth(),
             ){
                 Icon(
@@ -62,7 +63,8 @@ fun OpcionesReservaScreen(navController: NavController){
                     text = stringResource(R.string.option_phone_appointment),
                     fontSize = 22.sp,
                     fontFamily = FontFamily.Serif,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center
                 )
             }
         }
@@ -81,7 +83,7 @@ fun OpcionesReservaScreen(navController: NavController){
         ){
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Absolute.Left,
+                horizontalArrangement = Arrangement.Center,
                 modifier = Modifier.fillMaxWidth(),
             ){
                 Icon(
@@ -94,7 +96,8 @@ fun OpcionesReservaScreen(navController: NavController){
                     text = stringResource(R.string.option_online_appointment),
                     fontSize = 22.sp,
                     fontFamily = FontFamily.Serif,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center
                 )
             }
         }
