@@ -4,6 +4,7 @@ import android.graphics.Matrix
 import com.nextapp.monasterio.R
 import com.nextapp.monasterio.ui.virtualvisit.utils.createPathFromPoints
 import com.nextapp.monasterio.ui.virtualvisit.utils.mergePaths
+import com.nextapp.monasterio.AppRoutes
 
 object PlanoData {
 
@@ -55,10 +56,10 @@ object PlanoData {
                 nombre = "Colegio",
                 path = createTransformedPath(
                     coords = listOf(
-                        0.03f to 0.81f, // Pt1
-                        0.15f to 1.01f, // Pt2
-                        0.26f to 0.95f, // Pt3
-                        0.34f to 0.85f, // PERFECT
+                        0.03f to 0.81f,
+                        0.15f to 1.01f,
+                        0.26f to 0.95f,
+                        0.34f to 0.85f,
                         0.598f to 0.588f,
                         0.87f to 0.32f,
                         0.785f to 0.22f,
@@ -149,9 +150,10 @@ object PlanoData {
     }
 
     // 🔹 Lista de pines
+
     val pines: List<PinData> = listOf(
-        PinData("pin1", 0.40f, 0.65f, 0.03f, R.drawable.pin3, "detalle_pin"),
-        PinData("pin2", 0.70f, 0.45f, 0.05f, R.drawable.pin3, "detalle_pin2")
+        PinData("pin1", 0.40f, 0.65f, 0.03f, R.drawable.pin3, AppRoutes.PIN_DETALLE),
+        PinData("pin2", 0.70f, 0.45f, 0.05f, R.drawable.pin3, AppRoutes.PIN_DETALLE)
     )
 
     // 🔹 Utilidad interna para crear paths transformados

@@ -18,24 +18,26 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import com.nextapp.monasterio.AppRoutes
 import com.nextapp.monasterio.R
 import com.nextapp.monasterio.ui.virtualvisit.components.DebugPhotoView
 import com.nextapp.monasterio.ui.virtualvisit.data.MonasterioData
-import com.nextapp.monasterio.ui.virtualvisit.data.PlanoData
-import com.nextapp.monasterio.ui.virtualvisit.utils.isPointInPath
 import com.nextapp.monasterio.ui.virtualvisit.utils.isPointInPinArea
 
 @Composable
-fun MonasterioDetalleScreen(navController: NavController) {
+fun MonasterioDetalleScreen(
+    navController: NavController,
+    rootNavController: NavHostController? = null // 👈 nuevo parámetro opcional
+) {
     val context = LocalContext.current
 
-    // 🔹 Estado para resaltar figuras y pines
     var activePath by remember { mutableStateOf<android.graphics.Path?>(null) }
     var activeHighlight by remember { mutableStateOf<Color?>(null) }
     var isPinPressed by remember { mutableStateOf(false) }
 
     val planoBackgroundColor = Color(0xFFF5F5F5)
-    val initialZoom = 1.5f // Zoom inicial del plano
+    val initialZoom = 1.5f
 
     Box(
         modifier = Modifier
@@ -44,21 +46,15 @@ fun MonasterioDetalleScreen(navController: NavController) {
     ) {
         var photoViewRef by remember { mutableStateOf<DebugPhotoView?>(null) }
 
-        // 🖼️ Componente principal del plano interactivo
         AndroidView(
             modifier = Modifier.fillMaxSize(),
             factory = { ctx ->
                 DebugPhotoView(ctx).apply {
-                    // Imagen base del plano
                     setImageResource(R.drawable.monasterio_interior)
 
-                    // Aplica zoom inicial tras la carga
-                    post {
-                        setScale(initialZoom, true)
-                    }
+                    post { setScale(initialZoom, true) }
 
-                    // Asigna los pines desde la lista dinámica
-                    pins = PlanoData.pines.map {
+                    pins = MonasterioData.pines.map {
                         DebugPhotoView.PinData(
                             x = it.x,
                             y = it.y,
@@ -67,29 +63,26 @@ fun MonasterioDetalleScreen(navController: NavController) {
                         )
                     }
 
-                    // 🔹 Detección de toques en figuras o pines
                     setOnPhotoTapListener { _, x, y ->
-
                         val pin = MonasterioData.pines.find {
                             isPointInPinArea(x, y, it.x, it.y, it.tapRadius)
                         }
 
-                        when {
-                            
-                            // --- PIN TOCADO ---
-                            pin != null -> {
-                                isPinPressed = true
-                                Toast.makeText(context, "${pin.id} pulsado", Toast.LENGTH_SHORT)
-                                    .show()
+                        if (pin != null) {
+                            isPinPressed = true
+                            Toast.makeText(context, "${pin.id} pulsado", Toast.LENGTH_SHORT).show()
 
-                                Handler(Looper.getMainLooper()).postDelayed({
-                                    isPinPressed = false
-                                    navController.navigate(pin.destino)
-                                }, 200)
-                            }
-
-                            // --- NADA TOCADO ---
-                            else -> Toast.makeText(
+                            Handler(Looper.getMainLooper()).postDelayed({
+                                isPinPressed = false
+                                // 👇 Navegación al NavController principal
+                                if (rootNavController != null) {
+                                    rootNavController.navigate(AppRoutes.PIN_DETALLE)
+                                } else {
+                                    Toast.makeText(context, "No se pudo navegar al detalle del pin", Toast.LENGTH_SHORT).show()
+                                }
+                            }, 200)
+                        } else {
+                            Toast.makeText(
                                 context,
                                 "Fuera del área interactiva",
                                 Toast.LENGTH_SHORT
@@ -107,58 +100,41 @@ fun MonasterioDetalleScreen(navController: NavController) {
             }
         )
 
-        // 🎛️ Controles flotantes (zoom y reajuste)
+        // 🎛️ Controles flotantes
         Column(
             modifier = Modifier
                 .align(Alignment.CenterEnd)
                 .padding(end = 16.dp, bottom = 80.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            // 🔍 Aumentar zoom
             FloatingActionButton(onClick = {
                 photoViewRef?.let {
                     val newScale = (it.scale + 0.2f).coerceAtMost(it.maximumScale)
                     it.setScale(newScale, true)
                 }
             }) {
-                Box(
-                    modifier = Modifier
-                        .size(48.dp)
-                        .background(Color.White.copy(alpha = 0.7f), shape = CircleShape),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.aumentar_zoom),
-                        contentDescription = "Aumentar",
-                        modifier = Modifier.size(24.dp),
-                        tint = Color.Unspecified
-                    )
-                }
+                Icon(
+                    painter = painterResource(id = R.drawable.aumentar_zoom),
+                    contentDescription = "Aumentar",
+                    modifier = Modifier.size(24.dp),
+                    tint = Color.Unspecified
+                )
             }
 
-            // 🔎 Disminuir zoom
             FloatingActionButton(onClick = {
                 photoViewRef?.let {
                     val newScale = (it.scale - 0.2f).coerceAtLeast(it.minimumScale)
                     it.setScale(newScale, true)
                 }
             }) {
-                Box(
-                    modifier = Modifier
-                        .size(48.dp)
-                        .background(Color.White.copy(alpha = 0.7f), shape = CircleShape),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.disminuir_zoom),
-                        contentDescription = "Disminuir",
-                        modifier = Modifier.size(24.dp),
-                        tint = Color.Unspecified
-                    )
-                }
+                Icon(
+                    painter = painterResource(id = R.drawable.disminuir_zoom),
+                    contentDescription = "Disminuir",
+                    modifier = Modifier.size(24.dp),
+                    tint = Color.Unspecified
+                )
             }
 
-            // ♻️ Reajustar (volver al zoom inicial)
             FloatingActionButton(onClick = {
                 photoViewRef?.apply {
                     setScale(initialZoom, true)
@@ -166,19 +142,12 @@ fun MonasterioDetalleScreen(navController: NavController) {
                     setTranslationY(0f)
                 }
             }) {
-                Box(
-                    modifier = Modifier
-                        .size(48.dp)
-                        .background(Color.White.copy(alpha = 0.7f), shape = CircleShape),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.reajustar),
-                        contentDescription = "Reajustar",
-                        modifier = Modifier.size(24.dp),
-                        tint = Color.Unspecified
-                    )
-                }
+                Icon(
+                    painter = painterResource(id = R.drawable.reajustar),
+                    contentDescription = "Reajustar",
+                    modifier = Modifier.size(24.dp),
+                    tint = Color.Unspecified
+                )
             }
         }
     }

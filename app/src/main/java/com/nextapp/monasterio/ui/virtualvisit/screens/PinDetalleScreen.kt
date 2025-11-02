@@ -29,7 +29,7 @@ import com.nextapp.monasterio.R
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun PinDetalleScreen(navController: NavController) {
+fun PinDetalleScreen() {
     // 🧭 Activar modo inmersivo (oculta barra de estado y navegación)
     val view = LocalView.current
     LaunchedEffect(Unit) {

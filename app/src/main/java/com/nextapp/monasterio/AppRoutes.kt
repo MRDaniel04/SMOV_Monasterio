@@ -15,4 +15,5 @@ object AppRoutes {
     const val RESERVA = "reserva"
     const val CONFIRMACION_RESERVA = "confirmacion_reserva"
     const val VIRTUAL_VISIT = "virtual_visit"
+    const val PIN_DETALLE = "pin_detalle"
 }

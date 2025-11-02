@@ -18,23 +18,28 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.nextapp.monasterio.R
 import com.nextapp.monasterio.ui.virtualvisit.components.DebugPhotoView
 import com.nextapp.monasterio.ui.virtualvisit.data.PlanoData
 import com.nextapp.monasterio.ui.virtualvisit.utils.isPointInPath
 import com.nextapp.monasterio.ui.virtualvisit.utils.isPointInPinArea
+import com.nextapp.monasterio.AppRoutes
+
 
 @Composable
-fun PlanoInteractivoScreen(navController: NavController) {
+fun PlanoInteractivoScreen(
+    navController: NavController,
+    rootNavController: NavHostController? // 👈 ya lo has añadido correctamente
+) {
     val context = LocalContext.current
 
-    // 🔹 Estado para resaltar figuras y pines
     var activePath by remember { mutableStateOf<android.graphics.Path?>(null) }
     var activeHighlight by remember { mutableStateOf<Color?>(null) }
     var isPinPressed by remember { mutableStateOf(false) }
 
     val planoBackgroundColor = Color(0xFFF5F5F5)
-    val initialZoom = 1.5f // Zoom inicial del plano
+    val initialZoom = 1.5f
 
     Box(
         modifier = Modifier
@@ -43,20 +48,14 @@ fun PlanoInteractivoScreen(navController: NavController) {
     ) {
         var photoViewRef by remember { mutableStateOf<DebugPhotoView?>(null) }
 
-        // 🖼️ Componente principal del plano interactivo
         AndroidView(
             modifier = Modifier.fillMaxSize(),
             factory = { ctx ->
                 DebugPhotoView(ctx).apply {
-                    // Imagen base del plano
                     setImageResource(R.drawable.plano_monasterio)
 
-                    // Aplica zoom inicial tras la carga
-                    post {
-                        setScale(initialZoom, true)
-                    }
+                    post { setScale(initialZoom, true) }
 
-                    // Asigna los pines desde la lista dinámica
                     pins = PlanoData.pines.map {
                         DebugPhotoView.PinData(
                             x = it.x,
@@ -66,7 +65,6 @@ fun PlanoInteractivoScreen(navController: NavController) {
                         )
                     }
 
-                    // 🔹 Detección de toques en figuras o pines
                     setOnPhotoTapListener { _, x, y ->
                         val figura = PlanoData.figuras.find { isPointInPath(x, y, it.path) }
                         val pin = PlanoData.pines.find {
@@ -74,15 +72,12 @@ fun PlanoInteractivoScreen(navController: NavController) {
                         }
 
                         when {
-                            // --- FIGURA TOCADA ---
                             figura != null -> {
                                 activePath = figura.path
                                 activeHighlight = Color(figura.colorResaltado)
 
                                 Handler(Looper.getMainLooper()).postDelayed({
                                     activeHighlight = null
-
-                                    // Navegación segura (evita crash si el destino no existe)
                                     figura.destino?.let { destino ->
                                         try {
                                             navController.navigate(destino)
@@ -101,19 +96,22 @@ fun PlanoInteractivoScreen(navController: NavController) {
                                 }, 200)
                             }
 
-                            // --- PIN TOCADO ---
                             pin != null -> {
                                 isPinPressed = true
-                                Toast.makeText(context, "${pin.id} pulsado", Toast.LENGTH_SHORT)
-                                    .show()
+                                Toast.makeText(context, "${pin.id} pulsado", Toast.LENGTH_SHORT).show()
 
                                 Handler(Looper.getMainLooper()).postDelayed({
                                     isPinPressed = false
-                                    navController.navigate(pin.destino)
+                                    // 👇 Navegación al NavController principal
+                                    rootNavController?.navigate(AppRoutes.PIN_DETALLE)
+                                        ?: Toast.makeText(
+                                            context,
+                                            "No se pudo navegar al detalle del pin",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
                                 }, 200)
                             }
 
-                            // --- NADA TOCADO ---
                             else -> Toast.makeText(
                                 context,
                                 "Fuera del área interactiva",

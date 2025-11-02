@@ -22,9 +22,8 @@ import com.nextapp.monasterio.ui.theme.MonasteryRed
 import com.nextapp.monasterio.ui.theme.White
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import com.nextapp.monasterio.ui.screens.VirtualVisitScreen
+import com.nextapp.monasterio.ui.virtualvisit.screens.PinDetalleScreen
 
-// --- 7. El Host de Navegación (El "marco") ---
 @Composable
 fun AppNavigationHost(
     navController: NavHostController,
@@ -41,29 +40,42 @@ fun AppNavigationHost(
         composable(AppRoutes.GALERIA)  { GaleriaScreen() }
         composable(AppRoutes.PERFIL)   { ProfileScreen() }
         composable(AppRoutes.AJUSTES)  { AjustesScreen() }
-        composable(AppRoutes.OPCIONES_RESERVA) {OpcionesReservaScreen(navController = navController)}
-        composable( AppRoutes.RESERVA ) {ReservaScreen(navController = navController)}
+        composable(AppRoutes.OPCIONES_RESERVA) { OpcionesReservaScreen(navController = navController) }
+        composable(AppRoutes.RESERVA) { ReservaScreen(navController = navController) }
         composable(
-            route= AppRoutes.CONFIRMACION_RESERVA + "/{nombre}/{email}/{fecha}/{hora}",
+            route = AppRoutes.CONFIRMACION_RESERVA + "/{nombre}/{email}/{fecha}/{hora}",
             arguments = listOf(
                 navArgument("nombre") { type = NavType.StringType },
                 navArgument("email") { type = NavType.StringType },
                 navArgument("fecha") { type = NavType.StringType },
                 navArgument("hora") { type = NavType.StringType }
-            ),
-            content={ backStackEntry ->
-                val nombre = backStackEntry.arguments?.getString("nombre") ?: ""
-                val email = backStackEntry.arguments?.getString("email") ?: ""
-                val fecha = backStackEntry.arguments?.getString("fecha") ?: ""
-                val hora = backStackEntry.arguments?.getString("hora") ?: ""
-                ConfirmacionReservaScreen(navController = navController,nombre=nombre,email=email,fecha=fecha,hora=hora)
-            }
-        )
-        composable(AppRoutes.VIRTUAL_VISIT) { VirtualVisitScreen() }
+            )
+        ) { backStackEntry ->
+            val nombre = backStackEntry.arguments?.getString("nombre") ?: ""
+            val email = backStackEntry.arguments?.getString("email") ?: ""
+            val fecha = backStackEntry.arguments?.getString("fecha") ?: ""
+            val hora = backStackEntry.arguments?.getString("hora") ?: ""
+            ConfirmacionReservaScreen(
+                navController = navController,
+                nombre = nombre,
+                email = email,
+                fecha = fecha,
+                hora = hora
+            )
+        }
+
+        // ✅ Corrección aquí: pasamos el navController principal
+        composable(AppRoutes.VIRTUAL_VISIT) {
+            VirtualVisitScreen(navController = navController)
+        }
+
+        // 👇 Ruta inmersiva
+        composable(AppRoutes.PIN_DETALLE) {
+            PinDetalleScreen()
+        }
     }
 }
 
-// --- 8. El contenido del menú lateral (actualizado) ---
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppDrawerContent(
@@ -71,7 +83,6 @@ fun AppDrawerContent(
     scope: CoroutineScope,
     drawerState: DrawerState
 ) {
-    // Función helper para navegar y cerrar el menú
     val navigateTo: (String) -> Unit = { route ->
         navController.navigate(route) {
             popUpTo(navController.graph.findStartDestination().id)
@@ -126,7 +137,6 @@ fun AppDrawerContent(
     }
 }
 
-// Esta es la plantilla para cada fila del menú
 @Composable
 fun DrawerMenuItem(
     text: String,
