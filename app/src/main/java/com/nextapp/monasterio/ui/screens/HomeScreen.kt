@@ -17,6 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.nextapp.monasterio.AppRoutes
@@ -48,10 +49,13 @@ fun HomeScreenContent(navController:NavController, modifier: Modifier = Modifier
         Image(
             painter = painterResource(id = R.drawable.huelgas_inicio),
             contentDescription = "Escudo",
+            contentScale = ContentScale.FillWidth,
             modifier = Modifier
-                .size(395.dp)
                 .constrainAs(crest) {
                     top.linkTo(parent.top, margin = 24.dp)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                    width = Dimension.fillToConstraints
                 }
         )
         Button(

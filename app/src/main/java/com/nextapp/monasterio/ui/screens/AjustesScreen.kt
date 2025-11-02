@@ -1,6 +1,7 @@
 package com.nextapp.monasterio.ui.screens
 
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,6 +19,9 @@ import com.nextapp.monasterio.LanguageHelper
 import com.nextapp.monasterio.R
 import androidx.compose.ui.res.stringResource
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.layout.Row
+import androidx.compose.ui.text.style.TextAlign
+import com.nextapp.monasterio.utils.FontSize
 
 @Composable
 fun AjustesScreen() {
@@ -62,6 +66,54 @@ fun AjustesScreen() {
             context.recreate()
         }) {
             Text("Deutsch")
+        }
+        Spacer(modifier = Modifier.height(48.dp))
+        Text(
+            text = stringResource(R.string.font_size_select),
+            style = MaterialTheme.typography.headlineMedium
+        )
+        Spacer(modifier = Modifier.height(32.dp))
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ){
+            Button(
+                modifier = Modifier.weight(1f),
+                onClick = {
+                    FontSize.guardarFontScale(context,0.85f)
+                    context.recreate()
+                }
+            ) {
+                Text(
+                    text = stringResource(R.string.font_small),
+                    textAlign = TextAlign.Center
+                )
+            }
+            Spacer(modifier = Modifier.weight(0.1f))
+            Button(
+                modifier = Modifier.weight(1f),
+                onClick = {
+                    FontSize.guardarFontScale(context,1.0f)
+                    context.recreate()
+                }
+            ) {
+                Text(
+                    text = stringResource(R.string.font_normal),
+                    textAlign = TextAlign.Center
+                )
+            }
+            Spacer(modifier = Modifier.weight(0.1f))
+            Button(
+                modifier = Modifier.weight(1f),
+                onClick = {
+                    FontSize.guardarFontScale(context,1.25f)
+                    context.recreate()
+                }
+            ) {
+                Text(
+                    text = stringResource(R.string.font_big),
+                    textAlign = TextAlign.Center
+                )
+            }
         }
     }
 }
