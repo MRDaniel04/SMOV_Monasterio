@@ -18,7 +18,10 @@ import com.nextapp.monasterio.ui.theme.*
 import kotlinx.coroutines.launch
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Density
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.nextapp.monasterio.utils.FontSize
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,8 +29,16 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         LanguageHelper.loadLocale(this)
         setContent {
-            Smov_monasterioTheme {
-                MonasteryAppScreen()
+            val appFontScale = FontSize.devolverFontScale(this)
+            val currentDensity = LocalDensity.current
+            val newDensity= Density(
+                density= currentDensity.density,
+                fontScale = currentDensity.fontScale*appFontScale
+            )
+            CompositionLocalProvider(LocalDensity provides newDensity) {
+                Smov_monasterioTheme {
+                    MonasteryAppScreen()
+                }
             }
         }
     }
