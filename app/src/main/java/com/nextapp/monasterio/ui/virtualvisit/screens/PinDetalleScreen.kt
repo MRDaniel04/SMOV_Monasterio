@@ -4,6 +4,8 @@ import android.app.Activity
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -21,6 +23,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
@@ -29,15 +32,16 @@ import com.nextapp.monasterio.R
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun PinDetalleScreen() {
-    // 🧭 Activar modo inmersivo (oculta barra de estado y navegación)
+fun PinDetalleScreen(navController: NavController? = null) {
     val view = LocalView.current
     LaunchedEffect(Unit) {
         val window = (view.context as? Activity)?.window
         window?.let { WindowCompat.setDecorFitsSystemWindows(it, false) }
     }
 
+    // 🎨 Color temático
     val categoriaColor = Color(0xFF4CAF50)
+
     val titulo = "Retablo del nacimiento"
     val categoria = "Pintura y arte visual"
     val descripcion = """
@@ -46,47 +50,68 @@ fun PinDetalleScreen() {
         Junto al Niño hay un ángel de rodillas y más figuras. 
         La escena está tallada con gran detalle y expresividad, destacando por su realismo y dinamismo.
     """.trimIndent()
+
     val imagenes = listOf(
-        R.drawable.huelgas_inicio,
-        R.drawable.escudo,
-        R.drawable.plano_monasterio
+        R.drawable.claustro1,
+        R.drawable.claustro2,
+        R.drawable.claustro3
     )
 
     var expanded by remember { mutableStateOf(false) }
-    val scrollState = rememberScrollState()
     val pagerState = rememberPagerState(pageCount = { imagenes.size })
+    val scrollState = rememberScrollState()
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black) // Fondo oscuro para efecto inmersivo
+            .background(Color.White)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.White)
-                .verticalScroll(scrollState)
-                .padding(16.dp)
+                .padding(horizontal = 16.dp)
+                .padding(bottom = 80.dp)
+                .verticalScroll(scrollState),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Spacer(modifier = Modifier.height(8.dp))
 
-            Spacer(modifier = Modifier.height(16.dp))
-            // 🔹 Título (mover aquí)
+            // 🔙 Imagen como botón de retroceso
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                contentAlignment = Alignment.CenterStart
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.arrow_down),
+                    contentDescription = "Volver",
+                    modifier = Modifier
+                        .size(28.dp)
+                        .clickable { navController?.popBackStack() }
+                )
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // 🏛️ Título
             Text(
                 text = titulo,
                 fontSize = 26.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.Black
+                color = Color.Black,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
             )
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
-            // 🔹 Carrusel de imágenes
+            // 🖼️ Carrusel con borde del color del tema
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(300.dp)
+                    .height(250.dp)
                     .clip(RoundedCornerShape(16.dp))
-
+                    .border(3.dp, categoriaColor, RoundedCornerShape(16.dp))
             ) {
                 HorizontalPager(state = pagerState) { page ->
                     Image(
@@ -109,7 +134,7 @@ fun PinDetalleScreen() {
                                 .padding(3.dp)
                                 .size(if (selected) 8.dp else 6.dp)
                                 .background(
-                                    if (selected) Color.White else Color.White.copy(alpha = 0.4f),
+                                    if (selected) categoriaColor else categoriaColor.copy(alpha = 0.4f),
                                     shape = CircleShape
                                 )
                         )
@@ -117,9 +142,9 @@ fun PinDetalleScreen() {
                 }
             }
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
-            // 🔹 Categoría
+            // 🎨 Categoría
             Text(
                 text = categoria,
                 color = categoriaColor,
@@ -129,12 +154,13 @@ fun PinDetalleScreen() {
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // 🔹 Descripción
+            // 📜 Descripción
             val textoMostrado = if (expanded) descripcion else descripcion.take(250) + "..."
             Text(
                 text = textoMostrado,
                 fontSize = 16.sp,
-                color = Color.DarkGray
+                color = Color.DarkGray,
+                lineHeight = 22.sp
             )
 
             TextButton(onClick = { expanded = !expanded }) {
@@ -144,22 +170,31 @@ fun PinDetalleScreen() {
                     fontWeight = FontWeight.Medium
                 )
             }
+        }
 
-            Spacer(modifier = Modifier.height(24.dp))
-
+        // 🟩 Botón “Ver 360°” fijo al fondo
+        Box(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth()
+                .background(Color.White)
+                .padding(horizontal = 16.dp, vertical = 12.dp)
+        ) {
             Button(
-                onClick = { /* Aquí puedes abrir vista 360° si la tienes */ },
+                onClick = { /* Acción 360° */ },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = categoriaColor),
                 shape = RoundedCornerShape(12.dp)
             ) {
-                Text("Ver 360°", color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                Text(
+                    text = "Ver 360°",
+                    color = Color.White,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+                )
             }
-
-            Spacer(modifier = Modifier.height(20.dp))
         }
-
     }
 }
