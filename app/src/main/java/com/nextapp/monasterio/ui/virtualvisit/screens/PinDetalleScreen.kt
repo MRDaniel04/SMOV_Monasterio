@@ -1,18 +1,12 @@
 package com.nextapp.monasterio.ui.virtualvisit.screens
 
 import android.app.Activity
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -27,19 +21,19 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
-import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.nextapp.monasterio.R
+import androidx.compose.foundation.layout.statusBarsPadding
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun PinDetalleScreen(navController: NavController? = null) {
+fun PinDetalleScreen(navController: NavHostController) {
     val view = LocalView.current
     LaunchedEffect(Unit) {
         val window = (view.context as? Activity)?.window
         window?.let { WindowCompat.setDecorFitsSystemWindows(it, false) }
     }
 
-    // 🎨 Color temático
     val categoriaColor = Color(0xFF4CAF50)
 
     val titulo = "Retablo del nacimiento"
@@ -74,24 +68,23 @@ fun PinDetalleScreen(navController: NavController? = null) {
                 .verticalScroll(scrollState),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = Modifier.height(8.dp))
-
-            // 🔙 Imagen como botón de retroceso
+            // 🔙 Botón de retroceso con padding para evitar la barra de estado
             Box(
                 modifier = Modifier
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .statusBarsPadding(),
                 contentAlignment = Alignment.CenterStart
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.arrow_down),
+                    painter = painterResource(id = R.drawable.arrow_back),
                     contentDescription = "Volver",
                     modifier = Modifier
                         .size(28.dp)
-                        .clickable { navController?.popBackStack() }
+                        .clickable { navController.popBackStack() }
                 )
             }
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             // 🏛️ Título
             Text(
@@ -105,7 +98,7 @@ fun PinDetalleScreen(navController: NavController? = null) {
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            // 🖼️ Carrusel con borde del color del tema
+            // 🖼️ Carrusel
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -198,3 +191,4 @@ fun PinDetalleScreen(navController: NavController? = null) {
         }
     }
 }
+

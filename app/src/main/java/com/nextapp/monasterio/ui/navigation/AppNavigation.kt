@@ -71,7 +71,8 @@ fun AppNavigationHost(
 
         // 👇 Ruta inmersiva
         composable(AppRoutes.PIN_DETALLE) {
-            PinDetalleScreen()
+            PinDetalleScreen(navController = navController)
+
         }
     }
 }
