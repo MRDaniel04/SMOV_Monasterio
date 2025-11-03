@@ -69,49 +69,48 @@ fun AjustesScreen() {
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Button(
-                modifier = Modifier.weight(1f),
-                onClick = {
-                    FontSize.guardarFontScale(activity, 0.85f)
-                    activity.recreate()
-                }
-            ) {
-                Text(
-                    text = stringResource(R.string.font_small),
-                    textAlign = TextAlign.Center
-                )
+
+        Button(
+            modifier = Modifier.weight(1f),
+            onClick = {
+                FontSize.guardarFontScale(activity, 0.85f)
+                activity.recreate()
             }
+        ) {
+            Text(
+                text = stringResource(R.string.font_small),
+                textAlign = TextAlign.Center
+            )
+        }
 
-            Spacer(modifier = Modifier.weight(0.1f))
+        Spacer(modifier = Modifier.weight(0.1f))
 
-            Button(
-                modifier = Modifier.weight(1f),
-                onClick = {
-                    FontSize.guardarFontScale(activity, 1.0f)
-                    activity.recreate()
-                }
-            ) {
-                Text(
-                    text = stringResource(R.string.font_normal),
-                    textAlign = TextAlign.Center
-                )
+        Button(
+            modifier = Modifier.weight(1f),
+            onClick = {
+                FontSize.guardarFontScale(activity, 1.0f)
+                activity.recreate()
             }
+        ) {
+            Text(
+                text = stringResource(R.string.font_normal),
+                textAlign = TextAlign.Center
+            )
+        }
 
-            Spacer(modifier = Modifier.weight(0.1f))
+        Spacer(modifier = Modifier.weight(0.1f))
 
-            Button(
-                modifier = Modifier.weight(1f),
-                onClick = {
-                    FontSize.guardarFontScale(activity, 1.25f)
-                    activity.recreate()
-                }
-            ) {
-                Text(
-                    text = stringResource(R.string.font_big),
-                    textAlign = TextAlign.Center
-                )
+        Button(
+            modifier = Modifier.weight(1f),
+            onClick = {
+                FontSize.guardarFontScale(activity, 1.25f)
+                activity.recreate()
             }
+        ) {
+            Text(
+                text = stringResource(R.string.font_big),
+                textAlign = TextAlign.Center
+            )
         }
     }
 }
