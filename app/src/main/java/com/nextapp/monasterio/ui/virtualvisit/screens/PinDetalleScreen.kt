@@ -86,7 +86,7 @@ fun PinDetalleScreen() {
                     .fillMaxWidth()
                     .height(300.dp)
                     .clip(RoundedCornerShape(16.dp))
-                    
+
             ) {
                 HorizontalPager(state = pagerState) { page ->
                     Image(

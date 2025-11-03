@@ -125,7 +125,7 @@ object PlanoData {
                 destino = "detalle_arco_mudejar"
             ),
 
-                    // 🔹 FIGURA: CLAUSTRO
+            // 🔹 FIGURA: CLAUSTRO
             FiguraData(
                 id = "claustro",
                 nombre = "Claustro",
