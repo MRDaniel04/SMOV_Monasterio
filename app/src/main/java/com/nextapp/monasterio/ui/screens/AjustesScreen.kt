@@ -71,7 +71,6 @@ fun AjustesScreen() {
 
 
         Button(
-            modifier = Modifier.weight(1f),
             onClick = {
                 FontSize.guardarFontScale(activity, 0.85f)
                 activity.recreate()
@@ -83,10 +82,9 @@ fun AjustesScreen() {
             )
         }
 
-        Spacer(modifier = Modifier.weight(0.1f))
+        Spacer(modifier = Modifier.height(16.dp))
 
         Button(
-            modifier = Modifier.weight(1f),
             onClick = {
                 FontSize.guardarFontScale(activity, 1.0f)
                 activity.recreate()
@@ -98,10 +96,9 @@ fun AjustesScreen() {
             )
         }
 
-        Spacer(modifier = Modifier.weight(0.1f))
+        Spacer(modifier = Modifier.height(16.dp))
 
         Button(
-            modifier = Modifier.weight(1f),
             onClick = {
                 FontSize.guardarFontScale(activity, 1.25f)
                 activity.recreate()
