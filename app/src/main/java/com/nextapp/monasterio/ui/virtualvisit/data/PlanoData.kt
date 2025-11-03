@@ -152,8 +152,7 @@ object PlanoData {
     // 🔹 Lista de pines
 
     val pines: List<PinData> = listOf(
-        PinData("pin1", 0.40f, 0.65f, 0.03f, R.drawable.pin3, AppRoutes.PIN_DETALLE),
-        PinData("pin2", 0.70f, 0.45f, 0.05f, R.drawable.pin3, AppRoutes.PIN_DETALLE)
+
     )
 
     // 🔹 Utilidad interna para crear paths transformados

@@ -46,9 +46,8 @@ fun PinDetalleScreen(navController: NavHostController) {
     """.trimIndent()
 
     val imagenes = listOf(
-        R.drawable.claustro1,
-        R.drawable.claustro2,
-        R.drawable.claustro3
+        R.drawable.retablo1,
+        R.drawable.retablo2,
     )
 
     var expanded by remember { mutableStateOf(false) }

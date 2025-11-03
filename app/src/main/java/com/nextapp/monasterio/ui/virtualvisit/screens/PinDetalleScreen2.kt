@@ -21,7 +21,7 @@ fun PinDetalleScreen2(navController: NavHostController) {
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = "DETALLE DEL PIN 2",
+            text = "DETALLE DEL SEPULCRO",
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
             color = Color(0xFF1565C0)
