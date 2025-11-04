@@ -27,7 +27,7 @@ object PlanoData {
                     offsetY = 0.16f,
                     scale = 1.0f
                 ),
-                colorResaltado = 0x80FFFF00.toInt(), // amarillo semitransparente
+                colorResaltado = 0x80FF0000.toInt(), // amarillo semitransparente
                 destino = "detalle_monasterio"
             ),
             FiguraData(
@@ -46,7 +46,7 @@ object PlanoData {
                     offsetY = 0.63f,
                     scale = 0.2f
                 ),
-                colorResaltado = 0x80FFFF00.toInt(),
+                colorResaltado = 0x800000FF.toInt(),
                 destino = "detalle_iglesia"
             ),
 

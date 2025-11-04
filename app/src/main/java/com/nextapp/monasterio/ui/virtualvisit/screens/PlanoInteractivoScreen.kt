@@ -5,6 +5,13 @@ import android.os.Looper
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.animation.*
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -41,6 +48,16 @@ fun PlanoInteractivoScreen(
     val planoBackgroundColor = Color(0xFFF5F5F5)
     val initialZoom = 1.5f
 
+    val infiniteTransition = rememberInfiniteTransition(label="BlinkTransition")
+    val blinkalpha by infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = 1.0f,
+        animationSpec = infiniteRepeatable(
+            animation=tween(durationMillis = 1000, easing = LinearEasing),
+            repeatMode = RepeatMode.Reverse
+        )
+    )
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -62,6 +79,13 @@ fun PlanoInteractivoScreen(
                             y = it.y,
                             iconId = it.iconRes,
                             isPressed = isPinPressed
+                        )
+                    }
+
+                    staticZones = PlanoData.figuras.map{figura->
+                        DebugPhotoView.StaticZoneData(
+                            path = figura.path,
+                            color=figura.colorResaltado
                         )
                     }
 
@@ -124,6 +148,7 @@ fun PlanoInteractivoScreen(
                 }
             },
             update = {
+                it.blinkingAlpha = blinkalpha
                 it.interactivePath = activePath
                 it.highlightColor = activeHighlight?.toArgb() ?: Color.Transparent.toArgb()
                 it.invalidate()

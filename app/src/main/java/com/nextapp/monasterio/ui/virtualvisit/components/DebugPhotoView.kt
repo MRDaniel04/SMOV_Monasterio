@@ -15,10 +15,22 @@ class DebugPhotoView @JvmOverloads constructor(
     var highlightColor: Int = Color.TRANSPARENT
     var interactivePath: Path? = null
 
+    data class StaticZoneData(val path: Path, val color: Int)
+    var staticZones: List<StaticZoneData> = emptyList()
+
+    var blinkingAlpha:Float=1.0f
+
+
     data class PinData(val x: Float, val y: Float, val iconId: Int, val isPressed: Boolean)
     var pins: List<PinData> = emptyList()
 
     private val highlightPaint = Paint().apply {
+        style = Paint.Style.STROKE
+        strokeWidth = 10f
+        isAntiAlias = true
+    }
+
+    private val zonePaint = Paint().apply{
         style = Paint.Style.STROKE
         strokeWidth = 6f
         isAntiAlias = true
@@ -36,13 +48,31 @@ class DebugPhotoView @JvmOverloads constructor(
         val transX = matrixValues[Matrix.MTRANS_X]
         val transY = matrixValues[Matrix.MTRANS_Y]
 
+        val drawMatrix = Matrix().apply {
+            setScale(scaleX * d.intrinsicWidth, scaleY * d.intrinsicHeight)
+            postTranslate(transX, transY)
+        }
+
+        if (staticZones.isNotEmpty()) {
+            staticZones.forEach { zone ->
+                val baseColor = zone.color
+                val baseRed = Color.red(baseColor)
+                val baseGreen = Color.green(baseColor)
+                val baseBlue = Color.blue(baseColor)
+                val baseAlpha = Color.alpha(baseColor)
+
+                val newAlpha = (baseAlpha * blinkingAlpha).toInt()
+
+                zonePaint.color = Color.argb(newAlpha, baseRed, baseGreen, baseBlue)
+                val pathCopy = Path(zone.path)
+                pathCopy.transform(drawMatrix)
+                canvas.drawPath(pathCopy, zonePaint)
+            }
+        }
+
         interactivePath?.let { path ->
             if (highlightColor != Color.TRANSPARENT) {
                 val pathCopy = Path(path)
-                val drawMatrix = Matrix().apply {
-                    setScale(scaleX * d.intrinsicWidth, scaleY * d.intrinsicHeight)
-                    postTranslate(transX, transY)
-                }
                 pathCopy.transform(drawMatrix)
                 highlightPaint.color = highlightColor
                 canvas.drawPath(pathCopy, highlightPaint)
