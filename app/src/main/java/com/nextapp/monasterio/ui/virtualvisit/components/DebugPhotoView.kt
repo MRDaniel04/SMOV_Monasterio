@@ -26,13 +26,13 @@ class DebugPhotoView @JvmOverloads constructor(
 
     private val highlightPaint = Paint().apply {
         style = Paint.Style.STROKE
-        strokeWidth = 10f
+        strokeWidth = 15f
         isAntiAlias = true
     }
 
     private val zonePaint = Paint().apply{
         style = Paint.Style.STROKE
-        strokeWidth = 6f
+        strokeWidth = 20f
         isAntiAlias = true
     }
 

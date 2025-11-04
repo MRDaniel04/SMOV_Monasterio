@@ -72,20 +72,6 @@ fun AjustesScreen() {
 
         Button(
             onClick = {
-                FontSize.guardarFontScale(activity, 0.85f)
-                activity.recreate()
-            }
-        ) {
-            Text(
-                text = stringResource(R.string.font_small),
-                textAlign = TextAlign.Center
-            )
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Button(
-            onClick = {
                 FontSize.guardarFontScale(activity, 1.0f)
                 activity.recreate()
             }
@@ -100,12 +86,26 @@ fun AjustesScreen() {
 
         Button(
             onClick = {
-                FontSize.guardarFontScale(activity, 1.25f)
+                FontSize.guardarFontScale(activity, 1.3f)
                 activity.recreate()
             }
         ) {
             Text(
                 text = stringResource(R.string.font_big),
+                textAlign = TextAlign.Center
+            )
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Button(
+            onClick = {
+                FontSize.guardarFontScale(activity, 1.6f)
+                activity.recreate()
+            }
+        ) {
+            Text(
+                text = stringResource(R.string.font_extrabig),
                 textAlign = TextAlign.Center
             )
         }

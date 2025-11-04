@@ -74,7 +74,7 @@ dependencies {
     implementation("com.google.android.material:material:1.10.0")
 
     // Plano Interactivo
-    implementation("com.github.chrisbanes:PhotoView:2.3.0")
+    implementation("io.github.chrisbanes:PhotoView:2.3.0")
 
 
 }

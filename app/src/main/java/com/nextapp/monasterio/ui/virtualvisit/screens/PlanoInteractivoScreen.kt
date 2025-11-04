@@ -53,7 +53,7 @@ fun PlanoInteractivoScreen(
         initialValue = 0f,
         targetValue = 1.0f,
         animationSpec = infiniteRepeatable(
-            animation=tween(durationMillis = 1000, easing = LinearEasing),
+            animation=tween(durationMillis = 1500, easing = LinearEasing),
             repeatMode = RepeatMode.Reverse
         )
     )

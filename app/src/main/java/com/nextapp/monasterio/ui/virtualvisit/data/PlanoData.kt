@@ -27,7 +27,7 @@ object PlanoData {
                     offsetY = 0.16f,
                     scale = 1.0f
                 ),
-                colorResaltado = 0x80FF0000.toInt(), // amarillo semitransparente
+                colorResaltado = 0x80FF0000.toInt(), //rojo
                 destino = "detalle_monasterio"
             ),
             FiguraData(
@@ -46,7 +46,7 @@ object PlanoData {
                     offsetY = 0.63f,
                     scale = 0.2f
                 ),
-                colorResaltado = 0x800000FF.toInt(),
+                colorResaltado = 0x8003A9F4.toInt(),
                 destino = "detalle_iglesia"
             ),
 
@@ -88,7 +88,7 @@ object PlanoData {
                     offsetY = 0.38f,  // estimado: ajustar visualmente
                     scale = 0.3f     // proporcional al tamaño 250x384 sobre plano
                 ),
-                colorResaltado = 0x804CAF50.toInt(), // verde semitransparente
+                colorResaltado = 0x804A148C.toInt(), // morado semitransparente
                 destino = "detalle_colegio"
             ),
 
@@ -121,7 +121,7 @@ object PlanoData {
                         scale = 0.06f
                     )
                 ),
-                colorResaltado = 0x809C27B0.toInt(),
+                colorResaltado = 0x80FFFF00.toInt(),
                 destino = "detalle_arco_mudejar"
             ),
 
@@ -141,7 +141,7 @@ object PlanoData {
                     offsetY = 0.335f,   // posición Y estimada en el plano (ajustar si no queda bien)
                     scale = 0.15f       // escala estimada (ajustar para que el polygon se visualice con el tamaño correcto)
                 ),
-                colorResaltado = 0x80FFEB3B.toInt(), // amarillo/ámbar semitransparente (puedes cambiar)
+                colorResaltado = 0x8000FF50.toInt(), // amarillo/ámbar semitransparente (puedes cambiar)
                 destino = "detalle_claustro"
             )
 
