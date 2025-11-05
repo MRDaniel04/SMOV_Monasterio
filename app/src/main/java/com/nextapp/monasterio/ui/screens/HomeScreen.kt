@@ -1,5 +1,7 @@
 package com.nextapp.monasterio.ui.screens
 
+import android.app.Activity
+import android.content.pm.ActivityInfo
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -8,6 +10,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -29,6 +32,16 @@ import com.nextapp.monasterio.ui.theme.MonasteryOrange
 @Composable
 fun HomeScreenContent(navController:NavController, modifier: Modifier = Modifier) {
     val context = LocalContext.current
+
+    val activity = (context as? Activity)
+
+    DisposableEffect(Unit) {
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+
+        onDispose {
+
+        }
+    }
 
     ConstraintLayout(modifier = modifier.fillMaxSize()) {
         val (background, crest, title, btnVisit, btnBook) = createRefs()
@@ -112,11 +125,4 @@ fun HomeScreenContent(navController:NavController, modifier: Modifier = Modifier
             )
         }
     }
-}
-
-@Preview
-@Composable
-fun PreviewHomeScreen(){
-    val fakeNavController = rememberNavController()
-    HomeScreenContent(navController=fakeNavController)
 }

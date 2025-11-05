@@ -1,12 +1,15 @@
 package com.nextapp.monasterio.ui.screens
 
+import android.app.Activity
 import android.net.Uri
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.Modifier
@@ -26,8 +29,18 @@ import com.nextapp.monasterio.R
 @Composable
 fun OpcionesReservaScreen(navController: NavController){
 
-    val contexto= LocalContext.current
+    val context= LocalContext.current
     val numerodetelefono="+34983291395"
+
+    val activity = (context as? Activity)
+
+    DisposableEffect(Unit) {
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+
+        onDispose {
+
+        }
+    }
 
     Column(
         modifier = Modifier.fillMaxSize().padding(horizontal = 24.dp),
@@ -38,7 +51,7 @@ fun OpcionesReservaScreen(navController: NavController){
             onClick = {
                 val intent = Intent(Intent.ACTION_DIAL)
                 intent.data = Uri.parse("tel:$numerodetelefono")
-                contexto.startActivity(intent)
+                context.startActivity(intent)
             },
             enabled = true,
             shape = RoundedCornerShape(16.dp),

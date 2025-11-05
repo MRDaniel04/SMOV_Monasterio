@@ -1,10 +1,15 @@
 package com.nextapp.monasterio.ui.screens
 
+import android.app.Activity
+import android.content.pm.ActivityInfo
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
@@ -31,10 +36,19 @@ fun ConfirmacionReservaScreen(
     fecha: String,
     hora:String
 ){
-    val contexto= LocalContext.current
+    val context= LocalContext.current
     LaunchedEffect(key1=true) {
         delay(500L)
-        contexto.crearCorreo(nombre,email,fecha,hora)
+        context.crearCorreo(nombre,email,fecha,hora)
+    }
+
+    val activity = (context as? Activity)
+
+    DisposableEffect(Unit) {
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        onDispose {
+
+        }
     }
     Box(
         modifier = Modifier.fillMaxSize()
@@ -50,6 +64,7 @@ fun ConfirmacionReservaScreen(
         )
         Column(
             modifier = Modifier.fillMaxSize().padding(horizontal = 32.dp),
+
             horizontalAlignment = Alignment.CenterHorizontally,
         ){
             Spacer(modifier = Modifier.weight(0.35f))

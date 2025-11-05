@@ -1,7 +1,9 @@
 package com.nextapp.monasterio.ui.screens
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Arrangement
@@ -29,6 +31,9 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 import android.util.Patterns
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalContext
@@ -39,8 +44,17 @@ import kotlinx.coroutines.launch
 @Composable
 fun ReservaScreen(navController: NavController){
 
-    val contexto=LocalContext.current
-    
+    val context=LocalContext.current
+
+    val activity = (context as? Activity)
+
+    DisposableEffect(Unit) {
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+        onDispose {
+
+        }
+    }
+
     var nombre by rememberSaveable { mutableStateOf("") }
     var email by rememberSaveable { mutableStateOf("") }
     var fecha by rememberSaveable { mutableStateOf("") }
@@ -87,6 +101,7 @@ fun ReservaScreen(navController: NavController){
     Column (
         modifier = Modifier
             .fillMaxSize()
+            .verticalScroll(rememberScrollState())
             .padding(horizontal = 24.dp),
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.Center
@@ -238,24 +253,24 @@ fun ReservaScreen(navController: NavController){
                 val nombreRegex = Regex("^[\\p{L} ]+\$")
                 val contieneDigitosValidos = nombreRegex.matches(nombreLimpio)
                 if(nombreLimpio.isEmpty()){
-                    nombreError = contexto.getString(R.string.compulsory_name)
+                    nombreError = context.getString(R.string.compulsory_name)
                 } else if (!contieneDigitosValidos){
-                    nombreError = contexto.getString(R.string.valid_name)
+                    nombreError = context.getString(R.string.valid_name)
                 }
 
                 val emailLimpio = email.trim()
                 if(emailLimpio.isEmpty()){
-                    emailError = contexto.getString(R.string.compulsory_email)
+                    emailError = context.getString(R.string.compulsory_email)
                 } else if(!Patterns.EMAIL_ADDRESS.matcher(emailLimpio).matches()){
-                    emailError = contexto.getString(R.string.valid_email)
+                    emailError = context.getString(R.string.valid_email)
                 }
 
                 if(fecha==""){
-                    fechaError = contexto.getString(R.string.date_no_selected)
+                    fechaError = context.getString(R.string.date_no_selected)
                 }
 
                 if (hora==""){
-                    horaError = contexto.getString(R.string.hour_no_selected)
+                    horaError = context.getString(R.string.hour_no_selected)
                 }
 
                 if (emailError == null && nombreError == null && fecha!="" && hora!="") {

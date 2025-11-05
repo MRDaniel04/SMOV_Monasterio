@@ -62,6 +62,11 @@ fun MonasteryAppScreen() {
     val immersiveRoutes = listOf(AppRoutes.PIN_DETALLE)
     val isImmersive = currentRoute in immersiveRoutes
 
+    val gesturesEnabled = when(currentRoute){
+        AppRoutes.VIRTUAL_VISIT -> false
+        else -> true
+    }
+
     // ✅ Actualizar título
     LaunchedEffect(navController) {
         navController.currentBackStackEntryFlow.collect { backStackEntry ->
@@ -97,7 +102,8 @@ fun MonasteryAppScreen() {
                     scope = scope,
                     drawerState = drawerState
                 )
-            }
+            },
+            gesturesEnabled = gesturesEnabled
         ) {
             Scaffold(
                 topBar = {

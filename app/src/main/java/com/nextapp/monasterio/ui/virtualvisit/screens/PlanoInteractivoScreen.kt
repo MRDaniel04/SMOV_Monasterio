@@ -1,7 +1,12 @@
 package com.nextapp.monasterio.ui.virtualvisit.screens
 
+import android.app.Activity
+import android.content.pm.ActivityInfo
 import android.os.Handler
 import android.os.Looper
+import android.view.ViewGroup
+import android.widget.FrameLayout
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -40,6 +45,14 @@ fun PlanoInteractivoScreen(
     rootNavController: NavHostController? // 👈 ya lo has añadido correctamente
 ) {
     val context = LocalContext.current
+    val activity = (context as? Activity)
+
+    DisposableEffect(Unit) {
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+        onDispose {
+
+        }
+    }
 
     var activePath by remember { mutableStateOf<android.graphics.Path?>(null) }
     var activeHighlight by remember { mutableStateOf<Color?>(null) }
@@ -69,6 +82,12 @@ fun PlanoInteractivoScreen(
             modifier = Modifier.fillMaxSize(),
             factory = { ctx ->
                 DebugPhotoView(ctx).apply {
+
+                    layoutParams = FrameLayout.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                    )
+
                     setImageResource(R.drawable.plano_monasterio)
 
                     post { setScale(initialZoom, true) }

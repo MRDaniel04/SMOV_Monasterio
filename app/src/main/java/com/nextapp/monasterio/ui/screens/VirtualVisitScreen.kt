@@ -1,6 +1,10 @@
 package com.nextapp.monasterio.ui.screens
 
+import android.app.Activity
+import android.content.pm.ActivityInfo
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -19,6 +23,17 @@ object VirtualVisitRoutes {
 @Composable
 fun VirtualVisitScreen(navController: NavHostController? = null) {
     val localNavController = rememberNavController()
+
+    val context = LocalContext.current
+    val activity = (context as? Activity)
+
+    DisposableEffect(Unit) {
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+
+        onDispose {
+
+        }
+    }
 
     NavHost(
         navController = localNavController,
