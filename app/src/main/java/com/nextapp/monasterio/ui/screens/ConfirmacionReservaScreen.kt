@@ -33,7 +33,7 @@ fun ConfirmacionReservaScreen(
 ){
     val contexto= LocalContext.current
     LaunchedEffect(key1=true) {
-        delay(3000L)
+        delay(500L)
         contexto.crearCorreo(nombre,email,fecha,hora)
     }
     Box(

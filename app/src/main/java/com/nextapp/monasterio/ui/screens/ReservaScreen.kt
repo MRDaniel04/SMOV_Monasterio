@@ -29,6 +29,7 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 import android.util.Patterns
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalContext
 import kotlinx.coroutines.delay
@@ -40,10 +41,10 @@ fun ReservaScreen(navController: NavController){
 
     val contexto=LocalContext.current
     
-    var nombre by remember { mutableStateOf("") }
-    var email by remember { mutableStateOf("") }
-    var fecha by remember { mutableStateOf("") }
-    var hora by remember { mutableStateOf("") }
+    var nombre by rememberSaveable { mutableStateOf("") }
+    var email by rememberSaveable { mutableStateOf("") }
+    var fecha by rememberSaveable { mutableStateOf("") }
+    var hora by rememberSaveable { mutableStateOf("") }
 
     var nombreError by remember {mutableStateOf<String?>(null)}
     var emailError by remember {mutableStateOf<String?>(null)}
