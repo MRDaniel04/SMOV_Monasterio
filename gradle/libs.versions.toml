@@ -16,6 +16,8 @@ appcompat = "1.7.0"
 material = "1.12.0"
 firebase-gservices = "4.4.4"
 firebase-bom = "33.1.0"
+#panoramicas
+panoramaGL = "1.11.0"
 firebaseFirestore = "26.0.2"
 
 [libraries]
@@ -41,6 +43,8 @@ androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "a
 google-material = { module = "com.google.android.material:material", version.ref = "material" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase-bom" }
 firebase-firestore = { module = "com.google.firebase:firebase-firestore-ktx" }
+#Panoramicas
+panoramaGL = { module = "com.github.hannesa2:panoramaGL", version.ref = "panoramaGL" }
 google-firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore", version.ref = "firebaseFirestore" }
 
 [plugins]

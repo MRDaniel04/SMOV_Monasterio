@@ -17,12 +17,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.nextapp.monasterio.AppRoutes
 import com.nextapp.monasterio.R
+import com.nextapp.monasterio.ui.screens.* // Asegúrate de importar PanoramaScreen y GaleriaScreen
 import com.nextapp.monasterio.ui.screens.*
 import com.nextapp.monasterio.ui.virtualvisit.screens.*
 import com.nextapp.monasterio.ui.theme.MonasteryRed
 import com.nextapp.monasterio.ui.theme.White
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import com.nextapp.monasterio.ui.virtualvisit.screens.PinDetalleScreen
 
 @Composable
 fun AppNavigationHost(
@@ -37,12 +39,30 @@ fun AppNavigationHost(
         composable(AppRoutes.INICIO)   { HomeScreenContent(navController = navController) }
         composable(AppRoutes.INFO)     { InfoScreen() }
         composable(AppRoutes.HISTORIA) { HistoriaScreen() }
-        composable(AppRoutes.GALERIA)  { GaleriaScreen() }
+        composable(AppRoutes.GALERIA)  { GaleriaScreen(navController = navController) }
         composable(AppRoutes.PERFIL)   { ProfileScreen() }
         composable(AppRoutes.AJUSTES)  { AjustesScreen() }
+
+        // --- ESTA ES LA RUTA INMERSIVA ---
+        composable(
+            route = AppRoutes.PANORAMA + "/{vistaId}", // Define la ruta con argumento
+            arguments = listOf(navArgument("vistaId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            // Recoge el argumento
+            val vistaId = backStackEntry.arguments?.getString("vistaId")
+
+            // Llama a PanoramaScreen con el ID y el NavController
+            if (vistaId != null) {
+                PanoramaScreen(
+                    vistaId = vistaId,
+                    navController = navController
+                )
+            }
+        }
+
+        // --- RESTO DE TUS RUTAS ---
         composable(AppRoutes.OPCIONES_RESERVA) { OpcionesReservaScreen(navController = navController) }
         composable(AppRoutes.RESERVA) { ReservaScreen(navController = navController) }
-
         composable(
             route = AppRoutes.CONFIRMACION_RESERVA + "/{nombre}/{email}/{fecha}/{hora}",
             arguments = listOf(
@@ -65,7 +85,7 @@ fun AppNavigationHost(
             )
         }
 
-        // 🧭 Módulo de visita virtual
+        // ✅ Corrección aquí: pasamos el navController principal
         composable(AppRoutes.VIRTUAL_VISIT) {
             VirtualVisitScreen(navController = navController)
         }

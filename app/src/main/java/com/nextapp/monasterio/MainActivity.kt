@@ -58,9 +58,19 @@ fun MonasteryAppScreen() {
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = currentBackStackEntry?.destination?.route
 
-    // ✅ Rutas inmersivas
-    val immersiveRoutes = listOf(AppRoutes.PIN_DETALLE)
-    val isImmersive = currentRoute in immersiveRoutes
+    // --- ¡AQUÍ ESTÁ LA CORRECCIÓN! ---
+    // En lugar de una lista, comprobamos si la ruta "empieza por" la ruta base,
+    // ya que ahora tiene argumentos (ej: "panorama/monastery_1")
+
+    // Comprueba si la ruta actual empieza por "panorama"
+    val isPanorama = currentRoute?.startsWith(AppRoutes.PANORAMA) == true
+    // Comprueba si la ruta actual es exactamente "pin_detalle"
+    val isPinDetalle = currentRoute == AppRoutes.PIN_DETALLE
+
+    // La vista es inmersiva si CUALQUIERA de las dos es verdadera
+    val isImmersive = isPanorama || isPinDetalle
+    // --- FIN DE LA CORRECCIÓN ---
+
 
     val gesturesEnabled = when(currentRoute){
         AppRoutes.VIRTUAL_VISIT -> false
@@ -71,7 +81,11 @@ fun MonasteryAppScreen() {
     LaunchedEffect(navController) {
         navController.currentBackStackEntryFlow.collect { backStackEntry ->
             val route = backStackEntry.destination.route
-            currentTitle.value = when (route) {
+            // --- MODIFICACIÓN SUGERIDA ---
+            // Añadimos esto para que no intente buscar un título para la ruta con argumento
+            val routeBase = route?.split("/")?.firstOrNull() ?: route
+
+            currentTitle.value = when (routeBase) { // <-- Usamos routeBase
                 AppRoutes.INFO -> context.getString(R.string.title_info_general)
                 AppRoutes.HISTORIA -> context.getString(R.string.title_history)
                 AppRoutes.GALERIA -> context.getString(R.string.title_gallery)
@@ -81,6 +95,7 @@ fun MonasteryAppScreen() {
                 AppRoutes.RESERVA,
                 AppRoutes.CONFIRMACION_RESERVA -> context.getString(R.string.title_appointment)
                 AppRoutes.VIRTUAL_VISIT -> context.getString(R.string.title_monasterio)
+                // (No es necesario añadir PANORAMA aquí, ya que será inmersiva y no mostrará título)
                 else -> context.getString(R.string.title_inicio)
             }
         }

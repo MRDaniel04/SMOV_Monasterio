@@ -77,6 +77,8 @@ dependencies {
     // Plano Interactivo
     implementation("io.github.chrisbanes:PhotoView:2.3.0")
 
+    // Panoramica
+    implementation("com.github.hannesa2:panoramagl:1.14")
     // Cloudinary
     implementation("io.coil-kt:coil-compose:2.7.0")
 
