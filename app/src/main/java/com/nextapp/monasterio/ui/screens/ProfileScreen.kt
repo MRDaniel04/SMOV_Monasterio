@@ -1,104 +1,93 @@
 package com.nextapp.monasterio.ui.screens
 
-import android.app.Activity
-import android.content.pm.ActivityInfo
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import com.google.firebase.auth.FirebaseAuth
+import androidx.compose.ui.unit.dp
+import com.nextapp.monasterio.viewModels.AuthViewModel
 
 @Composable
-fun ProfileScreen() {
-    val auth = FirebaseAuth.getInstance()
+fun ProfileScreen(viewModel: AuthViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
+
+    val userState by viewModel.currentUser.collectAsState()
+    val user = userState
+    val isLoading by viewModel.isLoading.collectAsState()
+    val error by viewModel.error.collectAsState()
+
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    var errorMessage by remember { mutableStateOf<String?>(null) }
-    var successMessage by remember { mutableStateOf<String?>(null) }
-    var isLoading by remember { mutableStateOf(false) }
 
-    val context = LocalContext.current
-    val activity = (context as? Activity)
-
-    DisposableEffect(Unit) {
-        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
-        onDispose {
-
-        }
-    }
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(text = "Iniciar sesión", style = MaterialTheme.typography.titleLarge)
-        Spacer(modifier = Modifier.height(16.dp))
-
-        OutlinedTextField(
-            value = email,
-            onValueChange = { email = it },
-            label = { Text("Correo electrónico") },
-            singleLine = true,
-            maxLines = 1
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        OutlinedTextField(
-            value = password,
-            onValueChange = { password = it },
-            label = { Text("Contraseña") },
-            visualTransformation = PasswordVisualTransformation(),
-            singleLine = true,
-            maxLines = 1
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Button(
-            onClick = {
-                isLoading = true
-                errorMessage = null
-                successMessage = null
-
-                auth.signInWithEmailAndPassword(email, password)
-                    .addOnCompleteListener { task ->
-                        isLoading = false
-                        if (task.isSuccessful) {
-                            successMessage = "Inicio de sesión correcto ✅"
-                        } else {
-                            errorMessage = task.exception?.message ?: "Error desconocido"
-                        }
-                    }
-            },
-            enabled = !isLoading
+    if (isLoading) { // Vista de carga del estado
+        // TODO mover a un componente para usar en otras paginas?
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
         ) {
-            if (isLoading) {
-                CircularProgressIndicator(
-                    modifier = Modifier.size(20.dp),
-                    color = MaterialTheme.colorScheme.onPrimary,
-                    strokeWidth = 2.dp
-                )
-            } else {
-                Text("Iniciar sesión")
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                CircularProgressIndicator()
+                Spacer(modifier = Modifier.height(8.dp))
+                Text("Cargando...", style = MaterialTheme.typography.bodyMedium)
             }
         }
+    } else if (user == null) { // Si el usuario no esta autenticado
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(text = "Iniciar sesión", style = MaterialTheme.typography.titleLarge)
+            Spacer(modifier = Modifier.height(16.dp))
 
-        Spacer(modifier = Modifier.height(12.dp))
+            OutlinedTextField(
+                value = email,
+                onValueChange = { email = it },
+                label = { Text("Correo electrónico") },
+                singleLine = true
+            )
 
-        errorMessage?.let {
-            Text(text = it, color = MaterialTheme.colorScheme.error)
+            Spacer(modifier = Modifier.height(8.dp))
+
+            OutlinedTextField(
+                value = password,
+                onValueChange = { password = it },
+                label = { Text("Contraseña") },
+                visualTransformation = PasswordVisualTransformation(),
+                singleLine = true
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Button(onClick = { viewModel.login(email, password) }) {
+                Text("Iniciar sesión")
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            error?.let { Text(text = it, color = MaterialTheme.colorScheme.error) }
         }
+    } else { // Si el usuario esta autenticado
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = "Bienvenido, ${user.name}",
+                style = MaterialTheme.typography.titleLarge
+            )
 
-        successMessage?.let {
-            Text(text = it, color = MaterialTheme.colorScheme.primary)
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Button(onClick = { viewModel.logout() }) {
+                Text("Cerrar sesión")
+            }
         }
     }
 }
