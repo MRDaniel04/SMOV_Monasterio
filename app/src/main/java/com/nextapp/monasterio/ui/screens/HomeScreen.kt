@@ -4,7 +4,9 @@ import android.app.Activity
 import android.content.pm.ActivityInfo
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -13,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -43,9 +46,8 @@ fun HomeScreenContent(navController:NavController, modifier: Modifier = Modifier
         }
     }
 
-    ConstraintLayout(modifier = modifier.fillMaxSize()) {
+    ConstraintLayout(modifier = modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
         val (background, crest, title, btnVisit, btnBook) = createRefs()
-
         Image(
             painter = painterResource(id = R.drawable.monastery_background),
             contentDescription = null,
@@ -55,8 +57,10 @@ fun HomeScreenContent(navController:NavController, modifier: Modifier = Modifier
                 bottom.linkTo(parent.bottom)
                 start.linkTo(parent.start)
                 end.linkTo(parent.end)
-                width = androidx.constraintlayout.compose.Dimension.fillToConstraints
-                height = androidx.constraintlayout.compose.Dimension.fillToConstraints
+                width = Dimension.fillToConstraints
+                height = Dimension.fillToConstraints
+
+                centerVerticallyTo(parent)
             }
         )
         Image(
@@ -69,6 +73,7 @@ fun HomeScreenContent(navController:NavController, modifier: Modifier = Modifier
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                     width = Dimension.fillToConstraints
+                    height = Dimension.wrapContent
                 }
         )
         Button(
