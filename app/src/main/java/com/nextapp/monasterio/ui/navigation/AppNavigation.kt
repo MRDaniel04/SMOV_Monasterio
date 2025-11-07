@@ -21,7 +21,6 @@ import com.nextapp.monasterio.ui.screens.*
 import com.nextapp.monasterio.ui.virtualvisit.screens.*
 import com.nextapp.monasterio.ui.theme.MonasteryRed
 import com.nextapp.monasterio.ui.theme.White
-import com.nextapp.monasterio.ui.virtualvisit.data.MonasterioData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
