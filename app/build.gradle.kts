@@ -51,6 +51,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.compose.foundation)
+    implementation(libs.google.firebase.firestore)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -75,6 +76,10 @@ dependencies {
 
     // Plano Interactivo
     implementation("io.github.chrisbanes:PhotoView:2.3.0")
+
+    // Cloudinary
+    implementation("io.coil-kt:coil-compose:2.7.0")
+
 
 
 }

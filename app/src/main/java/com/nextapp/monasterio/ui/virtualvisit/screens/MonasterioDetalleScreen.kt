@@ -2,43 +2,68 @@ package com.nextapp.monasterio.ui.virtualvisit.screens
 
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
-import com.nextapp.monasterio.AppRoutes
 import com.nextapp.monasterio.R
+import com.nextapp.monasterio.models.PinData
 import com.nextapp.monasterio.ui.virtualvisit.components.DebugPhotoView
-import com.nextapp.monasterio.ui.virtualvisit.data.MonasterioData
 import com.nextapp.monasterio.ui.virtualvisit.utils.isPointInPinArea
+import kotlinx.coroutines.launch
+import com.nextapp.monasterio.repository.PinRepository
 
 @Composable
 fun MonasterioDetalleScreen(
     navController: NavController,
-    rootNavController: NavHostController? = null // 👈 nuevo parámetro opcional
+    rootNavController: NavHostController? = null
 ) {
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
 
-    var activePath by remember { mutableStateOf<android.graphics.Path?>(null) }
-    var activeHighlight by remember { mutableStateOf<Color?>(null) }
     var isPinPressed by remember { mutableStateOf(false) }
-
-    val planoBackgroundColor = Color(0xFFF5F5F5)
     val initialZoom = 1.5f
+    val planoBackgroundColor = Color(0xFFF5F5F5)
 
+    // 🔥 Estado que guarda los pines cargados de Firestore
+    var pines by remember { mutableStateOf<List<PinData>>(emptyList()) }
+    var isLoading by remember { mutableStateOf(true) }
+
+    // 🚀 Cargar pines desde Firestore al entrar
+    LaunchedEffect(Unit) {
+        try {
+            pines = PinRepository.getAllPins()
+            Log.d("FirestoreDebug", "✅ Pines cargados: ${pines.size}")
+        } catch (e: Exception) {
+            Log.e("FirestoreDebug", "❌ Error cargando pines", e)
+            Toast.makeText(context, "Error cargando pines", Toast.LENGTH_SHORT).show()
+        } finally {
+            isLoading = false
+        }
+    }
+
+    if (isLoading) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Text("Cargando pines...")
+        }
+        return
+    }
+
+    // 🖼️ Vista principal con el plano
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -51,56 +76,44 @@ fun MonasterioDetalleScreen(
             factory = { ctx ->
                 DebugPhotoView(ctx).apply {
                     setImageResource(R.drawable.monasterio_interior)
-
                     post { setScale(initialZoom, true) }
 
-                    pins = MonasterioData.pines.map {
+                    // 🔴 Pintamos los pines cargados desde Firestore
+                    pins = pines.map {
                         DebugPhotoView.PinData(
                             x = it.x,
                             y = it.y,
-                            iconId = it.iconRes,
+                            iconId = R.drawable.pin3,
                             isPressed = isPinPressed
                         )
                     }
 
+                    // 👆 Listener de toque
                     setOnPhotoTapListener { _, x, y ->
-                        val pin = MonasterioData.pines.find {
+                        val pin = pines.find {
                             isPointInPinArea(x, y, it.x, it.y, it.tapRadius)
                         }
 
                         if (pin != null) {
+                            Log.d("MonasterioDebug", "🟢 Pulsado pin con id=${pin.id}")
                             isPinPressed = true
-                            Toast.makeText(context, "${pin.id} pulsado", Toast.LENGTH_SHORT).show()
-
                             Handler(Looper.getMainLooper()).postDelayed({
                                 isPinPressed = false
-                                // 👇 Navegación al NavController principal
-                                if (rootNavController != null) {
-                                    rootNavController.navigate(AppRoutes.PIN_DETALLE)
-                                } else {
-                                    Toast.makeText(context, "No se pudo navegar al detalle del pin", Toast.LENGTH_SHORT).show()
+                                rootNavController?.navigate("pin_detalle/${pin.id}") {
+                                    launchSingleTop = true
                                 }
                             }, 200)
                         } else {
-                            Toast.makeText(
-                                context,
-                                "Fuera del área interactiva",
-                                Toast.LENGTH_SHORT
-                            ).show()
+                            Toast.makeText(context, "Fuera del área interactiva", Toast.LENGTH_SHORT).show()
                         }
                     }
 
                     photoViewRef = this
                 }
-            },
-            update = {
-                it.interactivePath = activePath
-                it.highlightColor = activeHighlight?.toArgb() ?: Color.Transparent.toArgb()
-                it.invalidate()
             }
         )
 
-        // 🎛️ Controles flotantes
+        // 🎛️ Controles flotantes (zoom)
         Column(
             modifier = Modifier
                 .align(Alignment.CenterEnd)
@@ -115,7 +128,7 @@ fun MonasterioDetalleScreen(
             }) {
                 Icon(
                     painter = painterResource(id = R.drawable.aumentar_zoom),
-                    contentDescription = "Aumentar",
+                    contentDescription = "Aumentar zoom",
                     modifier = Modifier.size(24.dp),
                     tint = Color.Unspecified
                 )
@@ -129,7 +142,7 @@ fun MonasterioDetalleScreen(
             }) {
                 Icon(
                     painter = painterResource(id = R.drawable.disminuir_zoom),
-                    contentDescription = "Disminuir",
+                    contentDescription = "Disminuir zoom",
                     modifier = Modifier.size(24.dp),
                     tint = Color.Unspecified
                 )
@@ -144,7 +157,7 @@ fun MonasterioDetalleScreen(
             }) {
                 Icon(
                     painter = painterResource(id = R.drawable.reajustar),
-                    contentDescription = "Reajustar",
+                    contentDescription = "Reajustar vista",
                     modifier = Modifier.size(24.dp),
                     tint = Color.Unspecified
                 )

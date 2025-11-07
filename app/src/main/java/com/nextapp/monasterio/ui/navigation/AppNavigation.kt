@@ -18,11 +18,12 @@ import androidx.navigation.compose.composable
 import com.nextapp.monasterio.AppRoutes
 import com.nextapp.monasterio.R
 import com.nextapp.monasterio.ui.screens.*
+import com.nextapp.monasterio.ui.virtualvisit.screens.*
 import com.nextapp.monasterio.ui.theme.MonasteryRed
 import com.nextapp.monasterio.ui.theme.White
+import com.nextapp.monasterio.ui.virtualvisit.data.MonasterioData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import com.nextapp.monasterio.ui.virtualvisit.screens.PinDetalleScreen
 
 @Composable
 fun AppNavigationHost(
@@ -42,6 +43,7 @@ fun AppNavigationHost(
         composable(AppRoutes.AJUSTES)  { AjustesScreen() }
         composable(AppRoutes.OPCIONES_RESERVA) { OpcionesReservaScreen(navController = navController) }
         composable(AppRoutes.RESERVA) { ReservaScreen(navController = navController) }
+
         composable(
             route = AppRoutes.CONFIRMACION_RESERVA + "/{nombre}/{email}/{fecha}/{hora}",
             arguments = listOf(
@@ -64,16 +66,26 @@ fun AppNavigationHost(
             )
         }
 
-        // ✅ Corrección aquí: pasamos el navController principal
+        // 🧭 Módulo de visita virtual
         composable(AppRoutes.VIRTUAL_VISIT) {
             VirtualVisitScreen(navController = navController)
         }
 
-        // 👇 Ruta inmersiva
-        composable(AppRoutes.PIN_DETALLE) {
-            PinDetalleScreen(navController = navController)
-
+        composable(
+            route = "pin_detalle/{pinId}",
+            arguments = listOf(navArgument("pinId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val pinId = backStackEntry.arguments?.getString("pinId") ?: ""
+            PinDetalleFirestoreScreen(
+                pinId = pinId,
+                navController = navController
+            )
         }
+
+
+
+
+
     }
 }
 
@@ -110,39 +122,18 @@ fun AppDrawerContent(
             }
             Spacer(modifier = Modifier.height(32.dp))
 
-            DrawerMenuItem(
-                text = stringResource(id = R.string.title_inicio),
-                onClick = { navigateTo(AppRoutes.INICIO) }
-            )
-            DrawerMenuItem(
-                text = stringResource(id = R.string.menu_info),
-                onClick = { navigateTo(AppRoutes.INFO) }
-            )
-            DrawerMenuItem(
-                text = stringResource(id = R.string.menu_history),
-                onClick = { navigateTo(AppRoutes.HISTORIA) }
-            )
-            DrawerMenuItem(
-                text = stringResource(id = R.string.menu_gallery),
-                onClick = { navigateTo(AppRoutes.GALERIA) }
-            )
-            DrawerMenuItem(
-                text = stringResource(id = R.string.menu_profile),
-                onClick = { navigateTo(AppRoutes.PERFIL) }
-            )
-            DrawerMenuItem(
-                text = stringResource(id = R.string.menu_settings),
-                onClick = { navigateTo(AppRoutes.AJUSTES) }
-            )
+            DrawerMenuItem(text = stringResource(id = R.string.title_inicio)) { navigateTo(AppRoutes.INICIO) }
+            DrawerMenuItem(text = stringResource(id = R.string.menu_info)) { navigateTo(AppRoutes.INFO) }
+            DrawerMenuItem(text = stringResource(id = R.string.menu_history)) { navigateTo(AppRoutes.HISTORIA) }
+            DrawerMenuItem(text = stringResource(id = R.string.menu_gallery)) { navigateTo(AppRoutes.GALERIA) }
+            DrawerMenuItem(text = stringResource(id = R.string.menu_profile)) { navigateTo(AppRoutes.PERFIL) }
+            DrawerMenuItem(text = stringResource(id = R.string.menu_settings)) { navigateTo(AppRoutes.AJUSTES) }
         }
     }
 }
 
 @Composable
-fun DrawerMenuItem(
-    text: String,
-    onClick: () -> Unit
-) {
+fun DrawerMenuItem(text: String, onClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -156,10 +147,6 @@ fun DrawerMenuItem(
             modifier = Modifier.size(20.dp)
         )
         Spacer(modifier = Modifier.width(16.dp))
-        Text(
-            text = text,
-            color = White,
-            style = MaterialTheme.typography.bodyMedium
-        )
+        Text(text = text, color = White, style = MaterialTheme.typography.bodyMedium)
     }
 }
