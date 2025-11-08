@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Santa María\nla Real de Huelgas</string>
+    <string name="app_name">Santa María la Real de Huelgas</string>
     <string name="title_inicio">Inicio</string>
     <string name="virtual_visit">VISITA VIRTUAL</string>
     <string name="book_appointment">RESERVA CITA</string>
@@ -57,4 +57,7 @@
     <string name="font_normal">Mediana</string>
     <string name="font_big">Grande</string>
     <string name="title_monasterio">Monasterio</string>
+    <string name="spanish_language">Español</string>
+    <string name="german_language">Alemán</string>
+    <string name="english_language">Inglés</string>
 </resources>

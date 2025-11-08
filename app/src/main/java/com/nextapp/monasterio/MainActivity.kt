@@ -1,8 +1,8 @@
 package com.nextapp.monasterio
 
+
 import android.os.Bundle
 import android.widget.Toast
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -18,8 +18,14 @@ import com.nextapp.monasterio.ui.theme.*
 import kotlinx.coroutines.launch
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.nextapp.monasterio.utils.FontSize
 
@@ -51,6 +57,20 @@ fun MonasteryAppScreen() {
     val navController = rememberNavController()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+
+    val stringEspanyol= "Español"
+    val stringAleman= "Deutsch"
+    val stringIngles= "English"
+
+
+    var mostrarIdioma by remember { mutableStateOf(false) }
+
+    val configuration = LocalConfiguration.current
+    val currentLanguageCode = configuration.locales[0].language
+
+    var idioma by remember { mutableStateOf(currentLanguageCode) }
+
+    var idiomasDisponibles = listOf(stringEspanyol,stringIngles,stringAleman)
 
     val currentTitle = remember { mutableStateOf(context.getString(R.string.title_inicio)) }
 
@@ -146,15 +166,53 @@ fun MonasteryAppScreen() {
                             }
                         },
                         actions = {
-                            IconButton(onClick = {
-                                Toast.makeText(context, "Modo edición (próximamente)", Toast.LENGTH_SHORT).show()
-                            }) {
-                                Icon(
-                                    painter = painterResource(id = R.drawable.lapiz),
-                                    contentDescription = stringResource(id = R.string.edit_mode)
-                                )
+                            Box {
+                                OutlinedIconButton(onClick = {
+                                    mostrarIdioma = true
+                                }) {
+                                    val iconRes =
+                                        if (idioma == "es" || idioma == stringEspanyol) R.drawable.espanya else if (idioma == "de" || idioma == stringAleman) R.drawable.alemania else R.drawable.reinounido
+                                    Image(
+                                        painter = painterResource(id = iconRes),
+                                        contentDescription = if (idioma == "es" || idioma == stringEspanyol ) stringEspanyol
+                                         else if (idioma == "de" || idioma == stringAleman) stringAleman else stringIngles,
+                                        contentScale = ContentScale.Crop
+                                    )
+                                }
+                                DropdownMenu(
+                                    expanded = mostrarIdioma,
+                                    onDismissRequest = { mostrarIdioma = false },
+                                    modifier = Modifier.fillMaxWidth(0.8f),
+                                ) {
+                                    idiomasDisponibles.forEach { idiomaSlot ->
+                                        DropdownMenuItem(
+                                            text = { Text(idiomaSlot) },
+                                            onClick = {
+                                                idioma = idiomaSlot
+                                                mostrarIdioma = false
+                                                if(idiomaSlot == stringEspanyol)
+                                                    LanguageHelper.saveLocale(context, "es")
+                                                else if(idiomaSlot == stringAleman){
+                                                    LanguageHelper.saveLocale(context, "de")
+                                                } else LanguageHelper.saveLocale(context, "en")
+                                            }
+                                        )
+                                    }
+                                }
                             }
-                        }
+                                IconButton(onClick = {
+                                    Toast.makeText(
+                                        context,
+                                        "Modo edición (próximamente)",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }) {
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.lapiz),
+                                        contentDescription = stringResource(id = R.string.edit_mode)
+                                    )
+                                }
+                            }
                     )
                 }
             ) { paddingValues ->

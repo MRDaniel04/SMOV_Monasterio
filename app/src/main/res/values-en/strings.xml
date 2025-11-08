@@ -61,5 +61,8 @@
     <string name="font_normal">Medium</string>
     <string name="font_big">Big</string>
     <string name="title_monasterio">Monastery</string>
+    <string name="spanish_language">Spanish</string>
+    <string name="german_language">German</string>
+    <string name="english_language">English</string>
 
 </resources>
