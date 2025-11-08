@@ -24,6 +24,7 @@ import androidx.core.view.WindowCompat
 import androidx.navigation.NavHostController
 import com.nextapp.monasterio.R
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.ui.tooling.preview.Preview
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -190,4 +191,6 @@ fun PinDetalleScreen(navController: NavHostController) {
         }
     }
 }
+
+
 

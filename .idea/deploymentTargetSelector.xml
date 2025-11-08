@@ -4,11 +4,11 @@
     <selectionStates>
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2025-11-07T14:58:50.699472400Z">
+        <DropdownSelection timestamp="2025-11-08T20:59:07.306923500Z">
           <Target type="DEFAULT_BOOT">
-            <template>
-              <DeviceId pluginId="FirebaseDirectAccess" type="TEMPLATE" identifier="model_id=akita/34" />
-            </template>
+            <handle>
+              <DeviceId pluginId="PhysicalDevice" identifier="serial=RZCX7216PCM" />
+            </handle>
           </Target>
         </DropdownSelection>
         <DialogSelection>
