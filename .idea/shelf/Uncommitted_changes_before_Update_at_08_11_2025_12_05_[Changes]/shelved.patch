@@ -1,0 +1,26 @@
+Index: app/src/main/java/com/nextapp/monasterio/ui/virtualvisit/data/MonasterioData.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.nextapp.monasterio.ui.virtualvisit.data\r\n\r\nimport com.nextapp.monasterio.R\r\nimport com.nextapp.monasterio.models.*\r\n\r\n/* TODO */\r\nobject MonasterioData {\r\n\r\n    val pines = listOf(\r\n        PinData(\r\n            id = \"pin1\",\r\n            titulo = \"Retablo del nacimiento\",\r\n            ubicacion = Ubicacion.IGLESIA,\r\n            x = 0.85f,\r\n            y = 0.8f,\r\n            tema = Tema.PINTURA_Y_ARTE_VISUAL,\r\n            imagenes = listOf(R.drawable.retablo1, R.drawable.retablo2),\r\n            descripcion = \"Existe un segundo retablo del mismo autor conocido como Retablo del Nacimiento (1614), en la capilla que fuera de San Juan, junto al coro, que da a la Sacristía. \\n\" +\r\n                    \"        En el centro del relieve está el Niño en cuna, la Virgen lo adora con las manos plegadas y hay un pastor ofreciendo un cordero. \\n\" +\r\n                    \"        Junto al Niño hay un ángel de rodillas y más figuras. \\n\" +\r\n                    \"        La escena está tallada con gran detalle y expresividad, destacando por su realismo y dinamismo.\"\r\n        ),\r\n        PinData(\r\n            id = \"pin2\",\r\n            titulo = \"Claustro principal\",\r\n            ubicacion = Ubicacion.CLAUSTRO,\r\n            x = 0.35f,\r\n            y = 0.15f,\r\n            tema = Tema.ESPACIOS_ARQUITECTONICOS,\r\n            imagenes = listOf(R.drawable.claustro1),\r\n            descripcion = \"El claustro principal es uno de los espacios más emblemáticos del monasterio.\"\r\n        )\r\n    )\r\n}\r\n
+===================================================================
+diff --git a/app/src/main/java/com/nextapp/monasterio/ui/virtualvisit/data/MonasterioData.kt b/app/src/main/java/com/nextapp/monasterio/ui/virtualvisit/data/MonasterioData.kt
+--- a/app/src/main/java/com/nextapp/monasterio/ui/virtualvisit/data/MonasterioData.kt	(revision 7bf4f8b6f6cb424fd6f3fce44f84f0a52360e3bc)
++++ b/app/src/main/java/com/nextapp/monasterio/ui/virtualvisit/data/MonasterioData.kt	(date 1762553112967)
+@@ -14,7 +14,7 @@
+             x = 0.85f,
+             y = 0.8f,
+             tema = Tema.PINTURA_Y_ARTE_VISUAL,
+-            imagenes = listOf(R.drawable.retablo1, R.drawable.retablo2),
++            imagenes = listOf("retablo1", "retablo2"),
+             descripcion = "Existe un segundo retablo del mismo autor conocido como Retablo del Nacimiento (1614), en la capilla que fuera de San Juan, junto al coro, que da a la Sacristía. \n" +
+                     "        En el centro del relieve está el Niño en cuna, la Virgen lo adora con las manos plegadas y hay un pastor ofreciendo un cordero. \n" +
+                     "        Junto al Niño hay un ángel de rodillas y más figuras. \n" +
+@@ -27,7 +27,7 @@
+             x = 0.35f,
+             y = 0.15f,
+             tema = Tema.ESPACIOS_ARQUITECTONICOS,
+-            imagenes = listOf(R.drawable.claustro1),
++            imagenes = listOf("claustro1"),
+             descripcion = "El claustro principal es uno de los espacios más emblemáticos del monasterio."
+         )
+     )
