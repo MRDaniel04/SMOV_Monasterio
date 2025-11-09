@@ -24,6 +24,9 @@ import androidx.core.view.WindowCompat
 import coil.compose.AsyncImage
 import com.nextapp.monasterio.R
 import com.nextapp.monasterio.models.PinData
+// Imports para el scroll de texto
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.rememberScrollState
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -39,26 +42,27 @@ fun PinDetalleScreen(
     }
 
     val categoriaColor = pin.tema.color
-    var expanded by remember { mutableStateOf(false) }
     val pagerState = rememberPagerState(pageCount = { pin.imagenes.size })
-    val scrollState = rememberScrollState()
 
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
+            .statusBarsPadding() // Padding para la barra de estado (arriba)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = 16.dp)
-                .padding(bottom = 80.dp)
-                .verticalScroll(scrollState),
+                .padding(bottom = 90.dp),
+            // La columna principal ya no es deslizable
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             // 🔙 Botón atrás
             Box(
-                modifier = Modifier.fillMaxWidth().statusBarsPadding(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp), // Padding para bajarlo
                 contentAlignment = Alignment.CenterStart
             ) {
                 Image(
@@ -72,6 +76,7 @@ fun PinDetalleScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            // Título (igual que antes)
             Text(
                 text = buildString {
                     append(pin.titulo)
@@ -86,7 +91,7 @@ fun PinDetalleScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            // 🖼️ Carrusel de imágenes desde Cloudinary
+            // 🖼️ Carrusel de imágenes (igual que antes)
             if (pin.imagenes.isNotEmpty()) {
                 Box(
                     modifier = Modifier
@@ -103,7 +108,6 @@ fun PinDetalleScreen(
                             modifier = Modifier.fillMaxSize()
                         )
                     }
-
                     Row(
                         Modifier.align(Alignment.BottomCenter).padding(8.dp)
                     ) {
@@ -121,10 +125,10 @@ fun PinDetalleScreen(
                         }
                     }
                 }
-
                 Spacer(modifier = Modifier.height(24.dp))
             }
 
+            // Texto del Tema (igual que antes)
             Text(
                 text = pin.tema.displayName,
                 color = categoriaColor,
@@ -134,32 +138,48 @@ fun PinDetalleScreen(
 
             Spacer(modifier = Modifier.height(12.dp))
 
+            // --- ¡¡CUADRO DE TEXTO DESLIZABLE CORREGIDO!! ---
             val descripcion = pin.descripcion ?: ""
             if (descripcion.isNotBlank()) {
-                val textoMostrado = if (expanded) descripcion else descripcion.take(250) + "..."
-                Text(
-                    text = textoMostrado,
-                    fontSize = 16.sp,
-                    color = Color.DarkGray,
-                    lineHeight = 22.sp
-                )
 
-                TextButton(onClick = { expanded = !expanded }) {
+                // 1. Creamos el estado de scroll (función que SÍ te reconoce)
+                val textScrollState = rememberScrollState()
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f) // Ocupa el espacio restante
+                        .border(1.dp, Color.LightGray.copy(alpha = 0.5f), RoundedCornerShape(8.dp))
+                        .clip(RoundedCornerShape(8.dp)) // Recorta el contenido al Box
+                ) {
                     Text(
-                        if (expanded) "Leer menos" else "Leer más",
-                        color = categoriaColor,
-                        fontWeight = FontWeight.Medium
+                        text = descripcion, // Texto completo
+                        fontSize = 16.sp,
+                        color = Color.DarkGray,
+                        lineHeight = 22.sp,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(horizontal = 12.dp, vertical = 8.dp)
+                            // 2. Hacemos que el texto sea deslizable (función que SÍ te reconoce)
+                            .verticalScroll(textScrollState)
                     )
+
+                    // (No añadimos la barra de scroll visual)
                 }
             }
-        }
 
+            // Espacio para que el botón "Ver 360" no tape el texto
+            Spacer(modifier = Modifier.height(80.dp))
+        } // --- FIN DE LA COLUMNA PRINCIPAL ---
+
+        // --- Botón 360 (igual que antes) ---
         onVer360?.let {
             Box(
                 modifier = Modifier
-                    .align(Alignment.BottomCenter)
+                    .align(Alignment.BottomCenter) // Fijo abajo
                     .fillMaxWidth()
                     .background(Color.White)
+                    .navigationBarsPadding() // Sube el botón por encima de la barra de Samsung
                     .padding(horizontal = 16.dp, vertical = 12.dp)
             ) {
                 Button(

@@ -6,9 +6,10 @@ import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape // <-- Import
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton // <-- Import
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -24,7 +25,6 @@ import com.nextapp.monasterio.R
 import com.nextapp.monasterio.models.PinData
 import com.nextapp.monasterio.ui.virtualvisit.components.DebugPhotoView
 import com.nextapp.monasterio.ui.virtualvisit.utils.isPointInPinArea
-import kotlinx.coroutines.launch
 import com.nextapp.monasterio.repository.PinRepository
 
 @Composable
@@ -56,19 +56,23 @@ fun MonasterioDetalleScreen(
         }
     }
 
-    if (isLoading) {
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text("Cargando pines...")
-        }
-        return
-    }
-
-    // 🖼️ Vista principal con el plano
+    // --- ¡¡CORRECCIÓN AQUÍ!! ---
+    // 1. Envolvemos todo en un Box
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(planoBackgroundColor)
     ) {
+
+        if (isLoading) {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Text("Cargando pines...")
+            }
+            // Salimos temprano si está cargando, pero el Box ya está dibujado
+            return@Box
+        }
+
+        // 🖼️ Vista principal con el plano (va "debajo")
         var photoViewRef by remember { mutableStateOf<DebugPhotoView?>(null) }
 
         AndroidView(
@@ -79,7 +83,7 @@ fun MonasterioDetalleScreen(
                     post { setScale(initialZoom, true) }
 
                     // 🔴 Pintamos los pines cargados desde Firestore
-                    pins = pines.map {
+                    this.pins = pines.map { // Usamos 'this.pins' para evitar confusión de nombres
                         DebugPhotoView.PinData(
                             x = it.x,
                             y = it.y,
@@ -90,6 +94,7 @@ fun MonasterioDetalleScreen(
 
                     // 👆 Listener de toque
                     setOnPhotoTapListener { _, x, y ->
+                        // Usamos 'pines' (la variable de @Composable) para buscar
                         val pin = pines.find {
                             isPointInPinArea(x, y, it.x, it.y, it.tapRadius)
                         }
@@ -99,7 +104,8 @@ fun MonasterioDetalleScreen(
                             isPinPressed = true
                             Handler(Looper.getMainLooper()).postDelayed({
                                 isPinPressed = false
-                                rootNavController?.navigate("pin_detalle/${pin.id}") {
+                                // Usamos el 'navController' (local) para ir al detalle
+                                navController.navigate("pin_detalle/${pin.id}") {
                                     launchSingleTop = true
                                 }
                             }, 200)
@@ -113,7 +119,7 @@ fun MonasterioDetalleScreen(
             }
         )
 
-        // 🎛️ Controles flotantes (zoom)
+        // 🎛️ Controles flotantes (zoom) (van "encima")
         Column(
             modifier = Modifier
                 .align(Alignment.CenterEnd)
@@ -162,6 +168,25 @@ fun MonasterioDetalleScreen(
                     tint = Color.Unspecified
                 )
             }
+        }
+
+        // 3. Tu IconButton (flecha) va "encima"
+        IconButton(
+            onClick = { navController.popBackStack() }, // Vuelve atrás en el navegador local
+            modifier = Modifier
+                .align(Alignment.TopStart) // <-- ¡Ahora SÍ funciona!
+                .statusBarsPadding() // Para que no se ponga debajo de la barra de estado
+                .padding(16.dp) // Margen
+                .background(
+                    color = Color.Black.copy(alpha = 0.5f), // Fondo negro semitransparente
+                    shape = RoundedCornerShape(12.dp) // Esquinas redondeadas
+                )
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.arrow_back), // Usa tu icono
+                contentDescription = "Volver",
+                tint = Color.White // Flecha blanca
+            )
         }
     }
 }

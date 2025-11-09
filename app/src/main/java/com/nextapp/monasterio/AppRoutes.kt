@@ -17,4 +17,6 @@ object AppRoutes {
     const val VIRTUAL_VISIT = "virtual_visit"
     const val PIN_DETALLE = "pin_detalle"
     const val PANORAMA = "panorama"
+
+    const val PIN_360 = "pin_360"
 }

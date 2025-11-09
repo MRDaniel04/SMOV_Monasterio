@@ -1,4 +1,4 @@
-package com.nextapp.monasterio.ui.screens
+package com.nextapp.monasterio.ui.screens // (O donde esté tu archivo)
 
 import android.app.Activity
 import android.content.pm.ActivityInfo
@@ -6,9 +6,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.nextapp.monasterio.AppRoutes
 import com.nextapp.monasterio.ui.virtualvisit.screens.*
 
 object VirtualVisitRoutes {
@@ -29,10 +32,7 @@ fun VirtualVisitScreen(navController: NavHostController? = null) {
 
     DisposableEffect(Unit) {
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
-
-        onDispose {
-
-        }
+        onDispose {}
     }
 
     NavHost(
@@ -40,34 +40,46 @@ fun VirtualVisitScreen(navController: NavHostController? = null) {
         startDestination = VirtualVisitRoutes.PLANO
     ) {
         composable(VirtualVisitRoutes.PLANO) {
-            // 👇 Le pasamos el navController principal para navegar al detalle inmersivo
             PlanoInteractivoScreen(
                 navController = localNavController,
-                rootNavController = navController // nuevo parámetro
             )
         }
+
+        // --- ¡¡AQUÍ ESTÁ LA CORRECCIÓN!! ---
+        // (Tu captura demuestra que estas líneas faltaban)
 
         composable(VirtualVisitRoutes.DETALLE_MONASTERIO) {
             MonasterioDetalleScreen(
                 navController = localNavController,
-                rootNavController = navController // nuevo parámetro
+                rootNavController = navController
             )
         }
-
         composable(VirtualVisitRoutes.DETALLE_IGLESIA) {
             IglesiaDetalleScreen(navController = localNavController)
         }
 
+        // --- AÑADE ESTOS 3 BLOQUES QUE FALTABAN ---
         composable(VirtualVisitRoutes.DETALLE_COLEGIO) {
             ColegioDetalleScreen(navController = localNavController)
         }
-
         composable(VirtualVisitRoutes.DETALLE_ARCO_MUDEJAR) {
             ArcoMudejarDetalleScreen(navController = localNavController)
         }
-
         composable(VirtualVisitRoutes.DETALLE_CLAUSTRO) {
             ClaustroDetalleScreen(navController = localNavController)
+        }
+        // --- FIN DE LA CORRECCIÓN ---
+
+
+        composable(
+            route = AppRoutes.PIN_DETALLE + "/{pinId}", // Usamos la constante global
+            arguments = listOf(navArgument("pinId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val pinId = backStackEntry.arguments?.getString("pinId") ?: ""
+            PinDetalleFirestoreScreen(
+                pinId = pinId,
+                navController = localNavController
+            )
         }
     }
 }

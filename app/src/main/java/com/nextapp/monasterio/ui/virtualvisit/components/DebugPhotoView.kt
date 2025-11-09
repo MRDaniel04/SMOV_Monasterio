@@ -21,7 +21,7 @@ class DebugPhotoView @JvmOverloads constructor(
     var blinkingAlpha:Float=1.0f
 
 
-    data class PinData(val x: Float, val y: Float, val iconId: Int, val isPressed: Boolean)
+    data class PinData(val x: Float, val y: Float, val iconId: Int?, val isPressed: Boolean)
     var pins: List<PinData> = emptyList()
 
     private val highlightPaint = Paint().apply {
@@ -80,7 +80,7 @@ class DebugPhotoView @JvmOverloads constructor(
         }
 
         pins.forEach { pin ->
-            val icon = ContextCompat.getDrawable(context, pin.iconId) ?: return@forEach
+            val icon = ContextCompat.getDrawable(context, pin.iconId ?: 0) ?: return@forEach
 
             val imageX = pin.x * d.intrinsicWidth
             val imageY = pin.y * d.intrinsicHeight

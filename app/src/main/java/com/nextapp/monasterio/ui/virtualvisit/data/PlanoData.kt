@@ -3,6 +3,7 @@ package com.nextapp.monasterio.ui.virtualvisit.data
 import android.graphics.Matrix
 import com.nextapp.monasterio.ui.virtualvisit.utils.createPathFromPoints
 import com.nextapp.monasterio.ui.virtualvisit.utils.mergePaths
+import com.nextapp.monasterio.models.PinData
 
 object PlanoData {
 
@@ -149,7 +150,7 @@ object PlanoData {
 
     // 🔹 Lista de pines
 
-    val pines: List<PinData1> = listOf(
+    val pines: List<PinData> = listOf(
 
     )
 

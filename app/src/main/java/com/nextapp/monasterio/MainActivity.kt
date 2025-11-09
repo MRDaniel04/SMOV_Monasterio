@@ -78,18 +78,17 @@ fun MonasteryAppScreen() {
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = currentBackStackEntry?.destination?.route
 
-    // --- ¡AQUÍ ESTÁ LA CORRECCIÓN! ---
-    // En lugar de una lista, comprobamos si la ruta "empieza por" la ruta base,
-    // ya que ahora tiene argumentos (ej: "panorama/monastery_1")
 
-    // Comprueba si la ruta actual empieza por "panorama"
+    // --- ¡¡CORRECCIÓN DEFINITIVA!! ---
+
+// Comprueba si la ruta actual EMPIEZA POR "panorama"
     val isPanorama = currentRoute?.startsWith(AppRoutes.PANORAMA) == true
-    // Comprueba si la ruta actual es exactamente "pin_detalle"
-    val isPinDetalle = currentRoute == AppRoutes.PIN_DETALLE
 
-    // La vista es inmersiva si CUALQUIERA de las dos es verdadera
-    val isImmersive = isPanorama || isPinDetalle
-    // --- FIN DE LA CORRECCIÓN ---
+// Comprueba si la ruta actual ES "virtual_visit"
+    val isVirtualVisit = currentRoute == AppRoutes.VIRTUAL_VISIT
+
+// La vista es inmersiva si es PANORAMA o CUALQUIER COSA DENTRO de VIRTUAL_VISIT
+    val isImmersive = isPanorama || isVirtualVisit
 
 
     val gesturesEnabled = when(currentRoute){

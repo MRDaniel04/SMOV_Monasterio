@@ -18,13 +18,11 @@ import androidx.navigation.compose.composable
 import com.nextapp.monasterio.AppRoutes
 import com.nextapp.monasterio.R
 import com.nextapp.monasterio.ui.screens.* // Asegúrate de importar PanoramaScreen y GaleriaScreen
-import com.nextapp.monasterio.ui.screens.*
-import com.nextapp.monasterio.ui.virtualvisit.screens.*
 import com.nextapp.monasterio.ui.theme.MonasteryRed
 import com.nextapp.monasterio.ui.theme.White
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import com.nextapp.monasterio.ui.virtualvisit.screens.PinDetalleScreen
+// (Ya no necesitamos PinDetalleScreen aquí)
 
 @Composable
 fun AppNavigationHost(
@@ -43,15 +41,12 @@ fun AppNavigationHost(
         composable(AppRoutes.PERFIL)   { ProfileScreen() }
         composable(AppRoutes.AJUSTES)  { AjustesScreen() }
 
-        // --- ESTA ES LA RUTA INMERSIVA ---
+        // Ruta de Panorama 360 (Inmersiva)
         composable(
-            route = AppRoutes.PANORAMA + "/{vistaId}", // Define la ruta con argumento
+            route = AppRoutes.PANORAMA + "/{vistaId}",
             arguments = listOf(navArgument("vistaId") { type = NavType.StringType })
         ) { backStackEntry ->
-            // Recoge el argumento
             val vistaId = backStackEntry.arguments?.getString("vistaId")
-
-            // Llama a PanoramaScreen con el ID y el NavController
             if (vistaId != null) {
                 PanoramaScreen(
                     vistaId = vistaId,
@@ -59,6 +54,15 @@ fun AppNavigationHost(
                 )
             }
         }
+
+        // Ruta de Visita Virtual (Mapa)
+        composable(AppRoutes.VIRTUAL_VISIT) {
+            VirtualVisitScreen(navController = navController)
+        }
+
+        // --- ¡¡CORRECCIÓN AQUÍ!! ---
+        // Se ha ELIMINADO la ruta 'AppRoutes.PIN_DETALLE + "/{pinId}"' de este NavHost (el raíz).
+        // La moveremos al NavHost anidado de 'VirtualVisitScreen.kt'.
 
         // --- RESTO DE TUS RUTAS ---
         composable(AppRoutes.OPCIONES_RESERVA) { OpcionesReservaScreen(navController = navController) }
@@ -84,29 +88,12 @@ fun AppNavigationHost(
                 hora = hora
             )
         }
-
-        // ✅ Corrección aquí: pasamos el navController principal
-        composable(AppRoutes.VIRTUAL_VISIT) {
-            VirtualVisitScreen(navController = navController)
-        }
-
-        composable(
-            route = "pin_detalle/{pinId}",
-            arguments = listOf(navArgument("pinId") { type = NavType.StringType })
-        ) { backStackEntry ->
-            val pinId = backStackEntry.arguments?.getString("pinId") ?: ""
-            PinDetalleFirestoreScreen(
-                pinId = pinId,
-                navController = navController
-            )
-        }
-
-
-
-
-
     }
 }
+
+//
+// --- EL RESTO DEL ARCHIVO (AppDrawerContent y DrawerMenuItem) SE QUEDA IGUAL ---
+//
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

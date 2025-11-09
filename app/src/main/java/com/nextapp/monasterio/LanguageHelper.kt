@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
+import androidx.core.content.edit
 
 object LanguageHelper {
 
@@ -17,7 +18,6 @@ object LanguageHelper {
         // --- FIN DE LA CORRECCIÓN ---
     }
 
-    // 1. Carga el idioma guardado al iniciar la app
     fun loadLocale(context: Context) {
         val language = getPrefs(context).getString(PREF_KEY_LANGUAGE, null)
         if (language != null) {
@@ -29,6 +29,7 @@ object LanguageHelper {
     // 2. Guarda el nuevo idioma cuando el usuario lo cambia
     fun saveLocale(context: Context, language: String) {
         getPrefs(context).edit().putString(PREF_KEY_LANGUAGE, language).commit()
+
         val appLocale = LocaleListCompat.forLanguageTags(language)
         AppCompatDelegate.setApplicationLocales(appLocale)
     }

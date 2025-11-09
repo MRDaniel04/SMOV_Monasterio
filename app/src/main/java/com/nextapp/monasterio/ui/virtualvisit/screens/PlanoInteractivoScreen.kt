@@ -6,11 +6,9 @@ import android.os.Handler
 import android.os.Looper
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.animation.*
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -18,8 +16,10 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape // <-- Import necesario
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton // <-- ¡IMPORT AÑADIDO!
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,19 +30,19 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import com.nextapp.monasterio.R
 import com.nextapp.monasterio.ui.virtualvisit.components.DebugPhotoView
 import com.nextapp.monasterio.ui.virtualvisit.data.PlanoData
 import com.nextapp.monasterio.ui.virtualvisit.utils.isPointInPath
 import com.nextapp.monasterio.ui.virtualvisit.utils.isPointInPinArea
 import com.nextapp.monasterio.AppRoutes
-
+import com.nextapp.monasterio.models.PinData // Importamos el modelo
+// (Se ha eliminado el import erróneo de rootNavController)
 
 @Composable
 fun PlanoInteractivoScreen(
     navController: NavController,
-    rootNavController: NavHostController? // 👈 ya lo has añadido correctamente
+    // rootNavController: NavHostController? <-- Este parámetro ya no es necesario
 ) {
     val context = LocalContext.current
     val activity = (context as? Activity)
@@ -96,7 +96,7 @@ fun PlanoInteractivoScreen(
                         DebugPhotoView.PinData(
                             x = it.x,
                             y = it.y,
-                            iconId = it.iconRes,
+                            iconId = it.iconRes ?: 0,
                             isPressed = isPinPressed
                         )
                     }
@@ -110,7 +110,9 @@ fun PlanoInteractivoScreen(
 
                     setOnPhotoTapListener { _, x, y ->
                         val figura = PlanoData.figuras.find { isPointInPath(x, y, it.path) }
-                        val pin = PlanoData.pines.find {
+
+                        // Buscamos el objeto PinData completo
+                        val pin: PinData? = PlanoData.pines.find {
                             isPointInPinArea(x, y, it.x, it.y, it.tapRadius)
                         }
 
@@ -121,37 +123,30 @@ fun PlanoInteractivoScreen(
 
                                 Handler(Looper.getMainLooper()).postDelayed({
                                     activeHighlight = null
-                                    figura.destino?.let { destino ->
+                                    figura.destino.let { destino ->
                                         try {
                                             navController.navigate(destino)
                                         } catch (e: Exception) {
                                             Toast.makeText(
                                                 context,
-                                                "Pantalla no encontrada: $destino",
+                                                "Pantalla no encontrada: $destino $e",
                                                 Toast.LENGTH_SHORT
                                             ).show()
                                         }
-                                    } ?: Toast.makeText(
-                                        context,
-                                        "Destino no asignado a ${figura.nombre}",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
+                                    }
                                 }, 200)
                             }
 
                             pin != null -> {
                                 isPinPressed = true
-                                Toast.makeText(context, "${pin.id} pulsado", Toast.LENGTH_SHORT).show()
+                                // Toast.makeText(context, "${pin.id} pulsado", Toast.LENGTH_SHORT).show()
 
                                 Handler(Looper.getMainLooper()).postDelayed({
                                     isPinPressed = false
-                                    // 👇 Navegación al NavController principal
-                                    rootNavController?.navigate(AppRoutes.PIN_DETALLE)
-                                        ?: Toast.makeText(
-                                            context,
-                                            "No se pudo navegar al detalle del pin",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
+
+                                    // Navegamos con el navController local
+                                    navController.navigate(AppRoutes.PIN_DETALLE + "/${pin.id}")
+
                                 }, 200)
                             }
 
@@ -247,6 +242,25 @@ fun PlanoInteractivoScreen(
                     )
                 }
             }
+        } // --- FIN DE LA COLUMN ---
+
+        // --- ¡¡BOTÓN DE "ATRÁS" CORREGIDO!! ---
+        IconButton(
+            onClick = { navController.popBackStack() }, // Vuelve atrás en el navegador local
+            modifier = Modifier
+                .align(Alignment.TopStart) // Arriba a la izquierda
+                .statusBarsPadding() // Para que no se ponga debajo de la barra de estado
+                .padding(16.dp) // Margen
+                .background(
+                    color = Color.Black.copy(alpha = 0.5f), // Fondo negro semitransparente
+                    shape = RoundedCornerShape(12.dp) // Esquinas redondeadas
+                )
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.arrow_back),
+                contentDescription = "Volver",
+                tint = Color.White // Flecha blanca
+            )
         }
-    }
+    } // --- FIN DEL BOX ---
 }
