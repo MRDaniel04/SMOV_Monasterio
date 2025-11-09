@@ -6,12 +6,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
-import androidx.navigation.navArgument
+import androidx.navigation.NavType // <-- ¡IMPORTANTE!
+import androidx.navigation.navArgument // <-- ¡IMPORTANTE!
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.nextapp.monasterio.AppRoutes
+import com.nextapp.monasterio.AppRoutes // <-- ¡IMPORTANTE!
 import com.nextapp.monasterio.ui.virtualvisit.screens.*
 
 object VirtualVisitRoutes {
@@ -24,7 +24,8 @@ object VirtualVisitRoutes {
 }
 
 @Composable
-fun VirtualVisitScreen(navController: NavHostController? = null) {
+fun VirtualVisitScreen(navController: NavHostController? = null) { // <-- Este es el 'navController' RAÍZ
+    // Este es el 'localNavController'
     val localNavController = rememberNavController()
 
     val context = LocalContext.current
@@ -42,23 +43,21 @@ fun VirtualVisitScreen(navController: NavHostController? = null) {
         composable(VirtualVisitRoutes.PLANO) {
             PlanoInteractivoScreen(
                 navController = localNavController,
+                rootNavController = navController
             )
         }
 
-        // --- ¡¡AQUÍ ESTÁ LA CORRECCIÓN!! ---
-        // (Tu captura demuestra que estas líneas faltaban)
-
+        // --- (Tus otras rutas de "sub-parte") ---
         composable(VirtualVisitRoutes.DETALLE_MONASTERIO) {
             MonasterioDetalleScreen(
                 navController = localNavController,
-                rootNavController = navController
+                rootNavController = navController // <-- ¡CORRECCIÓN 2: Pasa el raíz!
             )
         }
         composable(VirtualVisitRoutes.DETALLE_IGLESIA) {
             IglesiaDetalleScreen(navController = localNavController)
         }
 
-        // --- AÑADE ESTOS 3 BLOQUES QUE FALTABAN ---
         composable(VirtualVisitRoutes.DETALLE_COLEGIO) {
             ColegioDetalleScreen(navController = localNavController)
         }
@@ -68,7 +67,7 @@ fun VirtualVisitScreen(navController: NavHostController? = null) {
         composable(VirtualVisitRoutes.DETALLE_CLAUSTRO) {
             ClaustroDetalleScreen(navController = localNavController)
         }
-        // --- FIN DE LA CORRECCIÓN ---
+        // --- FIN DE TUS OTRAS RUTAS ---
 
 
         composable(
@@ -78,7 +77,8 @@ fun VirtualVisitScreen(navController: NavHostController? = null) {
             val pinId = backStackEntry.arguments?.getString("pinId") ?: ""
             PinDetalleFirestoreScreen(
                 pinId = pinId,
-                navController = localNavController
+                navController = localNavController, // <-- El local (para onBack)
+                rootNavController = navController // <-- ¡CORRECCIÓN 3: Pasa el raíz!
             )
         }
     }

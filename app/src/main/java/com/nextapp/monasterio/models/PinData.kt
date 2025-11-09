@@ -18,7 +18,8 @@ data class PinData(
     val imagenes: List<String> = emptyList(), // ✅ URLs de Cloudinary
     val descripcion: String? = null,
     val destino: DestinoPin = DestinoPin.Detalle("pin_detalle"),
-    val tapRadius: Float = 0.04f
+    val tapRadius: Float = 0.04f,
+    val vista360Url: String? = null
 )
 
 sealed class DestinoPin {

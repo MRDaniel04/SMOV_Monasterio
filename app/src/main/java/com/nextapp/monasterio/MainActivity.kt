@@ -58,18 +58,14 @@ fun MonasteryAppScreen() {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
+    // ... (Tu lógica de idioma se queda igual)
     val stringEspanyol= "Español"
     val stringAleman= "Deutsch"
     val stringIngles= "English"
-
-
     var mostrarIdioma by remember { mutableStateOf(false) }
-
     val configuration = LocalConfiguration.current
     val currentLanguageCode = configuration.locales[0].language
-
     var idioma by remember { mutableStateOf(currentLanguageCode) }
-
     var idiomasDisponibles = listOf(stringEspanyol,stringIngles,stringAleman)
 
     val currentTitle = remember { mutableStateOf(context.getString(R.string.title_inicio)) }
@@ -79,16 +75,16 @@ fun MonasteryAppScreen() {
     val currentRoute = currentBackStackEntry?.destination?.route
 
 
-    // --- ¡¡CORRECCIÓN DEFINITIVA!! ---
-
-// Comprueba si la ruta actual EMPIEZA POR "panorama"
     val isPanorama = currentRoute?.startsWith(AppRoutes.PANORAMA) == true
 
-// Comprueba si la ruta actual ES "virtual_visit"
+    // Comprueba si la ruta ES "virtual_visit" (esto cubre el mapa Y los pines anidados)
     val isVirtualVisit = currentRoute == AppRoutes.VIRTUAL_VISIT
 
-// La vista es inmersiva si es PANORAMA o CUALQUIER COSA DENTRO de VIRTUAL_VISIT
-    val isImmersive = isPanorama || isVirtualVisit
+    // Comprueba si la ruta EMPIEZA POR "pin_360" (la nueva vista 360)
+    val isPin360 = currentRoute?.startsWith(AppRoutes.PIN_360) == true
+
+    // La vista es inmersiva si es CUALQUIERA de las tres
+    val isImmersive = isPanorama || isVirtualVisit || isPin360
 
 
     val gesturesEnabled = when(currentRoute){
@@ -96,12 +92,10 @@ fun MonasteryAppScreen() {
         else -> true
     }
 
-    // ✅ Actualizar título
+    // ✅ Actualizar título (Tu lógica se queda igual)
     LaunchedEffect(navController) {
         navController.currentBackStackEntryFlow.collect { backStackEntry ->
             val route = backStackEntry.destination.route
-            // --- MODIFICACIÓN SUGERIDA ---
-            // Añadimos esto para que no intente buscar un título para la ruta con argumento
             val routeBase = route?.split("/")?.firstOrNull() ?: route
 
             currentTitle.value = when (routeBase) { // <-- Usamos routeBase
@@ -114,33 +108,30 @@ fun MonasteryAppScreen() {
                 AppRoutes.RESERVA,
                 AppRoutes.CONFIRMACION_RESERVA -> context.getString(R.string.title_appointment)
                 AppRoutes.VIRTUAL_VISIT -> context.getString(R.string.title_monasterio)
-                // (No es necesario añadir PANORAMA aquí, ya que será inmersiva y no mostrará título)
                 else -> context.getString(R.string.title_inicio)
             }
         }
     }
 
-    if (isImmersive) {
-        // 🌌 Vista inmersiva sin barra ni menú
-        AppNavigationHost(
-            navController = navController,
-            modifier = Modifier.fillMaxSize()
-        )
-    } else {
-        // 🧱 Vista normal con barra y menú
-        ModalNavigationDrawer(
-            drawerState = drawerState,
-            drawerContent = {
-                AppDrawerContent(
-                    navController = navController,
-                    scope = scope,
-                    drawerState = drawerState
-                )
-            },
-            gesturesEnabled = gesturesEnabled
-        ) {
-            Scaffold(
-                topBar = {
+    // --- ¡¡2. ESTRUCTURA REFACTORIZADA (UN SOLO NAVHOST)!! ---
+    // (Hemos eliminado el 'if (isImmersive)' que duplicaba el NavHost)
+
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        drawerContent = {
+            AppDrawerContent(
+                navController = navController,
+                scope = scope,
+                drawerState = drawerState
+            )
+        },
+        // Desactivamos gestos en el mapa Y en pantallas inmersivas
+        gesturesEnabled = gesturesEnabled && !isImmersive
+    ) {
+        Scaffold(
+            topBar = {
+                // Solo mostramos la barra roja si NO estamos en una ruta inmersiva
+                if (!isImmersive) {
                     CenterAlignedTopAppBar(
                         title = { Text(currentTitle.value) },
                         colors = TopAppBarDefaults.topAppBarColors(
@@ -165,6 +156,7 @@ fun MonasteryAppScreen() {
                             }
                         },
                         actions = {
+                            // ... (Tu lógica de idioma y Toast se queda igual)
                             Box {
                                 OutlinedIconButton(onClick = {
                                     mostrarIdioma = true
@@ -174,7 +166,7 @@ fun MonasteryAppScreen() {
                                     Image(
                                         painter = painterResource(id = iconRes),
                                         contentDescription = if (idioma == "es" || idioma == stringEspanyol ) stringEspanyol
-                                         else if (idioma == "de" || idioma == stringAleman) stringAleman else stringIngles,
+                                        else if (idioma == "de" || idioma == stringAleman) stringAleman else stringIngles,
                                         contentScale = ContentScale.Crop
                                     )
                                 }
@@ -199,27 +191,29 @@ fun MonasteryAppScreen() {
                                     }
                                 }
                             }
-                                IconButton(onClick = {
-                                    Toast.makeText(
-                                        context,
-                                        "Modo edición (próximamente)",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                }) {
-                                    Icon(
-                                        painter = painterResource(id = R.drawable.lapiz),
-                                        contentDescription = stringResource(id = R.string.edit_mode)
-                                    )
-                                }
+                            IconButton(onClick = {
+                                Toast.makeText(
+                                    context,
+                                    "Modo edición (próximamente)",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.lapiz),
+                                    contentDescription = stringResource(id = R.string.edit_mode)
+                                )
                             }
+                        }
                     )
                 }
-            ) { paddingValues ->
-                AppNavigationHost(
-                    navController = navController,
-                    modifier = Modifier.padding(paddingValues)
-                )
             }
+        ) { paddingValues ->
+            // ¡¡UN SOLO AppNavigationHost!!
+            // (Si es inmersiva, paddingValues será cero porque no hay TopBar)
+            AppNavigationHost(
+                navController = navController,
+                modifier = Modifier.padding(paddingValues)
+            )
         }
     }
 }

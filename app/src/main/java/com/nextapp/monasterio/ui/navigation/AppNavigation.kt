@@ -41,7 +41,7 @@ fun AppNavigationHost(
         composable(AppRoutes.PERFIL)   { ProfileScreen() }
         composable(AppRoutes.AJUSTES)  { AjustesScreen() }
 
-        // Ruta de Panorama 360 (Inmersiva)
+        // Ruta de Panorama 360 (Inmersiva, desde Galería / res/raw)
         composable(
             route = AppRoutes.PANORAMA + "/{vistaId}",
             arguments = listOf(navArgument("vistaId") { type = NavType.StringType })
@@ -60,9 +60,24 @@ fun AppNavigationHost(
             VirtualVisitScreen(navController = navController)
         }
 
-        // --- ¡¡CORRECCIÓN AQUÍ!! ---
-        // Se ha ELIMINADO la ruta 'AppRoutes.PIN_DETALLE + "/{pinId}"' de este NavHost (el raíz).
-        // La moveremos al NavHost anidado de 'VirtualVisitScreen.kt'.
+        // --- ¡¡AQUÍ ESTÁ LA NUEVA RUTA!! ---
+        // Ruta inmersiva para el 360 de un Pin (desde Firebase URL)
+        composable(
+            route = AppRoutes.PIN_360 + "/{pinId}", // Recibe el ID del Pin
+            arguments = listOf(navArgument("pinId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val pinId = backStackEntry.arguments?.getString("pinId")
+            if (pinId != null) {
+                // Llama a la NUEVA pantalla 360
+                Pin360Screen(
+                    pinId = pinId,
+                    navController = navController
+                )
+            }
+        }
+        // --- FIN DE LA MODIFICACIÓN ---
+
+        // (La ruta PIN_DETALLE se queda eliminada de aquí, ¡está bien!)
 
         // --- RESTO DE TUS RUTAS ---
         composable(AppRoutes.OPCIONES_RESERVA) { OpcionesReservaScreen(navController = navController) }

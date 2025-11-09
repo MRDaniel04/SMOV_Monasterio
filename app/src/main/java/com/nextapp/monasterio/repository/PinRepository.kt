@@ -30,9 +30,12 @@ object PinRepository {
             "y" to pin.y.toDouble(),
             "tema" to pin.tema.name,
             "color" to null,
-            "imagenes" to pin.imagenes, // ✅ URLs Cloudinary
+            "imagenes" to pin.imagenes,
             "descripcion" to pin.descripcion,
-            "tapRadius" to pin.tapRadius.toDouble()
+            "tapRadius" to pin.tapRadius.toDouble(),
+
+            // --- ¡¡1. CORRECCIÓN AL ESCRIBIR!! ---
+            "vista360Url" to pin.vista360Url
         )
         return createPinAutoId(payload)
     }
@@ -74,6 +77,10 @@ object PinRepository {
             val descripcion = data["descripcion"] as? String
             val tapRadius = (data["tapRadius"] as? Number)?.toFloat() ?: 0.04f
 
+            // --- ¡¡2. CORRECCIÓN AL LEER!! ---
+            // Leemos el nuevo campo de Firebase
+            val vista360Url = data["vista360Url"] as? String
+
             PinData(
                 id = docId,
                 titulo = titulo,
@@ -83,10 +90,13 @@ object PinRepository {
                 tema = tema,
                 color = null,
                 iconRes = null,
-                imagenes = imagenes, // ✅ URLs Cloudinary
+                imagenes = imagenes,
                 descripcion = descripcion,
                 destino = com.nextapp.monasterio.models.DestinoPin.Detalle(docId),
-                tapRadius = tapRadius
+                tapRadius = tapRadius,
+
+                // --- ¡¡Y LO ASIGNAMOS AQUÍ!! ---
+                vista360Url = vista360Url
             )
         } catch (e: Exception) {
             e.printStackTrace()

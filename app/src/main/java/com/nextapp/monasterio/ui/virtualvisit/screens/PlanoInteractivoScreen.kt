@@ -37,12 +37,13 @@ import com.nextapp.monasterio.ui.virtualvisit.utils.isPointInPath
 import com.nextapp.monasterio.ui.virtualvisit.utils.isPointInPinArea
 import com.nextapp.monasterio.AppRoutes
 import com.nextapp.monasterio.models.PinData // Importamos el modelo
+import androidx.navigation.NavHostController
 // (Se ha eliminado el import erróneo de rootNavController)
 
 @Composable
 fun PlanoInteractivoScreen(
     navController: NavController,
-    // rootNavController: NavHostController? <-- Este parámetro ya no es necesario
+    rootNavController: NavHostController? = null
 ) {
     val context = LocalContext.current
     val activity = (context as? Activity)
