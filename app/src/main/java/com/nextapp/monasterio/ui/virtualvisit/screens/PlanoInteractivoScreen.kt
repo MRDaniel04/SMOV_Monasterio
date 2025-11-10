@@ -32,6 +32,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavController
 import com.nextapp.monasterio.R
 import com.nextapp.monasterio.ui.virtualvisit.components.DebugPhotoView
+import com.nextapp.monasterio.ui.virtualvisit.data.PlanoData
 import com.nextapp.monasterio.ui.virtualvisit.utils.isPointInPath
 import com.nextapp.monasterio.ui.virtualvisit.utils.isPointInPinArea
 import com.nextapp.monasterio.AppRoutes
@@ -40,12 +41,14 @@ import com.nextapp.monasterio.models.PinData// Importamos el modelo
 import com.nextapp.monasterio.repository.FiguraRepository
 import com.nextapp.monasterio.ui.screens.VirtualVisitRoutes
 
+import com.nextapp.monasterio.models.PinData // Importamos el modelo
+import androidx.navigation.NavHostController
 // (Se ha eliminado el import erróneo de rootNavController)
 
 @Composable
 fun PlanoInteractivoScreen(
     navController: NavController,
-    // rootNavController: NavHostController? <-- Este parámetro ya no es necesario
+    rootNavController: NavHostController? = null
 ) {
     val context = LocalContext.current
     val activity = (context as? Activity)
@@ -107,6 +110,7 @@ fun PlanoInteractivoScreen(
             modifier = Modifier.fillMaxSize(),
             factory = { ctx ->
                 DebugPhotoView(ctx).apply {
+
                     layoutParams = FrameLayout.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.MATCH_PARENT,

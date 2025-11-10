@@ -26,7 +26,8 @@ object VirtualVisitRoutes {
 }
 
 @Composable
-fun VirtualVisitScreen(navController: NavHostController? = null) {
+fun VirtualVisitScreen(navController: NavHostController? = null) { // <-- Este es el 'navController' RAÍZ
+    // Este es el 'localNavController'
     val localNavController = rememberNavController()
 
     val context = LocalContext.current
@@ -44,12 +45,11 @@ fun VirtualVisitScreen(navController: NavHostController? = null) {
         composable(VirtualVisitRoutes.PLANO) {
             PlanoInteractivoScreen(
                 navController = localNavController,
+                rootNavController = navController
             )
         }
 
-        // --- ¡¡AQUÍ ESTÁ LA CORRECCIÓN!! ---
-        // (Tu captura demuestra que estas líneas faltaban)
-
+        // --- (Tus otras rutas de "sub-parte") ---
         composable(VirtualVisitRoutes.DETALLE_MONASTERIO) {
             MonasterioDetalleScreen(
                 navController = localNavController,
