@@ -64,7 +64,8 @@ fun VirtualVisitScreen(navController: NavHostController? = null) { // <-- Este e
             val pinId = backStackEntry.arguments?.getString("pinId") ?: ""
             PinDetalleFirestoreScreen(
                 pinId = pinId,
-                navController = localNavController
+                navController = localNavController,
+                rootNavController = navController
             )
         }
 
