@@ -41,7 +41,6 @@ import com.nextapp.monasterio.models.PinData// Importamos el modelo
 import com.nextapp.monasterio.repository.FiguraRepository
 import com.nextapp.monasterio.ui.screens.VirtualVisitRoutes
 
-import com.nextapp.monasterio.models.PinData // Importamos el modelo
 import androidx.navigation.NavHostController
 // (Se ha eliminado el import erróneo de rootNavController)
 
