@@ -32,11 +32,14 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavController
 import com.nextapp.monasterio.R
 import com.nextapp.monasterio.ui.virtualvisit.components.DebugPhotoView
-import com.nextapp.monasterio.ui.virtualvisit.data.PlanoData
 import com.nextapp.monasterio.ui.virtualvisit.utils.isPointInPath
 import com.nextapp.monasterio.ui.virtualvisit.utils.isPointInPinArea
 import com.nextapp.monasterio.AppRoutes
-import com.nextapp.monasterio.models.PinData // Importamos el modelo
+import com.nextapp.monasterio.models.FiguraData
+import com.nextapp.monasterio.models.PinData// Importamos el modelo
+import com.nextapp.monasterio.repository.FiguraRepository
+import com.nextapp.monasterio.ui.screens.VirtualVisitRoutes
+
 // (Se ha eliminado el import erróneo de rootNavController)
 
 @Composable
@@ -71,6 +74,28 @@ fun PlanoInteractivoScreen(
         )
     )
 
+    // 🔹 Estados
+    var figuras by remember { mutableStateOf<List<FiguraData>>(emptyList()) }
+    var isLoading by remember { mutableStateOf(true) }
+    val scope = rememberCoroutineScope()
+
+    LaunchedEffect(Unit) {
+        try {
+            figuras = FiguraRepository.getAllFiguras()
+            android.util.Log.d("PlanoInteractivo", "Figuras cargadas: ${figuras.size}")
+            figuras.forEach { figura ->
+                android.util.Log.d("PlanoInteractivo", "Figura: ${figura.nombre} - Puntos: ${figura.path.size}")
+            }
+        } catch (e: Exception) {
+            android.util.Log.e("PlanoInteractivo", "Error cargando figuras", e)
+            Toast.makeText(context, "Error cargando figuras", Toast.LENGTH_SHORT).show()
+        } finally {
+            isLoading = false
+        }
+    }
+
+
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -82,92 +107,68 @@ fun PlanoInteractivoScreen(
             modifier = Modifier.fillMaxSize(),
             factory = { ctx ->
                 DebugPhotoView(ctx).apply {
-
                     layoutParams = FrameLayout.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.MATCH_PARENT,
                     )
 
                     setImageResource(R.drawable.plano_monasterio)
-
                     post { setScale(initialZoom, true) }
 
-                    pins = PlanoData.pines.map {
-                        DebugPhotoView.PinData(
-                            x = it.x,
-                            y = it.y,
-                            iconId = it.iconRes ?: 0,
-                            isPressed = isPinPressed
-                        )
-                    }
-
-                    staticZones = PlanoData.figuras.map{figura->
-                        DebugPhotoView.StaticZoneData(
-                            path = figura.path,
-                            color=figura.colorResaltado
-                        )
-                    }
-
-                    setOnPhotoTapListener { _, x, y ->
-                        val figura = PlanoData.figuras.find { isPointInPath(x, y, it.path) }
-
-                        // Buscamos el objeto PinData completo
-                        val pin: PinData? = PlanoData.pines.find {
-                            isPointInPinArea(x, y, it.x, it.y, it.tapRadius)
-                        }
-
-                        when {
-                            figura != null -> {
-                                activePath = figura.path
-                                activeHighlight = Color(figura.colorResaltado)
-
-                                Handler(Looper.getMainLooper()).postDelayed({
-                                    activeHighlight = null
-                                    figura.destino.let { destino ->
-                                        try {
-                                            navController.navigate(destino)
-                                        } catch (e: Exception) {
-                                            Toast.makeText(
-                                                context,
-                                                "Pantalla no encontrada: $destino $e",
-                                                Toast.LENGTH_SHORT
-                                            ).show()
-                                        }
-                                    }
-                                }, 200)
-                            }
-
-                            pin != null -> {
-                                isPinPressed = true
-                                // Toast.makeText(context, "${pin.id} pulsado", Toast.LENGTH_SHORT).show()
-
-                                Handler(Looper.getMainLooper()).postDelayed({
-                                    isPinPressed = false
-
-                                    // Navegamos con el navController local
-                                    navController.navigate(AppRoutes.PIN_DETALLE + "/${pin.id}")
-
-                                }, 200)
-                            }
-
-                            else -> Toast.makeText(
-                                context,
-                                "Fuera del área interactiva",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                    }
-
-                    photoViewRef = this
+                    pins = emptyList() // Todavía no tenemos pines
                 }
             },
-            update = {
-                it.blinkingAlpha = blinkalpha
-                it.interactivePath = activePath
-                it.highlightColor = activeHighlight?.toArgb() ?: Color.Transparent.toArgb()
-                it.invalidate()
+            update = { photoView ->
+                // 🔹 Actualiza zonas cuando cambien las figuras o el parpadeo
+                photoView.staticZones = figuras.map { figura ->
+                    DebugPhotoView.StaticZoneData(
+                        path = createPathFromFirebase(figura),
+                        color = figura.colorResaltado
+                    )
+                }
+
+                // 🔹 Actualiza el estado visual dinámico
+                photoView.blinkingAlpha = blinkalpha
+                photoView.interactivePath = activePath
+                photoView.highlightColor = activeHighlight?.toArgb() ?: Color.Transparent.toArgb()
+
+                // 🔹 Redibuja
+                photoView.invalidate()
+
+                // 🔹 (mantén el listener aquí si quieres que se actualice al redibujar)
+                photoView.setOnPhotoTapListener { _, x, y ->
+                    val figura = figuras.find { isPointInPath(x, y, createPathFromFirebase(it)) }
+                    val pin: PinData? = null
+
+                    when {
+                        figura != null -> {
+                            activePath = createPathFromFirebase(figura)
+                            activeHighlight = Color(figura.colorResaltado)
+
+                            Handler(Looper.getMainLooper()).postDelayed({
+                                activeHighlight = null
+                                when (figura.tipoDestino) {
+                                    "detalle" -> navController.navigate("${VirtualVisitRoutes.DETALLE_GENERICO}/${figura.nombre}")
+                                    "plano" -> navController.navigate(VirtualVisitRoutes.DETALLE_MONASTERIO)
+                                    else -> Toast.makeText(context, "Destino no definido", Toast.LENGTH_SHORT).show()
+                                }
+                            }, 200)
+                        }
+
+                        pin != null -> {
+                            isPinPressed = true
+                            Handler(Looper.getMainLooper()).postDelayed({
+                                isPinPressed = false
+                                navController.navigate(AppRoutes.PIN_DETALLE + "/${pin.id}")
+                            }, 200)
+                        }
+
+                        else -> Toast.makeText(context, "Fuera del área interactiva", Toast.LENGTH_SHORT).show()
+                    }
+                }
             }
         )
+
 
         // 🎛️ Controles flotantes (zoom y reajuste)
         Column(
@@ -263,4 +264,23 @@ fun PlanoInteractivoScreen(
             )
         }
     } // --- FIN DEL BOX ---
+}
+
+private fun createPathFromFirebase(figura: FiguraData): android.graphics.Path {
+    val path = android.graphics.Path()
+    val points = figura.path
+    if (points.isEmpty()) return path
+
+    path.moveTo(points[0].x, points[0].y)
+    for (i in 1 until points.size) {
+        path.lineTo(points[i].x, points[i].y)
+    }
+    path.close()
+
+    val matrix = android.graphics.Matrix().apply {
+        setScale(figura.scale, figura.scale)
+        postTranslate(figura.offsetX, figura.offsetY)
+    }
+    path.transform(matrix)
+    return path
 }

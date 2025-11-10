@@ -22,7 +22,6 @@ import com.nextapp.monasterio.ui.theme.MonasteryRed
 import com.nextapp.monasterio.ui.theme.White
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-// (Ya no necesitamos PinDetalleScreen aquí)
 
 @Composable
 fun AppNavigationHost(
@@ -59,6 +58,8 @@ fun AppNavigationHost(
         composable(AppRoutes.VIRTUAL_VISIT) {
             VirtualVisitScreen(navController = navController)
         }
+
+
 
         // --- ¡¡CORRECCIÓN AQUÍ!! ---
         // Se ha ELIMINADO la ruta 'AppRoutes.PIN_DETALLE + "/{pinId}"' de este NavHost (el raíz).

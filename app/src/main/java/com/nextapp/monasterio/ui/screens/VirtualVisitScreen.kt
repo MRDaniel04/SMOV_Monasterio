@@ -21,6 +21,8 @@ object VirtualVisitRoutes {
     const val DETALLE_COLEGIO = "detalle_colegio"
     const val DETALLE_ARCO_MUDEJAR = "detalle_arco_mudejar"
     const val DETALLE_CLAUSTRO = "detalle_claustro"
+    const val DETALLE_GENERICO = "detalle_generico"
+
 }
 
 @Composable
@@ -54,22 +56,6 @@ fun VirtualVisitScreen(navController: NavHostController? = null) {
                 rootNavController = navController
             )
         }
-        composable(VirtualVisitRoutes.DETALLE_IGLESIA) {
-            IglesiaDetalleScreen(navController = localNavController)
-        }
-
-        // --- AÑADE ESTOS 3 BLOQUES QUE FALTABAN ---
-        composable(VirtualVisitRoutes.DETALLE_COLEGIO) {
-            ColegioDetalleScreen(navController = localNavController)
-        }
-        composable(VirtualVisitRoutes.DETALLE_ARCO_MUDEJAR) {
-            ArcoMudejarDetalleScreen(navController = localNavController)
-        }
-        composable(VirtualVisitRoutes.DETALLE_CLAUSTRO) {
-            ClaustroDetalleScreen(navController = localNavController)
-        }
-        // --- FIN DE LA CORRECCIÓN ---
-
 
         composable(
             route = AppRoutes.PIN_DETALLE + "/{pinId}", // Usamos la constante global
@@ -81,5 +67,17 @@ fun VirtualVisitScreen(navController: NavHostController? = null) {
                 navController = localNavController
             )
         }
+
+        composable(
+            route = "detalle_generico/{nombre}",
+            arguments = listOf(navArgument("nombre") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val nombre = backStackEntry.arguments?.getString("nombre") ?: ""
+            DetalleFiguraScreen(
+                navController = localNavController,
+                nombre = nombre
+            )
+        }
+
     }
 }
