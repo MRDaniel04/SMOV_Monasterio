@@ -20,8 +20,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView // <-- Import para PhotoView
+import androidx.compose.ui.window.Dialog // <-- Import para el Diálogo
+import androidx.compose.ui.window.DialogProperties // <-- Import para el Diálogo
 import androidx.core.view.WindowCompat
 import coil.compose.AsyncImage
+import coil.load // <-- Import para cargar la URL en PhotoView
+import com.github.chrisbanes.photoview.PhotoView // <-- Import de la librería de Zoom
 import com.nextapp.monasterio.R
 import com.nextapp.monasterio.models.PinData
 // Imports para el scroll de texto
@@ -44,6 +49,9 @@ fun PinDetalleScreen(
     val categoriaColor = pin.tema.color
     val pagerState = rememberPagerState(pageCount = { pin.imagenes.size })
 
+    // --- 1. ESTADO PARA EL ZOOM ---
+    var selectedImageUrl by remember { mutableStateOf<String?>(null) }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -54,8 +62,7 @@ fun PinDetalleScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = 16.dp)
-                .padding(bottom = 90.dp),
-            // La columna principal ya no es deslizable
+                .padding(bottom = 90.dp), // Padding para el botón 360
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             // 🔙 Botón atrás
@@ -91,7 +98,7 @@ fun PinDetalleScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            // 🖼️ Carrusel de imágenes (igual que antes)
+            // 🖼️ Carrusel de imágenes (AHORA CLICABLE)
             if (pin.imagenes.isNotEmpty()) {
                 Box(
                     modifier = Modifier
@@ -103,9 +110,12 @@ fun PinDetalleScreen(
                     HorizontalPager(state = pagerState) { page ->
                         AsyncImage(
                             model = pin.imagenes[page],
-                            contentDescription = null,
+                            contentDescription = "Imagen del pin (pulsar para ampliar)",
                             contentScale = ContentScale.Crop,
-                            modifier = Modifier.fillMaxSize()
+                            modifier = Modifier
+                                .fillMaxSize()
+                                // --- 2. ACCIÓN DE CLICK ---
+                                .clickable { selectedImageUrl = pin.imagenes[page] }
                         )
                     }
                     Row(
@@ -138,19 +148,16 @@ fun PinDetalleScreen(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // --- ¡¡CUADRO DE TEXTO DESLIZABLE CORREGIDO!! ---
+            // --- Cuadro de texto deslizable (igual que antes) ---
             val descripcion = pin.descripcion ?: ""
             if (descripcion.isNotBlank()) {
-
-                // 1. Creamos el estado de scroll (función que SÍ te reconoce)
                 val textScrollState = rememberScrollState()
-
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f) // Ocupa el espacio restante
                         .border(1.dp, Color.LightGray.copy(alpha = 0.5f), RoundedCornerShape(8.dp))
-                        .clip(RoundedCornerShape(8.dp)) // Recorta el contenido al Box
+                        .clip(RoundedCornerShape(8.dp))
                 ) {
                     Text(
                         text = descripcion, // Texto completo
@@ -160,16 +167,13 @@ fun PinDetalleScreen(
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(horizontal = 12.dp, vertical = 8.dp)
-                            // 2. Hacemos que el texto sea deslizable (función que SÍ te reconoce)
                             .verticalScroll(textScrollState)
                     )
-
-                    // (No añadimos la barra de scroll visual)
                 }
             }
 
-            // Espacio para que el botón "Ver 360" no tape el texto
-            Spacer(modifier = Modifier.height(80.dp))
+            // (El Spacer(80.dp) que tenías fue eliminado y reemplazado por el padding(bottom=90.dp) en la Column)
+
         } // --- FIN DE LA COLUMNA PRINCIPAL ---
 
         // --- Botón 360 (igual que antes) ---
@@ -197,6 +201,69 @@ fun PinDetalleScreen(
                         fontWeight = FontWeight.Bold
                     )
                 }
+            }
+        }
+
+        // --- 3. DIÁLOGO DE ZOOM (se muestra si selectedImageUrl no es null) ---
+        if (selectedImageUrl != null) {
+            ZoomableImageDialog(
+                imageUrl = selectedImageUrl!!,
+                onDismiss = { selectedImageUrl = null }
+            )
+        }
+    }
+}
+
+/**
+ * Un Diálogo Composable que muestra una imagen con zoom (usando PhotoView).
+ */
+@Composable
+private fun ZoomableImageDialog(imageUrl: String, onDismiss: () -> Unit) {
+    Dialog(
+        onDismissRequest = onDismiss,
+        properties = DialogProperties(
+            usePlatformDefaultWidth = false, // Ocupa todo el ancho
+            dismissOnClickOutside = true
+        )
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black.copy(alpha = 0.85f))
+                .clickable(onClick = onDismiss), // Permite cerrar pulsando el fondo
+            contentAlignment = Alignment.Center
+        ) {
+            // Usamos AndroidView para hostear la librería 'PhotoView' que permite zoom
+            AndroidView(
+                factory = { context ->
+                    PhotoView(context).apply {
+                        // Usamos Coil para cargar la URL en el PhotoView
+                        load(imageUrl) {
+                            crossfade(true)
+                            // (Opcional) puedes poner un placeholder
+                            // placeholder(R.drawable.ic_placeholder)
+                        }
+                    }
+                },
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp) // Un pequeño margen para que no toque los bordes
+            )
+
+            // Botón de Cerrar (X)
+            IconButton(
+                onClick = onDismiss,
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .statusBarsPadding()
+                    .padding(16.dp)
+                    .background(Color.Black.copy(alpha = 0.5f), CircleShape)
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.arrow_back),
+                    contentDescription = "Cerrar",
+                    tint = Color.White
+                )
             }
         }
     }
