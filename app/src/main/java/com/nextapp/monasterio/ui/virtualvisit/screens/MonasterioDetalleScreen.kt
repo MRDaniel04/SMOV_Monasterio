@@ -26,7 +26,7 @@ import com.nextapp.monasterio.models.PinData
 import com.nextapp.monasterio.ui.virtualvisit.components.DebugPhotoView
 import com.nextapp.monasterio.ui.virtualvisit.utils.isPointInPinArea
 import com.nextapp.monasterio.repository.PinRepository
-
+/*
 @Composable
 fun MonasterioDetalleScreen(
     navController: NavController,
@@ -190,3 +190,4 @@ fun MonasterioDetalleScreen(
         }
     }
 }
+*/

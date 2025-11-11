@@ -32,7 +32,6 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavController
 import com.nextapp.monasterio.R
 import com.nextapp.monasterio.ui.virtualvisit.components.DebugPhotoView
-import com.nextapp.monasterio.ui.virtualvisit.data.PlanoData
 import com.nextapp.monasterio.ui.virtualvisit.utils.isPointInPath
 import com.nextapp.monasterio.ui.virtualvisit.utils.isPointInPinArea
 import com.nextapp.monasterio.AppRoutes
@@ -43,7 +42,7 @@ import com.nextapp.monasterio.ui.screens.VirtualVisitRoutes
 
 import androidx.navigation.NavHostController
 // (Se ha eliminado el import erróneo de rootNavController)
-
+/*
 @Composable
 fun PlanoInteractivoScreen(
     navController: NavController,
@@ -286,3 +285,5 @@ private fun createPathFromFirebase(figura: FiguraData): android.graphics.Path {
     path.transform(matrix)
     return path
 }
+
+*/

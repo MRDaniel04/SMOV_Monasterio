@@ -1,4 +1,4 @@
-package com.nextapp.monasterio.ui.screens // (O donde esté tu archivo)
+package com.nextapp.monasterio.ui.screens
 
 import android.app.Activity
 import android.content.pm.ActivityInfo
@@ -16,18 +16,11 @@ import com.nextapp.monasterio.ui.virtualvisit.screens.*
 
 object VirtualVisitRoutes {
     const val PLANO = "plano"
-    const val DETALLE_MONASTERIO = "detalle_monasterio"
-    const val DETALLE_IGLESIA = "detalle_iglesia"
-    const val DETALLE_COLEGIO = "detalle_colegio"
-    const val DETALLE_ARCO_MUDEJAR = "detalle_arco_mudejar"
-    const val DETALLE_CLAUSTRO = "detalle_claustro"
     const val DETALLE_GENERICO = "detalle_generico"
-
 }
 
 @Composable
-fun VirtualVisitScreen(navController: NavHostController? = null) { // <-- Este es el 'navController' RAÍZ
-    // Este es el 'localNavController'
+fun VirtualVisitScreen(navController: NavHostController? = null) {
     val localNavController = rememberNavController()
 
     val context = LocalContext.current
@@ -38,27 +31,39 @@ fun VirtualVisitScreen(navController: NavHostController? = null) { // <-- Este e
         onDispose {}
     }
 
+    // 🔹 ID inicial del plano por defecto (exterior)
+    val initialPlanoId = "monasterio_exterior"
+
     NavHost(
         navController = localNavController,
-        startDestination = VirtualVisitRoutes.PLANO
+        // 👇 Empieza directamente en el plano exterior
+        startDestination = "${VirtualVisitRoutes.PLANO}/$initialPlanoId"
     ) {
+        // --- 🔹 Ruta base sin argumento (por si alguien navega a "plano" directamente)
         composable(VirtualVisitRoutes.PLANO) {
-            PlanoInteractivoScreen(
+            PlanoScreen(
+                planoId = initialPlanoId,
                 navController = localNavController,
                 rootNavController = navController
             )
         }
 
-        // --- (Tus otras rutas de "sub-parte") ---
-        composable(VirtualVisitRoutes.DETALLE_MONASTERIO) {
-            MonasterioDetalleScreen(
-                navController = localNavController,
-                rootNavController = navController
-            )
-        }
-
+        // --- 🔹 Ruta con parámetro (para navegación entre planos)
         composable(
-            route = AppRoutes.PIN_DETALLE + "/{pinId}", // Usamos la constante global
+            route = "${VirtualVisitRoutes.PLANO}/{planoId}",
+            arguments = listOf(navArgument("planoId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val planoId = backStackEntry.arguments?.getString("planoId") ?: initialPlanoId
+            PlanoScreen(
+                planoId = planoId,
+                navController = localNavController,
+                rootNavController = navController
+            )
+        }
+
+        // --- 🔹 Pantalla de detalle de Pin (igual que antes)
+        composable(
+            route = AppRoutes.PIN_DETALLE + "/{pinId}",
             arguments = listOf(navArgument("pinId") { type = NavType.StringType })
         ) { backStackEntry ->
             val pinId = backStackEntry.arguments?.getString("pinId") ?: ""
@@ -69,8 +74,9 @@ fun VirtualVisitScreen(navController: NavHostController? = null) { // <-- Este e
             )
         }
 
+        // --- 🔹 Pantalla genérica de detalle de Figura
         composable(
-            route = "detalle_generico/{nombre}",
+            route = "${VirtualVisitRoutes.DETALLE_GENERICO}/{nombre}",
             arguments = listOf(navArgument("nombre") { type = NavType.StringType })
         ) { backStackEntry ->
             val nombre = backStackEntry.arguments?.getString("nombre") ?: ""
@@ -79,6 +85,5 @@ fun VirtualVisitScreen(navController: NavHostController? = null) { // <-- Este e
                 nombre = nombre
             )
         }
-
     }
 }

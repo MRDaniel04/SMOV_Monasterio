@@ -99,4 +99,17 @@ class DebugPhotoView @JvmOverloads constructor(
             icon.draw(canvas)
         }
     }
+
+    fun setImageFromUrl(url: String) {
+        try {
+            // Carga la imagen remota usando Glide (descarga y la muestra en el PhotoView)
+            com.bumptech.glide.Glide.with(context)
+                .asBitmap()
+                .load(url)
+                .into(this)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
 }
