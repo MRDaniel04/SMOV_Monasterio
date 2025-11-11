@@ -162,8 +162,7 @@ fun PlanoInteractivoScreen(
                             isPinPressed = true
                             Handler(Looper.getMainLooper()).postDelayed({
                                 isPinPressed = false
-                                navController.navigate(AppRoutes.PIN_DETALLE + "/${pin.id}")
-                            }, 200)
+                                rootNavController?.navigate(AppRoutes.PIN_DETALLE + "/${pin.id}")                            }, 200)
                         }
 
                         else -> Toast.makeText(context, "Fuera del área interactiva", Toast.LENGTH_SHORT).show()
@@ -250,7 +249,7 @@ fun PlanoInteractivoScreen(
 
         // --- ¡¡BOTÓN DE "ATRÁS" CORREGIDO!! ---
         IconButton(
-            onClick = { navController.popBackStack() }, // Vuelve atrás en el navegador local
+            onClick = { rootNavController?.popBackStack() }, // Vuelve atrás en el navegador local
             modifier = Modifier
                 .align(Alignment.TopStart) // Arriba a la izquierda
                 .statusBarsPadding() // Para que no se ponga debajo de la barra de estado

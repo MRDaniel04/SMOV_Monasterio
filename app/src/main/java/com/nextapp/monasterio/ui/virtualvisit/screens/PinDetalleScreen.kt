@@ -32,6 +32,8 @@ import com.nextapp.monasterio.models.PinData
 // Imports para el scroll de texto
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.rememberScrollState
+import androidx.navigation.NavController
+
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
