@@ -35,9 +35,13 @@ import kotlinx.coroutines.launch
 import android.graphics.Matrix
 import android.graphics.Path
 import android.util.Log
+import androidx.compose.ui.res.stringResource
+import com.nextapp.monasterio.viewModels.AjustesViewModel
+import com.nextapp.monasterio.viewModels.AuthViewModel
 
 @Composable
 fun PlanoScreen(
+    viewModel: AjustesViewModel,
     planoId: String, // ← id del documento de Firestore (p.ej. "monasterio_exterior")
     navController: NavController,
     rootNavController: NavHostController? = null
@@ -65,6 +69,8 @@ fun PlanoScreen(
 
     val initialZoom = 1.5f
     val planoBackgroundColor = Color(0xFFF5F5F5)
+
+    val botonesVisibles by viewModel.botonesVisibles.collectAsState()
 
     // --- Efecto de parpadeo (blink) ---
     val infiniteTransition = rememberInfiniteTransition(label = "BlinkTransition")
@@ -99,7 +105,7 @@ fun PlanoScreen(
             }
         } catch (e: Exception) {
             Log.e("PlanoUniversal", "❌ Error cargando plano", e)
-            Toast.makeText(context, "Error cargando datos del plano", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, context.getString(R.string.error_loading_plane), Toast.LENGTH_SHORT).show()
         } finally {
             isLoading = false
         }
@@ -113,7 +119,7 @@ fun PlanoScreen(
     ) {
         if (isLoading) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text("Cargando plano...")
+                Text(stringResource(R.string.plane_loading))
             }
             return@Box
         }
@@ -186,13 +192,13 @@ fun PlanoScreen(
                                             // 🚀 Usar el navController local (no el root)
                                             navController.navigate("${VirtualVisitRoutes.PLANO}/$destinoId")
                                         } else {
-                                            Toast.makeText(context, "Plano destino no definido", Toast.LENGTH_SHORT).show()
+                                            Toast.makeText(context, context.getString(R.string.notdefined_destinyplane), Toast.LENGTH_SHORT).show()
                                         }
                                     }
 
 
                                     else -> {
-                                        Toast.makeText(context, "Destino no definido", Toast.LENGTH_SHORT).show()
+                                        Toast.makeText(context, context.getString(R.string.notdefined_destiny), Toast.LENGTH_SHORT).show()
                                     }
                                 }
 
@@ -207,7 +213,7 @@ fun PlanoScreen(
                             }, 200)
                         }
 
-                        else -> Toast.makeText(context, "Fuera del área interactiva", Toast.LENGTH_SHORT).show()
+                        else -> Toast.makeText(context, context.getString(R.string.out_interactive_area), Toast.LENGTH_SHORT).show()
                     }
                 }
 
@@ -222,52 +228,66 @@ fun PlanoScreen(
                 .padding(end = 16.dp, bottom = 80.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            FloatingActionButton(onClick = {
-                photoViewRef?.let {
-                    val newScale = (it.scale + 0.2f).coerceAtMost(it.maximumScale)
-                    it.setScale(newScale, true)
+            if(botonesVisibles) {
+                FloatingActionButton(onClick = {
+                    photoViewRef?.let {
+                        val newScale = (it.scale + 0.2f).coerceAtMost(it.maximumScale)
+                        it.setScale(newScale, true)
+                    }
+                }) {
+                    Box(
+                        modifier = Modifier
+                            .size(48.dp)
+                            .background(Color.White.copy(alpha = 0.7f), shape = CircleShape),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.aumentar_zoom),
+                            contentDescription = stringResource(R.string.increase),
+                            tint = Color.Unspecified
+                        )
+                    }
                 }
-            }) {
-                Box(
-                    modifier = Modifier
-                        .size(48.dp)
-                        .background(Color.White.copy(alpha = 0.7f), shape = CircleShape),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(painter = painterResource(id = R.drawable.aumentar_zoom), contentDescription = "Aumentar", tint = Color.Unspecified)
-                }
-            }
 
-            FloatingActionButton(onClick = {
-                photoViewRef?.let {
-                    val newScale = (it.scale - 0.2f).coerceAtLeast(it.minimumScale)
-                    it.setScale(newScale, true)
+                FloatingActionButton(onClick = {
+                    photoViewRef?.let {
+                        val newScale = (it.scale - 0.2f).coerceAtLeast(it.minimumScale)
+                        it.setScale(newScale, true)
+                    }
+                }) {
+                    Box(
+                        modifier = Modifier
+                            .size(48.dp)
+                            .background(Color.White.copy(alpha = 0.7f), shape = CircleShape),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.disminuir_zoom),
+                            contentDescription = stringResource(R.string.decrease),
+                            tint = Color.Unspecified
+                        )
+                    }
                 }
-            }) {
-                Box(
-                    modifier = Modifier
-                        .size(48.dp)
-                        .background(Color.White.copy(alpha = 0.7f), shape = CircleShape),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(painter = painterResource(id = R.drawable.disminuir_zoom), contentDescription = "Disminuir", tint = Color.Unspecified)
-                }
-            }
 
-            FloatingActionButton(onClick = {
-                photoViewRef?.apply {
-                    setScale(initialZoom, true)
-                    setTranslationX(0f)
-                    setTranslationY(0f)
-                }
-            }) {
-                Box(
-                    modifier = Modifier
-                        .size(48.dp)
-                        .background(Color.White.copy(alpha = 0.7f), shape = CircleShape),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(painter = painterResource(id = R.drawable.reajustar), contentDescription = "Reajustar", tint = Color.Unspecified)
+                FloatingActionButton(onClick = {
+                    photoViewRef?.apply {
+                        setScale(initialZoom, true)
+                        setTranslationX(0f)
+                        setTranslationY(0f)
+                    }
+                }) {
+                    Box(
+                        modifier = Modifier
+                            .size(48.dp)
+                            .background(Color.White.copy(alpha = 0.7f), shape = CircleShape),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.reajustar),
+                            contentDescription = stringResource(R.string.readjust),
+                            tint = Color.Unspecified
+                        )
+                    }
                 }
             }
         }
@@ -297,7 +317,7 @@ fun PlanoScreen(
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.arrow_back),
-                contentDescription = "Volver",
+                contentDescription = stringResource(R.string.go_back),
                 tint = Color.White
             )
         }

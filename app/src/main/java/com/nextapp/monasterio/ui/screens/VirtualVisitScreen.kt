@@ -13,6 +13,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.nextapp.monasterio.AppRoutes
 import com.nextapp.monasterio.ui.virtualvisit.screens.*
+import com.nextapp.monasterio.viewModels.AjustesViewModel
 
 object VirtualVisitRoutes {
     const val PLANO = "plano"
@@ -20,7 +21,7 @@ object VirtualVisitRoutes {
 }
 
 @Composable
-fun VirtualVisitScreen(navController: NavHostController? = null) {
+fun VirtualVisitScreen(navController: NavHostController? = null,viewModel: AjustesViewModel) {
     val localNavController = rememberNavController()
 
     val context = LocalContext.current
@@ -42,6 +43,7 @@ fun VirtualVisitScreen(navController: NavHostController? = null) {
         // --- 🔹 Ruta base sin argumento (por si alguien navega a "plano" directamente)
         composable(VirtualVisitRoutes.PLANO) {
             PlanoScreen(
+                viewModel=viewModel,
                 planoId = initialPlanoId,
                 navController = localNavController,
                 rootNavController = navController
@@ -55,6 +57,7 @@ fun VirtualVisitScreen(navController: NavHostController? = null) {
         ) { backStackEntry ->
             val planoId = backStackEntry.arguments?.getString("planoId") ?: initialPlanoId
             PlanoScreen(
+                viewModel=viewModel,
                 planoId = planoId,
                 navController = localNavController,
                 rootNavController = navController

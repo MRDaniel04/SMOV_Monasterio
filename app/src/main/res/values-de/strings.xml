@@ -65,5 +65,17 @@
     <string name="spanish_language">Spanisch</string>
     <string name="german_language">Deutsch</string>
     <string name="english_language">Englisch</string>
-
+    <string name="navegation_button">Navigationsschaltflächen ausblenden</string>
+    <string name="close">Schließen</string>
+    <string name="go_back">Geh zurück</string>
+    <string name="see_360">360º-Ansicht</string>
+    <string name="contentdescription_image_pin">Bild anpinnen (zum Vergrößern anklicken)</string>
+    <string name="readjust">Zurücksetzen</string>
+    <string name="decrease">Verringern</string>
+    <string name="increase">Zunahme</string>
+    <string name="out_interactive_area">Außerhalb des interaktiven Bereichs</string>
+    <string name="notdefined_destiny">Undefiniertes Ziel</string>
+    <string name="notdefined_destinyplane">Zielebene nicht definiert</string>
+    <string name="plane_loading">Ladeplan...</string>
+    <string name="error_loading_plane">Fehler beim Laden der Plandaten</string>
 </resources>

@@ -60,4 +60,17 @@
     <string name="spanish_language">Español</string>
     <string name="german_language">Alemán</string>
     <string name="english_language">Inglés</string>
+    <string name="navegation_button">Ocultar botones de navegación</string>
+    <string name="close">Cerrar</string>
+    <string name="go_back">Volver</string>
+    <string name="see_360">Ver 360º</string>
+    <string name="contentdescription_image_pin">Imagen del pin (pulsar para ampliar)</string>
+    <string name="readjust">Reajustar</string>
+    <string name="decrease">Disminuir</string>
+    <string name="increase">Aumentar</string>
+    <string name="out_interactive_area">Fuera del área interactiva</string>
+    <string name="notdefined_destiny">Destino no definido</string>
+    <string name="notdefined_destinyplane">Plano destino no definido</string>
+    <string name="plane_loading">Cargando plano...</string>
+    <string name="error_loading_plane">Error cargando datos del plano</string>
 </resources>

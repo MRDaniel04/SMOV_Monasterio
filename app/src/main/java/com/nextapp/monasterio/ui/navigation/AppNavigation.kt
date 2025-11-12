@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -20,11 +21,13 @@ import com.nextapp.monasterio.R
 import com.nextapp.monasterio.ui.screens.* // Asegúrate de importar PanoramaScreen y GaleriaScreen
 import com.nextapp.monasterio.ui.theme.MonasteryRed
 import com.nextapp.monasterio.ui.theme.White
+import com.nextapp.monasterio.viewModels.AjustesViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
 fun AppNavigationHost(
+    ajustesViewModel: AjustesViewModel = viewModel(),
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
@@ -38,7 +41,7 @@ fun AppNavigationHost(
         composable(AppRoutes.HISTORIA) { HistoriaScreen() }
         composable(AppRoutes.GALERIA)  { GaleriaScreen(navController = navController) }
         composable(AppRoutes.PERFIL)   { ProfileScreen() }
-        composable(AppRoutes.AJUSTES)  { AjustesScreen() }
+        composable(AppRoutes.AJUSTES)  { AjustesScreen(viewModel = ajustesViewModel) }
 
         // Ruta de Panorama 360 (Inmersiva, desde Galería / res/raw)
         composable(
@@ -56,7 +59,7 @@ fun AppNavigationHost(
 
         // Ruta de Visita Virtual (Mapa)
         composable(AppRoutes.VIRTUAL_VISIT) {
-            VirtualVisitScreen(navController = navController)
+            VirtualVisitScreen(navController = navController,viewModel = ajustesViewModel)
         }
 
         // --- ¡¡AQUÍ ESTÁ LA NUEVA RUTA!! ---

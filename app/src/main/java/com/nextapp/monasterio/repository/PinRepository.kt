@@ -64,8 +64,14 @@ object PinRepository {
         if (data == null) return null
         return try {
             val titulo = data["titulo"] as? String ?: ""
+            val tituloIngles = data["tituloIngles"] as? String ?: ""
+            val tituloAleman = data["tituloAleman"] as? String ?: ""
             val ubicacionStr = data["ubicacion"] as? String
+            val ubicacionStrIngles = data["ubicacionIngles"] as? String
+            val ubicacionStrAleman = data["ubicacionAleman"] as? String
             val ubicacion = ubicacionStr?.let { safeUbicacionOf(it) }
+            val ubicacionIngles = ubicacionStrIngles?.let { safeUbicacionOf(it) }
+            val ubicacionAleman = ubicacionStrAleman?.let { safeUbicacionOf(it) }
 
             val x = (data["x"] as? Number)?.toFloat() ?: 0f
             val y = (data["y"] as? Number)?.toFloat() ?: 0f
@@ -75,6 +81,8 @@ object PinRepository {
 
             val imagenes = (data["imagenes"] as? List<*>)?.mapNotNull { it as? String } ?: emptyList()
             val descripcion = data["descripcion"] as? String
+            val descripcionIngles = data["descripcionIngles"] as? String
+            val descripcionAleman = data["descripcionAleman"] as? String
             val tapRadius = (data["tapRadius"] as? Number)?.toFloat() ?: 0.04f
 
             // --- ¡¡2. CORRECCIÓN AL LEER!! ---
@@ -84,7 +92,11 @@ object PinRepository {
             PinData(
                 id = docId,
                 titulo = titulo,
+                tituloAleman = tituloAleman,
+                tituloIngles = tituloIngles,
                 ubicacion = ubicacion,
+                ubicacionIngles = ubicacionIngles,
+                ubicacionAleman = ubicacionAleman,
                 x = x,
                 y = y,
                 tema = tema,
@@ -92,6 +104,8 @@ object PinRepository {
                 iconRes = null,
                 imagenes = imagenes,
                 descripcion = descripcion,
+                descripcionIngles = descripcionIngles,
+                descripcionAleman = descripcionAleman,
                 destino = com.nextapp.monasterio.models.DestinoPin.Detalle(docId),
                 tapRadius = tapRadius,
 

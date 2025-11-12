@@ -32,7 +32,11 @@ import com.nextapp.monasterio.models.PinData
 // Imports para el scroll de texto
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
+import com.nextapp.monasterio.models.Ubicacion
+import java.util.Locale
 
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -48,11 +52,32 @@ fun PinDetalleScreen(
         window?.let { WindowCompat.setDecorFitsSystemWindows(it, false) }
     }
 
-    val categoriaColor = pin.tema.color
     val pagerState = rememberPagerState(pageCount = { pin.imagenes.size })
 
     // --- 1. ESTADO PARA EL ZOOM ---
     var selectedImageUrl by remember { mutableStateOf<String?>(null) }
+
+    val configuration = LocalConfiguration.current
+    val locale: Locale = configuration.locales[0]
+    val language = locale.language
+
+    var titulo_pin: String
+    var descripcion_pin : String? = null
+    var ubicacion_pin: Ubicacion? = null
+
+    if(language == "es"){
+        titulo_pin = pin.titulo
+        descripcion_pin = pin.descripcion
+        ubicacion_pin = pin.ubicacion
+    } else if(language == "de"){
+        titulo_pin = pin.tituloAleman
+        descripcion_pin = pin.descripcionAleman
+        ubicacion_pin = pin.ubicacionAleman
+    }else{
+        titulo_pin = pin.tituloIngles
+        descripcion_pin = pin.descripcionIngles
+        ubicacion_pin = pin.ubicacionIngles
+    }
 
     Box(
         modifier = Modifier
@@ -76,7 +101,7 @@ fun PinDetalleScreen(
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.arrow_back),
-                    contentDescription = "Volver",
+                    contentDescription = stringResource(R.string.go_back),
                     modifier = Modifier
                         .size(28.dp)
                         .clickable { onBack() }
@@ -88,8 +113,8 @@ fun PinDetalleScreen(
             // Título (igual que antes)
             Text(
                 text = buildString {
-                    append(pin.titulo)
-                    pin.ubicacion?.let { append(" (${it.displayName})") }
+                    append(titulo_pin)
+                    ubicacion_pin?.let { append(" (${it.displayName})") }
                 },
                 fontSize = 26.sp,
                 fontWeight = FontWeight.Bold,
@@ -107,12 +132,12 @@ fun PinDetalleScreen(
                         .fillMaxWidth()
                         .height(250.dp)
                         .clip(RoundedCornerShape(16.dp))
-                        .border(3.dp, categoriaColor, RoundedCornerShape(16.dp))
+                        .border(3.dp, Color.Black, RoundedCornerShape(16.dp))
                 ) {
                     HorizontalPager(state = pagerState) { page ->
                         AsyncImage(
                             model = pin.imagenes[page],
-                            contentDescription = "Imagen del pin (pulsar para ampliar)",
+                            contentDescription = stringResource(R.string.contentdescription_image_pin),
                             contentScale = ContentScale.Crop,
                             modifier = Modifier
                                 .fillMaxSize()
@@ -130,7 +155,7 @@ fun PinDetalleScreen(
                                     .padding(3.dp)
                                     .size(if (selected) 8.dp else 6.dp)
                                     .background(
-                                        if (selected) categoriaColor else categoriaColor.copy(alpha = 0.4f),
+                                        Color.Black,
                                         shape = CircleShape
                                     )
                             )
@@ -140,18 +165,10 @@ fun PinDetalleScreen(
                 Spacer(modifier = Modifier.height(24.dp))
             }
 
-            // Texto del Tema (igual que antes)
-            Text(
-                text = pin.tema.displayName,
-                color = categoriaColor,
-                fontSize = 18.sp,
-                fontWeight = FontWeight.SemiBold
-            )
-
             Spacer(modifier = Modifier.height(12.dp))
 
             // --- Cuadro de texto deslizable (igual que antes) ---
-            val descripcion = pin.descripcion ?: ""
+            val descripcion = descripcion_pin?: ""
             if (descripcion.isNotBlank()) {
                 val textScrollState = rememberScrollState()
                 Box(
@@ -193,14 +210,14 @@ fun PinDetalleScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(56.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = categoriaColor),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Black),
                     shape = RoundedCornerShape(12.dp)
                 ) {
                     Text(
-                        text = "Ver 360°",
+                        text = stringResource(R.string.see_360),
                         color = Color.White,
                         fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
                     )
                 }
             }
@@ -263,7 +280,7 @@ private fun ZoomableImageDialog(imageUrl: String, onDismiss: () -> Unit) {
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.arrow_back),
-                    contentDescription = "Cerrar",
+                    contentDescription = stringResource(R.string.close),
                     tint = Color.White
                 )
             }
