@@ -20,24 +20,21 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.viewinterop.AndroidView // <-- Import para PhotoView
-import androidx.compose.ui.window.Dialog // <-- Import para el Diálogo
-import androidx.compose.ui.window.DialogProperties // <-- Import para el Diálogo
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.core.view.WindowCompat
 import coil.compose.AsyncImage
-import coil.load // <-- Import para cargar la URL en PhotoView
-import com.github.chrisbanes.photoview.PhotoView // <-- Import de la librería de Zoom
+import coil.load
+import com.github.chrisbanes.photoview.PhotoView
 import com.nextapp.monasterio.R
 import com.nextapp.monasterio.models.PinData
-// Imports para el scroll de texto
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
-import androidx.navigation.NavController
 import com.nextapp.monasterio.models.Ubicacion
 import java.util.Locale
-
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -52,51 +49,60 @@ fun PinDetalleScreen(
         window?.let { WindowCompat.setDecorFitsSystemWindows(it, false) }
     }
 
-    val pagerState = rememberPagerState(pageCount = { pin.imagenes.size })
+    val imagenes = if (pin.imagenesDetalladas.isNotEmpty()) pin.imagenesDetalladas else emptyList()
 
-    // --- 1. ESTADO PARA EL ZOOM ---
+    LaunchedEffect(Unit) {
+        android.util.Log.d("PinDetalleScreen", "🖼️ Imagenes cargadas: ${imagenes.map { it.etiqueta }}")
+    }
+
+    val pagerState = rememberPagerState(pageCount = { imagenes.size })
     var selectedImageUrl by remember { mutableStateOf<String?>(null) }
+    var selectedImageLabel by remember { mutableStateOf<String?>(null) }
 
     val configuration = LocalConfiguration.current
     val locale: Locale = configuration.locales[0]
     val language = locale.language
 
-    var titulo_pin: String
-    var descripcion_pin : String? = null
-    var ubicacion_pin: Ubicacion? = null
+    val titulo_pin: String
+    val descripcion_pin: String?
+    val ubicacion_pin: Ubicacion?
 
-    if(language == "es"){
-        titulo_pin = pin.titulo
-        descripcion_pin = pin.descripcion
-        ubicacion_pin = pin.ubicacion
-    } else if(language == "de"){
-        titulo_pin = pin.tituloAleman
-        descripcion_pin = pin.descripcionAleman
-        ubicacion_pin = pin.ubicacionAleman
-    }else{
-        titulo_pin = pin.tituloIngles
-        descripcion_pin = pin.descripcionIngles
-        ubicacion_pin = pin.ubicacionIngles
+    when (language) {
+        "es" -> {
+            titulo_pin = pin.titulo
+            descripcion_pin = pin.descripcion
+            ubicacion_pin = pin.ubicacion
+        }
+        "de" -> {
+            titulo_pin = pin.tituloAleman
+            descripcion_pin = pin.descripcionAleman
+            ubicacion_pin = pin.ubicacionAleman
+        }
+        else -> {
+            titulo_pin = pin.tituloIngles
+            descripcion_pin = pin.descripcionIngles
+            ubicacion_pin = pin.ubicacionIngles
+        }
     }
 
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
-            .statusBarsPadding() // Padding para la barra de estado (arriba)
+            .statusBarsPadding()
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = 16.dp)
-                .padding(bottom = 90.dp), // Padding para el botón 360
+                .padding(bottom = 90.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             // 🔙 Botón atrás
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 16.dp), // Padding para bajarlo
+                    .padding(top = 16.dp),
                 contentAlignment = Alignment.CenterStart
             ) {
                 Image(
@@ -110,7 +116,7 @@ fun PinDetalleScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Título (igual que antes)
+            // 🏷️ Título
             Text(
                 text = buildString {
                     append(titulo_pin)
@@ -125,8 +131,8 @@ fun PinDetalleScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            // 🖼️ Carrusel de imágenes (AHORA CLICABLE)
-            if (pin.imagenes.isNotEmpty()) {
+            // 🖼️ Carrusel con etiqueta real desde Firestore
+            if (imagenes.isNotEmpty()) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -135,29 +141,46 @@ fun PinDetalleScreen(
                         .border(3.dp, Color.Black, RoundedCornerShape(16.dp))
                 ) {
                     HorizontalPager(state = pagerState) { page ->
-                        AsyncImage(
-                            model = pin.imagenes[page],
-                            contentDescription = stringResource(R.string.contentdescription_image_pin),
-                            contentScale = ContentScale.Crop,
-                            modifier = Modifier
-                                .fillMaxSize()
-                                // --- 2. ACCIÓN DE CLICK ---
-                                .clickable { selectedImageUrl = pin.imagenes[page] }
-                        )
+                        val imagen = imagenes[page]
+                        Box(modifier = Modifier.fillMaxSize()) {
+                            AsyncImage(
+                                model = imagen.url,
+                                contentDescription = imagen.etiqueta,
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .clickable {
+                                        selectedImageUrl = imagen.url
+                                        selectedImageLabel = imagen.etiqueta
+                                    }
+                            )
+
+                            // 🔹 Etiqueta abajo a la izquierda
+                            Text(
+                                text = imagen.etiqueta,
+                                color = Color.White,
+                                fontSize = 14.sp,
+                                modifier = Modifier
+                                    .align(Alignment.BottomStart)
+                                    .background(Color.Black.copy(alpha = 0.6f))
+                                    .padding(horizontal = 10.dp, vertical = 6.dp)
+                            )
+                        }
                     }
+
+                    // 🔸 Indicadores inferiores
                     Row(
-                        Modifier.align(Alignment.BottomCenter).padding(8.dp)
+                        Modifier
+                            .align(Alignment.BottomCenter)
+                            .padding(bottom = 6.dp)
                     ) {
-                        repeat(pin.imagenes.size) { index ->
+                        repeat(imagenes.size) { index ->
                             val selected = pagerState.currentPage == index
                             Box(
                                 Modifier
                                     .padding(3.dp)
                                     .size(if (selected) 8.dp else 6.dp)
-                                    .background(
-                                        Color.Black,
-                                        shape = CircleShape
-                                    )
+                                    .background(Color.White.copy(alpha = if (selected) 1f else 0.6f), shape = CircleShape)
                             )
                         }
                     }
@@ -165,21 +188,19 @@ fun PinDetalleScreen(
                 Spacer(modifier = Modifier.height(24.dp))
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
-
-            // --- Cuadro de texto deslizable (igual que antes) ---
-            val descripcion = descripcion_pin?: ""
+            // 📝 Descripción
+            val descripcion = descripcion_pin ?: ""
             if (descripcion.isNotBlank()) {
                 val textScrollState = rememberScrollState()
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .weight(1f) // Ocupa el espacio restante
+                        .weight(1f)
                         .border(1.dp, Color.LightGray.copy(alpha = 0.5f), RoundedCornerShape(8.dp))
                         .clip(RoundedCornerShape(8.dp))
                 ) {
                     Text(
-                        text = descripcion, // Texto completo
+                        text = descripcion,
                         fontSize = 16.sp,
                         color = Color.DarkGray,
                         lineHeight = 22.sp,
@@ -190,19 +211,16 @@ fun PinDetalleScreen(
                     )
                 }
             }
+        }
 
-            // (El Spacer(80.dp) que tenías fue eliminado y reemplazado por el padding(bottom=90.dp) en la Column)
-
-        } // --- FIN DE LA COLUMNA PRINCIPAL ---
-
-        // --- Botón 360 (igual que antes) ---
+        // 🔘 Botón 360
         onVer360?.let {
             Box(
                 modifier = Modifier
-                    .align(Alignment.BottomCenter) // Fijo abajo
+                    .align(Alignment.BottomCenter)
                     .fillMaxWidth()
                     .background(Color.White)
-                    .navigationBarsPadding() // Sube el botón por encima de la barra de Samsung
+                    .navigationBarsPadding()
                     .padding(horizontal = 16.dp, vertical = 12.dp)
             ) {
                 Button(
@@ -223,53 +241,54 @@ fun PinDetalleScreen(
             }
         }
 
-        // --- 3. DIÁLOGO DE ZOOM (se muestra si selectedImageUrl no es null) ---
+        // 🔍 Zoom con etiqueta real
         if (selectedImageUrl != null) {
             ZoomableImageDialog(
                 imageUrl = selectedImageUrl!!,
-                onDismiss = { selectedImageUrl = null }
+                label = selectedImageLabel ?: "",
+                onDismiss = {
+                    selectedImageUrl = null
+                    selectedImageLabel = null
+                }
             )
         }
     }
 }
 
-/**
- * Un Diálogo Composable que muestra una imagen con zoom (usando PhotoView).
- */
+// 🔍 Diálogo de zoom
 @Composable
-private fun ZoomableImageDialog(imageUrl: String, onDismiss: () -> Unit) {
+private fun ZoomableImageDialog(imageUrl: String, label: String, onDismiss: () -> Unit) {
     Dialog(
         onDismissRequest = onDismiss,
-        properties = DialogProperties(
-            usePlatformDefaultWidth = false, // Ocupa todo el ancho
-            dismissOnClickOutside = true
-        )
+        properties = DialogProperties(usePlatformDefaultWidth = false, dismissOnClickOutside = true)
     ) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.Black.copy(alpha = 0.85f))
-                .clickable(onClick = onDismiss), // Permite cerrar pulsando el fondo
-            contentAlignment = Alignment.Center
+                .background(Color.Black.copy(alpha = 0.95f))
         ) {
-            // Usamos AndroidView para hostear la librería 'PhotoView' que permite zoom
             AndroidView(
                 factory = { context ->
                     PhotoView(context).apply {
-                        // Usamos Coil para cargar la URL en el PhotoView
-                        load(imageUrl) {
-                            crossfade(true)
-                            // (Opcional) puedes poner un placeholder
-                            // placeholder(R.drawable.ic_placeholder)
-                        }
+                        load(imageUrl) { crossfade(true) }
                     }
                 },
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp) // Un pequeño margen para que no toque los bordes
+                modifier = Modifier.fillMaxSize()
             )
 
-            // Botón de Cerrar (X)
+            // 🔹 Etiqueta abajo a la izquierda
+            Text(
+                text = label,
+                color = Color.White,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Medium,
+                modifier = Modifier
+                    .align(Alignment.BottomStart)
+                    .background(Color.Black.copy(alpha = 0.7f))
+                    .padding(horizontal = 12.dp, vertical = 8.dp)
+            )
+
+            // ❌ Botón cerrar
             IconButton(
                 onClick = onDismiss,
                 modifier = Modifier

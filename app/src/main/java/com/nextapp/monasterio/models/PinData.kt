@@ -2,10 +2,6 @@ package com.nextapp.monasterio.models
 
 import androidx.compose.ui.graphics.Color
 
-/**
- * Representa un punto de interés individual mostrado como un "pin" sobre un plano.
- * Ahora admite URLs de imágenes (Cloudinary).
- */
 data class PinData(
     val id: String,
     val titulo: String,
@@ -18,8 +14,9 @@ data class PinData(
     val y: Float,
     val tema: Tema,
     val color: Color? = null,
-    val iconRes: Int? = null, // si algún día quieres usar íconos locales
-    val imagenes: List<String> = emptyList(), // ✅ URLs de Cloudinary
+    val iconRes: Int? = null,
+    val imagenes: List<String> = emptyList(), // referencias a las imágenes
+    val imagenesDetalladas: List<ImagenData> = emptyList(), // 🔥 cargadas desde Firebase
     val descripcion: String? = null,
     val descripcionIngles: String? = null,
     val descripcionAleman: String? = null,
