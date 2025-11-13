@@ -207,11 +207,40 @@ fun PlanoScreen(
 
                         pin != null -> {
                             isPinPressed = true
-                            Handler(Looper.getMainLooper()).postDelayed({
-                                isPinPressed = false
-                                navController.navigate(AppRoutes.PIN_DETALLE + "/${pin.id}")
-                            }, 200)
+                            Log.d("PlanoScreen", "🟡 Pin pulsado → ${pin.id}, tipoDestino=${pin.tipoDestino}, valorDestino=${pin.valorDestino}")
+                            try {
+                                Handler(Looper.getMainLooper()).postDelayed({
+                                    try {
+                                        isPinPressed = false
+                                        val tipo = pin.tipoDestino?.lowercase()
+                                        val destino = pin.valorDestino
+                                        Log.d("PlanoScreen", "🔹 Dentro del handler → tipo=$tipo, destino=$destino")
+
+                                        when (tipo) {
+                                            "ruta" -> {
+                                                val destino = pin.valorDestino ?: return@postDelayed
+                                                Log.d("PlanoScreen", "➡ Navegando (root) a: $destino con pinId=${pin.id}")
+                                                rootNavController?.navigate("${AppRoutes.PIN_ENTRADA_MONASTERIO}/${pin.id}")
+                                            }
+
+                                            "detalle" -> {
+                                                Log.d("PlanoScreen", "➡ Navegando a detalle: ${pin.id}")
+                                                navController.navigate(AppRoutes.PIN_DETALLE + "/${pin.id}")
+                                            }
+                                            else -> {
+                                                Log.w("PlanoScreen", "⚠️ tipoDestino desconocido: $tipo")
+                                            }
+                                        }
+                                    } catch (e: Exception) {
+                                        Log.e("PlanoScreen", "❌ Error dentro del Handler al navegar (interno)", e)
+                                    }
+                                }, 200)
+                            } catch (e: Exception) {
+                                Log.e("PlanoScreen", "❌ Error al iniciar el Handler (externo)", e)
+                            }
                         }
+
+
 
                         else -> Toast.makeText(context, context.getString(R.string.out_interactive_area), Toast.LENGTH_SHORT).show()
                     }
