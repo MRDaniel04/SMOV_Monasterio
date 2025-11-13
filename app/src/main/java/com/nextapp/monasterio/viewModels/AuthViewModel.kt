@@ -53,7 +53,7 @@ class AuthViewModel : ViewModel() {
                     User(
                         id = it.uid,
                         email = it.email ?: "",
-                        name = it.displayName,
+                        name = it.displayName ?: "",
                         photoUrl = it.photoUrl?.toString()
                     )
                 }
@@ -65,6 +65,7 @@ class AuthViewModel : ViewModel() {
         }
     }
 
+    // Funcion para iniciar sesion
     fun login(email: String, password: String) {
         viewModelScope.launch {
             _isLoading.value = true
@@ -80,7 +81,35 @@ class AuthViewModel : ViewModel() {
         }
     }
 
+    // Funcion para cerrar sesion
     fun logout() {
         auth.signOut()
+    }
+
+    // Funcion para actualizar los datos del usuario
+    fun updateUser(name: String?, email: String?) {
+        val current = auth.currentUser ?: return
+        val uid = current.uid
+
+        // Actualiza Firestore
+        val updates = mutableMapOf<String, Any>()
+        name?.let { updates["name"] = it }
+        email?.let { updates["email"] = it }
+
+        if (updates.isEmpty()) return
+
+        firestore.collection("users").document(uid)
+            .update(updates)
+            .addOnSuccessListener {
+                // Actualiza el flujo _currentUser localmente
+                val updatedUser = _currentUser.value?.copy(
+                    name = name ?: _currentUser.value?.name ?: "",
+                    email = email ?: _currentUser.value?.email ?: ""
+                )
+                _currentUser.value = updatedUser
+            }
+            .addOnFailureListener { e ->
+                _error.value = e.message
+            }
     }
 }

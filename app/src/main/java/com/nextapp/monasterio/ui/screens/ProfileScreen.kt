@@ -5,20 +5,31 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.nextapp.monasterio.R
 import com.nextapp.monasterio.viewModels.AuthViewModel
+import com.nextapp.monasterio.ui.components.EditableText
 
 @Composable
-fun ProfileScreen(viewModel: AuthViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
+fun ProfileScreen(
+    isEditing: Boolean,
+    viewModel: AuthViewModel = viewModel(),
+) {
 
     val userState by viewModel.currentUser.collectAsState()
     val user = userState
     val isLoading by viewModel.isLoading.collectAsState()
     val error by viewModel.error.collectAsState()
 
+    // campos para iniciar sesion
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+
+    // campos editables de usuario
+    var name by remember { mutableStateOf(user?.name ?: "") }
 
     if (isLoading) { // Vista de carga del estado
         // TODO mover a un componente para usar en otras paginas?
@@ -40,13 +51,13 @@ fun ProfileScreen(viewModel: AuthViewModel = androidx.lifecycle.viewmodel.compos
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = "Iniciar sesión", style = MaterialTheme.typography.titleLarge)
+            Text(text = stringResource(id = R.string.profile_login), style = MaterialTheme.typography.titleLarge)
             Spacer(modifier = Modifier.height(16.dp))
 
             OutlinedTextField(
                 value = email,
                 onValueChange = { email = it },
-                label = { Text("Correo electrónico") },
+                label = { Text(stringResource(id = R.string.profile_email)) },
                 singleLine = true
             )
 
@@ -55,7 +66,7 @@ fun ProfileScreen(viewModel: AuthViewModel = androidx.lifecycle.viewmodel.compos
             OutlinedTextField(
                 value = password,
                 onValueChange = { password = it },
-                label = { Text("Contraseña") },
+                label = { Text(stringResource(id = R.string.profile_password)) },
                 visualTransformation = PasswordVisualTransformation(),
                 singleLine = true
             )
@@ -63,7 +74,7 @@ fun ProfileScreen(viewModel: AuthViewModel = androidx.lifecycle.viewmodel.compos
             Spacer(modifier = Modifier.height(16.dp))
 
             Button(onClick = { viewModel.login(email, password) }) {
-                Text("Iniciar sesión")
+                Text(stringResource(id = R.string.profile_login))
             }
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -78,15 +89,33 @@ fun ProfileScreen(viewModel: AuthViewModel = androidx.lifecycle.viewmodel.compos
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                text = "Bienvenido, ${user.name}",
-                style = MaterialTheme.typography.titleLarge
-            )
+            if (isEditing) {
+                EditableText(
+                    text = name,
+                    isEditing = isEditing,
+                    onTextChange = { name = it },
+                    label = "Nombre",
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Button(
+                    onClick = {
+                        viewModel.updateUser(name = name, email = user.email) // O también email editable si quieres
+                    },
+                    modifier = Modifier.align(Alignment.End)
+                ) {
+                    Text(stringResource(id = R.string.edit_save_changes))
+                }
+            } else {
+                Text(
+                    text = "Bienvenido, ${user.name}",
+                    style = MaterialTheme.typography.titleLarge
+                )
 
-            Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(24.dp))
 
-            Button(onClick = { viewModel.logout() }) {
-                Text("Cerrar sesión")
+                Button(onClick = { viewModel.logout() }) {
+                    Text(stringResource(id = R.string.profile_logout))
+                }
             }
         }
     }
