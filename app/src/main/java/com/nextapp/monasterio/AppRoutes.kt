@@ -19,4 +19,5 @@ object AppRoutes {
     const val PANORAMA = "panorama"
 
     const val PIN_360 = "pin_360"
+    const val PIN_ENTRADA_MONASTERIO = "entrada_monasterio"
 }

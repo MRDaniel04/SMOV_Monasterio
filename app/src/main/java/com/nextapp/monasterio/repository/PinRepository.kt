@@ -79,17 +79,30 @@ object PinRepository {
         for (ref in basePin.imagenes) {
             try {
                 val imageId = ref.substringAfterLast("/")
-                val imageDoc =
-                    firestore.collection("imagenes").document(imageId).get().await()
+                val imageDoc = firestore.collection("imagenes").document(imageId).get().await()
                 if (imageDoc.exists()) {
                     val url = imageDoc.getString("url") ?: ""
                     val etiqueta = imageDoc.getString("etiqueta") ?: ""
+                    val titulo = imageDoc.getString("titulo") ?: ""
+                    val tituloIngles = imageDoc.getString("tituloIngles") ?: ""
+                    val tituloAleman = imageDoc.getString("tituloAleman") ?: ""
+
                     Log.d(
                         "PinRepository",
-                        "✅ Imagen encontrada '$imageId' → etiqueta='$etiqueta', url='$url'"
+                        "✅ Imagen encontrada '$imageId' → etiqueta='$etiqueta', titulo='$titulo', url='$url'"
                     )
+
                     if (url.isNotBlank()) {
-                        imagenesDetalladas.add(ImagenData(imageId, url, etiqueta))
+                        imagenesDetalladas.add(
+                            ImagenData(
+                                id = imageId,
+                                url = url,
+                                etiqueta = etiqueta,
+                                titulo = titulo,
+                                tituloIngles = tituloIngles,
+                                tituloAleman = tituloAleman
+                            )
+                        )
                     }
                 } else {
                     Log.w("PinRepository", "⚠️ Documento no encontrado en /imagenes/: $imageId")
@@ -98,6 +111,7 @@ object PinRepository {
                 Log.e("PinRepository", "❌ Error al obtener imagen referenciada para $ref", e)
             }
         }
+
 
         Log.d("PinRepository", "📊 Resultado final para pin $id → ${imagenesDetalladas.size} imágenes cargadas")
 
@@ -121,25 +135,18 @@ object PinRepository {
 
             val x = (data["x"] as? Number)?.toFloat() ?: 0f
             val y = (data["y"] as? Number)?.toFloat() ?: 0f
-
             val temaStr = data["tema"] as? String
             val tema = temaStr?.let { safeTemaOf(it) } ?: Tema.PINTURA_Y_ARTE_VISUAL
 
-            // 🧩 Aquí soportamos DocumentReference además de String
+            // 🧩 Referencias de imágenes
             val imagenes: List<String> = when (val raw = data["imagenes"]) {
-                is List<*> -> {
-                    raw.mapNotNull {
-                        when (it) {
-                            is String -> it
-                            is DocumentReference -> it.path // ← convierte ref a string "/imagenes/xyz"
-                            else -> {
-                                Log.w("PinRepository", "⚠️ Tipo de imagen no soportado: ${it?.javaClass?.simpleName}")
-                                null
-                            }
-                        }
+                is List<*> -> raw.mapNotNull {
+                    when (it) {
+                        is String -> it
+                        is DocumentReference -> it.path
+                        else -> null
                     }
                 }
-                is Map<*, *> -> raw.values.mapNotNull { it as? String }
                 else -> emptyList()
             }
 
@@ -149,13 +156,25 @@ object PinRepository {
             val tapRadius = (data["tapRadius"] as? Number)?.toFloat() ?: 0.04f
             val vista360Url = data["vista360Url"] as? String
 
-            Log.d("PinRepository", "📍 Mapeando pin '$titulo' ($docId) con ${imagenes.size} refs")
+            // 🔹 NUEVO: leer los campos de destino
+            val tipoDestino = data["tipoDestino"] as? String
+            val valorDestino = data["valorDestino"] as? String
+
+            // 🔹 Crear el destino dinámicamente
+            val destino = when (tipoDestino?.lowercase()) {
+                "ruta" -> DestinoPin.Ruta(valorDestino ?: "")
+                "detalle" -> DestinoPin.Detalle(valorDestino ?: docId)
+                "popup" -> DestinoPin.Popup(valorDestino ?: "Sin mensaje")
+                else -> DestinoPin.Detalle(docId)
+            }
+
+            Log.d("PinRepository", "📍 Mapeando pin '$titulo' ($docId) → tipoDestino=$tipoDestino, valor=$valorDestino")
 
             PinData(
                 id = docId,
                 titulo = titulo,
-                tituloAleman = tituloAleman,
                 tituloIngles = tituloIngles,
+                tituloAleman = tituloAleman,
                 ubicacion = ubicacion,
                 ubicacionIngles = ubicacionIngles,
                 ubicacionAleman = ubicacionAleman,
@@ -169,7 +188,9 @@ object PinRepository {
                 descripcion = descripcion,
                 descripcionIngles = descripcionIngles,
                 descripcionAleman = descripcionAleman,
-                destino = DestinoPin.Detalle(docId),
+                tipoDestino = tipoDestino,
+                valorDestino = valorDestino,
+                destino = destino,
                 tapRadius = tapRadius,
                 vista360Url = vista360Url
             )
@@ -178,6 +199,7 @@ object PinRepository {
             null
         }
     }
+
 
     private fun safeTemaOf(name: String): Tema {
         return try {

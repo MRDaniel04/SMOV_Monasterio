@@ -77,6 +77,20 @@ fun VirtualVisitScreen(navController: NavHostController? = null,viewModel: Ajust
             )
         }
 
+        // --- 🔹 Pantalla de entrada del Monasterio
+        composable(AppRoutes.PIN_ENTRADA_MONASTERIO + "/{pinId}",
+            arguments = listOf(navArgument("pinId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val pinId = backStackEntry.arguments?.getString("pinId") ?: ""
+            EntradaMonasterioFirestoreScreen(
+                pinId = pinId,
+                navController = localNavController,
+                rootNavController = navController
+            )
+        }
+
+
+
         // --- 🔹 Pantalla genérica de detalle de Figura
         composable(
             route = "${VirtualVisitRoutes.DETALLE_GENERICO}/{nombre}",
