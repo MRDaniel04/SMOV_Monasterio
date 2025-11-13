@@ -13,12 +13,15 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -47,7 +50,7 @@ fun HomeScreenContent(navController:NavController, modifier: Modifier = Modifier
     }
 
     ConstraintLayout(modifier = modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
-        val (background, crest, title, btnVisit, btnBook) = createRefs()
+        val (background, crest, title, btnVisit, btnChild,btnBook) = createRefs()
         Image(
             painter = painterResource(id = R.drawable.monastery_background),
             contentDescription = null,
@@ -84,24 +87,63 @@ fun HomeScreenContent(navController:NavController, modifier: Modifier = Modifier
             shape = RoundedCornerShape(20.dp),
             modifier = Modifier
                 .constrainAs(btnVisit) {
-                    bottom.linkTo(btnBook.top, margin = 72.dp)
-                    start.linkTo(parent.start, margin = 40.dp)
-                    end.linkTo(parent.end, margin = 40.dp)
-                    width = androidx.constraintlayout.compose.Dimension.fillToConstraints
+                    bottom.linkTo(btnChild.top, margin = 48.dp)
+                    start.linkTo(parent.start, margin = 20.dp)
+                    end.linkTo(parent.end, margin = 20.dp)
+                    width = Dimension.fillToConstraints
                 }
-                .height(60.dp)
         ) {
-            Icon(
-                painter = painterResource(id = R.drawable.ic_map_24),
-                contentDescription = null,
-                modifier = Modifier
-                    .padding(end = 16.dp)
-                    .size(48.dp)
-            )
-            Text(
-                stringResource(id = R.string.virtual_visit),
-                fontSize = 22.sp
-            )
+            Row(
+                modifier=Modifier
+                    .padding(horizontal = 20.dp),
+                verticalAlignment = Alignment.CenterVertically
+            )  {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_map_24),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .padding(end = 16.dp)
+                        .size(48.dp)
+                )
+                Text(
+                    stringResource(id = R.string.virtual_visit),
+                    fontSize = 22.sp,
+                    textAlign = TextAlign.Center
+                )
+            }
+        }
+        Button(
+            onClick = {
+                navController.navigate(AppRoutes.MODO_NINYOS)
+            },
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6EB017)),
+            shape = RoundedCornerShape(20.dp),
+            modifier = Modifier
+                .constrainAs(btnChild) {
+                    bottom.linkTo(btnBook.top, margin = 48.dp)
+                    start.linkTo(parent.start, margin = 20.dp)
+                    end.linkTo(parent.end, margin = 20.dp)
+                    width = Dimension.fillToConstraints
+                }
+        ) {
+            Row(
+                modifier=Modifier
+                    .padding(horizontal = 20.dp),
+                verticalAlignment = Alignment.CenterVertically
+            )  {
+                Icon(
+                    painter = painterResource(id = R.drawable.outline_account_child_invert_24),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .padding(end = 16.dp)
+                        .size(48.dp)
+                )
+                Text(
+                    stringResource(id = R.string.child_mode),
+                    fontSize = 22.sp,
+                    textAlign = TextAlign.Center
+                )
+            }
         }
         Button(
             onClick = {
@@ -112,22 +154,30 @@ fun HomeScreenContent(navController:NavController, modifier: Modifier = Modifier
             modifier = Modifier
                 .constrainAs(btnBook) {
                     bottom.linkTo(parent.bottom, margin = 186.dp)
-                    start.linkTo(parent.start, margin = 40.dp)
-                    end.linkTo(parent.end, margin = 40.dp)
-                    width = androidx.constraintlayout.compose.Dimension.fillToConstraints
+                    start.linkTo(parent.start, margin = 20.dp)
+                    end.linkTo(parent.end, margin = 20.dp)
+                    width = Dimension.fillToConstraints
                 }
-                .height(60.dp)
         ) {
-            Icon(
-                painter = painterResource(id = R.drawable.ic_time_24),
-                contentDescription = null,
-                modifier = Modifier.padding(end = 16.dp).size(48.dp)
+            Row(
+                modifier=Modifier
+                    .padding(horizontal = 20.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_time_24),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .padding(end = 16.dp)
+                        .size(48.dp)
 
-            )
-            Text(
-                stringResource(id = R.string.book_appointment),
-                fontSize = 22.sp
-            )
+                )
+                Text(
+                    stringResource(id = R.string.book_appointment),
+                    fontSize = 22.sp,
+                    textAlign = TextAlign.Center,
+                )
+            }
         }
     }
 }

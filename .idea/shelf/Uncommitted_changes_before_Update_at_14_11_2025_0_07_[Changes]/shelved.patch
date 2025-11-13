@@ -1,0 +1,470 @@
+Index: app/src/main/java/com/nextapp/monasterio/ui/screens/HomeScreen.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.nextapp.monasterio.ui.screens\r\n\r\nimport android.app.Activity\r\nimport android.content.pm.ActivityInfo\r\nimport androidx.compose.foundation.Image\r\nimport androidx.compose.foundation.layout.*\r\nimport androidx.compose.foundation.rememberScrollState\r\nimport androidx.compose.foundation.shape.RoundedCornerShape\r\nimport androidx.compose.foundation.verticalScroll\r\nimport androidx.compose.material3.Button\r\nimport androidx.compose.material3.ButtonDefaults\r\nimport androidx.compose.material3.Icon\r\nimport androidx.compose.material3.Text\r\nimport androidx.compose.runtime.Composable\r\nimport androidx.compose.runtime.DisposableEffect\r\nimport androidx.compose.ui.Modifier\r\nimport androidx.compose.ui.layout.ContentScale\r\nimport androidx.compose.ui.platform.LocalConfiguration\r\nimport androidx.compose.ui.platform.LocalContext\r\nimport androidx.compose.ui.res.painterResource\r\nimport androidx.compose.ui.res.stringResource\r\nimport androidx.compose.ui.tooling.preview.Preview\r\nimport androidx.compose.ui.unit.dp\r\nimport androidx.compose.ui.unit.sp\r\nimport androidx.constraintlayout.compose.ConstraintLayout\r\nimport androidx.constraintlayout.compose.Dimension\r\nimport androidx.navigation.NavController\r\nimport androidx.navigation.compose.rememberNavController\r\nimport com.nextapp.monasterio.AppRoutes\r\nimport com.nextapp.monasterio.R\r\nimport com.nextapp.monasterio.ui.theme.MonasteryBlue\r\nimport com.nextapp.monasterio.ui.theme.MonasteryOrange\r\n\r\n\r\n@Composable\r\nfun HomeScreenContent(navController:NavController, modifier: Modifier = Modifier) {\r\n    val context = LocalContext.current\r\n\r\n    val activity = (context as? Activity)\r\n\r\n    DisposableEffect(Unit) {\r\n        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT\r\n\r\n        onDispose {\r\n\r\n        }\r\n    }\r\n\r\n    ConstraintLayout(modifier = modifier.fillMaxSize().verticalScroll(rememberScrollState())) {\r\n        val (background, crest, title, btnVisit, btnBook) = createRefs()\r\n        Image(\r\n            painter = painterResource(id = R.drawable.monastery_background),\r\n            contentDescription = null,\r\n            contentScale = ContentScale.Crop,\r\n            modifier = Modifier.constrainAs(background) {\r\n                top.linkTo(parent.top)\r\n                bottom.linkTo(parent.bottom)\r\n                start.linkTo(parent.start)\r\n                end.linkTo(parent.end)\r\n                width = Dimension.fillToConstraints\r\n                height = Dimension.fillToConstraints\r\n\r\n                centerVerticallyTo(parent)\r\n            }\r\n        )\r\n        Image(\r\n            painter = painterResource(id = R.drawable.huelgas_inicio),\r\n            contentDescription = \"Escudo\",\r\n            contentScale = ContentScale.FillWidth,\r\n            modifier = Modifier\r\n                .constrainAs(crest) {\r\n                    top.linkTo(parent.top, margin = 24.dp)\r\n                    start.linkTo(parent.start)\r\n                    end.linkTo(parent.end)\r\n                    width = Dimension.fillToConstraints\r\n                    height = Dimension.wrapContent\r\n                }\r\n        )\r\n        Button(\r\n            onClick = {\r\n                navController.navigate(AppRoutes.VIRTUAL_VISIT)\r\n            },\r\n            colors = ButtonDefaults.buttonColors(containerColor = MonasteryOrange),\r\n            shape = RoundedCornerShape(20.dp),\r\n            modifier = Modifier\r\n                .constrainAs(btnVisit) {\r\n                    bottom.linkTo(btnBook.top, margin = 72.dp)\r\n                    start.linkTo(parent.start, margin = 40.dp)\r\n                    end.linkTo(parent.end, margin = 40.dp)\r\n                    width = androidx.constraintlayout.compose.Dimension.fillToConstraints\r\n                }\r\n                .height(60.dp)\r\n        ) {\r\n            Icon(\r\n                painter = painterResource(id = R.drawable.ic_map_24),\r\n                contentDescription = null,\r\n                modifier = Modifier\r\n                    .padding(end = 16.dp)\r\n                    .size(48.dp)\r\n            )\r\n            Text(\r\n                stringResource(id = R.string.virtual_visit),\r\n                fontSize = 22.sp\r\n            )\r\n        }\r\n        Button(\r\n            onClick = {\r\n                navController.navigate(AppRoutes.OPCIONES_RESERVA)\r\n            },\r\n            colors = ButtonDefaults.buttonColors(containerColor = MonasteryBlue),\r\n            shape = RoundedCornerShape(20.dp),\r\n            modifier = Modifier\r\n                .constrainAs(btnBook) {\r\n                    bottom.linkTo(parent.bottom, margin = 186.dp)\r\n                    start.linkTo(parent.start, margin = 40.dp)\r\n                    end.linkTo(parent.end, margin = 40.dp)\r\n                    width = androidx.constraintlayout.compose.Dimension.fillToConstraints\r\n                }\r\n                .height(60.dp)\r\n        ) {\r\n            Icon(\r\n                painter = painterResource(id = R.drawable.ic_time_24),\r\n                contentDescription = null,\r\n                modifier = Modifier.padding(end = 16.dp).size(48.dp)\r\n\r\n            )\r\n            Text(\r\n                stringResource(id = R.string.book_appointment),\r\n                fontSize = 22.sp\r\n            )\r\n        }\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/nextapp/monasterio/ui/screens/HomeScreen.kt b/app/src/main/java/com/nextapp/monasterio/ui/screens/HomeScreen.kt
+--- a/app/src/main/java/com/nextapp/monasterio/ui/screens/HomeScreen.kt	(revision 563626a1962cc5c0efe18dca48dd0a306acabc2f)
++++ b/app/src/main/java/com/nextapp/monasterio/ui/screens/HomeScreen.kt	(date 1763074982128)
+@@ -13,12 +13,15 @@
+ import androidx.compose.material3.Text
+ import androidx.compose.runtime.Composable
+ import androidx.compose.runtime.DisposableEffect
++import androidx.compose.ui.Alignment
+ import androidx.compose.ui.Modifier
++import androidx.compose.ui.graphics.Color
+ import androidx.compose.ui.layout.ContentScale
+ import androidx.compose.ui.platform.LocalConfiguration
+ import androidx.compose.ui.platform.LocalContext
+ import androidx.compose.ui.res.painterResource
+ import androidx.compose.ui.res.stringResource
++import androidx.compose.ui.text.style.TextAlign
+ import androidx.compose.ui.tooling.preview.Preview
+ import androidx.compose.ui.unit.dp
+ import androidx.compose.ui.unit.sp
+@@ -47,7 +50,7 @@
+     }
+ 
+     ConstraintLayout(modifier = modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
+-        val (background, crest, title, btnVisit, btnBook) = createRefs()
++        val (background, crest, title, btnVisit, btnChild,btnBook) = createRefs()
+         Image(
+             painter = painterResource(id = R.drawable.monastery_background),
+             contentDescription = null,
+@@ -84,24 +87,63 @@
+             shape = RoundedCornerShape(20.dp),
+             modifier = Modifier
+                 .constrainAs(btnVisit) {
+-                    bottom.linkTo(btnBook.top, margin = 72.dp)
+-                    start.linkTo(parent.start, margin = 40.dp)
+-                    end.linkTo(parent.end, margin = 40.dp)
+-                    width = androidx.constraintlayout.compose.Dimension.fillToConstraints
++                    bottom.linkTo(btnChild.top, margin = 48.dp)
++                    start.linkTo(parent.start, margin = 20.dp)
++                    end.linkTo(parent.end, margin = 20.dp)
++                    width = Dimension.fillToConstraints
+                 }
+-                .height(60.dp)
+         ) {
+-            Icon(
+-                painter = painterResource(id = R.drawable.ic_map_24),
+-                contentDescription = null,
+-                modifier = Modifier
+-                    .padding(end = 16.dp)
+-                    .size(48.dp)
+-            )
+-            Text(
+-                stringResource(id = R.string.virtual_visit),
+-                fontSize = 22.sp
+-            )
++            Row(
++                modifier=Modifier
++                    .padding(horizontal = 20.dp),
++                verticalAlignment = Alignment.CenterVertically
++            )  {
++                Icon(
++                    painter = painterResource(id = R.drawable.ic_map_24),
++                    contentDescription = null,
++                    modifier = Modifier
++                        .padding(end = 16.dp)
++                        .size(48.dp)
++                )
++                Text(
++                    stringResource(id = R.string.virtual_visit),
++                    fontSize = 22.sp,
++                    textAlign = TextAlign.Center
++                )
++            }
++        }
++        Button(
++            onClick = {
++                navController.navigate(AppRoutes.MODO_NINYOS)
++            },
++            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6EB017)),
++            shape = RoundedCornerShape(20.dp),
++            modifier = Modifier
++                .constrainAs(btnChild) {
++                    bottom.linkTo(btnBook.top, margin = 48.dp)
++                    start.linkTo(parent.start, margin = 20.dp)
++                    end.linkTo(parent.end, margin = 20.dp)
++                    width = Dimension.fillToConstraints
++                }
++        ) {
++            Row(
++                modifier=Modifier
++                    .padding(horizontal = 20.dp),
++                verticalAlignment = Alignment.CenterVertically
++            )  {
++                Icon(
++                    painter = painterResource(id = R.drawable.outline_account_child_invert_24),
++                    contentDescription = null,
++                    modifier = Modifier
++                        .padding(end = 16.dp)
++                        .size(48.dp)
++                )
++                Text(
++                    stringResource(id = R.string.child_mode),
++                    fontSize = 22.sp,
++                    textAlign = TextAlign.Center
++                )
++            }
+         }
+         Button(
+             onClick = {
+@@ -112,22 +154,30 @@
+             modifier = Modifier
+                 .constrainAs(btnBook) {
+                     bottom.linkTo(parent.bottom, margin = 186.dp)
+-                    start.linkTo(parent.start, margin = 40.dp)
+-                    end.linkTo(parent.end, margin = 40.dp)
+-                    width = androidx.constraintlayout.compose.Dimension.fillToConstraints
++                    start.linkTo(parent.start, margin = 20.dp)
++                    end.linkTo(parent.end, margin = 20.dp)
++                    width = Dimension.fillToConstraints
+                 }
+-                .height(60.dp)
+         ) {
+-            Icon(
+-                painter = painterResource(id = R.drawable.ic_time_24),
+-                contentDescription = null,
+-                modifier = Modifier.padding(end = 16.dp).size(48.dp)
++            Row(
++                modifier=Modifier
++                    .padding(horizontal = 20.dp),
++                verticalAlignment = Alignment.CenterVertically
++            ) {
++                Icon(
++                    painter = painterResource(id = R.drawable.ic_time_24),
++                    contentDescription = null,
++                    modifier = Modifier
++                        .padding(end = 16.dp)
++                        .size(48.dp)
+ 
+-            )
+-            Text(
+-                stringResource(id = R.string.book_appointment),
+-                fontSize = 22.sp
+-            )
++                )
++                Text(
++                    stringResource(id = R.string.book_appointment),
++                    fontSize = 22.sp,
++                    textAlign = TextAlign.Center,
++                )
++            }
+         }
+     }
+ }
+Index: app/src/main/java/com/nextapp/monasterio/ui/virtualvisit/screens/PinDetalleScreen.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.nextapp.monasterio.ui.virtualvisit.screens\r\n\r\nimport android.app.Activity\r\nimport androidx.compose.foundation.*\r\nimport androidx.compose.foundation.layout.*\r\nimport androidx.compose.foundation.pager.HorizontalPager\r\nimport androidx.compose.foundation.pager.rememberPagerState\r\nimport androidx.compose.foundation.shape.CircleShape\r\nimport androidx.compose.foundation.shape.RoundedCornerShape\r\nimport androidx.compose.material3.*\r\nimport androidx.compose.runtime.*\r\nimport androidx.compose.ui.Alignment\r\nimport androidx.compose.ui.Modifier\r\nimport androidx.compose.ui.draw.clip\r\nimport androidx.compose.ui.graphics.Color\r\nimport androidx.compose.ui.layout.ContentScale\r\nimport androidx.compose.ui.platform.LocalView\r\nimport androidx.compose.ui.res.painterResource\r\nimport androidx.compose.ui.text.font.FontWeight\r\nimport androidx.compose.ui.text.style.TextAlign\r\nimport androidx.compose.ui.unit.dp\r\nimport androidx.compose.ui.unit.sp\r\nimport androidx.compose.ui.viewinterop.AndroidView\r\nimport androidx.compose.ui.window.Dialog\r\nimport androidx.compose.ui.window.DialogProperties\r\nimport androidx.core.view.WindowCompat\r\nimport coil.compose.AsyncImage\r\nimport coil.load\r\nimport com.github.chrisbanes.photoview.PhotoView\r\nimport com.nextapp.monasterio.R\r\nimport com.nextapp.monasterio.models.PinData\r\nimport com.nextapp.monasterio.models.Ubicacion\r\nimport java.util.Locale\r\nimport androidx.compose.foundation.rememberScrollState\r\nimport androidx.compose.foundation.verticalScroll\r\nimport androidx.compose.ui.platform.LocalConfiguration\r\nimport androidx.compose.ui.res.stringResource\r\n\r\n@OptIn(ExperimentalFoundationApi::class)\r\n@Composable\r\nfun PinDetalleScreen(\r\n    pin: PinData,\r\n    onBack: () -> Unit,\r\n    onVer360: (() -> Unit)? = null\r\n) {\r\n    val view = LocalView.current\r\n    LaunchedEffect(Unit) {\r\n        val window = (view.context as? Activity)?.window\r\n        window?.let { WindowCompat.setDecorFitsSystemWindows(it, false) }\r\n    }\r\n\r\n    val imagenes = if (pin.imagenesDetalladas.isNotEmpty()) pin.imagenesDetalladas else emptyList()\r\n\r\n    val pagerState = rememberPagerState(pageCount = { imagenes.size })\r\n    var selectedImageUrl by remember { mutableStateOf<String?>(null) }\r\n    var selectedImageTitle by remember { mutableStateOf<String?>(null) }\r\n\r\n    val configuration = LocalConfiguration.current\r\n    val locale: Locale = configuration.locales[0]\r\n    val language = locale.language\r\n\r\n    val titulo_pin: String\r\n    val descripcion_pin: String?\r\n    val ubicacion_pin: Ubicacion?\r\n\r\n    when (language) {\r\n        \"es\" -> {\r\n            titulo_pin = pin.titulo\r\n            descripcion_pin = pin.descripcion\r\n            ubicacion_pin = pin.ubicacion\r\n        }\r\n        \"de\" -> {\r\n            titulo_pin = pin.tituloAleman\r\n            descripcion_pin = pin.descripcionAleman\r\n            ubicacion_pin = pin.ubicacionAleman\r\n        }\r\n        else -> {\r\n            titulo_pin = pin.tituloIngles\r\n            descripcion_pin = pin.descripcionIngles\r\n            ubicacion_pin = pin.ubicacionIngles\r\n        }\r\n    }\r\n\r\n    Box(\r\n        modifier = Modifier\r\n            .fillMaxSize()\r\n            .background(Color.White)\r\n            .statusBarsPadding()\r\n    ) {\r\n        Column(\r\n            modifier = Modifier\r\n                .fillMaxSize()\r\n                .padding(horizontal = 16.dp)\r\n                .padding(bottom = 90.dp),\r\n            horizontalAlignment = Alignment.CenterHorizontally\r\n        ) {\r\n            // \uD83D\uDD19 Botón atrás\r\n            Box(\r\n                modifier = Modifier\r\n                    .fillMaxWidth()\r\n                    .padding(top = 16.dp),\r\n                contentAlignment = Alignment.CenterStart\r\n            ) {\r\n                Image(\r\n                    painter = painterResource(id = R.drawable.arrow_back),\r\n                    contentDescription = stringResource(R.string.go_back),\r\n                    modifier = Modifier\r\n                        .size(28.dp)\r\n                        .clickable { onBack() }\r\n                )\r\n            }\r\n\r\n            Spacer(modifier = Modifier.height(16.dp))\r\n\r\n            // \uD83C\uDFF7\uFE0F Título principal\r\n            Text(\r\n                text = buildString {\r\n                    append(titulo_pin)\r\n                    ubicacion_pin?.let { append(\" (${it.displayName})\") }\r\n                },\r\n                fontSize = 26.sp,\r\n                fontWeight = FontWeight.Bold,\r\n                color = Color.Black,\r\n                textAlign = TextAlign.Center,\r\n                modifier = Modifier.fillMaxWidth()\r\n            )\r\n\r\n            Spacer(modifier = Modifier.height(20.dp))\r\n\r\n            // \uD83D\uDDBC\uFE0F Carrusel con etiqueta (solo aquí)\r\n            if (imagenes.isNotEmpty()) {\r\n                Box(\r\n                    modifier = Modifier\r\n                        .fillMaxWidth()\r\n                        .height(250.dp)\r\n                        .clip(RoundedCornerShape(16.dp))\r\n                        .border(3.dp, Color.Black, RoundedCornerShape(16.dp))\r\n                ) {\r\n                    HorizontalPager(state = pagerState) { page ->\r\n                        val imagen = imagenes[page]\r\n                        Box(modifier = Modifier.fillMaxSize()) {\r\n                            AsyncImage(\r\n                                model = imagen.url,\r\n                                contentDescription = imagen.etiqueta,\r\n                                contentScale = ContentScale.Crop,\r\n                                modifier = Modifier\r\n                                    .fillMaxSize()\r\n                                    .clickable {\r\n                                        selectedImageUrl = imagen.url\r\n                                        // \uD83D\uDC47 título según idioma actual\r\n                                        selectedImageTitle = when (language) {\r\n                                            \"es\" -> imagen.titulo\r\n                                            \"de\" -> imagen.tituloAleman\r\n                                            else -> imagen.tituloIngles\r\n                                        }\r\n                                    }\r\n                            )\r\n\r\n                            // \uD83D\uDD39 Etiqueta abajo a la izquierda (solo carrusel)\r\n                            Text(\r\n                                text = imagen.etiqueta,\r\n                                color = Color.White,\r\n                                fontSize = 14.sp,\r\n                                modifier = Modifier\r\n                                    .align(Alignment.BottomStart)\r\n                                    .background(Color.Black.copy(alpha = 0.6f))\r\n                                    .padding(horizontal = 10.dp, vertical = 6.dp)\r\n                            )\r\n                        }\r\n                    }\r\n\r\n                    // \uD83D\uDD38 Indicadores inferiores\r\n                    Row(\r\n                        Modifier\r\n                            .align(Alignment.BottomCenter)\r\n                            .padding(bottom = 6.dp)\r\n                    ) {\r\n                        repeat(imagenes.size) { index ->\r\n                            val selected = pagerState.currentPage == index\r\n                            Box(\r\n                                Modifier\r\n                                    .padding(3.dp)\r\n                                    .size(if (selected) 8.dp else 6.dp)\r\n                                    .background(\r\n                                        Color.White.copy(alpha = if (selected) 1f else 0.6f),\r\n                                        shape = CircleShape\r\n                                    )\r\n                            )\r\n                        }\r\n                    }\r\n                }\r\n                Spacer(modifier = Modifier.height(24.dp))\r\n            }\r\n\r\n            // \uD83D\uDCDD Descripción\r\n            val descripcion = descripcion_pin ?: \"\"\r\n            if (descripcion.isNotBlank()) {\r\n                val textScrollState = rememberScrollState()\r\n                Box(\r\n                    modifier = Modifier\r\n                        .fillMaxWidth()\r\n                        .weight(1f)\r\n                        .border(1.dp, Color.LightGray.copy(alpha = 0.5f), RoundedCornerShape(8.dp))\r\n                        .clip(RoundedCornerShape(8.dp))\r\n                ) {\r\n                    Text(\r\n                        text = descripcion,\r\n                        fontSize = 16.sp,\r\n                        color = Color.DarkGray,\r\n                        lineHeight = 22.sp,\r\n                        modifier = Modifier\r\n                            .fillMaxSize()\r\n                            .padding(horizontal = 12.dp, vertical = 8.dp)\r\n                            .verticalScroll(textScrollState)\r\n                    )\r\n                }\r\n            }\r\n        }\r\n\r\n        // \uD83D\uDD18 Botón 360\r\n        onVer360?.let {\r\n            Box(\r\n                modifier = Modifier\r\n                    .align(Alignment.BottomCenter)\r\n                    .fillMaxWidth()\r\n                    .background(Color.White)\r\n                    .navigationBarsPadding()\r\n                    .padding(horizontal = 16.dp, vertical = 12.dp)\r\n            ) {\r\n                Button(\r\n                    onClick = it,\r\n                    modifier = Modifier\r\n                        .fillMaxWidth()\r\n                        .height(56.dp),\r\n                    colors = ButtonDefaults.buttonColors(containerColor = Color.Black),\r\n                    shape = RoundedCornerShape(12.dp)\r\n                ) {\r\n                    Text(\r\n                        text = stringResource(R.string.see_360),\r\n                        color = Color.White,\r\n                        fontSize = 18.sp,\r\n                        fontWeight = FontWeight.Bold,\r\n                    )\r\n                }\r\n            }\r\n        }\r\n\r\n        // \uD83D\uDD0D Zoom con título traducido\r\n        if (selectedImageUrl != null) {\r\n            ZoomableImageDialog(\r\n                imageUrl = selectedImageUrl!!,\r\n                label = selectedImageTitle ?: \"\",\r\n                onDismiss = {\r\n                    selectedImageUrl = null\r\n                    selectedImageTitle = null\r\n                }\r\n            )\r\n        }\r\n    }\r\n}\r\n\r\n// \uD83D\uDD0D Diálogo de zoom\r\n@Composable\r\nprivate fun ZoomableImageDialog(imageUrl: String, label: String, onDismiss: () -> Unit) {\r\n    Dialog(\r\n        onDismissRequest = onDismiss,\r\n        properties = DialogProperties(usePlatformDefaultWidth = false, dismissOnClickOutside = true)\r\n    ) {\r\n        Box(\r\n            modifier = Modifier\r\n                .fillMaxSize()\r\n                .background(Color.Black.copy(alpha = 0.95f))\r\n        ) {\r\n            AndroidView(\r\n                factory = { context ->\r\n                    PhotoView(context).apply {\r\n                        load(imageUrl) { crossfade(true) }\r\n                    }\r\n                },\r\n                modifier = Modifier.fillMaxSize()\r\n            )\r\n\r\n            // \uD83D\uDD39 Título (ya traducido según idioma)\r\n            Text(\r\n                text = label,\r\n                color = Color.White,\r\n                fontSize = 16.sp,\r\n                fontWeight = FontWeight.Medium,\r\n                modifier = Modifier\r\n                    .align(Alignment.BottomStart)\r\n                    .background(Color.Black.copy(alpha = 0.7f))\r\n                    .padding(horizontal = 12.dp, vertical = 8.dp)\r\n            )\r\n\r\n            // ❌ Botón cerrar\r\n            IconButton(\r\n                onClick = onDismiss,\r\n                modifier = Modifier\r\n                    .align(Alignment.TopEnd)\r\n                    .statusBarsPadding()\r\n                    .padding(16.dp)\r\n                    .background(Color.Black.copy(alpha = 0.5f), CircleShape)\r\n            ) {\r\n                Icon(\r\n                    painter = painterResource(id = R.drawable.arrow_back),\r\n                    contentDescription = stringResource(R.string.close),\r\n                    tint = Color.White\r\n                )\r\n            }\r\n        }\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/nextapp/monasterio/ui/virtualvisit/screens/PinDetalleScreen.kt b/app/src/main/java/com/nextapp/monasterio/ui/virtualvisit/screens/PinDetalleScreen.kt
+--- a/app/src/main/java/com/nextapp/monasterio/ui/virtualvisit/screens/PinDetalleScreen.kt	(revision 563626a1962cc5c0efe18dca48dd0a306acabc2f)
++++ b/app/src/main/java/com/nextapp/monasterio/ui/virtualvisit/screens/PinDetalleScreen.kt	(date 1763075243695)
+@@ -89,25 +89,31 @@
+     ) {
+         Column(
+             modifier = Modifier
+-                .fillMaxSize()
+-                .padding(horizontal = 16.dp)
+-                .padding(bottom = 90.dp),
++                .fillMaxWidth()
++                .verticalScroll(rememberScrollState())
++                .padding(horizontal = 16.dp),
+             horizontalAlignment = Alignment.CenterHorizontally
+         ) {
+-            // 🔙 Botón atrás
+-            Box(
+-                modifier = Modifier
+-                    .fillMaxWidth()
+-                    .padding(top = 16.dp),
+-                contentAlignment = Alignment.CenterStart
+-            ) {
+-                Image(
+-                    painter = painterResource(id = R.drawable.arrow_back),
+-                    contentDescription = stringResource(R.string.go_back),
+-                    modifier = Modifier
+-                        .size(28.dp)
+-                        .clickable { onBack() }
+-                )
++            Column(
++                modifier = Modifier
++                    .padding(horizontal = 16.dp),
++                horizontalAlignment = Alignment.CenterHorizontally
++            ) {
++                // 🔙 Botón atrás
++                Box(
++                    modifier = Modifier
++                        .fillMaxWidth()
++                        .padding(top = 16.dp),
++                    contentAlignment = Alignment.CenterStart
++                ) {
++                    Image(
++                        painter = painterResource(id = R.drawable.arrow_back),
++                        contentDescription = stringResource(R.string.go_back),
++                        modifier = Modifier
++                            .size(28.dp)
++                            .clickable { onBack() }
++                    )
++                }
+             }
+ 
+             Spacer(modifier = Modifier.height(16.dp))
+@@ -189,8 +195,9 @@
+                         }
+                     }
+                 }
+-                Spacer(modifier = Modifier.height(24.dp))
+-            }
++            }
++
++            Spacer(modifier = Modifier.height(24.dp))
+ 
+             // 📝 Descripción
+             val descripcion = descripcion_pin ?: ""
+@@ -199,7 +206,6 @@
+                 Box(
+                     modifier = Modifier
+                         .fillMaxWidth()
+-                        .weight(1f)
+                         .border(1.dp, Color.LightGray.copy(alpha = 0.5f), RoundedCornerShape(8.dp))
+                         .clip(RoundedCornerShape(8.dp))
+                 ) {
+@@ -215,32 +221,32 @@
+                     )
+                 }
+             }
+-        }
++
+ 
+-        // 🔘 Botón 360
+-        onVer360?.let {
+-            Box(
+-                modifier = Modifier
+-                    .align(Alignment.BottomCenter)
+-                    .fillMaxWidth()
+-                    .background(Color.White)
+-                    .navigationBarsPadding()
+-                    .padding(horizontal = 16.dp, vertical = 12.dp)
+-            ) {
+-                Button(
+-                    onClick = it,
+-                    modifier = Modifier
+-                        .fillMaxWidth()
+-                        .height(56.dp),
+-                    colors = ButtonDefaults.buttonColors(containerColor = Color.Black),
+-                    shape = RoundedCornerShape(12.dp)
+-                ) {
+-                    Text(
+-                        text = stringResource(R.string.see_360),
+-                        color = Color.White,
+-                        fontSize = 18.sp,
+-                        fontWeight = FontWeight.Bold,
+-                    )
++            // 🔘 Botón 360
++            onVer360?.let {
++                Box(
++                    modifier = Modifier
++                        .fillMaxWidth()
++                        .background(Color.White)
++                        .navigationBarsPadding()
++                        .padding(horizontal = 16.dp, vertical = 12.dp)
++                ) {
++                    Button(
++                        onClick = it,
++                        modifier = Modifier
++                            .fillMaxWidth()
++                            .height(56.dp),
++                        colors = ButtonDefaults.buttonColors(containerColor = Color.Black),
++                        shape = RoundedCornerShape(12.dp)
++                    ) {
++                        Text(
++                            text = stringResource(R.string.see_360),
++                            color = Color.White,
++                            fontSize = 18.sp,
++                            fontWeight = FontWeight.Bold,
++                        )
++                    }
+                 }
+             }
+         }
+Index: app/src/main/java/com/nextapp/monasterio/MainActivity.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.nextapp.monasterio\r\n\r\nimport android.os.Bundle\r\nimport android.widget.Toast\r\nimport androidx.activity.compose.setContent\r\nimport androidx.compose.foundation.layout.*\r\nimport androidx.compose.material3.*\r\nimport androidx.compose.runtime.*\r\nimport androidx.compose.ui.Modifier\r\nimport androidx.compose.ui.platform.LocalContext\r\nimport androidx.compose.ui.res.painterResource\r\nimport androidx.compose.ui.res.stringResource\r\nimport androidx.navigation.compose.rememberNavController\r\nimport com.nextapp.monasterio.ui.navigation.AppDrawerContent\r\nimport com.nextapp.monasterio.ui.navigation.AppNavigationHost\r\nimport com.nextapp.monasterio.ui.theme.*\r\nimport kotlinx.coroutines.launch\r\nimport androidx.appcompat.app.AppCompatActivity\r\nimport androidx.appcompat.app.AppCompatDelegate\r\nimport androidx.compose.foundation.Image\r\nimport androidx.compose.foundation.border\r\nimport androidx.compose.ui.graphics.Color\r\nimport androidx.compose.ui.layout.ContentScale\r\nimport androidx.compose.ui.platform.LocalConfiguration\r\nimport androidx.compose.ui.platform.LocalDensity\r\nimport androidx.compose.ui.unit.Density\r\nimport androidx.compose.ui.unit.dp\r\nimport androidx.lifecycle.viewmodel.compose.viewModel\r\nimport androidx.navigation.compose.currentBackStackEntryAsState\r\nimport com.nextapp.monasterio.utils.FontSize\r\nimport com.nextapp.monasterio.viewModels.AjustesViewModel\r\nimport com.nextapp.monasterio.viewModels.AuthViewModel\r\n\r\nclass MainActivity : AppCompatActivity() {\r\n    override fun onCreate(savedInstanceState: Bundle?) {\r\n        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)\r\n        super.onCreate(savedInstanceState)\r\n        LanguageHelper.loadLocale(this)\r\n        setContent {\r\n            val appFontScale = FontSize.devolverFontScale(this)\r\n            val currentDensity = LocalDensity.current\r\n            val newDensity= Density(\r\n                density= currentDensity.density,\r\n                fontScale = currentDensity.fontScale*appFontScale\r\n            )\r\n            CompositionLocalProvider(LocalDensity provides newDensity) {\r\n                Smov_monasterioTheme {\r\n                    MonasteryAppScreen()\r\n                }\r\n            }\r\n        }\r\n    }\r\n}\r\n\r\n@OptIn(ExperimentalMaterial3Api::class)\r\n@Composable\r\nfun MonasteryAppScreen() {\r\n    val context = LocalContext.current\r\n    val navController = rememberNavController()\r\n    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)\r\n    val scope = rememberCoroutineScope()\r\n\r\n    //ViewModel para tener el estado del usuario autenticado\r\n    val authViewModel: AuthViewModel = viewModel()\r\n    val currentUser by authViewModel.currentUser.collectAsState(initial = null)\r\n    // Estado global para el modo edición\r\n    var isEditing by remember { mutableStateOf(false) }\r\n\r\n    // ... (Tu lógica de idioma se queda igual)\r\n    val stringEspanyol= \"Español\"\r\n    val stringAleman= \"Deutsch\"\r\n    val stringIngles= \"English\"\r\n    var mostrarIdioma by remember { mutableStateOf(false) }\r\n    val configuration = LocalConfiguration.current\r\n    val currentLanguageCode = configuration.locales[0].language\r\n    var idioma by remember { mutableStateOf(currentLanguageCode) }\r\n    var idiomasDisponibles = listOf(stringEspanyol,stringIngles,stringAleman)\r\n\r\n    val currentTitle = remember { mutableStateOf(context.getString(R.string.title_inicio)) }\r\n\r\n    // ✅ Detectar ruta actual\r\n    val currentBackStackEntry by navController.currentBackStackEntryAsState()\r\n    val currentRoute = currentBackStackEntry?.destination?.route\r\n\r\n\r\n    val isPanorama = currentRoute?.startsWith(AppRoutes.PANORAMA) == true\r\n\r\n    // Comprueba si la ruta ES \"virtual_visit\" (esto cubre el mapa Y los pines anidados)\r\n    val isVirtualVisit = currentRoute == AppRoutes.VIRTUAL_VISIT\r\n\r\n    // Comprueba si la ruta EMPIEZA POR \"pin_360\" (la nueva vista 360)\r\n    val isPin360 = currentRoute?.startsWith(AppRoutes.PIN_360) == true\r\n\r\n    // La vista es inmersiva si es CUALQUIERA de las tres\r\n    val isImmersive = isPanorama || isVirtualVisit || isPin360\r\n\r\n\r\n    val gesturesEnabled = when(currentRoute){\r\n        AppRoutes.VIRTUAL_VISIT -> false\r\n        else -> true\r\n    }\r\n\r\n    // ✅ Actualizar título (Tu lógica se queda igual)\r\n    LaunchedEffect(navController) {\r\n        navController.currentBackStackEntryFlow.collect { backStackEntry ->\r\n            val route = backStackEntry.destination.route\r\n            val routeBase = route?.split(\"/\")?.firstOrNull() ?: route\r\n\r\n            currentTitle.value = when (routeBase) { // <-- Usamos routeBase\r\n                AppRoutes.INFO -> context.getString(R.string.title_info_general)\r\n                AppRoutes.HISTORIA -> context.getString(R.string.title_history)\r\n                AppRoutes.GALERIA -> context.getString(R.string.title_gallery)\r\n                AppRoutes.PERFIL -> context.getString(R.string.title_profile)\r\n                AppRoutes.AJUSTES -> context.getString(R.string.title_settings)\r\n                AppRoutes.OPCIONES_RESERVA,\r\n                AppRoutes.RESERVA,\r\n                AppRoutes.CONFIRMACION_RESERVA -> context.getString(R.string.title_appointment)\r\n                AppRoutes.VIRTUAL_VISIT -> context.getString(R.string.title_monasterio)\r\n                else -> context.getString(R.string.title_inicio)\r\n            }\r\n        }\r\n    }\r\n\r\n    // --- ¡¡2. ESTRUCTURA REFACTORIZADA (UN SOLO NAVHOST)!! ---\r\n    // (Hemos eliminado el 'if (isImmersive)' que duplicaba el NavHost)\r\n\r\n    ModalNavigationDrawer(\r\n        drawerState = drawerState,\r\n        drawerContent = {\r\n            AppDrawerContent(\r\n                navController = navController,\r\n                scope = scope,\r\n                drawerState = drawerState\r\n            )\r\n        },\r\n        // Desactivamos gestos en el mapa Y en pantallas inmersivas\r\n        gesturesEnabled = gesturesEnabled && !isImmersive\r\n    ) {\r\n        Scaffold(\r\n            topBar = {\r\n                // Solo mostramos la barra roja si NO estamos en una ruta inmersiva\r\n                if (!isImmersive) {\r\n                    CenterAlignedTopAppBar(\r\n                        title = { Text(currentTitle.value) },\r\n                        colors = TopAppBarDefaults.topAppBarColors(\r\n                            containerColor = MonasteryRed,\r\n                            titleContentColor = White,\r\n                            navigationIconContentColor = White,\r\n                            actionIconContentColor = White\r\n                        ),\r\n                        navigationIcon = {\r\n                            IconButton(onClick = {\r\n                                scope.launch {\r\n                                    drawerState.apply {\r\n                                        if (isClosed) open() else close()\r\n                                    }\r\n                                }\r\n                            }) {\r\n                                val iconRes = if (drawerState.isOpen) R.drawable.menu_close else R.drawable.ic_menu_24\r\n                                Icon(\r\n                                    painter = painterResource(id = iconRes),\r\n                                    contentDescription = stringResource(id = R.string.navigation_drawer_open)\r\n                                )\r\n                            }\r\n                        },\r\n                        actions = {\r\n                            // ... (Tu lógica de idioma y Toast se queda igual)\r\n                            Box {\r\n                                OutlinedIconButton(onClick = {\r\n                                    mostrarIdioma = true\r\n                                }) {\r\n                                    val iconRes =\r\n                                        if (idioma == \"es\" || idioma == stringEspanyol) R.drawable.espanya else if (idioma == \"de\" || idioma == stringAleman) R.drawable.alemania else R.drawable.reinounido\r\n                                    Image(\r\n                                        painter = painterResource(id = iconRes),\r\n                                        contentDescription = if (idioma == \"es\" || idioma == stringEspanyol ) stringEspanyol\r\n                                        else if (idioma == \"de\" || idioma == stringAleman) stringAleman else stringIngles,\r\n                                        contentScale = ContentScale.Crop\r\n                                    )\r\n                                }\r\n                                DropdownMenu(\r\n                                    expanded = mostrarIdioma,\r\n                                    onDismissRequest = { mostrarIdioma = false },\r\n                                    modifier = Modifier.fillMaxWidth(0.8f),\r\n                                ) {\r\n                                    idiomasDisponibles.forEach { idiomaSlot ->\r\n                                        DropdownMenuItem(\r\n                                            text = { Text(idiomaSlot) },\r\n                                            onClick = {\r\n                                                idioma = idiomaSlot\r\n                                                mostrarIdioma = false\r\n                                                if(idiomaSlot == stringEspanyol)\r\n                                                    LanguageHelper.saveLocale(context, \"es\")\r\n                                                else if(idiomaSlot == stringAleman){\r\n                                                    LanguageHelper.saveLocale(context, \"de\")\r\n                                                } else LanguageHelper.saveLocale(context, \"en\")\r\n                                            }\r\n                                        )\r\n                                    }\r\n                                }\r\n                            }\r\n\r\n                            // Icono Editar: solo disponible para un usuario autenticado\r\n                            if (currentUser != null) {\r\n                                IconButton(onClick = {\r\n                                    isEditing = !isEditing // Toggle del modo edición\r\n                                    val message = if (isEditing) context.getString(R.string.edit_mode_activate_message) else context.getString(R.string.edit_mode_deactivate_message)\r\n                                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()\r\n                                }) {\r\n                                    Icon(\r\n                                        painter = painterResource(id = if (isEditing) R.drawable.baseline_done_24 else R.drawable.lapiz),\r\n                                        contentDescription = if (isEditing) stringResource(id = R.string.edit_mode_deactivate_icon) else  stringResource(id = R.string.edit_mode_activate_icon)\r\n                                    )\r\n                                }\r\n                            }\r\n\r\n                        }\r\n                    )\r\n                }\r\n            }\r\n        ) { paddingValues ->\r\n            // ¡¡UN SOLO AppNavigationHost!!\r\n            // (Si es inmersiva, paddingValues será cero porque no hay TopBar)\r\n            AppNavigationHost(\r\n                authViewModel = authViewModel,\r\n                navController = navController,\r\n                isEditing = isEditing,\r\n                modifier = Modifier.padding(paddingValues)\r\n            )\r\n        }\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/nextapp/monasterio/MainActivity.kt b/app/src/main/java/com/nextapp/monasterio/MainActivity.kt
+--- a/app/src/main/java/com/nextapp/monasterio/MainActivity.kt	(revision 563626a1962cc5c0efe18dca48dd0a306acabc2f)
++++ b/app/src/main/java/com/nextapp/monasterio/MainActivity.kt	(date 1763070828153)
+@@ -116,6 +116,9 @@
+                 AppRoutes.RESERVA,
+                 AppRoutes.CONFIRMACION_RESERVA -> context.getString(R.string.title_appointment)
+                 AppRoutes.VIRTUAL_VISIT -> context.getString(R.string.title_monasterio)
++                AppRoutes.MODO_NINYOS -> context.getString(R.string.child_mode_view)
++                AppRoutes.VIDEO_NINYOS -> context.getString(R.string.video_view)
++                AppRoutes.JUEGO_NINYOS -> context.getString(R.string.game_view)
+                 else -> context.getString(R.string.title_inicio)
+             }
+         }
+@@ -208,7 +211,7 @@
+                                     Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                                 }) {
+                                     Icon(
+-                                        painter = painterResource(id = if (isEditing) R.drawable.baseline_done_24 else R.drawable.lapiz),
++                                        painter = painterResource(id = if (isEditing) R.drawable.lapiz else R.drawable.lapiz),
+                                         contentDescription = if (isEditing) stringResource(id = R.string.edit_mode_deactivate_icon) else  stringResource(id = R.string.edit_mode_activate_icon)
+                                     )
+                                 }
+Index: app/src/main/java/com/nextapp/monasterio/ui/navigation/AppNavigation.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.nextapp.monasterio.ui.navigation\r\n\r\nimport androidx.compose.foundation.clickable\r\nimport androidx.compose.foundation.layout.*\r\nimport androidx.compose.material3.*\r\nimport androidx.compose.runtime.Composable\r\nimport androidx.compose.ui.Alignment\r\nimport androidx.compose.ui.Modifier\r\nimport androidx.compose.ui.res.painterResource\r\nimport androidx.compose.ui.res.stringResource\r\nimport androidx.compose.ui.unit.dp\r\nimport androidx.lifecycle.viewmodel.compose.viewModel\r\nimport androidx.navigation.NavGraph.Companion.findStartDestination\r\nimport androidx.navigation.NavHostController\r\nimport androidx.navigation.NavType\r\nimport androidx.navigation.navArgument\r\nimport androidx.navigation.compose.NavHost\r\nimport androidx.navigation.compose.composable\r\nimport com.nextapp.monasterio.AppRoutes\r\nimport com.nextapp.monasterio.R\r\nimport com.nextapp.monasterio.ui.screens.* // Asegúrate de importar PanoramaScreen y GaleriaScreen\r\nimport com.nextapp.monasterio.ui.theme.MonasteryRed\r\nimport com.nextapp.monasterio.ui.theme.White\r\nimport com.nextapp.monasterio.ui.virtualvisit.screens.EntradaMonasterioFirestoreScreen\r\nimport com.nextapp.monasterio.viewModels.AjustesViewModel\r\nimport com.nextapp.monasterio.viewModels.AuthViewModel\r\nimport kotlinx.coroutines.CoroutineScope\r\nimport kotlinx.coroutines.launch\r\n\r\n@Composable\r\nfun AppNavigationHost(\r\n    authViewModel: AuthViewModel = viewModel(),\r\n    ajustesViewModel: AjustesViewModel = viewModel(),\r\n    navController: NavHostController,\r\n    isEditing: Boolean = false,\r\n    modifier: Modifier = Modifier\r\n) {\r\n    NavHost(\r\n        navController = navController,\r\n        startDestination = AppRoutes.INICIO,\r\n        modifier = modifier\r\n    ) {\r\n        composable(AppRoutes.INICIO)   { HomeScreenContent(navController = navController) }\r\n        composable(AppRoutes.INFO)     { InfoScreen() }\r\n        composable(AppRoutes.HISTORIA) { HistoriaScreen() }\r\n        composable(AppRoutes.GALERIA)  { GaleriaScreen(navController = navController) }\r\n        composable(AppRoutes.PERFIL)   { ProfileScreen(isEditing = isEditing, viewModel = authViewModel ) }\r\n        composable(AppRoutes.AJUSTES)  { AjustesScreen(viewModel = ajustesViewModel) }\r\n\r\n        // Ruta de Panorama 360 (Inmersiva, desde Galería / res/raw)\r\n        composable(\r\n            route = AppRoutes.PANORAMA + \"/{vistaId}\",\r\n            arguments = listOf(navArgument(\"vistaId\") { type = NavType.StringType })\r\n        ) { backStackEntry ->\r\n            val vistaId = backStackEntry.arguments?.getString(\"vistaId\")\r\n            if (vistaId != null) {\r\n                PanoramaScreen(\r\n                    vistaId = vistaId,\r\n                    navController = navController\r\n                )\r\n            }\r\n        }\r\n\r\n        // Ruta de Visita Virtual (Mapa)\r\n        composable(AppRoutes.VIRTUAL_VISIT) {\r\n            VirtualVisitScreen(navController = navController,viewModel = ajustesViewModel)\r\n        }\r\n\r\n        // --- ¡¡AQUÍ ESTÁ LA NUEVA RUTA!! ---\r\n        // Ruta inmersiva para el 360 de un Pin (desde Firebase URL)\r\n        composable(\r\n            route = AppRoutes.PIN_360 + \"/{pinId}\", // Recibe el ID del Pin\r\n            arguments = listOf(navArgument(\"pinId\") { type = NavType.StringType })\r\n        ) { backStackEntry ->\r\n            val pinId = backStackEntry.arguments?.getString(\"pinId\")\r\n            if (pinId != null) {\r\n                // Llama a la NUEVA pantalla 360\r\n                Pin360Screen(\r\n                    pinId = pinId,\r\n                    navController = navController\r\n                )\r\n            }\r\n        }\r\n\r\n        // --- Pantalla de Entrada del Monasterio (desde Firebase Pin)\r\n        composable(\r\n            route = AppRoutes.PIN_ENTRADA_MONASTERIO + \"/{pinId}\",\r\n            arguments = listOf(navArgument(\"pinId\") { type = NavType.StringType })\r\n        ) { backStackEntry ->\r\n            val pinId = backStackEntry.arguments?.getString(\"pinId\") ?: \"\"\r\n            EntradaMonasterioFirestoreScreen(\r\n                pinId = pinId,\r\n                navController = navController,\r\n                rootNavController = navController\r\n            )\r\n        }\r\n\r\n        // --- FIN DE LA MODIFICACIÓN ---\r\n\r\n        // (La ruta PIN_DETALLE se queda eliminada de aquí, ¡está bien!)\r\n\r\n        // --- RESTO DE TUS RUTAS ---\r\n        composable(AppRoutes.OPCIONES_RESERVA) { OpcionesReservaScreen(navController = navController) }\r\n        composable(AppRoutes.RESERVA) { ReservaScreen(navController = navController) }\r\n        composable(\r\n            route = AppRoutes.CONFIRMACION_RESERVA + \"/{nombre}/{email}/{fecha}/{hora}\",\r\n            arguments = listOf(\r\n                navArgument(\"nombre\") { type = NavType.StringType },\r\n                navArgument(\"email\") { type = NavType.StringType },\r\n                navArgument(\"fecha\") { type = NavType.StringType },\r\n                navArgument(\"hora\") { type = NavType.StringType }\r\n            )\r\n        ) { backStackEntry ->\r\n            val nombre = backStackEntry.arguments?.getString(\"nombre\") ?: \"\"\r\n            val email = backStackEntry.arguments?.getString(\"email\") ?: \"\"\r\n            val fecha = backStackEntry.arguments?.getString(\"fecha\") ?: \"\"\r\n            val hora = backStackEntry.arguments?.getString(\"hora\") ?: \"\"\r\n            ConfirmacionReservaScreen(\r\n                navController = navController,\r\n                nombre = nombre,\r\n                email = email,\r\n                fecha = fecha,\r\n                hora = hora\r\n            )\r\n        }\r\n    }\r\n}\r\n\r\n//\r\n// --- EL RESTO DEL ARCHIVO (AppDrawerContent y DrawerMenuItem) SE QUEDA IGUAL ---\r\n//\r\n\r\n@OptIn(ExperimentalMaterial3Api::class)\r\n@Composable\r\nfun AppDrawerContent(\r\n    navController: NavHostController,\r\n    scope: CoroutineScope,\r\n    drawerState: DrawerState\r\n) {\r\n    val navigateTo: (String) -> Unit = { route ->\r\n        navController.navigate(route) {\r\n            popUpTo(navController.graph.findStartDestination().id)\r\n            launchSingleTop = true\r\n        }\r\n        scope.launch { drawerState.close() }\r\n    }\r\n\r\n    ModalDrawerSheet(\r\n        modifier = Modifier.fillMaxHeight(),\r\n        drawerContainerColor = MonasteryRed,\r\n        drawerContentColor = White\r\n    ) {\r\n        Column(\r\n            modifier = Modifier\r\n                .fillMaxSize()\r\n                .padding(16.dp)\r\n        ) {\r\n            IconButton(onClick = { scope.launch { drawerState.close() } }) {\r\n                Icon(\r\n                    painter = painterResource(id = R.drawable.ic_menu_24),\r\n                    contentDescription = stringResource(id = R.string.navigation_drawer_close)\r\n                )\r\n            }\r\n            Spacer(modifier = Modifier.height(32.dp))\r\n\r\n            DrawerMenuItem(text = stringResource(id = R.string.title_inicio)) { navigateTo(AppRoutes.INICIO) }\r\n            DrawerMenuItem(text = stringResource(id = R.string.menu_info)) { navigateTo(AppRoutes.INFO) }\r\n            DrawerMenuItem(text = stringResource(id = R.string.menu_history)) { navigateTo(AppRoutes.HISTORIA) }\r\n            DrawerMenuItem(text = stringResource(id = R.string.menu_gallery)) { navigateTo(AppRoutes.GALERIA) }\r\n            DrawerMenuItem(text = stringResource(id = R.string.menu_profile)) { navigateTo(AppRoutes.PERFIL) }\r\n            DrawerMenuItem(text = stringResource(id = R.string.menu_settings)) { navigateTo(AppRoutes.AJUSTES) }\r\n        }\r\n    }\r\n}\r\n\r\n@Composable\r\nfun DrawerMenuItem(text: String, onClick: () -> Unit) {\r\n    Row(\r\n        modifier = Modifier\r\n            .fillMaxWidth()\r\n            .clickable(onClick = onClick)\r\n            .padding(vertical = 12.dp),\r\n        verticalAlignment = Alignment.CenterVertically\r\n    ) {\r\n        Icon(\r\n            painter = painterResource(id = R.drawable.arrow_right),\r\n            contentDescription = null,\r\n            modifier = Modifier.size(20.dp)\r\n        )\r\n        Spacer(modifier = Modifier.width(16.dp))\r\n        Text(text = text, color = White, style = MaterialTheme.typography.bodyMedium)\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/nextapp/monasterio/ui/navigation/AppNavigation.kt b/app/src/main/java/com/nextapp/monasterio/ui/navigation/AppNavigation.kt
+--- a/app/src/main/java/com/nextapp/monasterio/ui/navigation/AppNavigation.kt	(revision 563626a1962cc5c0efe18dca48dd0a306acabc2f)
++++ b/app/src/main/java/com/nextapp/monasterio/ui/navigation/AppNavigation.kt	(date 1763066246026)
+@@ -44,6 +44,8 @@
+         composable(AppRoutes.INFO)     { InfoScreen() }
+         composable(AppRoutes.HISTORIA) { HistoriaScreen() }
+         composable(AppRoutes.GALERIA)  { GaleriaScreen(navController = navController) }
++        composable(AppRoutes.MODO_NINYOS)   { OpcionesModoNiño(navController = navController) }
++        composable(AppRoutes.VIDEO_NINYOS)   { VideoNinyos()}
+         composable(AppRoutes.PERFIL)   { ProfileScreen(isEditing = isEditing, viewModel = authViewModel ) }
+         composable(AppRoutes.AJUSTES)  { AjustesScreen(viewModel = ajustesViewModel) }
+ 
+Index: app/src/main/res/values/strings.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><resources>\r\n    <string name=\"app_name\">Santa María la Real de Huelgas</string>\r\n    <string name=\"title_inicio\">Inicio</string>\r\n    <string name=\"virtual_visit\">VISITA VIRTUAL</string>\r\n    <string name=\"book_appointment\">RESERVA CITA</string>\r\n    <string name=\"monastery_name\">Santa María\\nla Real de Huelgas</string>\r\n    <string name=\"edit_mode_activate_icon\">Modo edición</string>\r\n    <string name=\"edit_mode_deactivate_icon\">Salir del modo edición</string>\r\n    <string name=\"edit_mode_activate_message\">Modo edición activado</string>\r\n    <string name=\"edit_mode_deactivate_message\">Modo edición desactivado</string>\r\n    <string name=\"edit_save_changes\">Guardar cambios</string>\r\n    <string name=\"profile_login\">Iniciar Sesión</string>\r\n    <string name=\"profile_logout\">Cerrar Sesión</string>\r\n    <string name=\"profile_email\">Correo Electrónico</string>\r\n    <string name=\"profile_password\">Contraseña</string>\r\n    <string name=\"navigation_drawer_open\">Abrir menú</string>\r\n    <string name=\"navigation_drawer_close\">Cerrar menú</string>\r\n    <string name=\"menu_info\">Información monasterio</string>\r\n    <string name=\"menu_history\">Historia</string>\r\n    <string name=\"menu_gallery\">Galería</string>\r\n    <string name=\"menu_profile\">Perfil</string>\r\n    <string name=\"menu_settings\">Ajustes</string>\r\n    <string name=\"title_info_general\">Información General</string>\r\n    <string name=\"title_history\">Historia</string>\r\n    <string name=\"title_gallery\">Galería</string>\r\n    <string name=\"title_profile\">Perfil</string>\r\n    <string name=\"title_settings\">Ajustes</string>\r\n    <string name=\"info_location\">C/…</string>\r\n    <string name=\"info_hours\">C/XX:XX - YY:YY</string>\r\n    <string name=\"general_info\">Información general:</string>\r\n    <string name=\"history_1800\">1800</string>\r\n    <string name=\"history_1900\">1900-1950</string>\r\n    <string name=\"history_1950\">1950-2000</string>\r\n    <string name=\"history_actualidad\">Actualidad</string>\r\n    <string name=\"title_appointment\">Reservar Cita</string>\r\n    <string name=\"option_phone_appointment\">Reservar por teléfono</string>\r\n    <string name=\"option_online_appointment\">Reservar online</string>\r\n    <string name=\"name_appointment\">Nombre y apellidos</string>\r\n    <string name=\"email_appointment\">Correo electrónico</string>\r\n    <string name=\"date_appointment\">Fecha</string>\r\n    <string name=\"hour_appointment\">Hora</string>\r\n    <string name=\"placeholdername_appointment\">Introduce tu nombre y apellidos</string>\r\n    <string name=\"placeholderemail_appointment\">Introduce tu correo electrónico</string>\r\n    <string name=\"placeholderdate_appointment\">Selecciona una fecha</string>\r\n    <string name=\"placeholderhour_appointment\">Selecciona una hora</string>\r\n    <string name=\"compulsory_name\">El nombre es obligatorio</string>\r\n    <string name=\"valid_name\">El nombre contiene algún simbolo no válido</string>\r\n    <string name=\"compulsory_email\">El email es obligatorio</string>\r\n    <string name=\"valid_email\">El formato del email no es válido</string>\r\n    <string name=\"date_no_selected\">Se debe seleccionar una fecha</string>\r\n    <string name=\"hour_no_selected\">Se debe seleccionar una hora</string>\r\n    <string name=\"datepicker_ok\">Ok</string>\r\n    <string name=\"datepicker_cancel\">Cancelar</string>\r\n    <string name=\"confirm_button\">CONFIRMAR</string>\r\n    <string name=\"contentimage_confirmation\">Confirmado</string>\r\n    <string name=\"confirmation_appointment\">¡CASI LISTO!</string>\r\n    <string name=\"details_appointment\">Tu solicitud de reserva está preparada. Por favor, pulsa \\'enviar\\' en la aplicación de correo que se acaba de abrir para finalizar tu solicitud. Te responderemos a ese correo para confirmar la disponibilidad.</string>\r\n    <string name=\"email_subject\">Solicitud de Reserva de Vista - %1$s</string>\r\n    <string name=\"email_message\">Hola,\\n\\nMe gustaría solicitar una reserva para una visita al monasterio con los siguientes datos:\\n\\n* Nombre: %1$s\\n* Email: %2$s\\n* Fecha de la visita: %3$s\\n* Hora de la visita: %4$s\\n\\nQuedo a la espera de su amable confirmación.\\n\\nMuchas gracias,\\nAtentamente,\\n\\n%1$s</string>\r\n    <string name=\"email_error\">No se encontró ninguna app de correo</string>\r\n    <string name=\"history_content_placeholder\">Mauris vel nisi id metus vestibulum vehicula nec ac orci. Curabitur massa diam, fermentum sit amet augue sit, volutpat efficitur enim. Phasellus a cursus orci, id laoreet dolor. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</string>\r\n    <string name=\"language_select\">Seleccionar Idioma</string>\r\n    <string name=\"font_size_select\">Selecciona el tamaño de la letra</string>\r\n    <string name=\"font_extrabig\">Extra Grande</string>\r\n    <string name=\"font_normal\">Mediana</string>\r\n    <string name=\"font_big\">Grande</string>\r\n    <string name=\"title_monasterio\">Monasterio</string>\r\n    <string name=\"spanish_language\">Español</string>\r\n    <string name=\"german_language\">Alemán</string>\r\n    <string name=\"english_language\">Inglés</string>\r\n    <string name=\"navegation_button\">Ocultar botones de navegación</string>\r\n    <string name=\"close\">Cerrar</string>\r\n    <string name=\"go_back\">Volver</string>\r\n    <string name=\"see_360\">Ver 360º</string>\r\n    <string name=\"contentdescription_image_pin\">Imagen del pin (pulsar para ampliar)</string>\r\n    <string name=\"readjust\">Reajustar</string>\r\n    <string name=\"decrease\">Disminuir</string>\r\n    <string name=\"increase\">Aumentar</string>\r\n    <string name=\"out_interactive_area\">Fuera del área interactiva</string>\r\n    <string name=\"notdefined_destiny\">Destino no definido</string>\r\n    <string name=\"notdefined_destinyplane\">Plano destino no definido</string>\r\n    <string name=\"plane_loading\">Cargando plano...</string>\r\n    <string name=\"error_loading_plane\">Error cargando datos del plano</string>\r\n</resources>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/values/strings.xml b/app/src/main/res/values/strings.xml
+--- a/app/src/main/res/values/strings.xml	(revision 563626a1962cc5c0efe18dca48dd0a306acabc2f)
++++ b/app/src/main/res/values/strings.xml	(date 1763066246062)
+@@ -81,4 +81,10 @@
+     <string name="notdefined_destinyplane">Plano destino no definido</string>
+     <string name="plane_loading">Cargando plano...</string>
+     <string name="error_loading_plane">Error cargando datos del plano</string>
++    <string name="child_mode">MODO NIÑOS</string>
++    <string name="child_mode_view">Modo Niños</string>
++    <string name="video_view">Video</string>
++    <string name="game_view">Juego</string>
++    <string name="video_child">VIDEO</string>
++    <string name="game_child">JUEGO</string>
+ </resources>
+\ No newline at end of file
+Index: app/src/main/java/com/nextapp/monasterio/AppRoutes.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.nextapp.monasterio\r\n\r\n/**\r\n * Define todas las rutas (llaves) de navegación en un solo lugar\r\n * para evitar errores de escritura y centralizar la gestión.\r\n */\r\nobject AppRoutes {\r\n    const val INICIO = \"inicio\"\r\n    const val INFO = \"info\"\r\n    const val HISTORIA = \"historia\"\r\n    const val GALERIA = \"galeria\"\r\n    const val PERFIL = \"perfil\"\r\n    const val AJUSTES = \"ajustes\"\r\n    const val OPCIONES_RESERVA = \"opciones_reserva\"\r\n    const val RESERVA = \"reserva\"\r\n    const val CONFIRMACION_RESERVA = \"confirmacion_reserva\"\r\n    const val VIRTUAL_VISIT = \"virtual_visit\"\r\n    const val PIN_DETALLE = \"pin_detalle\"\r\n    const val PANORAMA = \"panorama\"\r\n\r\n    const val PIN_360 = \"pin_360\"\r\n    const val PIN_ENTRADA_MONASTERIO = \"entrada_monasterio\"\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/nextapp/monasterio/AppRoutes.kt b/app/src/main/java/com/nextapp/monasterio/AppRoutes.kt
+--- a/app/src/main/java/com/nextapp/monasterio/AppRoutes.kt	(revision 563626a1962cc5c0efe18dca48dd0a306acabc2f)
++++ b/app/src/main/java/com/nextapp/monasterio/AppRoutes.kt	(date 1763066246086)
+@@ -18,6 +18,12 @@
+     const val PIN_DETALLE = "pin_detalle"
+     const val PANORAMA = "panorama"
+ 
++    const val MODO_NINYOS = "modo_niños"
++
++    const val VIDEO_NINYOS = "video_modo_niños"
++
++    const val JUEGO_NINYOS = "juego_modo_niños"
++
+     const val PIN_360 = "pin_360"
+     const val PIN_ENTRADA_MONASTERIO = "entrada_monasterio"
+ }
+Index: app/src/main/res/values-de/strings.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<resources>\r\n    <string name=\"app_name\">Museum360</string>\r\n    <string name=\"title_inicio\">Startseite</string>\r\n    <string name=\"virtual_visit\">VIRTUELLER BESUCH</string>\r\n    <string name=\"book_appointment\">TERMIN BUCHEN</string>\r\n    <string name=\"monastery_name\">Santa María\\nla Real de Huelgas</string>\r\n    <string name=\"edit_mode_activate_icon\">Bearbeitungsmodus</string>\r\n    <string name=\"edit_mode_deactivate_icon\">Bearbeitungsmodus verlassen</string>\r\n    <string name=\"edit_mode_activate_message\">Bearbeitungsmodus aktiviert</string>\r\n    <string name=\"edit_mode_deactivate_message\">Bearbeitungsmodus deaktiviert</string>\r\n    <string name=\"edit_save_changes\">Änderungen speichern</string>\r\n    <string name=\"profile_login\">Login</string>\r\n    <string name=\"profile_logout\">Abmelden</string>\r\n    <string name=\"profile_email\">E-Mail</string>\r\n    <string name=\"profile_password\">Passwort</string>\r\n    <string name=\"navigation_drawer_open\">Menü öffnen</string>\r\n    <string name=\"navigation_drawer_close\">Menü schließen</string>\r\n    <string name=\"menu_info\">Klosterinformationen</string>\r\n    <string name=\"menu_history\">Geschichte</string>\r\n    <string name=\"menu_gallery\">Galerie</string>\r\n    <string name=\"menu_profile\">Profil</string>\r\n    <string name=\"menu_settings\">Einstellungen</string>\r\n    <string name=\"title_info_general\">Allgemeine Informationen</string>\r\n    <string name=\"title_history\">Geschichte</string>\r\n    <string name=\"title_gallery\">Galerie</string>\r\n    <string name=\"title_profile\">Profil</string>\r\n    <string name=\"title_settings\">Einstellungen</string>\r\n\r\n\r\n    <string name=\"info_location\">Straße: …</string>\r\n\r\n    <string name=\"info_hours\">Öffnungszeiten: XX:XX - YY:YY</string>\r\n    <string name=\"general_info\">Allgemeine Informationen:</string>\r\n\r\n    <string name=\"history_1800\">1800</string>\r\n    <string name=\"history_1900\">1900-1950</string>\r\n    <string name=\"history_1950\">1950-2000</string>\r\n    <string name=\"history_actualidad\">Heute</string>\r\n    <string name=\"title_appointment\">Termin vereinbaren</string>\r\n    <string name=\"option_phone_appointment\">Buchen Sie telefonisch</string>\r\n    <string name=\"option_online_appointment\">Online buchen</string>\r\n    <string name=\"name_appointment\">Name</string>\r\n    <string name=\"email_appointment\">E-Mail</string>\r\n    <string name=\"date_appointment\">Datum</string>\r\n    <string name=\"hour_appointment\">Stunde</string>\r\n    <string name=\"placeholdername_appointment\">Geben Sie Ihren vollständigen Namen ein</string>\r\n    <string name=\"placeholderemail_appointment\">Geben Sie Ihre E-Mail-Adresse ein</string>\r\n    <string name=\"placeholderdate_appointment\">Datum auswählen</string>\r\n    <string name=\"placeholderhour_appointment\">Wählen Sie eine Uhrzeit</string>\r\n    <string name=\"compulsory_name\">Name erforderlich</string>\r\n    <string name=\"valid_name\">Der Name enthält ein ungültiges Symbol</string>\r\n    <string name=\"compulsory_email\">E-Mail-Adresse erforderlich</string>\r\n    <string name=\"valid_email\">Das E-Mail-Format ist ungültig.</string>\r\n    <string name=\"date_no_selected\">Ein Datum muss ausgewählt werden.</string>\r\n    <string name=\"hour_no_selected\">Es muss ein Zeitpunkt ausgewählt werden.</string>\r\n    <string name=\"datepicker_ok\">Ok</string>\r\n    <string name=\"datepicker_cancel\">Stornieren</string>\r\n    <string name=\"confirm_button\">BESTÄTIGEN</string>\r\n    <string name=\"contentimage_confirmation\">Bestätigt</string>\r\n    <string name=\"confirmation_appointment\">FAST FERTIG!!</string>\r\n    <string name=\"details_appointment\">Ihre Buchungsanfrage ist fertig. Bitte klicken Sie in der soeben geöffneten E-Mail-Anwendung auf „Senden“, um Ihre Anfrage abzuschließen. Wir werden Ihnen die Verfügbarkeit per E-Mail bestätigen..</string>\r\n    <string name=\"email_subject\">Reservierungsanfrage ansehen - %1$s</string>\r\n    <string name=\"email_message\">Hallo,\\n\\nich möchte hiermit eine Reservierung für einen Besuch im Kloster anfragen. Bitte geben Sie folgende Daten an:\\n\\n* Name: %1$s\\n* E-Mail: %2$s\\n* Besuchsdatum: %3$s\\n* Besuchszeit: %4$s\\n\\nIch freue mich auf Ihre Bestätigung.\\n\\nVielen Dank,\\nMit freundlichen Grüßen,\\n\\n%1$s</string>\r\n    <string name=\"email_error\">Es wurde keine E-Mail-App gefunden.</string>\r\n    <string name=\"history_content_placeholder\">Mauris vel nisi id metus vestibulum vehicula nec ac orci. Curabitur massa diam, fermentum sit amet augue sit, volutpat efficitur enim. Phasellus a cursus orci, id laoreet dolor. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</string>\r\n    <string name=\"language_select\">Sprache auswählen</string>\r\n    <string name=\"font_size_select\">Wählen Sie die Schriftgröße aus</string>\r\n    <string name=\"font_extrabig\">Extra groß</string>\r\n    <string name=\"font_normal\">Mittlere</string>\r\n    <string name=\"font_big\">Groß</string>\r\n    <string name=\"title_monasterio\">Kloster</string>\r\n    <string name=\"spanish_language\">Spanisch</string>\r\n    <string name=\"german_language\">Deutsch</string>\r\n    <string name=\"english_language\">Englisch</string>\r\n    <string name=\"navegation_button\">Navigationsschaltflächen ausblenden</string>\r\n    <string name=\"close\">Schließen</string>\r\n    <string name=\"go_back\">Geh zurück</string>\r\n    <string name=\"see_360\">360º-Ansicht</string>\r\n    <string name=\"contentdescription_image_pin\">Bild anpinnen (zum Vergrößern anklicken)</string>\r\n    <string name=\"readjust\">Zurücksetzen</string>\r\n    <string name=\"decrease\">Verringern</string>\r\n    <string name=\"increase\">Zunahme</string>\r\n    <string name=\"out_interactive_area\">Außerhalb des interaktiven Bereichs</string>\r\n    <string name=\"notdefined_destiny\">Undefiniertes Ziel</string>\r\n    <string name=\"notdefined_destinyplane\">Zielebene nicht definiert</string>\r\n    <string name=\"plane_loading\">Ladeplan...</string>\r\n    <string name=\"error_loading_plane\">Fehler beim Laden der Plandaten</string>\r\n</resources>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/values-de/strings.xml b/app/src/main/res/values-de/strings.xml
+--- a/app/src/main/res/values-de/strings.xml	(revision 563626a1962cc5c0efe18dca48dd0a306acabc2f)
++++ b/app/src/main/res/values-de/strings.xml	(date 1763066246094)
+@@ -86,4 +86,10 @@
+     <string name="notdefined_destinyplane">Zielebene nicht definiert</string>
+     <string name="plane_loading">Ladeplan...</string>
+     <string name="error_loading_plane">Fehler beim Laden der Plandaten</string>
++    <string name="child_mode">KINDERMODUS</string>
++    <string name="child_mode_view">Kindermodus</string>
++    <string name="video_view">Video</string>
++    <string name="game_view">Spiel</string>
++    <string name="video_child">VIDEO</string>
++    <string name="game_child">SPIEL</string>
+ </resources>
+\ No newline at end of file
+Index: app/src/main/res/values-en/strings.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<resources>\r\n    <string name=\"app_name\">Museum360</string>\r\n    <string name=\"title_inicio\">Home</string>\r\n    <string name=\"virtual_visit\">VIRTUAL VISIT</string>\r\n    <string name=\"book_appointment\">BOOK APPOINTMENT</string>\r\n    <string name=\"monastery_name\">Santa María\\nla Real de Huelgas</string>\r\n    <string name=\"edit_mode_activate_icon\">Editor mode</string>\r\n    <string name=\"edit_mode_deactivate_icon\">Exit from editor mode</string>\r\n    <string name=\"edit_mode_activate_message\">Editor mode activated</string>\r\n    <string name=\"edit_mode_deactivate_message\">Editor mode deactivated</string>\r\n    <string name=\"edit_save_changes\">Save changes</string>\r\n    <string name=\"profile_login\">Login</string>\r\n    <string name=\"profile_logout\">Logout</string>\r\n    <string name=\"profile_email\">Email</string>\r\n    <string name=\"profile_password\">Password</string>\r\n    <string name=\"navigation_drawer_open\">Open menu</string>\r\n    <string name=\"navigation_drawer_close\">Close menu</string>\r\n    <string name=\"menu_info\">Monastery information</string>\r\n    <string name=\"menu_history\">History</string>\r\n    <string name=\"menu_gallery\">Gallery</string>\r\n    <string name=\"menu_profile\">Profile</string>\r\n    <string name=\"menu_settings\">Settings</string>\r\n    <string name=\"title_info_general\">General Information</string>\r\n    <string name=\"title_history\">History</string>\r\n    <string name=\"title_gallery\">Gallery</string>\r\n    <string name=\"title_profile\">Profile</string>\r\n    <string name=\"title_settings\">Settings</string>\r\n\r\n    <string name=\"info_location\">Street: …</string>\r\n\r\n    <string name=\"info_hours\">Hours: XX:XX - YY:YY</string>\r\n    <string name=\"general_info\">General information:</string>\r\n\r\n    <string name=\"history_1800\">1800</string>\r\n    <string name=\"history_1900\">1900-1950</string>\r\n    <string name=\"history_1950\">1950-2000</string>\r\n    <string name=\"history_actualidad\">Present Day</string>\r\n    <string name=\"title_appointment\">Book Appointment</string>\r\n    <string name=\"option_phone_appointment\">Book by phone</string>\r\n    <string name=\"option_online_appointment\">Book online</string>\r\n    <string name=\"name_appointment\">Name</string>\r\n    <string name=\"email_appointment\">Email</string>\r\n    <string name=\"date_appointment\">Date</string>\r\n    <string name=\"hour_appointment\">Time</string>\r\n    <string name=\"placeholdername_appointment\">Enter your full name</string>\r\n    <string name=\"placeholderemail_appointment\">Enter your email address</string>\r\n    <string name=\"placeholderdate_appointment\">Select a date</string>\r\n    <string name=\"placeholderhour_appointment\">Select a time</string>\r\n    <string name=\"compulsory_name\">Name is required</string>\r\n    <string name=\"valid_name\">The name contains an invalid symbol</string>\r\n    <string name=\"compulsory_email\">Email is required</string>\r\n    <string name=\"valid_email\">The email format is invalid</string>\r\n    <string name=\"date_no_selected\">A date must be selected</string>\r\n    <string name=\"hour_no_selected\">A time must be selected</string>\r\n    <string name=\"datepicker_ok\">Ok</string>\r\n    <string name=\"datepicker_cancel\">Cancel</string>\r\n    <string name=\"confirm_button\">CONFIRM</string>\r\n    <string name=\"contentimage_confirmation\">Confirmed</string>\r\n    <string name=\"confirmation_appointment\">ALMOST READY!!</string>\r\n    <string name=\"details_appointment\">Your booking request is ready. Please click \\'send\\' in the email application that just opened to finalize your request. We will reply to that email to confirm availability..</string>\r\n    <string name=\"email_subject\">View Reservation Request - %1$s</string>\r\n    <string name=\"email_message\">Hello,\\n\\nI would like to request a reservation for a visit to the monastery with the following details:\\n\\n* Name: %1$s\\n* Email: %2$s\\n* Date of visit: %3$s\\n* Time of visit: %4$s\\n\\nI look forward to your kind confirmation.\\n\\nThank you very much,\\nSincerely,\\n\\n%1$s</string>\r\n    <string name=\"email_error\">No email app was found</string>\r\n    <string name=\"history_content_placeholder\">Mauris vel nisi id metus vestibulum vehicula nec ac orci. Curabitur massa diam, fermentum sit amet augue sit, volutpat efficitur enim. Phasellus a cursus orci, id laoreet dolor. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</string>\r\n    <string name=\"language_select\">Select language</string>\r\n    <string name=\"font_size_select\">Select the font size</string>\r\n    <string name=\"font_extrabig\">Extra Big</string>\r\n    <string name=\"font_normal\">Medium</string>\r\n    <string name=\"font_big\">Big</string>\r\n    <string name=\"title_monasterio\">Monastery</string>\r\n    <string name=\"spanish_language\">Spanish</string>\r\n    <string name=\"german_language\">German</string>\r\n    <string name=\"english_language\">English</string>\r\n    <string name=\"navegation_button\">Hide navigation buttons</string>\r\n    <string name=\"close\">Close</string>\r\n    <string name=\"go_back\">Go Back</string>\r\n    <string name=\"see_360\">View 360º</string>\r\n    <string name=\"contentdescription_image_pin\">Pin image (click to enlarge)</string>\r\n    <string name=\"readjust\">Readjust</string>\r\n    <string name=\"decrease\">Decrease</string>\r\n    <string name=\"increase\">Increase</string>\r\n    <string name=\"out_interactive_area\">Outside the interactive area</string>\r\n    <string name=\"notdefined_destiny\">Undefined destination</string>\r\n    <string name=\"notdefined_destinyplane\">Destination plane not defined</string>\r\n    <string name=\"plane_loading\">Loading plane...</string>\r\n    <string name=\"error_loading_plane\">Error loading plan data</string>\r\n\r\n</resources>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/values-en/strings.xml b/app/src/main/res/values-en/strings.xml
+--- a/app/src/main/res/values-en/strings.xml	(revision 563626a1962cc5c0efe18dca48dd0a306acabc2f)
++++ b/app/src/main/res/values-en/strings.xml	(date 1763066246105)
+@@ -85,5 +85,11 @@
+     <string name="notdefined_destinyplane">Destination plane not defined</string>
+     <string name="plane_loading">Loading plane...</string>
+     <string name="error_loading_plane">Error loading plan data</string>
++    <string name="child_mode">KIDS MODE</string>
++    <string name="child_mode_view">Kids Mode</string>
++    <string name="video_view">Video</string>
++    <string name="game_view">Game</string>
++    <string name="video_child">VIDEO</string>
++    <string name="game_child">GAME</string>
+ 
+ </resources>
+\ No newline at end of file
+Index: app/src/main/AndroidManifest.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<manifest xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    package=\"com.nextapp.monasterio\"> <application\r\n    android:name=\".MonasteryApplication\"\r\n    android:allowBackup=\"true\"\r\n    android:dataExtractionRules=\"@xml/data_extraction_rules\"\r\n    android:fullBackupContent=\"@xml/backup_rules\"\r\n    android:icon=\"@drawable/escudo\"\r\n    android:label=\"@string/app_name\"\r\n    android:roundIcon=\"@mipmap/ic_launcher_round\"\r\n    android:supportsRtl=\"true\"\r\n    android:theme=\"@style/Theme.SMOV_Monasterio\">\r\n    <activity\r\n        android:name=\".MainActivity\"\r\n        android:exported=\"true\"\r\n        android:theme=\"@style/Theme.SMOV_Monasterio\">\r\n        <intent-filter>\r\n            <action android:name=\"android.intent.action.MAIN\" />\r\n            <category android:name=\"android.intent.category.LAUNCHER\" />\r\n        </intent-filter>\r\n    </activity>\r\n</application>\r\n\r\n</manifest>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/AndroidManifest.xml b/app/src/main/AndroidManifest.xml
+--- a/app/src/main/AndroidManifest.xml	(revision 563626a1962cc5c0efe18dca48dd0a306acabc2f)
++++ b/app/src/main/AndroidManifest.xml	(date 1763071551234)
+@@ -1,6 +1,8 @@
+ <?xml version="1.0" encoding="utf-8"?>
+ <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+-    package="com.nextapp.monasterio"> <application
++    package="com.nextapp.monasterio">
++    <uses-permission android:name="android.permission.INTERNET"/>
++    <application
+     android:name=".MonasteryApplication"
+     android:allowBackup="true"
+     android:dataExtractionRules="@xml/data_extraction_rules"
+@@ -9,11 +11,13 @@
+     android:label="@string/app_name"
+     android:roundIcon="@mipmap/ic_launcher_round"
+     android:supportsRtl="true"
+-    android:theme="@style/Theme.SMOV_Monasterio">
++    android:theme="@style/Theme.SMOV_Monasterio"
++        android:usesCleartextTraffic="true">
+     <activity
+         android:name=".MainActivity"
+         android:exported="true"
+-        android:theme="@style/Theme.SMOV_Monasterio">
++        android:theme="@style/Theme.SMOV_Monasterio"
++        android:configChanges="orientation|screenSize|keyboardHidden">
+         <intent-filter>
+             <action android:name="android.intent.action.MAIN" />
+             <category android:name="android.intent.category.LAUNCHER" />

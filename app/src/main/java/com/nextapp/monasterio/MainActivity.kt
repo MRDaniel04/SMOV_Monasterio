@@ -116,6 +116,9 @@ fun MonasteryAppScreen() {
                 AppRoutes.RESERVA,
                 AppRoutes.CONFIRMACION_RESERVA -> context.getString(R.string.title_appointment)
                 AppRoutes.VIRTUAL_VISIT -> context.getString(R.string.title_monasterio)
+                AppRoutes.MODO_NINYOS -> context.getString(R.string.child_mode_view)
+                AppRoutes.VIDEO_NINYOS -> context.getString(R.string.video_view)
+                AppRoutes.JUEGO_NINYOS -> context.getString(R.string.game_view)
                 AppRoutes.PIN_ENTRADA_MONASTERIO -> context.getString(R.string.title_entrada)
                 else -> context.getString(R.string.title_inicio)
             }

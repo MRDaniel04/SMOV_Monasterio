@@ -18,6 +18,12 @@ object AppRoutes {
     const val PIN_DETALLE = "pin_detalle"
     const val PANORAMA = "panorama"
 
+    const val MODO_NINYOS = "modo_niños"
+
+    const val VIDEO_NINYOS = "video_modo_niños"
+
+    const val JUEGO_NINYOS = "juego_modo_niños"
+
     const val PIN_360 = "pin_360"
     const val PIN_ENTRADA_MONASTERIO = "entrada_monasterio"
 }

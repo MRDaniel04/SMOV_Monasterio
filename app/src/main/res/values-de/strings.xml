@@ -87,4 +87,10 @@
     <string name="notdefined_destinyplane">Zielebene nicht definiert</string>
     <string name="plane_loading">Ladeplan...</string>
     <string name="error_loading_plane">Fehler beim Laden der Plandaten</string>
+    <string name="child_mode">KINDERMODUS</string>
+    <string name="child_mode_view">Kindermodus</string>
+    <string name="video_view">Video</string>
+    <string name="game_view">Spiel</string>
+    <string name="video_child">VIDEO</string>
+    <string name="game_child">SPIEL</string>
 </resources>

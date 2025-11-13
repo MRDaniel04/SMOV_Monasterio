@@ -44,6 +44,8 @@ fun AppNavigationHost(
         composable(AppRoutes.INFO)     { InfoScreen() }
         composable(AppRoutes.HISTORIA) { HistoriaScreen() }
         composable(AppRoutes.GALERIA)  { GaleriaScreen(navController = navController) }
+        composable(AppRoutes.MODO_NINYOS)   { OpcionesModoNiño(navController = navController) }
+        composable(AppRoutes.VIDEO_NINYOS)   { VideoNinyos()}
         composable(AppRoutes.PERFIL)   { ProfileScreen(isEditing = isEditing, viewModel = authViewModel ) }
         composable(AppRoutes.AJUSTES)  { AjustesScreen(viewModel = ajustesViewModel) }
 

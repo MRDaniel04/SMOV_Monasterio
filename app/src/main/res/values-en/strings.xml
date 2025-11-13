@@ -86,5 +86,11 @@
     <string name="notdefined_destinyplane">Destination plane not defined</string>
     <string name="plane_loading">Loading plane...</string>
     <string name="error_loading_plane">Error loading plan data</string>
+    <string name="child_mode">KIDS MODE</string>
+    <string name="child_mode_view">Kids Mode</string>
+    <string name="video_view">Video</string>
+    <string name="game_view">Game</string>
+    <string name="video_child">VIDEO</string>
+    <string name="game_child">GAME</string>
 
 </resources>
