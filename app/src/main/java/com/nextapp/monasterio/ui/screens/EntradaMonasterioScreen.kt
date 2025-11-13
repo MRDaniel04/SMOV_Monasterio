@@ -1,11 +1,11 @@
 package com.nextapp.monasterio.ui.screens
 
 import android.app.Activity
-import androidx.compose.foundation.*
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -27,7 +27,7 @@ import com.nextapp.monasterio.models.PinData
 import kotlinx.coroutines.delay
 import java.util.Locale
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun EntradaMonasterioScreen(
     pin: PinData,
@@ -40,7 +40,7 @@ fun EntradaMonasterioScreen(
     }
 
     val imagenes = pin.imagenesDetalladas.ifEmpty { emptyList() }
-    val pagerState = rememberPagerState(pageCount = { imagenes.size })
+    var currentIndex by remember { mutableStateOf(0) }
     val configuration = LocalConfiguration.current
     val locale: Locale = configuration.locales[0]
     val language = locale.language
@@ -51,18 +51,14 @@ fun EntradaMonasterioScreen(
         else -> pin.titulo
     }
 
-    // 🔄 AUTO-CARRUSEL: cambia de imagen cada 4 segundos
+    // 🔄 Cambio automático de imagen (cada 4 s)
     if (imagenes.size > 1) {
-        LaunchedEffect(pagerState.currentPage, imagenes.size) {
-            while (true) {
-                delay(4000L) // ⏱️ tiempo entre imágenes (ajustable)
-                val nextPage = (pagerState.currentPage + 1) % imagenes.size
-                pagerState.animateScrollToPage(nextPage)
-            }
+        LaunchedEffect(currentIndex, imagenes.size) {
+            delay(4000L)
+            currentIndex = (currentIndex + 1) % imagenes.size
         }
     }
 
-    // ✅ LazyColumn en lugar de Column + verticalScroll
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -90,7 +86,7 @@ fun EntradaMonasterioScreen(
             Spacer(modifier = Modifier.height(16.dp))
         }
 
-        // 🖼️ Carrusel de imágenes
+        // 🖼️ Carrusel tipo fade
         if (imagenes.isNotEmpty()) {
             item {
                 Box(
@@ -98,9 +94,14 @@ fun EntradaMonasterioScreen(
                         .fillMaxWidth(0.9f)
                         .height(260.dp)
                         .clip(RoundedCornerShape(12.dp))
-                        .border(2.dp, Color(0xFF2196F3), RoundedCornerShape(12.dp))
+                        .border(2.dp, Color(0xFF2196F3), RoundedCornerShape(12.dp)),
+                    contentAlignment = Alignment.Center
                 ) {
-                    HorizontalPager(state = pagerState) { page ->
+                    // 👇 Transición suave entre imágenes
+                    androidx.compose.animation.Crossfade(
+                        targetState = currentIndex,
+                        label = "imageFade"
+                    ) { page ->
                         val imagen = imagenes[page]
                         Box(modifier = Modifier.fillMaxSize()) {
                             AsyncImage(
@@ -109,15 +110,17 @@ fun EntradaMonasterioScreen(
                                 contentScale = ContentScale.Crop,
                                 modifier = Modifier.fillMaxSize()
                             )
-                            Text(
-                                text = imagen.etiqueta,
-                                color = Color.White,
-                                fontSize = 14.sp,
-                                modifier = Modifier
-                                    .align(Alignment.BottomStart)
-                                    .background(Color.Black.copy(alpha = 0.6f))
-                                    .padding(horizontal = 10.dp, vertical = 6.dp)
-                            )
+                            if (imagen.etiqueta.isNotBlank()) {
+                                Text(
+                                    text = imagen.etiqueta,
+                                    color = Color.White,
+                                    fontSize = 14.sp,
+                                    modifier = Modifier
+                                        .align(Alignment.BottomStart)
+                                        .background(Color.Black.copy(alpha = 0.6f))
+                                        .padding(horizontal = 10.dp, vertical = 6.dp)
+                                )
+                            }
                         }
                     }
 
@@ -128,13 +131,16 @@ fun EntradaMonasterioScreen(
                             .padding(bottom = 6.dp)
                     ) {
                         repeat(imagenes.size) { index ->
-                            val selected = pagerState.currentPage == index
+                            val selected = currentIndex == index
                             Box(
                                 Modifier
                                     .padding(3.dp)
-                                    .size(if (selected) 8.dp else 6.dp)
+                                    .size(if (selected) 9.dp else 7.dp)
                                     .background(
-                                        Color.White.copy(alpha = if (selected) 1f else 0.5f),
+                                        if (selected)
+                                            Color.White
+                                        else
+                                            Color.White.copy(alpha = 0.4f),
                                         shape = CircleShape
                                     )
                             )
