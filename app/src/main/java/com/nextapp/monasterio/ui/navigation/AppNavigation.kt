@@ -22,13 +22,16 @@ import com.nextapp.monasterio.ui.screens.* // Asegúrate de importar PanoramaScr
 import com.nextapp.monasterio.ui.theme.MonasteryRed
 import com.nextapp.monasterio.ui.theme.White
 import com.nextapp.monasterio.viewModels.AjustesViewModel
+import com.nextapp.monasterio.viewModels.AuthViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
 fun AppNavigationHost(
+    authViewModel: AuthViewModel = viewModel(),
     ajustesViewModel: AjustesViewModel = viewModel(),
     navController: NavHostController,
+    isEditing: Boolean = false,
     modifier: Modifier = Modifier
 ) {
     NavHost(
@@ -40,7 +43,7 @@ fun AppNavigationHost(
         composable(AppRoutes.INFO)     { InfoScreen() }
         composable(AppRoutes.HISTORIA) { HistoriaScreen() }
         composable(AppRoutes.GALERIA)  { GaleriaScreen(navController = navController) }
-        composable(AppRoutes.PERFIL)   { ProfileScreen() }
+        composable(AppRoutes.PERFIL)   { ProfileScreen(isEditing = isEditing, viewModel = authViewModel ) }
         composable(AppRoutes.AJUSTES)  { AjustesScreen(viewModel = ajustesViewModel) }
 
         // Ruta de Panorama 360 (Inmersiva, desde Galería / res/raw)

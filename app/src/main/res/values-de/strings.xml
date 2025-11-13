@@ -5,7 +5,15 @@
     <string name="virtual_visit">VIRTUELLER BESUCH</string>
     <string name="book_appointment">TERMIN BUCHEN</string>
     <string name="monastery_name">Santa María\nla Real de Huelgas</string>
-    <string name="edit_mode">Bearbeiten</string>
+    <string name="edit_mode_activate_icon">Bearbeitungsmodus</string>
+    <string name="edit_mode_deactivate_icon">Bearbeitungsmodus verlassen</string>
+    <string name="edit_mode_activate_message">Bearbeitungsmodus aktiviert</string>
+    <string name="edit_mode_deactivate_message">Bearbeitungsmodus deaktiviert</string>
+    <string name="edit_save_changes">Änderungen speichern</string>
+    <string name="profile_login">Login</string>
+    <string name="profile_logout">Abmelden</string>
+    <string name="profile_email">E-Mail</string>
+    <string name="profile_password">Passwort</string>
     <string name="navigation_drawer_open">Menü öffnen</string>
     <string name="navigation_drawer_close">Menü schließen</string>
     <string name="menu_info">Klosterinformationen</string>

@@ -1,6 +1,5 @@
 package com.nextapp.monasterio
 
-
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.compose.setContent
@@ -30,6 +29,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.nextapp.monasterio.utils.FontSize
 import com.nextapp.monasterio.viewModels.AjustesViewModel
+import com.nextapp.monasterio.viewModels.AuthViewModel
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,6 +59,12 @@ fun MonasteryAppScreen() {
     val navController = rememberNavController()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+
+    //ViewModel para tener el estado del usuario autenticado
+    val authViewModel: AuthViewModel = viewModel()
+    val currentUser by authViewModel.currentUser.collectAsState(initial = null)
+    // Estado global para el modo edición
+    var isEditing by remember { mutableStateOf(false) }
 
     // ... (Tu lógica de idioma se queda igual)
     val stringEspanyol= "Español"
@@ -193,18 +199,21 @@ fun MonasteryAppScreen() {
                                     }
                                 }
                             }
-                            IconButton(onClick = {
-                                Toast.makeText(
-                                    context,
-                                    "Modo edición (próximamente)",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }) {
-                                Icon(
-                                    painter = painterResource(id = R.drawable.lapiz),
-                                    contentDescription = stringResource(id = R.string.edit_mode)
-                                )
+
+                            // Icono Editar: solo disponible para un usuario autenticado
+                            if (currentUser != null) {
+                                IconButton(onClick = {
+                                    isEditing = !isEditing // Toggle del modo edición
+                                    val message = if (isEditing) context.getString(R.string.edit_mode_activate_message) else context.getString(R.string.edit_mode_deactivate_message)
+                                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                                }) {
+                                    Icon(
+                                        painter = painterResource(id = if (isEditing) R.drawable.baseline_done_24 else R.drawable.lapiz),
+                                        contentDescription = if (isEditing) stringResource(id = R.string.edit_mode_deactivate_icon) else  stringResource(id = R.string.edit_mode_activate_icon)
+                                    )
+                                }
                             }
+
                         }
                     )
                 }
@@ -213,7 +222,9 @@ fun MonasteryAppScreen() {
             // ¡¡UN SOLO AppNavigationHost!!
             // (Si es inmersiva, paddingValues será cero porque no hay TopBar)
             AppNavigationHost(
+                authViewModel = authViewModel,
                 navController = navController,
+                isEditing = isEditing,
                 modifier = Modifier.padding(paddingValues)
             )
         }
