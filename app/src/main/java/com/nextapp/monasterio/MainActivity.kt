@@ -116,6 +116,7 @@ fun MonasteryAppScreen() {
                 AppRoutes.RESERVA,
                 AppRoutes.CONFIRMACION_RESERVA -> context.getString(R.string.title_appointment)
                 AppRoutes.VIRTUAL_VISIT -> context.getString(R.string.title_monasterio)
+                AppRoutes.PIN_ENTRADA_MONASTERIO -> context.getString(R.string.title_entrada)
                 else -> context.getString(R.string.title_inicio)
             }
         }
@@ -208,7 +209,7 @@ fun MonasteryAppScreen() {
                                     Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
                                 }) {
                                     Icon(
-                                        painter = painterResource(id = if (isEditing) R.drawable.baseline_done_24 else R.drawable.lapiz),
+                                        painter = painterResource(id = if (isEditing) R.drawable.lapiz else R.drawable.lapiz),
                                         contentDescription = if (isEditing) stringResource(id = R.string.edit_mode_deactivate_icon) else  stringResource(id = R.string.edit_mode_activate_icon)
                                     )
                                 }

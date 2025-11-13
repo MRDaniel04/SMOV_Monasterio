@@ -41,14 +41,53 @@ fun EntradaMonasterioScreen(
 
     val imagenes = pin.imagenesDetalladas.ifEmpty { emptyList() }
     var currentIndex by remember { mutableStateOf(0) }
+
     val configuration = LocalConfiguration.current
     val locale: Locale = configuration.locales[0]
-    val language = locale.language
+    val lang = locale.language
 
-    val titulo_pin = when (language) {
+    // ⭐ TITULO DEL PIN SEGÚN IDIOMA
+    val titulo_pin = when (lang) {
         "de" -> pin.tituloAleman.ifBlank { pin.titulo }
         "en" -> pin.tituloIngles.ifBlank { pin.titulo }
         else -> pin.titulo
+    }
+
+    // ⭐ TEXTOS MULTIDIOMA
+    val tDatosContacto = when (lang) {
+        "de" -> "Kontaktinformationen"
+        "en" -> "Contact Information"
+        else -> "Datos de contacto"
+    }
+
+    val tUbicacion = when (lang) {
+        "de" -> "Standort"
+        "en" -> "Location"
+        else -> "Ubicación"
+    }
+
+    val tCorreo = when (lang) {
+        "de" -> "E-Mail"
+        "en" -> "Email"
+        else -> "Correo electrónico"
+    }
+
+    val tTelefono = when (lang) {
+        "de" -> "Telefon"
+        "en" -> "Phone"
+        else -> "Teléfono"
+    }
+
+    val tHorarios = when (lang) {
+        "de" -> "Öffnungszeiten"
+        "en" -> "Opening Hours"
+        else -> "Horarios de Visita"
+    }
+
+    val tLunesViernes = when (lang) {
+        "de" -> "Montag bis Freitag:"
+        "en" -> "Monday to Friday:"
+        else -> "Lunes a Viernes:"
     }
 
     // 🔄 Cambio automático de imagen (cada 4 s)
@@ -67,21 +106,22 @@ fun EntradaMonasterioScreen(
         contentPadding = PaddingValues(bottom = 40.dp)
     ) {
         item {
-            // 🔙 Encabezado
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color(0xFFD50000))
+                    .background(Color.White)
                     .padding(vertical = 12.dp),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
                     text = titulo_pin,
-                    color = Color.White,
+                    color = Color.Black,
                     fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center
                 )
             }
+
 
             Spacer(modifier = Modifier.height(16.dp))
         }
@@ -97,7 +137,6 @@ fun EntradaMonasterioScreen(
                         .border(2.dp, Color(0xFF2196F3), RoundedCornerShape(12.dp)),
                     contentAlignment = Alignment.Center
                 ) {
-                    // 👇 Transición suave entre imágenes
                     androidx.compose.animation.Crossfade(
                         targetState = currentIndex,
                         label = "imageFade"
@@ -110,21 +149,9 @@ fun EntradaMonasterioScreen(
                                 contentScale = ContentScale.Crop,
                                 modifier = Modifier.fillMaxSize()
                             )
-                            if (imagen.etiqueta.isNotBlank()) {
-                                Text(
-                                    text = imagen.etiqueta,
-                                    color = Color.White,
-                                    fontSize = 14.sp,
-                                    modifier = Modifier
-                                        .align(Alignment.BottomStart)
-                                        .background(Color.Black.copy(alpha = 0.6f))
-                                        .padding(horizontal = 10.dp, vertical = 6.dp)
-                                )
-                            }
                         }
                     }
 
-                    // 🔘 Indicadores
                     Row(
                         Modifier
                             .align(Alignment.BottomCenter)
@@ -137,10 +164,8 @@ fun EntradaMonasterioScreen(
                                     .padding(3.dp)
                                     .size(if (selected) 9.dp else 7.dp)
                                     .background(
-                                        if (selected)
-                                            Color.White
-                                        else
-                                            Color.White.copy(alpha = 0.4f),
+                                        if (selected) Color.White
+                                        else Color.White.copy(alpha = 0.4f),
                                         shape = CircleShape
                                     )
                             )
@@ -148,7 +173,7 @@ fun EntradaMonasterioScreen(
                     }
                 }
 
-                Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(18.dp))
             }
         }
 
@@ -157,11 +182,12 @@ fun EntradaMonasterioScreen(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 24.dp, vertical = 16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .padding(horizontal = 24.dp, vertical = 16.dp)
             ) {
+
+                // ⭐ TÍTULO CENTRADO (Multidioma)
                 Text(
-                    text = "Datos de contacto",
+                    text = tDatosContacto,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center,
@@ -170,14 +196,15 @@ fun EntradaMonasterioScreen(
                         .padding(vertical = 12.dp)
                 )
 
-                InfoRow(label = "Ubicación:", value = "Av. Ramón y Cajal, 4A, 47005 Valladolid")
-                InfoRow(label = "Correo electrónico:", value = "smrhv@huelgasreales.es")
-                InfoRow(label = "Teléfono:", value = "+34 983 29 13 95")
+                InfoItem(label = tUbicacion, value = "Av. Ramón y Cajal, 4A, 47005 Valladolid")
+                InfoItem(label = tCorreo, value = "smrhv@huelgasreales.es")
+                InfoItem(label = tTelefono, value = "+34 983 29 13 95")
 
                 Spacer(modifier = Modifier.height(30.dp))
 
+                // ⭐ TÍTULO CENTRADO (Multidioma)
                 Text(
-                    text = "Horarios de Visita",
+                    text = tHorarios,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center,
@@ -186,29 +213,21 @@ fun EntradaMonasterioScreen(
                         .padding(bottom = 12.dp)
                 )
 
-                Row(
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text("Lunes a Viernes: ", fontWeight = FontWeight.SemiBold)
-                    Text("17:00 - 19:30", fontWeight = FontWeight.Normal)
-                }
+                Text(tLunesViernes, fontWeight = FontWeight.SemiBold)
+                Text("17:00 - 19:30")
             }
         }
     }
 }
 
 @Composable
-private fun InfoRow(label: String, value: String) {
-    Row(
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically,
+private fun InfoItem(label: String, value: String) {
+    Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 6.dp)
+            .padding(vertical = 8.dp)
     ) {
-        Text(text = "$label ", fontWeight = FontWeight.SemiBold)
+        Text(text = label, fontWeight = FontWeight.SemiBold)
         Text(text = value, color = Color(0xFF1976D2))
     }
 }

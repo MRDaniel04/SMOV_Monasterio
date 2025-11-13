@@ -65,6 +65,7 @@
     <string name="font_normal">Mediana</string>
     <string name="font_big">Grande</string>
     <string name="title_monasterio">Monasterio</string>
+    <string name="title_entrada">Entrada Monasterio</string>
     <string name="spanish_language">Español</string>
     <string name="german_language">Alemán</string>
     <string name="english_language">Inglés</string>
