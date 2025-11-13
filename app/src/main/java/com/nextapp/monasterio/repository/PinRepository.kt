@@ -79,17 +79,30 @@ object PinRepository {
         for (ref in basePin.imagenes) {
             try {
                 val imageId = ref.substringAfterLast("/")
-                val imageDoc =
-                    firestore.collection("imagenes").document(imageId).get().await()
+                val imageDoc = firestore.collection("imagenes").document(imageId).get().await()
                 if (imageDoc.exists()) {
                     val url = imageDoc.getString("url") ?: ""
                     val etiqueta = imageDoc.getString("etiqueta") ?: ""
+                    val titulo = imageDoc.getString("titulo") ?: ""
+                    val tituloIngles = imageDoc.getString("tituloIngles") ?: ""
+                    val tituloAleman = imageDoc.getString("tituloAleman") ?: ""
+
                     Log.d(
                         "PinRepository",
-                        "✅ Imagen encontrada '$imageId' → etiqueta='$etiqueta', url='$url'"
+                        "✅ Imagen encontrada '$imageId' → etiqueta='$etiqueta', titulo='$titulo', url='$url'"
                     )
+
                     if (url.isNotBlank()) {
-                        imagenesDetalladas.add(ImagenData(imageId, url, etiqueta))
+                        imagenesDetalladas.add(
+                            ImagenData(
+                                id = imageId,
+                                url = url,
+                                etiqueta = etiqueta,
+                                titulo = titulo,
+                                tituloIngles = tituloIngles,
+                                tituloAleman = tituloAleman
+                            )
+                        )
                     }
                 } else {
                     Log.w("PinRepository", "⚠️ Documento no encontrado en /imagenes/: $imageId")
@@ -98,6 +111,7 @@ object PinRepository {
                 Log.e("PinRepository", "❌ Error al obtener imagen referenciada para $ref", e)
             }
         }
+
 
         Log.d("PinRepository", "📊 Resultado final para pin $id → ${imagenesDetalladas.size} imágenes cargadas")
 

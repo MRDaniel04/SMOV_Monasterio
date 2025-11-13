@@ -29,12 +29,12 @@ import coil.load
 import com.github.chrisbanes.photoview.PhotoView
 import com.nextapp.monasterio.R
 import com.nextapp.monasterio.models.PinData
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.res.stringResource
 import com.nextapp.monasterio.models.Ubicacion
 import java.util.Locale
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -51,13 +51,9 @@ fun PinDetalleScreen(
 
     val imagenes = if (pin.imagenesDetalladas.isNotEmpty()) pin.imagenesDetalladas else emptyList()
 
-    LaunchedEffect(Unit) {
-        android.util.Log.d("PinDetalleScreen", "🖼️ Imagenes cargadas: ${imagenes.map { it.etiqueta }}")
-    }
-
     val pagerState = rememberPagerState(pageCount = { imagenes.size })
     var selectedImageUrl by remember { mutableStateOf<String?>(null) }
-    var selectedImageLabel by remember { mutableStateOf<String?>(null) }
+    var selectedImageTitle by remember { mutableStateOf<String?>(null) }
 
     val configuration = LocalConfiguration.current
     val locale: Locale = configuration.locales[0]
@@ -116,7 +112,7 @@ fun PinDetalleScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // 🏷️ Título
+            // 🏷️ Título principal
             Text(
                 text = buildString {
                     append(titulo_pin)
@@ -131,7 +127,7 @@ fun PinDetalleScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            // 🖼️ Carrusel con etiqueta real desde Firestore
+            // 🖼️ Carrusel con etiqueta (solo aquí)
             if (imagenes.isNotEmpty()) {
                 Box(
                     modifier = Modifier
@@ -151,11 +147,16 @@ fun PinDetalleScreen(
                                     .fillMaxSize()
                                     .clickable {
                                         selectedImageUrl = imagen.url
-                                        selectedImageLabel = imagen.etiqueta
+                                        // 👇 título según idioma actual
+                                        selectedImageTitle = when (language) {
+                                            "es" -> imagen.titulo
+                                            "de" -> imagen.tituloAleman
+                                            else -> imagen.tituloIngles
+                                        }
                                     }
                             )
 
-                            // 🔹 Etiqueta abajo a la izquierda
+                            // 🔹 Etiqueta abajo a la izquierda (solo carrusel)
                             Text(
                                 text = imagen.etiqueta,
                                 color = Color.White,
@@ -180,7 +181,10 @@ fun PinDetalleScreen(
                                 Modifier
                                     .padding(3.dp)
                                     .size(if (selected) 8.dp else 6.dp)
-                                    .background(Color.White.copy(alpha = if (selected) 1f else 0.6f), shape = CircleShape)
+                                    .background(
+                                        Color.White.copy(alpha = if (selected) 1f else 0.6f),
+                                        shape = CircleShape
+                                    )
                             )
                         }
                     }
@@ -241,14 +245,14 @@ fun PinDetalleScreen(
             }
         }
 
-        // 🔍 Zoom con etiqueta real
+        // 🔍 Zoom con título traducido
         if (selectedImageUrl != null) {
             ZoomableImageDialog(
                 imageUrl = selectedImageUrl!!,
-                label = selectedImageLabel ?: "",
+                label = selectedImageTitle ?: "",
                 onDismiss = {
                     selectedImageUrl = null
-                    selectedImageLabel = null
+                    selectedImageTitle = null
                 }
             )
         }
@@ -276,7 +280,7 @@ private fun ZoomableImageDialog(imageUrl: String, label: String, onDismiss: () -
                 modifier = Modifier.fillMaxSize()
             )
 
-            // 🔹 Etiqueta abajo a la izquierda
+            // 🔹 Título (ya traducido según idioma)
             Text(
                 text = label,
                 color = Color.White,
