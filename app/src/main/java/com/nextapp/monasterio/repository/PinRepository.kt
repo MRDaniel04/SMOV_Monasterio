@@ -135,25 +135,18 @@ object PinRepository {
 
             val x = (data["x"] as? Number)?.toFloat() ?: 0f
             val y = (data["y"] as? Number)?.toFloat() ?: 0f
-
             val temaStr = data["tema"] as? String
             val tema = temaStr?.let { safeTemaOf(it) } ?: Tema.PINTURA_Y_ARTE_VISUAL
 
-            // 🧩 Aquí soportamos DocumentReference además de String
+            // 🧩 Referencias de imágenes
             val imagenes: List<String> = when (val raw = data["imagenes"]) {
-                is List<*> -> {
-                    raw.mapNotNull {
-                        when (it) {
-                            is String -> it
-                            is DocumentReference -> it.path // ← convierte ref a string "/imagenes/xyz"
-                            else -> {
-                                Log.w("PinRepository", "⚠️ Tipo de imagen no soportado: ${it?.javaClass?.simpleName}")
-                                null
-                            }
-                        }
+                is List<*> -> raw.mapNotNull {
+                    when (it) {
+                        is String -> it
+                        is DocumentReference -> it.path
+                        else -> null
                     }
                 }
-                is Map<*, *> -> raw.values.mapNotNull { it as? String }
                 else -> emptyList()
             }
 
@@ -163,13 +156,25 @@ object PinRepository {
             val tapRadius = (data["tapRadius"] as? Number)?.toFloat() ?: 0.04f
             val vista360Url = data["vista360Url"] as? String
 
-            Log.d("PinRepository", "📍 Mapeando pin '$titulo' ($docId) con ${imagenes.size} refs")
+            // 🔹 NUEVO: leer los campos de destino
+            val tipoDestino = data["tipoDestino"] as? String
+            val valorDestino = data["valorDestino"] as? String
+
+            // 🔹 Crear el destino dinámicamente
+            val destino = when (tipoDestino?.lowercase()) {
+                "ruta" -> DestinoPin.Ruta(valorDestino ?: "")
+                "detalle" -> DestinoPin.Detalle(valorDestino ?: docId)
+                "popup" -> DestinoPin.Popup(valorDestino ?: "Sin mensaje")
+                else -> DestinoPin.Detalle(docId)
+            }
+
+            Log.d("PinRepository", "📍 Mapeando pin '$titulo' ($docId) → tipoDestino=$tipoDestino, valor=$valorDestino")
 
             PinData(
                 id = docId,
                 titulo = titulo,
-                tituloAleman = tituloAleman,
                 tituloIngles = tituloIngles,
+                tituloAleman = tituloAleman,
                 ubicacion = ubicacion,
                 ubicacionIngles = ubicacionIngles,
                 ubicacionAleman = ubicacionAleman,
@@ -183,7 +188,9 @@ object PinRepository {
                 descripcion = descripcion,
                 descripcionIngles = descripcionIngles,
                 descripcionAleman = descripcionAleman,
-                destino = DestinoPin.Detalle(docId),
+                tipoDestino = tipoDestino,
+                valorDestino = valorDestino,
+                destino = destino,
                 tapRadius = tapRadius,
                 vista360Url = vista360Url
             )
@@ -192,6 +199,7 @@ object PinRepository {
             null
         }
     }
+
 
     private fun safeTemaOf(name: String): Tema {
         return try {
