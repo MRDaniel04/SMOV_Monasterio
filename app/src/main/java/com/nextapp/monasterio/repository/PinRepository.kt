@@ -31,7 +31,10 @@ object PinRepository {
             "imagenes" to pin.imagenes,
             "descripcion" to pin.descripcion,
             "tapRadius" to pin.tapRadius.toDouble(),
-            "vista360Url" to pin.vista360Url
+            "vista360Url" to pin.vista360Url,
+            "audioUrl_es" to pin.audioUrl_es,
+            "audioUrl_en" to pin.audioUrl_en,
+            "audioUrl_ge" to pin.audioUrl_ge
         )
         return createPinAutoId(payload)
     }
@@ -156,6 +159,10 @@ object PinRepository {
             val tapRadius = (data["tapRadius"] as? Number)?.toFloat() ?: 0.04f
             val vista360Url = data["vista360Url"] as? String
 
+            val audioUrl_es = data["audioUrl_es"] as? String
+            val audioUrl_en = data["audioUrl_en"] as? String
+            val audioUrl_ge = data["audioUrl_ge"] as? String
+
             // 🔹 NUEVO: leer los campos de destino
             val tipoDestino = data["tipoDestino"] as? String
             val valorDestino = data["valorDestino"] as? String
@@ -192,7 +199,10 @@ object PinRepository {
                 valorDestino = valorDestino,
                 destino = destino,
                 tapRadius = tapRadius,
-                vista360Url = vista360Url
+                vista360Url = vista360Url,
+                audioUrl_es = audioUrl_es,
+                audioUrl_en = audioUrl_en,
+                audioUrl_ge = audioUrl_ge
             )
         } catch (e: Exception) {
             Log.e("PinRepository", "❌ Error mapeando pin $docId", e)

@@ -100,4 +100,5 @@
     <string name="phone_data">Telefon</string>
     <string name="visit_schedule">Öffnungszeiten</string>
     <string name="monday_to_friday">Montag bis Freitag:</string>
+    <string name="play_audio" />
 </resources>

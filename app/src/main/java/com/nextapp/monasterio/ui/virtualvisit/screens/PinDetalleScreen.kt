@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext // <-- ¡NUEVO IMPORT!
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -36,6 +37,12 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
+// Imports de Media3 (ExoPlayer)
+import androidx.media3.common.MediaItem
+import androidx.media3.common.Player
+import androidx.media3.exoplayer.ExoPlayer
+import android.util.Log
+import androidx.compose.foundation.layout.Arrangement
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -70,6 +77,7 @@ fun PinDetalleScreen(
     val locale: Locale = configuration.locales[0]
     val language = locale.language
 
+    // --- Lógica de Texto Multilingüe (Tu código) ---
     val titulo_pin: String
     val descripcion_pin: String?
     val ubicacion_pin: Ubicacion?
@@ -91,6 +99,64 @@ fun PinDetalleScreen(
             ubicacion_pin = pin.ubicacionIngles
         }
     }
+
+    // --- ¡¡NUEVA LÓGICA DE AUDIO!! ---
+    val context = LocalContext.current
+
+    // 1. Selecciona la URL de audio correcta
+    val audioUrl = when (language) {
+        "es" -> pin.audioUrl_es
+        "en" -> pin.audioUrl_en
+        "de" -> pin.audioUrl_ge
+        else -> pin.audioUrl_es
+    }
+
+    Log.d(
+        "AudioDebug",
+        "Pin: '${pin.titulo}', Idioma: $language, URL de Audio Seleccionada: [$audioUrl]"
+    )
+
+    // 2. Configura el ExoPlayer
+    val exoPlayer = remember { ExoPlayer.Builder(context).build() }
+    var isPlaying by remember { mutableStateOf(false) }
+    var playbackState by remember { mutableStateOf(Player.STATE_IDLE) }
+    var hasUserInteracted by remember { mutableStateOf(false) }
+
+    // 3. Prepara el player si la URL cambia (y no es nula)
+    DisposableEffect(audioUrl) {
+        if (!audioUrl.isNullOrBlank()) {
+            val mediaItem = MediaItem.fromUri(audioUrl)
+            exoPlayer.setMediaItem(mediaItem)
+            exoPlayer.prepare()
+        }
+        // (No necesitamos onDispose aquí, se libera abajo)
+        onDispose { }
+    }
+
+    // 4. Listener para actualizar el botón Play/Pause y rebobinar
+    LaunchedEffect(exoPlayer) {
+        exoPlayer.addListener(object : Player.Listener {
+            override fun onIsPlayingChanged(isPlayingValue: Boolean) {
+                isPlaying = isPlayingValue
+            }
+            override fun onPlaybackStateChanged(state: Int) {
+                playbackState = state
+
+                if (state == Player.STATE_ENDED) {
+                    isPlaying = false
+                    exoPlayer.seekTo(0)
+                }
+            }
+        })
+    }
+
+    // 5. Libera el player al salir de la pantalla
+    DisposableEffect(Unit) {
+        onDispose {
+            exoPlayer.release()
+        }
+    }
+    // --- FIN LÓGICA DE AUDIO ---
 
     Box(
         modifier = Modifier
@@ -121,9 +187,8 @@ fun PinDetalleScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
-            // 🏷️ Título principal
             Text(
                 text = buildString {
                     append(titulo_pin)
@@ -136,9 +201,9 @@ fun PinDetalleScreen(
                 modifier = Modifier.fillMaxWidth()
             )
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-            // 🖼️ Carrusel con etiqueta (solo aquí)
+            // 🖼️ Carrusel con etiqueta (se queda igual)
             if (imagenes.isNotEmpty()) {
                 Box(
                     modifier = Modifier
@@ -148,62 +213,141 @@ fun PinDetalleScreen(
                         .border(3.dp, Color.Black, RoundedCornerShape(16.dp))
                 ) {
                     HorizontalPager(state = pagerState) { page ->
+
                         val imagen = imagenes[page]
+
                         Box(modifier = Modifier.fillMaxSize()) {
+
                             AsyncImage(
+
                                 model = imagen.url,
+
                                 contentDescription = imagen.etiqueta,
+
                                 contentScale = ContentScale.Crop,
+
                                 modifier = Modifier
+
                                     .fillMaxSize()
+
                                     .clickable {
+
                                         selectedImageUrl = imagen.url
-                                        // 👇 título según idioma actual
+
+// 👇 título según idioma actual
+
                                         selectedImageTitle = when (language) {
+
                                             "es" -> imagen.titulo
+
                                             "de" -> imagen.tituloAleman
+
                                             else -> imagen.tituloIngles
+
                                         }
+
                                     }
-                            )
 
-                            // 🔹 Etiqueta abajo a la izquierda (solo carrusel)
+                            )
                             Text(
-                                text = imagen.etiqueta,
-                                color = Color.White,
-                                fontSize = 14.sp,
-                                modifier = Modifier
-                                    .align(Alignment.BottomStart)
-                                    .background(Color.Black.copy(alpha = 0.6f))
-                                    .padding(horizontal = 10.dp, vertical = 6.dp)
-                            )
-                        }
-                    }
 
-                    // 🔸 Indicadores inferiores
+                                text = imagen.etiqueta,
+
+                                color = Color.White,
+
+                                fontSize = 14.sp,
+
+                                modifier = Modifier
+
+                                    .align(Alignment.BottomStart)
+
+                                    .background(Color.Black.copy(alpha = 0.6f))
+
+                                    .padding(horizontal = 10.dp, vertical = 6.dp)
+
+                            )
+
+                        }
+
+                    }
                     Row(
                         Modifier
                             .align(Alignment.BottomCenter)
                             .padding(bottom = 6.dp)
                     ) {
                         repeat(imagenes.size) { index ->
+
                             val selected = pagerState.currentPage == index
+
                             Box(
+
                                 Modifier
+
                                     .padding(3.dp)
+
                                     .size(if (selected) 8.dp else 6.dp)
+
                                     .background(
+
                                         Color.White.copy(alpha = if (selected) 1f else 0.6f),
+
                                         shape = CircleShape
+
                                     )
+
                             )
+
                         }
                     }
                 }
-                Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(12.dp))
             }
 
-            // 📝 Descripción
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // Botón de Audio (solo si hay URL)
+                if (!audioUrl.isNullOrBlank()) {
+                    // 1. Determina el icono correcto
+                    val iconRes = when {
+                        isPlaying -> R.drawable.pause
+                        !hasUserInteracted -> R.drawable.microphone
+                        else -> R.drawable.play_arrow
+                    }
+
+                    // 2. Botón de audio con redondel, alineado a la derecha del título
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 8.dp), // Espacio entre el título y el botón
+                        horizontalArrangement = Arrangement.Start // Alinea a la derecha
+                    ) {
+                        IconButton(onClick = {
+                            hasUserInteracted = true
+                            if (isPlaying) exoPlayer.pause() else exoPlayer.play()
+                        }) {
+                            Box(
+                                modifier = Modifier
+                                    .size(48.dp) // Tamaño del redondel
+                                    .clip(CircleShape) // Forma redonda
+                                    .background(Color.Gray.copy(alpha = 0.3f)), // Color de fondo del redondel (ej. gris suave)
+                                contentAlignment = Alignment.Center // Centra el icono dentro del redondel
+                            ) {
+                                Icon(
+                                    painter = painterResource(id = iconRes),
+                                    contentDescription = stringResource(R.string.play_audio),
+                                    tint = Color.Black, // Color del icono
+                                    modifier = Modifier.size(28.dp) // Tamaño del icono dentro del redondel
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+
+            // 📝 Descripción (se queda igual)
             val descripcion = descripcion_pin ?: ""
             if (descripcion.isNotBlank()) {
                 val textScrollState = rememberScrollState()
@@ -229,7 +373,7 @@ fun PinDetalleScreen(
 
             Spacer(modifier=Modifier.height(24.dp))
 
-            // 🔘 Botón 360
+            // 🔘 Botón 360 (se queda igual)
             onVer360?.let {
                 Box(
                     modifier = Modifier
@@ -256,7 +400,7 @@ fun PinDetalleScreen(
             }
         }
 
-        // 🔍 Zoom con título traducido
+        // 🔍 Zoom con título traducido (se queda igual)
         if (selectedImageUrl != null) {
             ZoomableImageDialog(
                 imageUrl = selectedImageUrl!!,
@@ -270,7 +414,7 @@ fun PinDetalleScreen(
     }
 }
 
-// 🔍 Diálogo de zoom
+// 🔍 Diálogo de zoom (se queda igual)
 @Composable
 private fun ZoomableImageDialog(imageUrl: String, label: String, onDismiss: () -> Unit) {
 

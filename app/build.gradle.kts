@@ -83,6 +83,9 @@ dependencies {
     // Cloudinary
     implementation("io.coil-kt:coil-compose:2.7.0")
 
+    //media
+    implementation(libs.androidx.media3.exoplayer)
+
 
 
 }

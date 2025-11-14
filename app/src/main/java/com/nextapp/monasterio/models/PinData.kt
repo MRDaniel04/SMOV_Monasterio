@@ -27,7 +27,11 @@ data class PinData(
     val destino: DestinoPin = DestinoPin.Detalle("pin_detalle"),
 
     val tapRadius: Float = 0.04f,
-    val vista360Url: String? = null
+    val vista360Url: String? = null,
+
+    val audioUrl_es: String? = null,
+    val audioUrl_en: String? = null,
+    val audioUrl_ge: String? = null
 )
 
 sealed class DestinoPin {

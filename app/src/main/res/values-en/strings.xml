@@ -99,5 +99,6 @@
     <string name="phone_data">Phone</string>
     <string name="visit_schedule">Opening Hours</string>
     <string name="monday_to_friday">Monday to Friday:</string>
+    <string name="play_audio" />
 
 </resources>
