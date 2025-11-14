@@ -95,4 +95,5 @@
     <string name="phone_data">Teléfono</string>
     <string name="visit_schedule">Horarios de Visita</string>
     <string name="monday_to_friday">Lunes a Viernes:</string>
+    <string name="play_audio" />
 </resources>
