@@ -91,7 +91,7 @@ fun PinDetalleScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = 16.dp)
-                .padding(bottom = 90.dp),
+                .padding(bottom = 40.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             // 🔙 Botón atrás
@@ -215,32 +215,32 @@ fun PinDetalleScreen(
                     )
                 }
             }
-        }
 
-        // 🔘 Botón 360
-        onVer360?.let {
-            Box(
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .fillMaxWidth()
-                    .background(Color.White)
-                    .navigationBarsPadding()
-                    .padding(horizontal = 16.dp, vertical = 12.dp)
-            ) {
-                Button(
-                    onClick = it,
+            Spacer(modifier=Modifier.height(24.dp))
+
+            // 🔘 Botón 360
+            onVer360?.let {
+                Box(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.Black),
-                    shape = RoundedCornerShape(12.dp)
+                        .background(Color.White)
+                        .navigationBarsPadding()
+                        .padding(horizontal = 16.dp, vertical = 2.dp)
                 ) {
-                    Text(
-                        text = stringResource(R.string.see_360),
-                        color = Color.White,
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold,
-                    )
+                    Button(
+                        onClick = it,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(56.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color.Black),
+                        shape = RoundedCornerShape(12.dp)
+                    ) {
+                        Text(
+                            text = stringResource(R.string.see_360),
+                            color = Color.White,
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold,
+                        )
+                    }
                 }
             }
         }

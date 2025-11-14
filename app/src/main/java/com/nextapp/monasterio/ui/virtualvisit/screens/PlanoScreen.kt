@@ -35,6 +35,7 @@ import kotlinx.coroutines.launch
 import android.graphics.Matrix
 import android.graphics.Path
 import android.util.Log
+import androidx.compose.runtime.snapshots.toInt
 import androidx.compose.ui.res.stringResource
 import com.nextapp.monasterio.viewModels.AjustesViewModel
 import com.nextapp.monasterio.viewModels.AuthViewModel
@@ -149,7 +150,7 @@ fun PlanoScreen(
                 photoView.staticZones = figuras.map { figura ->
                     DebugPhotoView.StaticZoneData(
                         path = createPathFromFirebase(figura),
-                        color = figura.colorResaltado
+                        color = figura.colorResaltado.toUInt().toInt()
                     )
                 }
 
@@ -178,7 +179,7 @@ fun PlanoScreen(
                     when {
                         figura != null -> {
                             activePath = createPathFromFirebase(figura)
-                            activeHighlight = Color(figura.colorResaltado)
+                            activeHighlight = Color(figura.colorResaltado.toUInt().toInt())
                             Handler(Looper.getMainLooper()).postDelayed({
                                 activeHighlight = null
                                 when (figura.tipoDestino) {

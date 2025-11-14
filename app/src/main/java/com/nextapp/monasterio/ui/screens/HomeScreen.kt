@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.pm.ActivityInfo
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -94,9 +95,9 @@ fun HomeScreenContent(navController:NavController, modifier: Modifier = Modifier
                 }
         ) {
             Row(
-                modifier=Modifier
-                    .padding(horizontal = 20.dp),
-                verticalAlignment = Alignment.CenterVertically
+                modifier=Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Start
             )  {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_map_24),
@@ -105,11 +106,13 @@ fun HomeScreenContent(navController:NavController, modifier: Modifier = Modifier
                         .padding(end = 16.dp)
                         .size(48.dp)
                 )
+                Spacer(modifier = Modifier.weight(1f))
                 Text(
                     stringResource(id = R.string.virtual_visit),
                     fontSize = 22.sp,
                     textAlign = TextAlign.Center
                 )
+                Spacer(modifier = Modifier.width(64.dp).weight(1f))
             }
         }
         Button(
@@ -127,9 +130,9 @@ fun HomeScreenContent(navController:NavController, modifier: Modifier = Modifier
                 }
         ) {
             Row(
-                modifier=Modifier
-                    .padding(horizontal = 20.dp),
-                verticalAlignment = Alignment.CenterVertically
+                modifier=Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Start
             )  {
                 Icon(
                     painter = painterResource(id = R.drawable.outline_account_child_invert_24),
@@ -138,11 +141,13 @@ fun HomeScreenContent(navController:NavController, modifier: Modifier = Modifier
                         .padding(end = 16.dp)
                         .size(48.dp)
                 )
+                Spacer(modifier = Modifier.weight(1f))
                 Text(
                     stringResource(id = R.string.child_mode),
                     fontSize = 22.sp,
                     textAlign = TextAlign.Center
                 )
+                Spacer(modifier = Modifier.width(64.dp).weight(1f))
             }
         }
         Button(
@@ -160,9 +165,9 @@ fun HomeScreenContent(navController:NavController, modifier: Modifier = Modifier
                 }
         ) {
             Row(
-                modifier=Modifier
-                    .padding(horizontal = 20.dp),
-                verticalAlignment = Alignment.CenterVertically
+                modifier=Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Start
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_time_24),
@@ -172,11 +177,13 @@ fun HomeScreenContent(navController:NavController, modifier: Modifier = Modifier
                         .size(48.dp)
 
                 )
+                Spacer(modifier = Modifier.weight(1f))
                 Text(
                     stringResource(id = R.string.book_appointment),
                     fontSize = 22.sp,
                     textAlign = TextAlign.Center,
                 )
+                Spacer(modifier = Modifier.width(64.dp).weight(1f))
             }
         }
     }
