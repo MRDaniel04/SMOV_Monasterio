@@ -1,6 +1,7 @@
 package com.nextapp.monasterio.ui.virtualvisit.screens
 
 import android.app.Activity
+import android.content.pm.ActivityInfo
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
@@ -47,6 +48,16 @@ fun PinDetalleScreen(
     LaunchedEffect(Unit) {
         val window = (view.context as? Activity)?.window
         window?.let { WindowCompat.setDecorFitsSystemWindows(it, false) }
+    }
+
+    val activity = view.context as? Activity
+
+    DisposableEffect(Unit) {
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+
+        onDispose {
+            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+        }
     }
 
     val imagenes = if (pin.imagenesDetalladas.isNotEmpty()) pin.imagenesDetalladas else emptyList()
@@ -262,6 +273,18 @@ fun PinDetalleScreen(
 // 🔍 Diálogo de zoom
 @Composable
 private fun ZoomableImageDialog(imageUrl: String, label: String, onDismiss: () -> Unit) {
+
+    val view =LocalView.current
+    val activity = view.context as? Activity
+
+    DisposableEffect(Unit) {
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
+
+        onDispose {
+            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        }
+    }
+
     Dialog(
         onDismissRequest = onDismiss,
         properties = DialogProperties(usePlatformDefaultWidth = false, dismissOnClickOutside = true)

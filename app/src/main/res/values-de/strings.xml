@@ -93,4 +93,11 @@
     <string name="game_view">Spiel</string>
     <string name="video_child">VIDEO</string>
     <string name="game_child">SPIEL</string>
+    <string name="location_error">Es wurde keine App gefunden, mit der der Standort geöffnet werden kann.</string>
+    <string name="contact_data">Kontaktinformationen</string>
+    <string name="location_data">Standort</string>
+    <string name="email_data">E-Mail</string>
+    <string name="phone_data">Telefon</string>
+    <string name="visit_schedule">Öffnungszeiten</string>
+    <string name="monday_to_friday">Montag bis Freitag:</string>
 </resources>

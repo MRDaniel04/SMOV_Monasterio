@@ -1,9 +1,12 @@
 package com.nextapp.monasterio.ui.screens
 
+import android.R.attr.onClick
 import android.app.Activity
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.rememberScrollableState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
@@ -16,7 +19,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -26,6 +31,11 @@ import coil.compose.AsyncImage
 import com.nextapp.monasterio.models.PinData
 import kotlinx.coroutines.delay
 import java.util.Locale
+import com.nextapp.monasterio.utils.llamarTelefono
+import com.nextapp.monasterio.utils.crearCorreo
+import com.nextapp.monasterio.utils.abrirUbicacion
+import com.nextapp.monasterio.R
+
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -54,41 +64,17 @@ fun EntradaMonasterioScreen(
     }
 
     // ⭐ TEXTOS MULTIDIOMA
-    val tDatosContacto = when (lang) {
-        "de" -> "Kontaktinformationen"
-        "en" -> "Contact Information"
-        else -> "Datos de contacto"
-    }
+    val tDatosContacto = stringResource(R.string.contact_data)
 
-    val tUbicacion = when (lang) {
-        "de" -> "Standort"
-        "en" -> "Location"
-        else -> "Ubicación"
-    }
+    val tUbicacion = stringResource(R.string.location_data)
 
-    val tCorreo = when (lang) {
-        "de" -> "E-Mail"
-        "en" -> "Email"
-        else -> "Correo electrónico"
-    }
+    val tCorreo = stringResource(R.string.email_data)
 
-    val tTelefono = when (lang) {
-        "de" -> "Telefon"
-        "en" -> "Phone"
-        else -> "Teléfono"
-    }
+    val tTelefono = stringResource(R.string.phone_data)
 
-    val tHorarios = when (lang) {
-        "de" -> "Öffnungszeiten"
-        "en" -> "Opening Hours"
-        else -> "Horarios de Visita"
-    }
+    val tHorarios = stringResource(R.string.visit_schedule)
 
-    val tLunesViernes = when (lang) {
-        "de" -> "Montag bis Freitag:"
-        "en" -> "Monday to Friday:"
-        else -> "Lunes a Viernes:"
-    }
+    val tLunesViernes = stringResource(R.string.monday_to_friday)
 
     // 🔄 Cambio automático de imagen (cada 4 s)
     if (imagenes.size > 1) {
@@ -195,10 +181,20 @@ fun EntradaMonasterioScreen(
                         .fillMaxWidth()
                         .padding(vertical = 12.dp)
                 )
+                val context = LocalContext.current
+                val ubicacion = "Av. Ramón y Cajal, 4A, 47005 Valladolid"
+                val correo="smrhv@huelgasreales.es"
+                val telefono ="+34 983 29 13 95"
+                InfoItem(label = tUbicacion, value = ubicacion,onClick={
+                    context.abrirUbicacion(ubicacion)
+                })
+                InfoItem(label = tCorreo, value = correo,onClick={
+                    context.crearCorreo("","","","",false)
+                })
+                InfoItem(label = tTelefono, value = telefono,onClick={
+                    context.llamarTelefono(telefono)
+                })
 
-                InfoItem(label = tUbicacion, value = "Av. Ramón y Cajal, 4A, 47005 Valladolid")
-                InfoItem(label = tCorreo, value = "smrhv@huelgasreales.es")
-                InfoItem(label = tTelefono, value = "+34 983 29 13 95")
 
                 Spacer(modifier = Modifier.height(30.dp))
 
@@ -221,11 +217,19 @@ fun EntradaMonasterioScreen(
 }
 
 @Composable
-private fun InfoItem(label: String, value: String) {
+private fun InfoItem(label: String, value: String,onClick: (() -> Unit)? = null ){
+    val isClickable = onClick != null
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp)
+            .let{ currentModifier ->
+                if(isClickable){
+                    currentModifier.clickable(onClick = onClick!!)
+                } else{
+                    currentModifier
+                }
+            }
     ) {
         Text(text = label, fontWeight = FontWeight.SemiBold)
         Text(text = value, color = Color(0xFF1976D2))

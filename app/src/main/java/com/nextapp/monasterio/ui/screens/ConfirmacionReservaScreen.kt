@@ -39,7 +39,7 @@ fun ConfirmacionReservaScreen(
     val context= LocalContext.current
     LaunchedEffect(key1=true) {
         delay(500L)
-        context.crearCorreo(nombre,email,fecha,hora)
+        context.crearCorreo(nombre,email,fecha,hora,true)
     }
 
     val activity = (context as? Activity)

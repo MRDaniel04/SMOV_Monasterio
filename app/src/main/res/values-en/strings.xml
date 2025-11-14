@@ -92,5 +92,12 @@
     <string name="game_view">Game</string>
     <string name="video_child">VIDEO</string>
     <string name="game_child">GAME</string>
+    <string name="location_error">No app was found to open the location.</string>
+    <string name="contact_data">Contact Information</string>
+    <string name="location_data">Location</string>
+    <string name="email_data">Email</string>
+    <string name="phone_data">Phone</string>
+    <string name="visit_schedule">Opening Hours</string>
+    <string name="monday_to_friday">Monday to Friday:</string>
 
 </resources>
