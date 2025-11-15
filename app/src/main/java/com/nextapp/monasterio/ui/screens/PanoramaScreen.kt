@@ -1,7 +1,6 @@
 package com.nextapp.monasterio.ui.screens
 
 import android.util.Log
-import android.view.MotionEvent
 import android.widget.FrameLayout
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -27,10 +26,10 @@ import androidx.navigation.NavController
 import com.nextapp.monasterio.R
 import com.nextapp.monasterio.data.MonasterioMapRepository
 import androidx.compose.ui.res.painterResource
+import com.panoramagl.PLManager
 
 // Imports de la librería
 import com.panoramagl.PLImage
-import com.panoramagl.PLManager
 import com.panoramagl.PLSphericalPanorama
 import com.panoramagl.utils.PLUtils
 
@@ -60,6 +59,10 @@ fun PanoramaScreen(
                 when (event) {
                     Lifecycle.Event.ON_CREATE -> {
                         plManager.setContentView(frameLayout)
+                        plManager.setInertiaEnabled(false)
+                        plManager.setAcceleratedTouchScrollingEnabled(true)
+                        plManager.accelerometerSensitivity = 0.5f
+                        plManager.isAcceleratedTouchScrollingEnabled = false
                         plManager.onCreate()
                         try {
                             val panorama = PLSphericalPanorama()

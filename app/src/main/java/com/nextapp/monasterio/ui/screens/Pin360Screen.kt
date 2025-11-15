@@ -26,10 +26,11 @@ import com.nextapp.monasterio.R
 import com.nextapp.monasterio.models.PinData
 import com.nextapp.monasterio.repository.PinRepository // Importa tu repositorio
 import com.panoramagl.PLImage
-import com.panoramagl.PLManager
 import com.panoramagl.PLSphericalPanorama
 import coil.imageLoader
 import coil.request.ImageRequest
+import com.panoramagl.PLManager
+
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -94,6 +95,9 @@ fun Pin360Screen(
                 when (event) {
                     Lifecycle.Event.ON_CREATE -> {
                         plManager.setContentView(frameLayout)
+                        plManager.setInertiaEnabled(false)
+                        plManager.accelerometerSensitivity = 10f
+                        plManager.isAcceleratedTouchScrollingEnabled = false
                         plManager.onCreate()
                         try {
                             val panorama = PLSphericalPanorama()
