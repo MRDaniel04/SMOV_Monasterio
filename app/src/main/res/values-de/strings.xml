@@ -93,6 +93,7 @@
     <string name="game_view">Spiel</string>
     <string name="video_child">VIDEO</string>
     <string name="game_child">SPIEL</string>
+    <string name="edit_mode">BEARBEITUNGSMODUS</string>
     <string name="location_error">Es wurde keine App gefunden, mit der der Standort geöffnet werden kann.</string>
     <string name="contact_data">Kontaktinformationen</string>
     <string name="location_data">Standort</string>

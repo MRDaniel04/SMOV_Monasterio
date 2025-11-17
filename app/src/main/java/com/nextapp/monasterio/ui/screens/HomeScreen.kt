@@ -51,7 +51,7 @@ fun HomeScreenContent(navController:NavController, modifier: Modifier = Modifier
     }
 
     ConstraintLayout(modifier = modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
-        val (background, crest, title, btnVisit, btnChild,btnBook) = createRefs()
+        val (background, crest, title, btnVisit, btnChild,btnBook, btnEdit) = createRefs()
         Image(
             painter = painterResource(id = R.drawable.monastery_background),
             contentDescription = null,
@@ -158,7 +158,7 @@ fun HomeScreenContent(navController:NavController, modifier: Modifier = Modifier
             shape = RoundedCornerShape(20.dp),
             modifier = Modifier
                 .constrainAs(btnBook) {
-                    bottom.linkTo(parent.bottom, margin = 186.dp)
+                    bottom.linkTo(btnEdit.top, margin = 48.dp)
                     start.linkTo(parent.start, margin = 20.dp)
                     end.linkTo(parent.end, margin = 20.dp)
                     width = Dimension.fillToConstraints
@@ -182,6 +182,43 @@ fun HomeScreenContent(navController:NavController, modifier: Modifier = Modifier
                     stringResource(id = R.string.book_appointment),
                     fontSize = 22.sp,
                     textAlign = TextAlign.Center,
+                )
+                Spacer(modifier = Modifier.width(64.dp).weight(1f))
+            }
+        }
+
+        Button(
+            onClick = {
+                navController.navigate(AppRoutes.MODO_EDICION)
+            },
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF9C27B0)), // Púrpura de ejemplo
+            shape = RoundedCornerShape(20.dp),
+            modifier = Modifier
+                .constrainAs(btnEdit) {
+                    bottom.linkTo(parent.bottom, margin = 120.dp)
+                    start.linkTo(parent.start, margin = 20.dp)
+                    end.linkTo(parent.end, margin = 20.dp)
+                    width = Dimension.fillToConstraints
+                }
+
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Start
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.lapiz), // Ícono provisional
+                    contentDescription = null,
+                    modifier = Modifier
+                        .padding(end = 16.dp)
+                        .size(48.dp)
+                )
+                Spacer(modifier = Modifier.weight(1f))
+                Text(
+                    stringResource(id = R.string.edit_mode),
+                    fontSize = 22.sp,
+                    textAlign = TextAlign.Center
                 )
                 Spacer(modifier = Modifier.width(64.dp).weight(1f))
             }

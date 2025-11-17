@@ -119,6 +119,7 @@ fun MonasteryAppScreen() {
                 AppRoutes.MODO_NINYOS -> context.getString(R.string.child_mode_view)
                 AppRoutes.VIDEO_NINYOS -> context.getString(R.string.video_view)
                 AppRoutes.JUEGO_NINYOS -> context.getString(R.string.game_view)
+                AppRoutes.MODO_EDICION -> "Modo Edición"
                 AppRoutes.PIN_ENTRADA_MONASTERIO -> context.getString(R.string.title_entrada)
                 else -> context.getString(R.string.title_inicio)
             }
