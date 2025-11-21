@@ -6,18 +6,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 
-/**
- * Componente reutilizable para texto editable
- * Muestra texto normal cuando no está en modo edición y un campo editable cuando sí lo está
- * 
- * @param text Texto actual
- * @param isEditing Si está en modo edición
- * @param onTextChange Callback cuando cambia el texto
- * @param modifier Modificador de Compose
- * @param label Etiqueta del campo (opcional)
- * @param singleLine Si el campo debe ser de una sola línea (por defecto true)
- * @param readOnlyStyle Estilo del texto cuando no está en edición
- */
 @Composable
 fun EditableText(
     text: String,
