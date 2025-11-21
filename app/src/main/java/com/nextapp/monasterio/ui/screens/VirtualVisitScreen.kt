@@ -21,7 +21,7 @@ object VirtualVisitRoutes {
 }
 
 @Composable
-fun VirtualVisitScreen(navController: NavHostController? = null,viewModel: AjustesViewModel) {
+fun VirtualVisitScreen(navController: NavHostController? = null, viewModel: AjustesViewModel) {
     val localNavController = rememberNavController()
 
     val context = LocalContext.current
@@ -43,7 +43,7 @@ fun VirtualVisitScreen(navController: NavHostController? = null,viewModel: Ajust
         // --- 🔹 Ruta base sin argumento (por si alguien navega a "plano" directamente)
         composable(VirtualVisitRoutes.PLANO) {
             PlanoScreen(
-                viewModel=viewModel,
+                viewModel = viewModel,
                 planoId = initialPlanoId,
                 navController = localNavController,
                 rootNavController = navController
@@ -57,20 +57,23 @@ fun VirtualVisitScreen(navController: NavHostController? = null,viewModel: Ajust
         ) { backStackEntry ->
             val planoId = backStackEntry.arguments?.getString("planoId") ?: initialPlanoId
             PlanoScreen(
-                viewModel=viewModel,
+                viewModel = viewModel,
                 planoId = planoId,
                 navController = localNavController,
                 rootNavController = navController
             )
         }
 
-        // --- 🔹 Pantalla de detalle de Pin (igual que antes)
+        // --- 🔹 Pantalla de detalle de Pin
         composable(
             route = AppRoutes.PIN_DETALLE + "/{pinId}",
             arguments = listOf(navArgument("pinId") { type = NavType.StringType })
         ) { backStackEntry ->
             val pinId = backStackEntry.arguments?.getString("pinId") ?: ""
+
+            // 👇 AQUÍ ESTABA EL ERROR: AÑADIMOS 'viewModel = viewModel'
             PinDetalleFirestoreScreen(
+                viewModel = viewModel, // <--- ¡CORREGIDO!
                 pinId = pinId,
                 navController = localNavController,
                 rootNavController = navController

@@ -6,17 +6,20 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController // <-- ¡IMPORT AÑADIDO!
+import androidx.navigation.NavHostController
 import com.nextapp.monasterio.repository.PinRepository
 import com.nextapp.monasterio.models.PinData
-import com.nextapp.monasterio.AppRoutes // <-- ¡IMPORT AÑADIDO!
+import com.nextapp.monasterio.AppRoutes
 import android.util.Log
+// 1. IMPORTAMOS EL VIEWMODEL
+import com.nextapp.monasterio.viewModels.AjustesViewModel
 
 @Composable
 fun PinDetalleFirestoreScreen(
+    viewModel: AjustesViewModel, // <--- 2. AÑADIMOS ESTE PARÁMETRO
     pinId: String,
-    navController: NavController, // Este es el local (para 'onBack')
-    rootNavController: NavHostController? = null // <-- 1. ACEPTA EL NAVEGADOR RAÍZ
+    navController: NavController,
+    rootNavController: NavHostController? = null
 ) {
     var pin by remember { mutableStateOf<PinData?>(null) }
     var isLoading by remember { mutableStateOf(true) }
@@ -46,29 +49,25 @@ fun PinDetalleFirestoreScreen(
         pin != null -> {
             val currentPin = pin
 
-            // 2. Usamos 'currentPin' para todas las operaciones
             Log.d(
                 "Pin360Debug",
                 "Pin cargado: '${currentPin?.titulo}'. URL 360: [${currentPin?.vista360Url}]"
             )
             val onVer360: (() -> Unit)? =
-                // Usamos 'vista360Url' (el campo que añadimos a PinData.kt)
                 if (!pin!!.vista360Url.isNullOrBlank()) {
-                    // 3. Si la tiene, creamos la lambda de navegación
                     {
-                        // Llama al navegador RAÍZ (rootNavController)
-                        // y navega a la NUEVA ruta 'PIN_360'
                         rootNavController?.navigate(AppRoutes.PIN_360 + "/${pin!!.id}")
                     }
                 } else {
-                    // 4. Si no la tiene, pasa null
                     null
                 }
 
+            // AQUI ESTABA EL ERROR:
             PinDetalleScreen(
+                viewModel = viewModel,
                 pin = pin!!,
                 onBack = { navController.popBackStack() },
-                onVer360 = onVer360 // <-- 5. PASAMOS LA LAMBDA (O NULL)
+                onVer360 = onVer360
             )
         }
     }

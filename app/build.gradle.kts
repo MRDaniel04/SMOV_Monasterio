@@ -87,6 +87,9 @@ dependencies {
     implementation(libs.androidx.media3.exoplayer)
     implementation(libs.androidx.media3.ui)
 
+    //Datastore
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
+
 
 
 }
