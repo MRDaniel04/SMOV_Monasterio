@@ -90,6 +90,7 @@ dependencies {
     //Datastore
     implementation("androidx.datastore:datastore-preferences:1.0.0")
 
-
+    // Cloudinary - Image Upload
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
 
 }

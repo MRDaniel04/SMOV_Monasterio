@@ -107,4 +107,13 @@
     <string name="confirm_cancel_button">Cancel</string>
     <string name="edit_cancel_changes">Cancel</string>
     <string name="profile_name">Name</string>
+    <string name="image_add">Add image</string>
+    <string name="image_delete">Delete</string>
+    <string name="image_delete_confirm_title">Delete image?</string>
+    <string name="image_delete_confirm_message">Are you sure you want to delete this image?</string>
+    <string name="image_uploading">Uploading image...</string>
+    <string name="image_upload_success">Image uploaded successfully</string>
+    <string name="image_upload_error">Error uploading image</string>
+    <string name="image_select_error">Error selecting image</string>
+    <string name="image_gallery_title">Images</string>
 </resources>

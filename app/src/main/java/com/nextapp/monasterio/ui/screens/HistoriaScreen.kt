@@ -2,6 +2,9 @@ package com.nextapp.monasterio.ui.screens
 
 import android.app.Activity
 import android.content.pm.ActivityInfo
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.clickable
@@ -18,20 +21,39 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.nextapp.monasterio.R
+import com.nextapp.monasterio.viewModels.HistoriaViewModel
 
 @Composable
-fun HistoriaScreen() {
-
+fun HistoriaScreen(
+    isEditing: Boolean = false,
+    viewModel: HistoriaViewModel = viewModel()
+) {
     val context = LocalContext.current
-
     val activity = (context as? Activity)
+
+    val historyPeriods by viewModel.historyPeriods.collectAsState()
+    val uploadingPeriodId by viewModel.uploadingPeriodId.collectAsState()
+
+    // Estado para controlar qué período está seleccionando imagen
+    var selectedPeriodId by remember { mutableStateOf<String?>(null) }
+
+    // Launcher para seleccionar imagen
+    val imagePickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        uri?.let { imageUri ->
+            selectedPeriodId?.let { periodId ->
+                viewModel.uploadImage(imageUri, context, periodId)
+            }
+        }
+        selectedPeriodId = null
+    }
 
     DisposableEffect(Unit) {
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
-        onDispose {
-
-        }
+        onDispose { }
     }
 
     Column(
@@ -40,29 +62,34 @@ fun HistoriaScreen() {
             .verticalScroll(rememberScrollState())
             .padding(16.dp)
     ) {
-        ExpandableHistoryCard(
-            title = stringResource(id = R.string.history_1800),
-            content = stringResource(id = R.string.history_content_placeholder)
-        )
-        ExpandableHistoryCard(
-            title = stringResource(id = R.string.history_1900),
-            content = stringResource(id = R.string.history_content_placeholder)
-        )
-        ExpandableHistoryCard(
-            title = stringResource(id = R.string.history_1950),
-            content = stringResource(id = R.string.history_content_placeholder)
-        )
-        ExpandableHistoryCard(
-            title = stringResource(id = R.string.history_actualidad),
-            content = stringResource(id = R.string.history_content_placeholder)
-        )
+        historyPeriods.forEach { period ->
+            ExpandableHistoryCard(
+                title = period.title,
+                content = period.content,
+                imageUrls = period.imageUrls,
+                isEditing = isEditing,
+                isUploading = uploadingPeriodId == period.id,
+                onAddImage = {
+                    selectedPeriodId = period.id
+                    imagePickerLauncher.launch("image/*")
+                },
+                onDeleteImage = { imageUrl ->
+                    viewModel.deleteImage(period.id, imageUrl)
+                }
+            )
+        }
     }
 }
 
 @Composable
 fun ExpandableHistoryCard(
     title: String,
-    content: String
+    content: String,
+    imageUrls: List<String> = emptyList(),
+    isEditing: Boolean = false,
+    isUploading: Boolean = false,
+    onAddImage: () -> Unit = {},
+    onDeleteImage: (String) -> Unit = {}
 ) {
     var expanded by remember { mutableStateOf(false) }
     val rotationAngle by animateFloatAsState(
@@ -97,11 +124,25 @@ fun ExpandableHistoryCard(
         HorizontalDivider(thickness = 1.dp, color = Color.Gray)
 
         AnimatedVisibility(visible = expanded) {
-            Text(
-                text = content,
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)
-            )
+            Column(modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)) {
+                Text(
+                    text = content,
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.padding(bottom = 16.dp)
+                )
+
+                // Galería de imágenes (solo muestra si hay imágenes o está editando)
+                if (imageUrls.isNotEmpty() || isEditing) {
+                    com.nextapp.monasterio.ui.components.EditableImageGallery(
+                        imageUrls = imageUrls,
+                        isEditing = isEditing,
+                        isUploading = isUploading,
+                        onAddImage = onAddImage,
+                        onDeleteImage = onDeleteImage,
+                        title = stringResource(id = R.string.image_gallery_title)
+                    )
+                }
+            }
         }
     }
 }
