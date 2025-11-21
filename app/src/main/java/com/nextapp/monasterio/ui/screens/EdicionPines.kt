@@ -78,6 +78,17 @@ fun EdicionPines(
                 val allPins = PinRepository.getAllPins()
                 val pinRefs = plano?.pines?.map { it.substringAfterLast("/") } ?: emptyList()
                 pines = allPins.filter { pinRefs.contains(it.id) }
+
+                // ⭐ AÑADIR EL LOG 1 AQUÍ ⭐
+                // ===============================================
+                Log.d("DIAG_PINES", "Total de pines cargados: ${pines.size}")
+                val pinConImagenes = pines.firstOrNull { it.imagenesDetalladas.isNotEmpty() }
+                if (pinConImagenes != null) {
+                    Log.d("DIAG_PINES", "✅ Pin con ID '${pinConImagenes.id}' tiene ${pinConImagenes.imagenesDetalladas.size} imágenes detalladas.")
+                } else {
+                    Log.e("DIAG_PINES", "❌ Ningún pin cargado contiene imágenes detalladas. Revisar el repositorio o el filtro.")
+                }
+
             } catch (e: Exception) {
                 Log.e("EdicionPines", "❌ Error al cargar plano/pines", e)
             } finally {
@@ -192,9 +203,26 @@ fun EdicionPines(
                             Log.d("EdicionPines", "Restaurando translationY/X a 0f antes de aplicar nuevo shift.")
                         }
 
+
                         selectedPin = touchedPin
 
-                        // --- ⭐ GESTIÓN DEL DESPLAZAMIENTO HORIZONTAL (Centralización) ⭐
+                        scope.launch { // Usamos el scope del Composable
+                            // Opcional: mostrar un Toast de "Cargando..."
+                            // Toast.makeText(context, "Cargando detalles del pin...", Toast.LENGTH_SHORT).show()
+
+                            val fullPin = PinRepository.getPinById(touchedPin!!.id)
+                            if (fullPin != null) {
+                                // Reemplazamos el pin básico por el pin completo (con imágenes)
+                                selectedPin = fullPin
+                                Log.d("EdicionPines", "✅ Pin completo cargado. Imágenes detalladas: ${fullPin.imagenesDetalladas.size}")
+                            } else {
+                                Log.e("EdicionPines", "❌ No se pudo cargar el pin detallado: ${touchedPin!!.id}")
+                                selectedPin = null // Ocultar el panel si falla
+                            }
+                        }
+
+
+                        // --- GESTIÓN DEL DESPLAZAMIENTO HORIZONTAL (Centralización)
 
                         val screenWidth = photoView.width.toFloat()
                         val targetCenter = screenWidth / 2f
@@ -266,26 +294,139 @@ fun EdicionPines(
         )
 
         // -------------------------
-        // ⭐ PANEL INFORMATIVO (35% de altura y estilo Google Maps) ⭐
+        // ⭐ PANEL INFORMATIVO (Estructura fija/scroll de descripción) ⭐
         // -------------------------
-
         if (selectedPin != null) {
+
+            // Accedemos a la lista de imágenes detalladas
+            val imagenesDetalladas = selectedPin!!.imagenesDetalladas // Asumimos que esta lista contiene objetos ImagenData
             Box(
+
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .fillMaxWidth()
-                    .height(300.dp)
-                    .background(Color.White),
-                contentAlignment = Alignment.Center
+                    .fillMaxHeight(PANEL_HEIGHT_FRACTION)
+                    .background(
+                        Color.White,
+                        shape = androidx.compose.foundation.shape.RoundedCornerShape(
+                            topStart = 20.dp,
+                            topEnd = 20.dp
+                        )
+                    )
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
             ) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(text = selectedPin?.titulo ?: "Detalle", color = Color.Black)
+
+                Column(
+                    modifier = Modifier.fillMaxSize()
+                ) {
+
+                    // --- 1. Botones de Control (Esquina Superior DERECHA) ---
+                    // ... (La lógica de botones se mantiene igual) ...
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.End,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        IconButton(onClick = {
+                            Toast.makeText(context, "Mover Pin", Toast.LENGTH_SHORT).show()
+                        }) {
+                            Icon(painter = painterResource(R.drawable.lapiz), contentDescription = "Mover Pin")
+                        }
+                        IconButton(onClick = {
+                            Toast.makeText(context, "Editar Pin", Toast.LENGTH_SHORT).show()
+                        }) {
+                            Icon(painter = painterResource(R.drawable.lapiz), contentDescription = "Editar Pin")
+                        }
+                        IconButton(onClick = {
+                            photoViewRef?.translationY = 0f
+                            photoViewRef?.translationX = 0f
+                            selectedPin = null
+                        }) {
+                            Icon(painter = painterResource(R.drawable.ic_photo), contentDescription = "Cerrar Panel")
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(4.dp))
+
+                    // --- 2. Título del Pin ---
+                    Text(
+                        text = selectedPin?.titulo ?: "Detalle del Pin",
+                        style = androidx.compose.ui.text.TextStyle(
+                            fontSize = 24.sp,
+                            fontWeight = FontWeight.Bold
+                        ),
+                        color = Color.Black
+                    )
+
+                    Spacer(modifier = Modifier.height(12.dp))
+                    val numImages = imagenesDetalladas.size
+                    Log.i("DIAG_PANEL", "Pin seleccionado: ${selectedPin!!.titulo}. Imágenes detalladas: $numImages")
+
+                    // --- 3. Carrusel de Imágenes (Scroll Horizontal) ---
+                    // ⭐ CAMBIO AQUÍ: USAMOS LA LISTA DETALLADA Y SUS PROPIEDADES ⭐
+                    if (imagenesDetalladas.isNotEmpty()) {
+                        LazyRow(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(150.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            contentPadding = PaddingValues(end = 16.dp)
+                        ) {
+                            items(imagenesDetalladas) { imagen -> // Iteramos sobre objetos ImagenData
+                                Box(
+                                    modifier = Modifier
+                                        .size(150.dp) // Tamaño de la celda de la imagen
+                                        .clip(RoundedCornerShape(8.dp))
+                                ) {
+                                    AsyncImage(
+                                        model = imagen.url, // ⭐ Usamos el campo URL del objeto ImagenData
+                                        contentDescription = imagen.etiqueta, // ⭐ Usamos la etiqueta
+                                        contentScale = ContentScale.Crop,
+                                        modifier = Modifier.fillMaxSize()
+                                    )
+
+                                    // Texto de Etiqueta (similar al de tu carrusel original)
+                                    Text(
+                                        text = imagen.etiqueta, // ⭐ Muestra la etiqueta
+                                        color = Color.White,
+                                        fontSize = 12.sp,
+                                        modifier = Modifier
+                                            .align(Alignment.BottomStart)
+                                            .background(Color.Black.copy(alpha = 0.6f))
+                                            .padding(horizontal = 8.dp, vertical = 4.dp)
+                                    )
+                                }
+                            }
+                        }
+                        Spacer(modifier = Modifier.height(12.dp))
+                    } else {
+                        // Si no hay imágenes detalladas, mostramos un placeholder o espaciador.
+                        Spacer(modifier = Modifier.height(12.dp))
+                        Text(
+                            text = "No hay imágenes detalladas disponibles.",
+                            color = Color.Gray,
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
+                    }
+
+                    // --- 4. Descripción del Pin (Scroll Vertical INDEPENDIENTE) ---
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f)
+                            .verticalScroll(rememberScrollState())
+                    ) {
+                        Text(
+                            text = selectedPin?.descripcion ?: "Descripción no disponible.",
+                            style = androidx.compose.ui.text.TextStyle(fontSize = 16.sp),
+                            color = Color.DarkGray
+                        )
+                    }
+
                     Spacer(modifier = Modifier.height(8.dp))
-                    Text(text = "Coordenadas: X=${selectedPin?.x}, Y=${selectedPin?.y}", color = Color.Gray)
                 }
             }
         }
-
 
 
         // --- Botón Atrás ---
