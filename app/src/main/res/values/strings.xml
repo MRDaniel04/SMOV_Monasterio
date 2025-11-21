@@ -89,6 +89,8 @@
     <string name="video_child">VIDEO</string>
     <string name="game_child">JUEGO</string>
     <string name="edit_mode">MODO EDICIÓN</string>
+    <string name="edit_home_background">Edición fondo inicio</string>
+    <string name="edit_pins">Edición pines</string>
     <string name="location_error">No se encontró una app para abrir la ubicación.</string>
     <string name="contact_data">Datos de contacto</string>
     <string name="location_data">Ubicación</string>

@@ -68,7 +68,7 @@ fun PlanoScreen(
     var activeHighlight by remember { mutableStateOf<Color?>(null) }
     var isPinPressed by remember { mutableStateOf(false) }
 
-    val initialZoom = 1.5f
+    val initialZoom = 1f
     val planoBackgroundColor = Color(0xFFF5F5F5)
 
     val botonesVisibles by viewModel.botonesVisibles.collectAsState()

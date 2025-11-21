@@ -23,7 +23,11 @@ object AppRoutes {
     const val VIDEO_NINYOS = "video_modo_niños"
 
     const val JUEGO_NINYOS = "juego_modo_niños"
-    const val MODO_EDICION = "modo-edicion"
+    const val MODO_EDICION = "modo_edicion"
+    const val EDICION_FONDO_INICIO = "edicion_fondo_inicio"
+    const val EDICION_PINES = "edicion_pines"
+
+
 
     const val PIN_360 = "pin_360"
     const val PIN_ENTRADA_MONASTERIO = "entrada_monasterio"

@@ -93,6 +93,8 @@
     <string name="video_child">VIDEO</string>
     <string name="game_child">GAME</string>
     <string name="edit_mode">EDIT MODE</string>
+    <string name="edit_home_background">Edit home background</string>
+    <string name="edit_pins">Edit pins</string>
     <string name="location_error">No app was found to open the location.</string>
     <string name="contact_data">Contact Information</string>
     <string name="location_data">Location</string>
