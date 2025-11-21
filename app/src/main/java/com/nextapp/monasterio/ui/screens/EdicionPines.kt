@@ -1,7 +1,6 @@
 package com.nextapp.monasterio.ui.screens
 
 import android.app.Activity
-import android.content.Context
 import android.content.pm.ActivityInfo
 import android.graphics.Matrix
 import android.util.Log
@@ -39,7 +38,10 @@ fun EdicionPines(
     val context = LocalContext.current
     val activity = context as? Activity
 
-    Log.d("EdicionPines", "Composición iniciada - Modo Interacción Pin")
+    // ⭐ VALOR CONSTANTE PARA LA ALTURA DEL PANEL
+    val PANEL_HEIGHT_FRACTION = 0.50f // 35% de la altura total de la pantalla
+
+    Log.d("EdicionPines", "Composición iniciada - Modo Interacción Pin (Panel 35%)")
 
     DisposableEffect(Unit) {
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
@@ -59,7 +61,6 @@ fun EdicionPines(
         isLoading = true
         scope.launch {
             try {
-                // Se asume la existencia de PlanoRepository (para fines de compilación)
                 val plano = PlanoRepository.getPlanoById("monasterio_interior")
                 planoUrl = plano?.plano ?: ""
 
@@ -99,7 +100,6 @@ fun EdicionPines(
                     setImageFromUrl(planoUrl)
 
                     post {
-                        // Alineación al fondo (parte inferior de la pantalla)
                         attacher.scaleType = android.widget.ImageView.ScaleType.FIT_END
                         Log.d("EdicionPines", "Plano alineado al final (abajo) usando FIT_END.")
                     }
@@ -117,16 +117,12 @@ fun EdicionPines(
                     )
                 }
 
-                // ⭐ NUEVA LÓGICA: OCULTAR PANEL AL DESPLAZAR/HACER ZOOM (PAN/MATRIX CHANGE) ⭐
+                // ⭐ LÓGICA: OCULTAR PANEL AL DESPLAZAR/HACER ZOOM (PAN/MATRIX CHANGE) ⭐
                 photoView.attacher.setOnMatrixChangeListener {
-                    // Se dispara cada vez que la matriz de la imagen cambia (por pan o zoom)
                     if (selectedPin != null) {
                         Log.d("EdicionPines", "Matrix cambió (Pan/Zoom detectado). Ocultando panel.")
-
-                        // Oculta el panel
                         selectedPin = null
 
-                        // Restaura el desplazamiento si existía
                         if (photoView.translationY != 0f) {
                             photoView.translationY = 0f
                             Log.d("EdicionPines", "Restaurando translationY a 0f tras desplazamiento manual.")
@@ -139,7 +135,6 @@ fun EdicionPines(
 
                     val drawable = photoView.drawable ?: return@setOnPhotoTapListener
 
-                    // ... (Cálculos de coordenadas y búsqueda del pin, se mantienen iguales) ...
                     val m = FloatArray(9)
                     photoView.imageMatrix.getValues(m)
                     val scaleX = m[Matrix.MSCALE_X]
@@ -184,26 +179,35 @@ fun EdicionPines(
 
                         selectedPin = touchedPin
 
-                        // --- CÁLCULO DE DESPLAZAMIENTO ADAPTATIVO (Se mantiene) ---
-                        val panelHeightDp = 300.dp
+                        // --- ⭐ CÁLCULO DE DESPLAZAMIENTO ADAPTATIVO CON PORCENTAJE ⭐
+
                         val pinMarginDp = 80.dp
                         val density = context.resources.displayMetrics.density
-
-                        val panelHeightPx = panelHeightDp.value * density
                         val pinMarginPx = pinMarginDp.value * density
 
+                        // 1. Calcular la altura del panel en píxeles (35% de la altura de la PhotoView)
+                        val panelHeightPx = photoView.height * PANEL_HEIGHT_FRACTION
+
+                        // 2. Límite superior (Target Y): Posición donde queremos que quede el pin.
                         val pinTargetY = photoView.height - panelHeightPx - pinMarginPx
 
+                        // 3. Comprobar si el pin queda por debajo del límite (será ocultado)
                         if (pinScreenYCoord > pinTargetY) {
+
+                            // 4. CALCULAR DESPLAZAMIENTO NECESARIO
                             val neededShift = pinScreenYCoord - pinTargetY
 
+                            // 5. APLICAR DESPLAZAMIENTO ADAPTATIVO (hacia ARRIBA: negativo)
                             photoViewRef?.moveVerticalFree(-neededShift)
 
                             Toast.makeText(context, "Desplazando plano: ${String.format("%.0f", neededShift)}px", Toast.LENGTH_SHORT).show()
                             Log.w("EdicionPines", "Pin oculto. Desplazando: -${String.format("%.0f", neededShift)}px.")
+                        } else {
+                            Log.d("EdicionPines", "El pin es visible. No se requiere desplazamiento.")
                         }
+
                     } else {
-                        // TOQUE FUERA DEL PIN (Toque estático)
+                        // TOQUE FUERA DEL PIN: Oculta el panel y RESTAURA EL DESPLAZAMIENTO
                         if (selectedPin != null) {
                             Log.d("EdicionPines", "❌ Toque estático fuera de Pin. Ocultando panel y RESTAURANDO POSICIÓN.")
 
@@ -224,20 +228,17 @@ fun EdicionPines(
 
                 photoView.invalidate()
             }
-
-
-// ... (resto del código sin cambios)
         )
 
         // -------------------------
-        // PANEL INFORMATIVO
+        // ⭐ PANEL INFORMATIVO (35% de altura) ⭐
         // -------------------------
         if (selectedPin != null) {
             Box(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .fillMaxWidth()
-                    .height(300.dp)
+                    .fillMaxHeight(PANEL_HEIGHT_FRACTION) // ⭐ APLICACIÓN DEL 35%
                     .background(Color.White),
                 contentAlignment = Alignment.Center
             ) {

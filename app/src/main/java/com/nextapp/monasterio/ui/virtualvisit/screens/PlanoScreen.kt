@@ -111,8 +111,6 @@ fun PlanoScreen(
     var activePath by remember { mutableStateOf<Path?>(null) }
     var activeHighlight by remember { mutableStateOf<Color?>(null) }
     var isPinPressed by remember { mutableStateOf(false) }
-
-    val initialZoom = 1f
     // --- LOGICA DE TUTORIAL ---
     val isMainDismissed by viewModel.isMainMapDismissed.collectAsState()
     val isSubDismissed by viewModel.isSubMapDismissed.collectAsState()
