@@ -123,4 +123,13 @@
     <string name="confirm_cancel_button">Cancelar</string>
     <string name="edit_cancel_changes">Cancelar</string>
     <string name="profile_name">Nombre</string>
+    <string name="image_add">Añadir imagen</string>
+    <string name="image_delete">Borrar</string>
+    <string name="image_delete_confirm_title">¿Borrar imagen?</string>
+    <string name="image_delete_confirm_message">¿Seguro que quieres borrar la imagen?</string>
+    <string name="image_uploading">Subiendo imagen...</string>
+    <string name="image_upload_success">Imagen subida correctamente</string>
+    <string name="image_upload_error">Error al subir la imagen</string>
+    <string name="image_select_error">Error al cargar la imagen</string>
+    <string name="image_gallery_title">Imágenes</string>
 </resources>
