@@ -8,19 +8,29 @@ import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import com.nextapp.monasterio.R
 import com.nextapp.monasterio.models.PinData
 // Nota: Se asume la existencia de PinRepository y PlanoRepository
@@ -40,6 +50,7 @@ fun EdicionPines(
 
     // ⭐ VALOR CONSTANTE PARA LA ALTURA DEL PANEL
     val PANEL_HEIGHT_FRACTION = 0.50f // 35% de la altura total de la pantalla
+    val CENTRALIZATION_THRESHOLD = 0.15f // 15% de los bordes de la pantalla
 
     Log.d("EdicionPines", "Composición iniciada - Modo Interacción Pin (Panel 35%)")
 
@@ -148,6 +159,7 @@ fun EdicionPines(
 
                     var touchedPin: PinData? = null
                     var pinScreenYCoord = 0f
+                    var pinScreenXCoord = 0f // ⭐ Guardamos la coordenada X del pin
 
                     pines.forEach { pin ->
                         val pinImageX = pin.x * drawable.intrinsicWidth
@@ -164,6 +176,7 @@ fun EdicionPines(
                         if ((dx * dx + dy * dy) <= tapRadiusPx * tapRadiusPx) {
                             touchedPin = pin
                             pinScreenYCoord = pinScreenY
+                            pinScreenXCoord = pinScreenX // ⭐ Asignación de la coordenada X
                             return@forEach
                         }
                     }
@@ -171,50 +184,73 @@ fun EdicionPines(
                     if (touchedPin != null) {
                         // PIN ENCONTRADO: Muestra el panel y chequea si lo ocultará
 
-                        // 1. RESTAURAR POSICIÓN ANTERIOR (evitar desplazamiento acumulado)
-                        if (selectedPin != null && photoView.translationY != 0f) {
+                        // 1. RESTAURAR POSICIONES ANTERIORES (Horizontal y Vertical)
+                        // Limpiamos los desplazamientos aplicados anteriormente.
+                        if (selectedPin != null || photoView.translationY != 0f || photoView.translationX != 0f) {
                             photoViewRef?.translationY = 0f
-                            Log.d("EdicionPines", "Restaurando translationY a 0f antes de aplicar nuevo shift.")
+                            photoViewRef?.translationX = 0f // ⭐ Restaurar desplazamiento HORIZONTAL
+                            Log.d("EdicionPines", "Restaurando translationY/X a 0f antes de aplicar nuevo shift.")
                         }
 
                         selectedPin = touchedPin
 
-                        // --- ⭐ CÁLCULO DE DESPLAZAMIENTO ADAPTATIVO CON PORCENTAJE ⭐
+                        // --- ⭐ GESTIÓN DEL DESPLAZAMIENTO HORIZONTAL (Centralización) ⭐
+
+                        val screenWidth = photoView.width.toFloat()
+                        val targetCenter = screenWidth / 2f
+                        val thresholdPx = screenWidth * CENTRALIZATION_THRESHOLD
+
+                        var neededShiftX = 0f
+
+                        // Borde Izquierdo (0% al 15%)
+                        if (pinScreenXCoord < thresholdPx) {
+                            // Mover la vista hacia la DERECHA (shift POSITIVO) para que el pin se mueva a la IZQUIERDA.
+                            neededShiftX = targetCenter - pinScreenXCoord
+
+                            // Borde Derecho (85% al 100%)
+                        } else if (pinScreenXCoord > (screenWidth - thresholdPx)) {
+                            // Mover la vista hacia la IZQUIERDA (shift NEGATIVO) para que el pin se mueva a la DERECHA.
+                            neededShiftX = targetCenter - pinScreenXCoord
+                        }
+
+                        if (neededShiftX != 0f) {
+                            // Aplicar el desplazamiento horizontal (moveHorizontalFree(deltaX))
+                            photoViewRef?.moveHorizontalFree(neededShiftX)
+                            Log.w("EdicionPines", "Pin Lateral. Desplazando X: ${String.format("%.0f", neededShiftX)}px para centrar.")
+                        }
+
+                        // --- GESTIÓN DEL DESPLAZAMIENTO VERTICAL (Se mantiene) ---
 
                         val pinMarginDp = 80.dp
                         val density = context.resources.displayMetrics.density
                         val pinMarginPx = pinMarginDp.value * density
 
-                        // 1. Calcular la altura del panel en píxeles (35% de la altura de la PhotoView)
                         val panelHeightPx = photoView.height * PANEL_HEIGHT_FRACTION
-
-                        // 2. Límite superior (Target Y): Posición donde queremos que quede el pin.
                         val pinTargetY = photoView.height - panelHeightPx - pinMarginPx
 
-                        // 3. Comprobar si el pin queda por debajo del límite (será ocultado)
                         if (pinScreenYCoord > pinTargetY) {
+                            val neededShiftY = pinScreenYCoord - pinTargetY
+                            photoViewRef?.moveVerticalFree(-neededShiftY)
 
-                            // 4. CALCULAR DESPLAZAMIENTO NECESARIO
-                            val neededShift = pinScreenYCoord - pinTargetY
-
-                            // 5. APLICAR DESPLAZAMIENTO ADAPTATIVO (hacia ARRIBA: negativo)
-                            photoViewRef?.moveVerticalFree(-neededShift)
-
-                            Toast.makeText(context, "Desplazando plano: ${String.format("%.0f", neededShift)}px", Toast.LENGTH_SHORT).show()
-                            Log.w("EdicionPines", "Pin oculto. Desplazando: -${String.format("%.0f", neededShift)}px.")
-                        } else {
-                            Log.d("EdicionPines", "El pin es visible. No se requiere desplazamiento.")
+                            // Mostrar Toast combinado
+                            val totalShift = if (neededShiftX != 0f) "X:${String.format("%.0f", neededShiftX)} / Y:${String.format("%.0f", neededShiftY)}" else "Y:${String.format("%.0f", neededShiftY)}"
+                            Toast.makeText(context, "Desplazando plano: $totalShift px", Toast.LENGTH_SHORT).show()
+                            Log.w("EdicionPines", "Pin oculto. Desplazando Y: -${String.format("%.0f", neededShiftY)}px.")
+                        } else if (neededShiftX != 0f) {
+                            // Mostrar Toast solo si se movió en X
+                            Toast.makeText(context, "Desplazando plano: X:${String.format("%.0f", neededShiftX)} px", Toast.LENGTH_SHORT).show()
                         }
 
                     } else {
-                        // TOQUE FUERA DEL PIN: Oculta el panel y RESTAURA EL DESPLAZAMIENTO
+                        // TOQUE FUERA DEL PIN: Oculta el panel y RESTAURA AMBOS DESPLAZAMIENTOS
                         if (selectedPin != null) {
-                            Log.d("EdicionPines", "❌ Toque estático fuera de Pin. Ocultando panel y RESTAURANDO POSICIÓN.")
+                            Log.d("EdicionPines", "❌ Toque estático fuera de Pin. Ocultando panel y RESTAURANDO POSICIONES.")
 
-                            // RESTAURAR DESPLAZAMIENTO (translationY = 0)
-                            if (photoView.translationY != 0f) {
+                            // RESTAURAR AMBOS DESPLAZAMIENTOS (translationY = 0, translationX = 0)
+                            if (photoView.translationY != 0f || photoView.translationX != 0f) {
                                 photoViewRef?.translationY = 0f
-                                Log.d("EdicionPines", "Restaurando translationY a 0f.")
+                                photoViewRef?.translationX = 0f // ⭐ Restaurar desplazamiento HORIZONTAL
+                                Log.d("EdicionPines", "Restaurando translationY/X a 0f.")
                             }
 
                             selectedPin = null
@@ -225,20 +261,20 @@ fun EdicionPines(
 
                     photoView.invalidate() // Forzar redibujo
                 }
-
                 photoView.invalidate()
             }
         )
 
         // -------------------------
-        // ⭐ PANEL INFORMATIVO (35% de altura) ⭐
+        // ⭐ PANEL INFORMATIVO (35% de altura y estilo Google Maps) ⭐
         // -------------------------
+
         if (selectedPin != null) {
             Box(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .fillMaxWidth()
-                    .fillMaxHeight(PANEL_HEIGHT_FRACTION) // ⭐ APLICACIÓN DEL 35%
+                    .height(300.dp)
                     .background(Color.White),
                 contentAlignment = Alignment.Center
             ) {
@@ -249,6 +285,8 @@ fun EdicionPines(
                 }
             }
         }
+
+
 
         // --- Botón Atrás ---
         IconButton(

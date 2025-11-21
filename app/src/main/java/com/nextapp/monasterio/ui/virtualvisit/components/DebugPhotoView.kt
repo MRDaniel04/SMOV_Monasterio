@@ -115,19 +115,6 @@ class DebugPhotoView @JvmOverloads constructor(
     }
 
 
-    /**
-     * Mueve la imagen en Y respetando los límites visibles.
-     * deltaY positivo mueve hacia abajo, negativo hacia arriba.
-     */
-    // DebugPhotoView.kt
-
-// ... (en la clase DebugPhotoView)
-
-    /**
-     * Mueve la imagen en Y.
-     */
-
-
     fun moveVerticalFree(deltaY: Float) {
 
         // Esta función asume que está dentro de una clase que hereda de View (como DebugPhotoView).
@@ -153,7 +140,7 @@ class DebugPhotoView @JvmOverloads constructor(
 
         Log.d("MOVE_FREE_H", "Desplazamiento aplicado: $deltaX. Nueva translationX: ${this.translationX}")
     }
-// ... (resto de la clase)
+
 
 
 

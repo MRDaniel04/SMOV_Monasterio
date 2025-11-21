@@ -37,18 +37,28 @@ import com.nextapp.monasterio.ui.theme.MonasteryOrange
 
 @Composable
 fun OpcionesModoEdicion(navController: NavController, modifier: Modifier = Modifier) {
+    val context = LocalContext.current
+    val activity = (context as? Activity)
+
+    // Bloque para establecer la orientación vertical y limpiarla (copiado del original)
+    DisposableEffect(Unit) {
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+
+        onDispose {
+
+        }
+    }
 
     ConstraintLayout(
         modifier = modifier
             .fillMaxSize()
             .background(Color.White)
             .verticalScroll(rememberScrollState())
-            .padding(horizontal = 40.dp)
     ) {
         val (btnInicio, btnPines) = createRefs()
         val centerGuide = createGuidelineFromTop(0.5f)
 
-        // --- BOTÓN: Edición pantalla inicio ---
+        // --- BOTÓN: Edición pantalla inicio (btnInicio) ---
         Button(
             onClick = {
                 navController.navigate(AppRoutes.EDICION_FONDO_INICIO)
@@ -57,9 +67,9 @@ fun OpcionesModoEdicion(navController: NavController, modifier: Modifier = Modif
             shape = RoundedCornerShape(20.dp),
             modifier = Modifier
                 .constrainAs(btnInicio) {
-                    bottom.linkTo(centerGuide, margin = 24.dp)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
+                    bottom.linkTo(centerGuide, margin = 24.dp) // Centrado superior
+                    start.linkTo(parent.start, margin = 40.dp) // Margen de 40.dp
+                    end.linkTo(parent.end, margin = 40.dp)   // Margen de 40.dp
                     width = Dimension.fillToConstraints
                 }
         ) {
@@ -68,7 +78,7 @@ fun OpcionesModoEdicion(navController: NavController, modifier: Modifier = Modif
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.lapiz), // icono temporal
+                    painter = painterResource(id = R.drawable.ic_photo), // icono temporal
                     contentDescription = null,
                     modifier = Modifier
                         .padding(end = 18.dp)
@@ -82,7 +92,7 @@ fun OpcionesModoEdicion(navController: NavController, modifier: Modifier = Modif
             }
         }
 
-        // --- BOTÓN: Edición pines ---
+        // --- BOTÓN: Edición pines (btnPines) ---
         Button(
             onClick = {
                 navController.navigate(AppRoutes.EDICION_PINES)
@@ -91,9 +101,9 @@ fun OpcionesModoEdicion(navController: NavController, modifier: Modifier = Modif
             shape = RoundedCornerShape(20.dp),
             modifier = Modifier
                 .constrainAs(btnPines) {
-                    top.linkTo(centerGuide, margin = 24.dp)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
+                    top.linkTo(centerGuide, margin = 24.dp) // Centrado inferior
+                    start.linkTo(parent.start, margin = 40.dp) // Margen de 40.dp
+                    end.linkTo(parent.end, margin = 40.dp)   // Margen de 40.dp
                     width = Dimension.fillToConstraints
                 }
         ) {
@@ -105,7 +115,7 @@ fun OpcionesModoEdicion(navController: NavController, modifier: Modifier = Modif
                     painter = painterResource(id = R.drawable.pin3), // icono temporal
                     contentDescription = null,
                     modifier = Modifier
-                        .padding(end = 18.dp)
+                        .padding(end = 18.dp) // Se ha ajustado el padding para igualar el patrón
                         .size(48.dp)
                 )
                 Text(
@@ -117,5 +127,3 @@ fun OpcionesModoEdicion(navController: NavController, modifier: Modifier = Modif
         }
     }
 }
-
-

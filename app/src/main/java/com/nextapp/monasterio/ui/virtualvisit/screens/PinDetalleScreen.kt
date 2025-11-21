@@ -520,7 +520,7 @@ private fun ZoomableImageDialog(imageUrl: String, label: String, onDismiss: () -
             IconButton(
                 onClick = onDismiss,
                 modifier = Modifier
-                    .align(Alignment.TopEnd)
+                    .align(Alignment.TopStart)
                     .statusBarsPadding()
                     .padding(16.dp)
                     .background(Color.Black.copy(alpha = 0.5f), CircleShape)
