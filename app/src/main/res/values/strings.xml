@@ -115,4 +115,10 @@
     <string name="pin_2">Puedes desplazarte por las imágenes o pulsar en ellas para ampliarlas</string>
     <string name="pin_3">Pulsando aquí puedes escuchar el audio del texto</string>
     <string name="pin_4">Para acceder a la vista 360 pulse este botón</string>
+    <string name="confirm_save_title">¿Guardar cambios?</string>
+    <string name="confirm_save_message">¿Estás seguro de que quieres guardar los cambios realizados?</string>
+    <string name="confirm_save_button">Guardar</string>
+    <string name="confirm_cancel_button">Cancelar</string>
+    <string name="edit_cancel_changes">Cancelar</string>
+    <string name="profile_name">Nombre</string>
 </resources>
