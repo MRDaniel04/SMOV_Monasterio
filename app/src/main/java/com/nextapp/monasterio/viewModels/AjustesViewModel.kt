@@ -1,16 +1,38 @@
 package com.nextapp.monasterio.viewModels
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.nextapp.monasterio.repository.UserPreferencesRepository // 1. Importar
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
-class AjustesViewModel : ViewModel(){
+class AjustesViewModel : ViewModel() {
+    // 2. Obtener la instancia del repositorio
+    private val prefsRepository = UserPreferencesRepository.instance
+
+    // --- Lógica existente de botones ---
     private val _botonesVisibles = MutableStateFlow(true)
-
     val botonesVisibles: StateFlow<Boolean> = _botonesVisibles
-
-    fun setBotonesVisibles(valor: Boolean){
+    fun setBotonesVisibles(valor: Boolean) {
         _botonesVisibles.value = valor
     }
+
+    val isMainMapDismissed = prefsRepository.isMainMapTutorialDismissed
+        .stateIn(viewModelScope, SharingStarted.Lazily, false)
+
+    val isSubMapDismissed = prefsRepository.isSubMapTutorialDismissed
+        .stateIn(viewModelScope, SharingStarted.Lazily, false)
+
+    val isPinDismissed = prefsRepository.isPinTutorialDismissed
+        .stateIn(viewModelScope, SharingStarted.Lazily, false)
+
+    // --- FUNCIONES PARA OCULTAR ---
+
+    fun dismissMainMap() = viewModelScope.launch { prefsRepository.dismissMainMapTutorial() }
+    fun dismissSubMap() = viewModelScope.launch { prefsRepository.dismissSubMapTutorial() }
+    fun dismissPin() = viewModelScope.launch { prefsRepository.dismissPinTutorial() }
 }

@@ -103,5 +103,10 @@
     <string name="visit_schedule">Opening Hours</string>
     <string name="monday_to_friday">Monday to Friday:</string>
     <string name="play_audio" />
-
+    <string name="confirm_save_title">Save changes?</string>
+    <string name="confirm_save_message">Are you sure you want to save the changes?</string>
+    <string name="confirm_save_button">Save</string>
+    <string name="confirm_cancel_button">Cancel</string>
+    <string name="edit_cancel_changes">Cancel</string>
+    <string name="profile_name">Name</string>
 </resources>

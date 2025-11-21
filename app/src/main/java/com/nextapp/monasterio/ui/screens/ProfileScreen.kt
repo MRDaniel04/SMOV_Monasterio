@@ -12,6 +12,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.nextapp.monasterio.R
 import com.nextapp.monasterio.viewModels.AuthViewModel
 import com.nextapp.monasterio.ui.components.EditableText
+import com.nextapp.monasterio.ui.components.EditableContent
 
 @Composable
 fun ProfileScreen(
@@ -28,8 +29,25 @@ fun ProfileScreen(
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
-    // campos editables de usuario
-    var name by remember { mutableStateOf(user?.name ?: "") }
+    // campos editables de usuario - inicializar con los valores actuales
+    var editableName by remember(user) { mutableStateOf(user?.name ?: "") }
+    var editableEmail by remember(user) { mutableStateOf(user?.email ?: "") }
+
+    // Detectar si hay cambios no guardados
+    val hasChanges = remember(editableName, editableEmail, user) {
+        editableName != (user?.name ?: "") || editableEmail != (user?.email ?: "")
+    }
+
+    // Función para cancelar cambios
+    val cancelChanges = {
+        editableName = user?.name ?: ""
+        editableEmail = user?.email ?: ""
+    }
+
+    // Función para guardar cambios
+    val saveChanges = {
+        viewModel.updateUser(name = editableName, email = editableEmail)
+    }
 
     if (isLoading) { // Vista de carga del estado
         // TODO mover a un componente para usar en otras paginas?
@@ -90,32 +108,114 @@ fun ProfileScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             if (isEditing) {
-                EditableText(
-                    text = name,
+                // Usar EditableContent para gestionar el estado de edición
+                EditableContent(
                     isEditing = isEditing,
-                    onTextChange = { name = it },
-                    label = "Nombre",
+                    hasChanges = hasChanges,
+                    onSave = saveChanges,
+                    onCancel = cancelChanges,
                     modifier = Modifier.fillMaxWidth()
-                )
-                Button(
-                    onClick = {
-                        viewModel.updateUser(name = name, email = user.email) // O también email editable si quieres
-                    },
-                    modifier = Modifier.align(Alignment.End)
                 ) {
-                    Text(stringResource(id = R.string.edit_save_changes))
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.title_profile),
+                            style = MaterialTheme.typography.titleLarge
+                        )
+
+                        // Campo de nombre editable
+                        Column {
+                            Text(
+                                text = stringResource(id = R.string.profile_name),
+                                style = MaterialTheme.typography.labelMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                            Spacer(modifier = Modifier.height(4.dp))
+                            EditableText(
+                                text = editableName,
+                                isEditing = isEditing,
+                                onTextChange = { editableName = it },
+                                label = stringResource(id = R.string.profile_name),
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        }
+
+                        // Campo de email editable
+                        Column {
+                            Text(
+                                text = stringResource(id = R.string.profile_email),
+                                style = MaterialTheme.typography.labelMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                            Spacer(modifier = Modifier.height(4.dp))
+                            EditableText(
+                                text = editableEmail,
+                                isEditing = isEditing,
+                                onTextChange = { editableEmail = it },
+                                label = stringResource(id = R.string.profile_email),
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        }
+                    }
                 }
             } else {
-                Text(
-                    text = "Bienvenido, ${user.name}",
-                    style = MaterialTheme.typography.titleLarge
-                )
+                // Vista de solo lectura
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    Text(
+                        text = "Bienvenido, ${user.name}",
+                        style = MaterialTheme.typography.titleLarge
+                    )
 
-                Spacer(modifier = Modifier.height(24.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
 
-                Button(onClick = { viewModel.logout() }) {
-                    Text(stringResource(id = R.string.profile_logout))
+                    // Mostrar información del usuario
+                    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                        Column {
+                            Text(
+                                text = stringResource(id = R.string.profile_name),
+                                style = MaterialTheme.typography.labelMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                            EditableText(
+                                text = user.name ?: "",
+                                isEditing = false,
+                                onTextChange = {},
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        }
+
+                        Column {
+                            Text(
+                                text = stringResource(id = R.string.profile_email),
+                                style = MaterialTheme.typography.labelMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                            EditableText(
+                                text = user.email ?: "",
+                                isEditing = false,
+                                onTextChange = {},
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Button(onClick = { viewModel.logout() }) {
+                        Text(stringResource(id = R.string.profile_logout))
+                    }
                 }
+            }
+
+            // Mostrar errores si los hay
+            error?.let {
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(text = it, color = MaterialTheme.colorScheme.error)
             }
         }
     }
