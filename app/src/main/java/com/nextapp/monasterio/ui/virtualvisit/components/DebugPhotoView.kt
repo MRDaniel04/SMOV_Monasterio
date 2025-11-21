@@ -3,6 +3,8 @@ package com.nextapp.monasterio.ui.virtualvisit.components
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
+import android.util.Log
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.github.chrisbanes.photoview.PhotoView
 
@@ -111,5 +113,49 @@ class DebugPhotoView @JvmOverloads constructor(
             e.printStackTrace()
         }
     }
+
+
+    /**
+     * Mueve la imagen en Y respetando los límites visibles.
+     * deltaY positivo mueve hacia abajo, negativo hacia arriba.
+     */
+    // DebugPhotoView.kt
+
+// ... (en la clase DebugPhotoView)
+
+    /**
+     * Mueve la imagen en Y.
+     */
+
+
+    fun moveVerticalFree(deltaY: Float) {
+
+        // Esta función asume que está dentro de una clase que hereda de View (como DebugPhotoView).
+
+        // Si deltaY es positivo (como +120f), la vista se moverá hacia abajo.
+        // No hay chequeos de límites, por lo que puede moverse indefinidamente.
+
+        // Aplicar el movimiento directamente a la propiedad de traslación de la View.
+        this.translationY += deltaY
+
+        Log.d("MOVE_FREE", "Desplazamiento aplicado: $deltaY. Nueva translationY: ${this.translationY}")
+    }
+
+    fun moveHorizontalFree(deltaX: Float) {
+
+        // Esta función aplica un desplazamiento horizontal sin límites.
+
+        // Si deltaX es positivo (+), la vista se moverá hacia la DERECHA.
+        // Si deltaX es negativo (-), la vista se moverá hacia la IZQUIERDA.
+
+        // Aplicar el movimiento directamente a la propiedad de traslación horizontal de la View.
+        this.translationX += deltaX
+
+        Log.d("MOVE_FREE_H", "Desplazamiento aplicado: $deltaX. Nueva translationX: ${this.translationX}")
+    }
+// ... (resto de la clase)
+
+
+
 
 }

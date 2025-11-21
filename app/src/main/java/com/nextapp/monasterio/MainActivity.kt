@@ -91,8 +91,10 @@ fun MonasteryAppScreen() {
     // Comprueba si la ruta EMPIEZA POR "pin_360" (la nueva vista 360)
     val isPin360 = currentRoute?.startsWith(AppRoutes.PIN_360) == true
 
+    val isEdicion = currentRoute == AppRoutes.EDICION_PINES
+
     // La vista es inmersiva si es CUALQUIERA de las tres
-    val isImmersive = isPanorama || isVirtualVisit || isPin360
+    val isImmersive = isPanorama || isVirtualVisit || isPin360 || isEdicion
 
 
     val gesturesEnabled = when(currentRoute){

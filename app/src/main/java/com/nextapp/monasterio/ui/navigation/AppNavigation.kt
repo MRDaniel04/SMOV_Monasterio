@@ -49,7 +49,9 @@ fun AppNavigationHost(
         composable(AppRoutes.MODO_NINYOS)   { OpcionesModoNiño(navController = navController) }
         composable(AppRoutes.VIDEO_NINYOS)   { VideoNinyos()}
         composable(route=AppRoutes.MODO_EDICION) { OpcionesModoEdicion(navController = navController)}
-        composable(AppRoutes.PERFIL)   { ProfileScreen(isEditing = isEditing, viewModel = authViewModel) }
+        composable(AppRoutes.EDICION_FONDO_INICIO) {EdicionFondoInicio(navController = navController)}
+        composable(AppRoutes.EDICION_PINES) { EdicionPines(navController) }
+        composable(AppRoutes.PERFIL)   { ProfileScreen(isEditing = isEditing, viewModel = authViewModel ) }
         composable(AppRoutes.AJUSTES)  { AjustesScreen(viewModel = ajustesViewModel) }
 
         // Ruta de Panorama 360 (Inmersiva, desde Galería / res/raw)
@@ -70,6 +72,12 @@ fun AppNavigationHost(
         composable(AppRoutes.VIRTUAL_VISIT) {
             VirtualVisitScreen(navController = navController,viewModel = ajustesViewModel)
         }
+
+        // Ruta al Edición Pines Host
+        composable(AppRoutes.EDICION_PINES) {
+            EdicionPinesHost(navController)
+        }
+
 
         // --- ¡¡AQUÍ ESTÁ LA NUEVA RUTA!! ---
         // Ruta inmersiva para el 360 de un Pin (desde Firebase URL)
