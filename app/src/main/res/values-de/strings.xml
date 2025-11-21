@@ -59,7 +59,7 @@
     <string name="confirm_button">BESTÄTIGEN</string>
     <string name="contentimage_confirmation">Bestätigt</string>
     <string name="confirmation_appointment">FAST FERTIG!!</string>
-    <string name="details_appointment">Ihre Buchungsanfrage ist fertig. Bitte klicken Sie in der soeben geöffneten E-Mail-Anwendung auf „Senden“, um Ihre Anfrage abzuschließen. Wir werden Ihnen die Verfügbarkeit per E-Mail bestätigen..</string>
+    <string name="details_appointment">Ihre Buchungsanfrage ist fertig. Bitte klicken Sie in der soeben geöffneten E-Mail-Anwendung auf „Senden", um Ihre Anfrage abzuschließen. Wir werden Ihnen die Verfügbarkeit per E-Mail bestätigen..</string>
     <string name="email_subject">Reservierungsanfrage ansehen - %1$s</string>
     <string name="email_message">Hallo,\n\nich möchte hiermit eine Reservierung für einen Besuch im Kloster anfragen. Bitte geben Sie folgende Daten an:\n\n* Name: %1$s\n* E-Mail: %2$s\n* Besuchsdatum: %3$s\n* Besuchszeit: %4$s\n\nIch freue mich auf Ihre Bestätigung.\n\nVielen Dank,\nMit freundlichen Grüßen,\n\n%1$s</string>
     <string name="email_error">Es wurde keine E-Mail-App gefunden.</string>
@@ -102,4 +102,10 @@
     <string name="visit_schedule">Öffnungszeiten</string>
     <string name="monday_to_friday">Montag bis Freitag:</string>
     <string name="play_audio" />
+    <string name="confirm_save_title">Änderungen speichern?</string>
+    <string name="confirm_save_message">Sind Sie sicher, dass Sie die Änderungen speichern möchten?</string>
+    <string name="confirm_save_button">Speichern</string>
+    <string name="confirm_cancel_button">Abbrechen</string>
+    <string name="edit_cancel_changes">Abbrechen</string>
+    <string name="profile_name">Name</string>
 </resources>
