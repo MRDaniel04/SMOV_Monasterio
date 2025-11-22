@@ -27,6 +27,7 @@
     <string name="title_profile">Profil</string>
     <string name="title_settings">Einstellungen</string>
 
+
     <string name="info_location">Straße: …</string>
 
     <string name="info_hours">Öffnungszeiten: XX:XX - YY:YY</string>
@@ -125,4 +126,35 @@
     <string name="message_puzzle_completed">Du hast das Rätsel gelöst! Bereit für die nächste Herausforderung?</string>
     <string name="original_image">Bild ansehen</string>
     <string name="ready">Bereit</string>
+    <string name="dont_show_again">Nicht mehr anzeigen</string>
+    <string name="understand">Verstanden</string>
+    <string name="map_tutorial_body">Dies ist der Inhalt des Tutorials</string>
+    <string name="map_tutorial_title">Dies ist der Titel des Tutorials</string>
+    <string name="map_tutorial_body2">Dies ist der Inhalt des Kartentutorials 2</string>
+    <string name="map_tutorial_title2">Dies ist der Titel des Kartentutorials 2</string>
+    <string name="pin_tutorial_body">Dies ist der Inhalt des Pin-Tutorials</string>
+    <string name="pin_tutorial_title">Dies ist der Titel des Pin-Tutorials</string>
+    <string name="next">Weiter</string>
+
+    <string name="map_tutorial_body1">Oben links können Sie über das Symbol (←) zum Start zurückkehren.</string>
+    <string name="map_tutorial_body1_2">Tippen Sie auf die farbigen Bereiche der Karte, um die verschiedenen Bereiche zu erkunden.</string>
+    <string name="map_tutorial_body1_3">Mit den Tasten auf der rechten Seite können Sie die Karte vergrößern, verkleinern oder zurücksetzen.</string>
+
+    <string name="submapa_1">Tippen Sie auf das Symbol (←), um zur Übersichtskarte zurückzukehren.</string>
+    <string name="submapa_2">Tippen Sie auf die verschiedenen Pins, um die Details aufzurufen.</string>
+
+    <string name="pin_1">Drücken Sie das Symbol (←), um zur Karte zurückzukehren.</string>
+    <string name="pin_2">Wischen Sie durch die Bilder oder tippen Sie darauf, um sie zu vergrößern.</string>
+    <string name="pin_3">Tippen Sie hier, um den Audioguide anzuhören.</string>
+    <string name="pin_4">Drücken Sie diesen Button, um die 360°-Ansicht zu öffnen.</string>
+    <string name="image_gallery_title">Bilder</string>
+    <string name="visible">sichtbar</string>
+    <string name="hidden">versteckt</string>
+    <string name="lang_en">English</string>
+    <string name="lang_es">Español</string>
+    <string name="sample_text">Beispiel</string>
+    <string name="lang_de">Deutsch</string>
+    <string name="font_small">Klein</string>
+    <string name="font_medium">Mittel</string>
+    <string name="font_large">Groß</string>
 </resources>

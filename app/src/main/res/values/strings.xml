@@ -114,7 +114,7 @@
     <string name="next">Siguiente</string>
     <string name="map_tutorial_body1">En la parte superior izquierda, el símbolo (←) permite volver al inicio</string>
     <string name="map_tutorial_body1_2">Tocando en las zonas con color del mapa podemos entrar a las distintas partes visualizables</string>
-    <string name="map_tutorial_body1_3">Además de tocando en el mapa se puede interactuar con este a partir de los botones en la parte derecha que permiten ampliar, desampliar y centrar el mapa</string>
+    <string name="map_tutorial_body1_3">Además, los botones de la parte derecha te permiten ampliar el mapa, reducirlo o volver a su tamaño   original</string>
     <string name="submapa_1">Tocando en el símbolo (←) podemos volver al mapa general</string>
     <string name="submapa_2">Tocando en los distintos pines podemos entrar a los puntos de interés</string>
     <string name="pin_1">Pulsando en el símbolo (←), se puede volver al mapa</string>
@@ -140,4 +140,13 @@
     <string name="ready">Listo</string>
     <string name="original_image">Ver imagen</string>
     <string name="image_gallery_title">Imágenes</string>
+    <string name="visible">Visibles</string>
+    <string name="hidden">Ocultos</string>
+    <string name="lang_en">Engish</string>
+    <string name="lang_es">Español</string>
+    <string name="sample_text">Ejemplo</string>
+    <string name="lang_de">Deutsch</string>
+    <string name="font_small">Pequeña</string>
+    <string name="font_medium">Mediana</string>
+    <string name="font_large">Grande</string>
 </resources>
