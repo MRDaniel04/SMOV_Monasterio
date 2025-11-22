@@ -76,9 +76,8 @@ fun PuzzleScreen(
                 columns = GridCells.Fixed(tamaño.columns),
                 // ... (Arreglos y Paddings)
                 modifier = Modifier
-                    .widthIn(max = 300.dp)
+                    .fillMaxWidth()
                     .wrapContentWidth(Alignment.CenterHorizontally)
-                    .aspectRatio(1f)
                     .background(Color.LightGray.copy(0.5f))
                     .onGloballyPositioned { coordinates ->
                         val gridWith = coordinates.size.width
@@ -170,8 +169,10 @@ fun PuzzleScreen(
                         val centroRelativeX = relativeX + (piezaSize / 2f)
                         val centroRelativeY = relativeY + (piezaSize / 2f)
 
-                        val newColumn = round(centroRelativeX / piezaSize).toInt().coerceIn(0, tamaño.columns - 1)
-                        val newRow = round(centroRelativeY / piezaSize).toInt().coerceIn(0, tamaño.rows - 1)
+                        val Y_Compensado = centroRelativeY + piezaSize * 1.0f
+
+                        val newColumn = (centroRelativeX / piezaSize).toInt().coerceIn(0, tamaño.columns - 1)
+                        val newRow = (Y_Compensado / piezaSize).toInt().coerceIn(0, tamaño.rows - 1)
 
                         Log.d("PUZZLE_DROP", "Pieza ${piezaArrastradaId} destino: R$newRow C$newColumn")
                         Log.d("PUZZLE_DROP_2", "Pieza ${piezaArrastradaId} posicion correcta: R${piezaActual.posicionCorrecta.row} C${piezaActual.posicionCorrecta.column}")
