@@ -7,6 +7,8 @@ import android.util.Log
 import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -66,6 +68,7 @@ fun EdicionPines(
     var selectedPin by remember { mutableStateOf<PinData?>(null) }
     var planoUrl by remember { mutableStateOf("") }
     val scope = rememberCoroutineScope()
+
 
     // --- Carga inicial del plano y pines ---
     LaunchedEffect(Unit) {
@@ -301,7 +304,6 @@ fun EdicionPines(
             // Accedemos a la lista de imágenes detalladas
             val imagenesDetalladas = selectedPin!!.imagenesDetalladas // Asumimos que esta lista contiene objetos ImagenData
             Box(
-
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .fillMaxWidth()
@@ -314,6 +316,16 @@ fun EdicionPines(
                         )
                     )
                     .padding(horizontal = 16.dp, vertical = 8.dp)
+
+                    .clickable(
+                        // No queremos ningún efecto visual al tocar el panel
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null,
+                        onClick = {
+                            Log.d("EdicionPines", "Toque en el panel consumido.")
+                            // No hacemos nada, solo consumimos el evento para que no se propague.
+                        }
+                    )
             ) {
 
                 Column(
@@ -330,7 +342,7 @@ fun EdicionPines(
                         IconButton(onClick = {
                             Toast.makeText(context, "Mover Pin", Toast.LENGTH_SHORT).show()
                         }) {
-                            Icon(painter = painterResource(R.drawable.lapiz), contentDescription = "Mover Pin")
+                            Icon(painter = painterResource(R.drawable.ic_move), contentDescription = "Mover Pin")
                         }
                         IconButton(onClick = {
                             Toast.makeText(context, "Editar Pin", Toast.LENGTH_SHORT).show()
@@ -342,7 +354,7 @@ fun EdicionPines(
                             photoViewRef?.translationX = 0f
                             selectedPin = null
                         }) {
-                            Icon(painter = painterResource(R.drawable.ic_photo), contentDescription = "Cerrar Panel")
+                            Icon(painter = painterResource(R.drawable.ic_close_24), contentDescription = "Cerrar Panel" )
                         }
                     }
 
@@ -352,7 +364,7 @@ fun EdicionPines(
                     Text(
                         text = selectedPin?.titulo ?: "Detalle del Pin",
                         style = androidx.compose.ui.text.TextStyle(
-                            fontSize = 24.sp,
+                            fontSize = 20.sp,
                             fontWeight = FontWeight.Bold
                         ),
                         color = Color.Black
@@ -418,7 +430,7 @@ fun EdicionPines(
                     ) {
                         Text(
                             text = selectedPin?.descripcion ?: "Descripción no disponible.",
-                            style = androidx.compose.ui.text.TextStyle(fontSize = 16.sp),
+                            style = androidx.compose.ui.text.TextStyle(fontSize = 12.sp),
                             color = Color.DarkGray
                         )
                     }
