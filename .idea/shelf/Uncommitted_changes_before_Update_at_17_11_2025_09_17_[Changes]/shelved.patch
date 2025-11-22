@@ -1,0 +1,1764 @@
+Index: .idea/shelf/Uncommitted_changes_before_Update_at_08_11_2025_20_07__Changes_.xml
+===================================================================
+diff --git a/.idea/shelf/Uncommitted_changes_before_Update_at_08_11_2025_20_07__Changes_.xml b/.idea/shelf/Uncommitted_changes_before_Update_at_08_11_2025_20_07__Changes_.xml
+deleted file mode 100644
+--- a/.idea/shelf/Uncommitted_changes_before_Update_at_08_11_2025_20_07__Changes_.xml	(revision d076f828ce2f52136802345ea495ef475f1af8b2)
++++ /dev/null	(revision d076f828ce2f52136802345ea495ef475f1af8b2)
+@@ -1,4 +0,0 @@
+-<changelist name="Uncommitted_changes_before_Update_at_08_11_2025_20_07_[Changes]" date="1762628829564" recycled="true" deleted="true">
+-  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_08_11_2025_20_07_[Changes]/shelved.patch" />
+-  <option name="DESCRIPTION" value="Uncommitted changes before Update at 08/11/2025 20:07 [Changes]" />
+-</changelist>
+\ No newline at end of file
+Index: .idea/shelf/Uncommitted_changes_before_Checkout_at_08_11_2025_22_18_[Changes]/shelved.patch
+===================================================================
+diff --git a/.idea/shelf/Uncommitted_changes_before_Checkout_at_08_11_2025_22_18_[Changes]/shelved.patch b/.idea/shelf/Uncommitted_changes_before_Checkout_at_08_11_2025_22_18_[Changes]/shelved.patch
+deleted file mode 100644
+--- a/.idea/shelf/Uncommitted_changes_before_Checkout_at_08_11_2025_22_18_[Changes]/shelved.patch	(revision d076f828ce2f52136802345ea495ef475f1af8b2)
++++ /dev/null	(revision d076f828ce2f52136802345ea495ef475f1af8b2)
+@@ -1,17 +0,0 @@
+-Index: .idea/gradle.xml
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"GradleSettings\">\r\n    <option name=\"linkedExternalProjectsSettings\">\r\n      <GradleProjectSettings>\r\n        <option name=\"testRunner\" value=\"CHOOSE_PER_TEST\" />\r\n        <option name=\"externalProjectPath\" value=\"$PROJECT_DIR$\" />\r\n        <option name=\"gradleJvm\" value=\"#GRADLE_LOCAL_JAVA_HOME\" />\r\n        <option name=\"modules\">\r\n          <set>\r\n            <option value=\"$PROJECT_DIR$\" />\r\n            <option value=\"$PROJECT_DIR$/app\" />\r\n          </set>\r\n        </option>\r\n      </GradleProjectSettings>\r\n    </option>\r\n  </component>\r\n</project>
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+-diff --git a/.idea/gradle.xml b/.idea/gradle.xml
+---- a/.idea/gradle.xml	(revision 1c0bfc618ece38c61714e2813735e3a928424a11)
+-+++ b/.idea/gradle.xml	(date 1762636134357)
+-@@ -1,5 +1,6 @@
+- <?xml version="1.0" encoding="UTF-8"?>
+- <project version="4">
+-+  <component name="GradleMigrationSettings" migrationVersion="1" />
+-   <component name="GradleSettings">
+-     <option name="linkedExternalProjectsSettings">
+-       <GradleProjectSettings>
+Index: .idea/shelf/Uncommitted_changes_before_Checkout_at_08_11_2025_21_48_[Changes]/shelved.patch
+===================================================================
+diff --git a/.idea/shelf/Uncommitted_changes_before_Checkout_at_08_11_2025_21_48_[Changes]/shelved.patch b/.idea/shelf/Uncommitted_changes_before_Checkout_at_08_11_2025_21_48_[Changes]/shelved.patch
+deleted file mode 100644
+--- a/.idea/shelf/Uncommitted_changes_before_Checkout_at_08_11_2025_21_48_[Changes]/shelved.patch	(revision d076f828ce2f52136802345ea495ef475f1af8b2)
++++ /dev/null	(revision d076f828ce2f52136802345ea495ef475f1af8b2)
+@@ -1,17 +0,0 @@
+-Index: .idea/gradle.xml
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"GradleSettings\">\r\n    <option name=\"linkedExternalProjectsSettings\">\r\n      <GradleProjectSettings>\r\n        <option name=\"testRunner\" value=\"CHOOSE_PER_TEST\" />\r\n        <option name=\"externalProjectPath\" value=\"$PROJECT_DIR$\" />\r\n        <option name=\"gradleJvm\" value=\"#GRADLE_LOCAL_JAVA_HOME\" />\r\n        <option name=\"modules\">\r\n          <set>\r\n            <option value=\"$PROJECT_DIR$\" />\r\n            <option value=\"$PROJECT_DIR$/app\" />\r\n          </set>\r\n        </option>\r\n      </GradleProjectSettings>\r\n    </option>\r\n  </component>\r\n</project>
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+-diff --git a/.idea/gradle.xml b/.idea/gradle.xml
+---- a/.idea/gradle.xml	(revision 1ce74093873ec1b16c413750e558114559284ef6)
+-+++ b/.idea/gradle.xml	(date 1762631053346)
+-@@ -1,5 +1,6 @@
+- <?xml version="1.0" encoding="UTF-8"?>
+- <project version="4">
+-+  <component name="GradleMigrationSettings" migrationVersion="1" />
+-   <component name="GradleSettings">
+-     <option name="linkedExternalProjectsSettings">
+-       <GradleProjectSettings>
+Index: .idea/shelf/Uncommitted_changes_before_Update_at_08_11_2025_23_00_[Changes]/shelved.patch
+===================================================================
+diff --git a/.idea/shelf/Uncommitted_changes_before_Update_at_08_11_2025_23_00_[Changes]/shelved.patch b/.idea/shelf/Uncommitted_changes_before_Update_at_08_11_2025_23_00_[Changes]/shelved.patch
+deleted file mode 100644
+--- a/.idea/shelf/Uncommitted_changes_before_Update_at_08_11_2025_23_00_[Changes]/shelved.patch	(revision d076f828ce2f52136802345ea495ef475f1af8b2)
++++ /dev/null	(revision d076f828ce2f52136802345ea495ef475f1af8b2)
+@@ -1,872 +0,0 @@
+-Index: gradle.properties
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+># Project-wide Gradle settings.\r\n# IDE (e.g. Android Studio) users:\r\n# Gradle settings configured through the IDE *will override*\r\n# any settings specified in this file.\r\n# For more details on how to configure your build environment visit\r\n# http://www.gradle.org/docs/current/userguide/build_environment.html\r\n# Specifies the JVM arguments used for the daemon process.\r\n# The setting is particularly useful for tweaking memory settings.\r\norg.gradle.jvmargs=-Xmx2048m -Dfile.encoding=UTF-8\r\n# When configured, Gradle will run in incubating parallel mode.\r\n# This option should only be used with decoupled projects. For more details, visit\r\n# https://developer.android.com/r/tools/gradle-multi-project-decoupled-projects\r\n# org.gradle.parallel=true\r\n# AndroidX package structure to make it clearer which packages are bundled with the\r\n# Android operating system, and which are packaged with your app's APK\r\n# https://developer.android.com/topic/libraries/support-library/androidx-rn\r\nandroid.useAndroidX=true\r\n# Kotlin code style for this project: \"official\" or \"obsolete\":\r\nkotlin.code.style=official\r\n# Enables namespacing of each library's R class so that its R class includes only the\r\n# resources declared in the library itself and none from the library's dependencies,\r\n# thereby reducing the size of the R class for that library\r\nandroid.nonTransitiveRClass=true
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>ISO-8859-1
+-===================================================================
+-diff --git a/gradle.properties b/gradle.properties
+---- a/gradle.properties	(revision 1ce74093873ec1b16c413750e558114559284ef6)
+-+++ b/gradle.properties	(date 1762631081582)
+-@@ -20,4 +20,5 @@
+- # Enables namespacing of each library's R class so that its R class includes only the
+- # resources declared in the library itself and none from the library's dependencies,
+- # thereby reducing the size of the R class for that library
+--android.nonTransitiveRClass=true
+-\ No newline at end of file
+-+android.nonTransitiveRClass=true
+-+kotlin.compiler.force.k1=true
+-\ No newline at end of file
+-Index: gradle/libs.versions.toml
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+>[versions]\r\nagp = \"8.11.1\" #no cambiar de la 8.11.1\r\nkotlin = \"2.0.21\"\r\ncoreKtx = \"1.17.0\"\r\njunit = \"4.13.2\"\r\njunitVersion = \"1.3.0\"\r\nespressoCore = \"3.7.0\"\r\nlifecycleRuntimeKtx = \"2.9.4\"\r\nactivityCompose = \"1.11.0\"\r\ncomposeBom = \"2025.10.01\"\r\n#Practica\r\nconstraintlayoutCompose = \"1.1.1\"\r\nnavigationCompose = \"2.9.5\"\r\nfoundation = \"1.9.4\"\r\nappcompat = \"1.7.0\"\r\nmaterial = \"1.12.0\"\r\nfirebase-gservices = \"4.4.4\"\r\nfirebase-bom = \"33.1.0\"\r\n#panoramicas\r\npanoramaGL = \"1.11.0\"\r\nfirebaseFirestore = \"26.0.2\"\r\n\r\n[libraries]\r\nandroidx-core-ktx = { group = \"androidx.core\", name = \"core-ktx\", version.ref = \"coreKtx\" }\r\njunit = { group = \"junit\", name = \"junit\", version.ref = \"junit\" }\r\nandroidx-junit = { group = \"androidx.test.ext\", name = \"junit\", version.ref = \"junitVersion\" }\r\nandroidx-espresso-core = { group = \"androidx.test.espresso\", name = \"espresso-core\", version.ref = \"espressoCore\" }\r\nandroidx-lifecycle-runtime-ktx = { group = \"androidx.lifecycle\", name = \"lifecycle-runtime-ktx\", version.ref = \"lifecycleRuntimeKtx\" }\r\nandroidx-activity-compose = { group = \"androidx.activity\", name = \"activity-compose\", version.ref = \"activityCompose\" }\r\nandroidx-compose-bom = { group = \"androidx.compose\", name = \"compose-bom\", version.ref = \"composeBom\" }\r\nandroidx-ui = { group = \"androidx.compose.ui\", name = \"ui\" }\r\nandroidx-ui-graphics = { group = \"androidx.compose.ui\", name = \"ui-graphics\" }\r\nandroidx-ui-tooling = { group = \"androidx.compose.ui\", name = \"ui-tooling\" }\r\nandroidx-ui-tooling-preview = { group = \"androidx.compose.ui\", name = \"ui-tooling-preview\" }\r\nandroidx-ui-test-manifest = { group = \"androidx.compose.ui\", name = \"ui-test-manifest\" }\r\nandroidx-ui-test-junit4 = { group = \"androidx.compose.ui\", name = \"ui-test-junit4\" }\r\nandroidx-material3 = { group = \"androidx.compose.material3\", name = \"material3\" }\r\n#Practica\r\nconstraintlayout-compose = { module = \"androidx.constraintlayout:constraintlayout-compose\", version.ref = \"constraintlayoutCompose\" }\r\nnavigation-compose = { module = \"androidx.navigation:navigation-compose\", version.ref = \"navigationCompose\" }\r\nandroidx-compose-foundation = { group = \"androidx.compose.foundation\", name = \"foundation\", version.ref = \"foundation\" }\r\nandroidx-appcompat = { module = \"androidx.appcompat:appcompat\", version.ref = \"appcompat\" }\r\ngoogle-material = { module = \"com.google.android.material:material\", version.ref = \"material\" }\r\nfirebase-bom = { module = \"com.google.firebase:firebase-bom\", version.ref = \"firebase-bom\" }\r\nfirebase-firestore = { module = \"com.google.firebase:firebase-firestore-ktx\" }\r\n#Panoramicas\r\npanoramaGL = { module = \"com.github.hannesa2:panoramaGL\", version.ref = \"panoramaGL\" }\r\ngoogle-firebase-firestore = { group = \"com.google.firebase\", name = \"firebase-firestore\", version.ref = \"firebaseFirestore\" }\r\n\r\n[plugins]\r\nandroid-application = { id = \"com.android.application\", version.ref = \"agp\" }\r\nkotlin-android = { id = \"org.jetbrains.kotlin.android\", version.ref = \"kotlin\" }\r\nkotlin-compose = { id = \"org.jetbrains.kotlin.plugin.compose\", version.ref = \"kotlin\" }\r\nfirebase-gservices = { id = \"com.google.gms.google-services\", version.ref = \"firebase-gservices\" }\r\n\r\n\r\n
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+-diff --git a/gradle/libs.versions.toml b/gradle/libs.versions.toml
+---- a/gradle/libs.versions.toml	(revision 1ce74093873ec1b16c413750e558114559284ef6)
+-+++ b/gradle/libs.versions.toml	(date 1762638917078)
+-@@ -1,6 +1,6 @@
+- [versions]
+- agp = "8.11.1" #no cambiar de la 8.11.1
+--kotlin = "2.0.21"
+-+kotlin = "2.2.0"
+- coreKtx = "1.17.0"
+- junit = "4.13.2"
+- junitVersion = "1.3.0"
+-Index: app/src/main/java/com/nextapp/monasterio/LanguageHelper.kt
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+>package com.nextapp.monasterio\r\n\r\nimport android.content.Context\r\nimport android.content.SharedPreferences\r\nimport androidx.appcompat.app.AppCompatDelegate\r\nimport androidx.core.os.LocaleListCompat\r\n\r\nobject LanguageHelper {\r\n\r\n    private const val PREFS_NAME = \"language_prefs\"\r\n    private const val PREF_KEY_LANGUAGE = \"language_code\"\r\n\r\n    private fun getPrefs(context: Context): SharedPreferences {\r\n        // --- INICIO DE LA CORRECCIÓN ---\r\n        // Usa SIEMPRE el contexto de la aplicación para evitar inconsistencias\r\n        return context.applicationContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)\r\n        // --- FIN DE LA CORRECCIÓN ---\r\n    }\r\n\r\n    // 1. Carga el idioma guardado al iniciar la app\r\n    fun loadLocale(context: Context) {\r\n        val language = getPrefs(context).getString(PREF_KEY_LANGUAGE, null)\r\n        if (language != null) {\r\n            val appLocale = LocaleListCompat.forLanguageTags(language)\r\n            AppCompatDelegate.setApplicationLocales(appLocale)\r\n        }\r\n    }\r\n\r\n    // 2. Guarda el nuevo idioma cuando el usuario lo cambia\r\n    fun saveLocale(context: Context, language: String) {\r\n        getPrefs(context).edit().putString(PREF_KEY_LANGUAGE, language).commit()\r\n        val appLocale = LocaleListCompat.forLanguageTags(language)\r\n        AppCompatDelegate.setApplicationLocales(appLocale)\r\n    }\r\n}
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+-diff --git a/app/src/main/java/com/nextapp/monasterio/LanguageHelper.kt b/app/src/main/java/com/nextapp/monasterio/LanguageHelper.kt
+---- a/app/src/main/java/com/nextapp/monasterio/LanguageHelper.kt	(revision 1ce74093873ec1b16c413750e558114559284ef6)
+-+++ b/app/src/main/java/com/nextapp/monasterio/LanguageHelper.kt	(date 1762633262572)
+-@@ -4,6 +4,7 @@
+- import android.content.SharedPreferences
+- import androidx.appcompat.app.AppCompatDelegate
+- import androidx.core.os.LocaleListCompat
+-+import androidx.core.content.edit
+- 
+- object LanguageHelper {
+- 
+-@@ -17,7 +18,6 @@
+-         // --- FIN DE LA CORRECCIÓN ---
+-     }
+- 
+--    // 1. Carga el idioma guardado al iniciar la app
+-     fun loadLocale(context: Context) {
+-         val language = getPrefs(context).getString(PREF_KEY_LANGUAGE, null)
+-         if (language != null) {
+-@@ -29,6 +29,7 @@
+-     // 2. Guarda el nuevo idioma cuando el usuario lo cambia
+-     fun saveLocale(context: Context, language: String) {
+-         getPrefs(context).edit().putString(PREF_KEY_LANGUAGE, language).commit()
+-+
+-         val appLocale = LocaleListCompat.forLanguageTags(language)
+-         AppCompatDelegate.setApplicationLocales(appLocale)
+-     }
+-Index: .idea/shelf/Uncommitted_changes_before_Update_at_05_11_2025_19_15_[Changes]/shelved.patch
+-===================================================================
+-diff --git a/.idea/shelf/Uncommitted_changes_before_Update_at_05_11_2025_19_15_[Changes]/shelved.patch b/.idea/shelf/Uncommitted_changes_before_Update_at_05_11_2025_19_15_[Changes]/shelved.patch
+-deleted file mode 100644
+---- a/.idea/shelf/Uncommitted_changes_before_Update_at_05_11_2025_19_15_[Changes]/shelved.patch	(revision 1ce74093873ec1b16c413750e558114559284ef6)
+-+++ /dev/null	(revision 1ce74093873ec1b16c413750e558114559284ef6)
+-@@ -1,639 +0,0 @@
+--Index: app/src/main/java/com/nextapp/monasterio/MainActivity.kt
+--IDEA additional info:
+--Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+--<+>package com.nextapp.monasterio\r\n\r\nimport android.os.Bundle\r\nimport android.widget.Toast\r\nimport androidx.activity.ComponentActivity\r\nimport androidx.activity.compose.setContent\r\nimport androidx.compose.foundation.layout.*\r\nimport androidx.compose.material3.*\r\nimport androidx.compose.runtime.*\r\nimport androidx.compose.ui.Modifier\r\nimport androidx.compose.ui.platform.LocalContext\r\nimport androidx.compose.ui.res.painterResource\r\nimport androidx.compose.ui.res.stringResource\r\nimport androidx.navigation.compose.rememberNavController\r\nimport com.nextapp.monasterio.ui.navigation.AppDrawerContent\r\nimport com.nextapp.monasterio.ui.navigation.AppNavigationHost\r\nimport com.nextapp.monasterio.ui.theme.*\r\nimport kotlinx.coroutines.launch\r\nimport androidx.appcompat.app.AppCompatActivity\r\nimport androidx.appcompat.app.AppCompatDelegate\r\nimport androidx.compose.ui.platform.LocalDensity\r\nimport androidx.compose.ui.unit.Density\r\nimport androidx.navigation.compose.currentBackStackEntryAsState\r\nimport com.nextapp.monasterio.utils.FontSize\r\n\r\nclass MainActivity : AppCompatActivity() {\r\n    override fun onCreate(savedInstanceState: Bundle?) {\r\n        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)\r\n        super.onCreate(savedInstanceState)\r\n        LanguageHelper.loadLocale(this)\r\n        setContent {\r\n            val appFontScale = FontSize.devolverFontScale(this)\r\n            val currentDensity = LocalDensity.current\r\n            val newDensity= Density(\r\n                density= currentDensity.density,\r\n                fontScale = currentDensity.fontScale*appFontScale\r\n            )\r\n            CompositionLocalProvider(LocalDensity provides newDensity) {\r\n                Smov_monasterioTheme {\r\n                    MonasteryAppScreen()\r\n                }\r\n            }\r\n        }\r\n    }\r\n}\r\n\r\n@OptIn(ExperimentalMaterial3Api::class)\r\n@Composable\r\nfun MonasteryAppScreen() {\r\n    val context = LocalContext.current\r\n    val navController = rememberNavController()\r\n    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)\r\n    val scope = rememberCoroutineScope()\r\n\r\n    val currentTitle = remember { mutableStateOf(context.getString(R.string.title_inicio)) }\r\n\r\n    // ✅ Detectar ruta actual\r\n    val currentBackStackEntry by navController.currentBackStackEntryAsState()\r\n    val currentRoute = currentBackStackEntry?.destination?.route\r\n\r\n    // ✅ Rutas inmersivas\r\n    val immersiveRoutes = listOf(AppRoutes.PIN_DETALLE)\r\n    val isImmersive = currentRoute in immersiveRoutes\r\n\r\n    // ✅ Actualizar título\r\n    LaunchedEffect(navController) {\r\n        navController.currentBackStackEntryFlow.collect { backStackEntry ->\r\n            val route = backStackEntry.destination.route\r\n            currentTitle.value = when (route) {\r\n                AppRoutes.INFO -> context.getString(R.string.title_info_general)\r\n                AppRoutes.HISTORIA -> context.getString(R.string.title_history)\r\n                AppRoutes.GALERIA -> context.getString(R.string.title_gallery)\r\n                AppRoutes.PERFIL -> context.getString(R.string.title_profile)\r\n                AppRoutes.AJUSTES -> context.getString(R.string.title_settings)\r\n                AppRoutes.OPCIONES_RESERVA,\r\n                AppRoutes.RESERVA,\r\n                AppRoutes.CONFIRMACION_RESERVA -> context.getString(R.string.title_appointment)\r\n                AppRoutes.VIRTUAL_VISIT -> context.getString(R.string.title_monasterio)\r\n                else -> context.getString(R.string.title_inicio)\r\n            }\r\n        }\r\n    }\r\n\r\n    if (isImmersive) {\r\n        // \uD83C\uDF0C Vista inmersiva sin barra ni menú\r\n        AppNavigationHost(\r\n            navController = navController,\r\n            modifier = Modifier.fillMaxSize()\r\n        )\r\n    } else {\r\n        // \uD83E\uDDF1 Vista normal con barra y menú\r\n        ModalNavigationDrawer(\r\n            drawerState = drawerState,\r\n            drawerContent = {\r\n                AppDrawerContent(\r\n                    navController = navController,\r\n                    scope = scope,\r\n                    drawerState = drawerState\r\n                )\r\n            }\r\n        ) {\r\n            Scaffold(\r\n                topBar = {\r\n                    CenterAlignedTopAppBar(\r\n                        title = { Text(currentTitle.value) },\r\n                        colors = TopAppBarDefaults.topAppBarColors(\r\n                            containerColor = MonasteryRed,\r\n                            titleContentColor = White,\r\n                            navigationIconContentColor = White,\r\n                            actionIconContentColor = White\r\n                        ),\r\n                        navigationIcon = {\r\n                            IconButton(onClick = {\r\n                                scope.launch {\r\n                                    drawerState.apply {\r\n                                        if (isClosed) open() else close()\r\n                                    }\r\n                                }\r\n                            }) {\r\n                                val iconRes = if (drawerState.isOpen) R.drawable.menu_close else R.drawable.ic_menu_24\r\n                                Icon(\r\n                                    painter = painterResource(id = iconRes),\r\n                                    contentDescription = stringResource(id = R.string.navigation_drawer_open)\r\n                                )\r\n                            }\r\n                        },\r\n                        actions = {\r\n                            IconButton(onClick = {\r\n                                Toast.makeText(context, \"Modo edición (próximamente)\", Toast.LENGTH_SHORT).show()\r\n                            }) {\r\n                                Icon(\r\n                                    painter = painterResource(id = R.drawable.lapiz),\r\n                                    contentDescription = stringResource(id = R.string.edit_mode)\r\n                                )\r\n                            }\r\n                        }\r\n                    )\r\n                }\r\n            ) { paddingValues ->\r\n                AppNavigationHost(\r\n                    navController = navController,\r\n                    modifier = Modifier.padding(paddingValues)\r\n                )\r\n            }\r\n        }\r\n    }\r\n}
+--Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+--<+>UTF-8
+--===================================================================
+--diff --git a/app/src/main/java/com/nextapp/monasterio/MainActivity.kt b/app/src/main/java/com/nextapp/monasterio/MainActivity.kt
+----- a/app/src/main/java/com/nextapp/monasterio/MainActivity.kt	(revision 908520697335b64df4dc786e407d3b983b76a621)
+--+++ b/app/src/main/java/com/nextapp/monasterio/MainActivity.kt	(date 1762358031493)
+--@@ -59,7 +59,7 @@
+--     val currentRoute = currentBackStackEntry?.destination?.route
+-- 
+--     // ✅ Rutas inmersivas
+---    val immersiveRoutes = listOf(AppRoutes.PIN_DETALLE)
+--+    val immersiveRoutes = listOf(AppRoutes.PIN_DETALLE, AppRoutes.PANORAMA)
+--     val isImmersive = currentRoute in immersiveRoutes
+-- 
+--     // ✅ Actualizar título
+--Index: settings.gradle.kts
+--IDEA additional info:
+--Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+--<+>pluginManagement {\r\n    repositories {\r\n        google {\r\n            content {\r\n                includeGroupByRegex(\"com\\\\.android.*\")\r\n                includeGroupByRegex(\"com\\\\.google.*\")\r\n                includeGroupByRegex(\"androidx.*\")\r\n            }\r\n        }\r\n        mavenCentral()\r\n        gradlePluginPortal()\r\n    }\r\n}\r\ndependencyResolutionManagement {\r\n    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)\r\n    repositories {\r\n        google()\r\n        mavenCentral( )\r\n        maven { url = uri(\"https://www.jitpack.io\") }\r\n    }\r\n}\r\n\r\nrootProject.name = \"SMOV_Monasterio\"\r\ninclude(\":app\")\r\n 
+--Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+--<+>UTF-8
+--===================================================================
+--diff --git a/settings.gradle.kts b/settings.gradle.kts
+----- a/settings.gradle.kts	(revision 908520697335b64df4dc786e407d3b983b76a621)
+--+++ b/settings.gradle.kts	(date 1762358031452)
+--@@ -9,6 +9,7 @@
+--         }
+--         mavenCentral()
+--         gradlePluginPortal()
+--+        maven { url = uri("https://www.jitpack.io") }
+--     }
+-- }
+-- dependencyResolutionManagement {
+--Index: gradle/libs.versions.toml
+--IDEA additional info:
+--Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+--<+>[versions]\r\nagp = \"8.11.1\" #no cambiar de la 8.11.1\r\nkotlin = \"2.0.21\"\r\ncoreKtx = \"1.17.0\"\r\njunit = \"4.13.2\"\r\njunitVersion = \"1.3.0\"\r\nespressoCore = \"3.7.0\"\r\nlifecycleRuntimeKtx = \"2.9.4\"\r\nactivityCompose = \"1.11.0\"\r\ncomposeBom = \"2025.10.01\"\r\n#Practica\r\nconstraintlayoutCompose = \"1.1.1\"\r\nnavigationCompose = \"2.9.5\"\r\nfoundation = \"1.9.4\"\r\nappcompat = \"1.7.0\"\r\nmaterial = \"1.12.0\"\r\nfirebase-gservices = \"4.4.4\"\r\nfirebase-bom = \"33.1.0\"\r\n\r\n[libraries]\r\nandroidx-core-ktx = { group = \"androidx.core\", name = \"core-ktx\", version.ref = \"coreKtx\" }\r\njunit = { group = \"junit\", name = \"junit\", version.ref = \"junit\" }\r\nandroidx-junit = { group = \"androidx.test.ext\", name = \"junit\", version.ref = \"junitVersion\" }\r\nandroidx-espresso-core = { group = \"androidx.test.espresso\", name = \"espresso-core\", version.ref = \"espressoCore\" }\r\nandroidx-lifecycle-runtime-ktx = { group = \"androidx.lifecycle\", name = \"lifecycle-runtime-ktx\", version.ref = \"lifecycleRuntimeKtx\" }\r\nandroidx-activity-compose = { group = \"androidx.activity\", name = \"activity-compose\", version.ref = \"activityCompose\" }\r\nandroidx-compose-bom = { group = \"androidx.compose\", name = \"compose-bom\", version.ref = \"composeBom\" }\r\nandroidx-ui = { group = \"androidx.compose.ui\", name = \"ui\" }\r\nandroidx-ui-graphics = { group = \"androidx.compose.ui\", name = \"ui-graphics\" }\r\nandroidx-ui-tooling = { group = \"androidx.compose.ui\", name = \"ui-tooling\" }\r\nandroidx-ui-tooling-preview = { group = \"androidx.compose.ui\", name = \"ui-tooling-preview\" }\r\nandroidx-ui-test-manifest = { group = \"androidx.compose.ui\", name = \"ui-test-manifest\" }\r\nandroidx-ui-test-junit4 = { group = \"androidx.compose.ui\", name = \"ui-test-junit4\" }\r\nandroidx-material3 = { group = \"androidx.compose.material3\", name = \"material3\" }\r\n#Practica\r\nconstraintlayout-compose = { module = \"androidx.constraintlayout:constraintlayout-compose\", version.ref = \"constraintlayoutCompose\" }\r\nnavigation-compose = { module = \"androidx.navigation:navigation-compose\", version.ref = \"navigationCompose\" }\r\nandroidx-compose-foundation = { group = \"androidx.compose.foundation\", name = \"foundation\", version.ref = \"foundation\" }\r\nandroidx-appcompat = { module = \"androidx.appcompat:appcompat\", version.ref = \"appcompat\" }\r\ngoogle-material = { module = \"com.google.android.material:material\", version.ref = \"material\" }\r\nfirebase-bom = { module = \"com.google.firebase:firebase-bom\", version.ref = \"firebase-bom\" }\r\nfirebase-firestore = { module = \"com.google.firebase:firebase-firestore-ktx\" }\r\n\r\n[plugins]\r\nandroid-application = { id = \"com.android.application\", version.ref = \"agp\" }\r\nkotlin-android = { id = \"org.jetbrains.kotlin.android\", version.ref = \"kotlin\" }\r\nkotlin-compose = { id = \"org.jetbrains.kotlin.plugin.compose\", version.ref = \"kotlin\" }\r\nfirebase-gservices = { id = \"com.google.gms.google-services\", version.ref = \"firebase-gservices\" }\r\n\r\n\r\n
+--Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+--<+>UTF-8
+--===================================================================
+--diff --git a/gradle/libs.versions.toml b/gradle/libs.versions.toml
+----- a/gradle/libs.versions.toml	(revision 908520697335b64df4dc786e407d3b983b76a621)
+--+++ b/gradle/libs.versions.toml	(date 1762366234772)
+--@@ -1,6 +1,6 @@
+-- [versions]
+-- agp = "8.11.1" #no cambiar de la 8.11.1
+---kotlin = "2.0.21"
+--+kotlin = "2.2.21"
+-- coreKtx = "1.17.0"
+-- junit = "4.13.2"
+-- junitVersion = "1.3.0"
+--@@ -16,6 +16,8 @@
+-- material = "1.12.0"
+-- firebase-gservices = "4.4.4"
+-- firebase-bom = "33.1.0"
+--+#panoramicas
+--+panoramaGL = "1.11.0"
+-- 
+-- [libraries]
+-- androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+--@@ -40,7 +42,8 @@
+-- google-material = { module = "com.google.android.material:material", version.ref = "material" }
+-- firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase-bom" }
+-- firebase-firestore = { module = "com.google.firebase:firebase-firestore-ktx" }
+---
+--+#Panoramicas
+--+panoramaGL = { module = "com.github.hannesa2:panoramaGL", version.ref = "panoramaGL" }
+-- [plugins]
+-- android-application = { id = "com.android.application", version.ref = "agp" }
+-- kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+--Index: app/src/main/java/com/nextapp/monasterio/ui/navigation/AppNavigation.kt
+--IDEA additional info:
+--Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+--<+>package com.nextapp.monasterio.ui.navigation\r\n\r\nimport androidx.compose.foundation.clickable\r\nimport androidx.compose.foundation.layout.*\r\nimport androidx.compose.material3.*\r\nimport androidx.compose.runtime.Composable\r\nimport androidx.compose.ui.Alignment\r\nimport androidx.compose.ui.Modifier\r\nimport androidx.compose.ui.res.painterResource\r\nimport androidx.compose.ui.res.stringResource\r\nimport androidx.compose.ui.unit.dp\r\nimport androidx.navigation.NavGraph.Companion.findStartDestination\r\nimport androidx.navigation.NavHostController\r\nimport androidx.navigation.NavType\r\nimport androidx.navigation.navArgument\r\nimport androidx.navigation.compose.NavHost\r\nimport androidx.navigation.compose.composable\r\nimport com.nextapp.monasterio.AppRoutes\r\nimport com.nextapp.monasterio.R\r\nimport com.nextapp.monasterio.ui.screens.*\r\nimport com.nextapp.monasterio.ui.theme.MonasteryRed\r\nimport com.nextapp.monasterio.ui.theme.White\r\nimport kotlinx.coroutines.CoroutineScope\r\nimport kotlinx.coroutines.launch\r\nimport com.nextapp.monasterio.ui.virtualvisit.screens.PinDetalleScreen\r\n\r\n@Composable\r\nfun AppNavigationHost(\r\n    navController: NavHostController,\r\n    modifier: Modifier = Modifier\r\n) {\r\n    NavHost(\r\n        navController = navController,\r\n        startDestination = AppRoutes.INICIO,\r\n        modifier = modifier\r\n    ) {\r\n        composable(AppRoutes.INICIO)   { HomeScreenContent(navController = navController) }\r\n        composable(AppRoutes.INFO)     { InfoScreen() }\r\n        composable(AppRoutes.HISTORIA) { HistoriaScreen() }\r\n        composable(AppRoutes.GALERIA)  { GaleriaScreen() }\r\n        composable(AppRoutes.PERFIL)   { ProfileScreen() }\r\n        composable(AppRoutes.AJUSTES)  { AjustesScreen() }\r\n        composable(AppRoutes.OPCIONES_RESERVA) { OpcionesReservaScreen(navController = navController) }\r\n        composable(AppRoutes.RESERVA) { ReservaScreen(navController = navController) }\r\n        composable(\r\n            route = AppRoutes.CONFIRMACION_RESERVA + \"/{nombre}/{email}/{fecha}/{hora}\",\r\n            arguments = listOf(\r\n                navArgument(\"nombre\") { type = NavType.StringType },\r\n                navArgument(\"email\") { type = NavType.StringType },\r\n                navArgument(\"fecha\") { type = NavType.StringType },\r\n                navArgument(\"hora\") { type = NavType.StringType }\r\n            )\r\n        ) { backStackEntry ->\r\n            val nombre = backStackEntry.arguments?.getString(\"nombre\") ?: \"\"\r\n            val email = backStackEntry.arguments?.getString(\"email\") ?: \"\"\r\n            val fecha = backStackEntry.arguments?.getString(\"fecha\") ?: \"\"\r\n            val hora = backStackEntry.arguments?.getString(\"hora\") ?: \"\"\r\n            ConfirmacionReservaScreen(\r\n                navController = navController,\r\n                nombre = nombre,\r\n                email = email,\r\n                fecha = fecha,\r\n                hora = hora\r\n            )\r\n        }\r\n\r\n        // ✅ Corrección aquí: pasamos el navController principal\r\n        composable(AppRoutes.VIRTUAL_VISIT) {\r\n            VirtualVisitScreen(navController = navController)\r\n        }\r\n\r\n        // \uD83D\uDC47 Ruta inmersiva\r\n        composable(AppRoutes.PIN_DETALLE) {\r\n            PinDetalleScreen(navController = navController)\r\n\r\n        }\r\n    }\r\n}\r\n\r\n@OptIn(ExperimentalMaterial3Api::class)\r\n@Composable\r\nfun AppDrawerContent(\r\n    navController: NavHostController,\r\n    scope: CoroutineScope,\r\n    drawerState: DrawerState\r\n) {\r\n    val navigateTo: (String) -> Unit = { route ->\r\n        navController.navigate(route) {\r\n            popUpTo(navController.graph.findStartDestination().id)\r\n            launchSingleTop = true\r\n        }\r\n        scope.launch { drawerState.close() }\r\n    }\r\n\r\n    ModalDrawerSheet(\r\n        modifier = Modifier.fillMaxHeight(),\r\n        drawerContainerColor = MonasteryRed,\r\n        drawerContentColor = White\r\n    ) {\r\n        Column(\r\n            modifier = Modifier\r\n                .fillMaxSize()\r\n                .padding(16.dp)\r\n        ) {\r\n            IconButton(onClick = { scope.launch { drawerState.close() } }) {\r\n                Icon(\r\n                    painter = painterResource(id = R.drawable.ic_menu_24),\r\n                    contentDescription = stringResource(id = R.string.navigation_drawer_close)\r\n                )\r\n            }\r\n            Spacer(modifier = Modifier.height(32.dp))\r\n\r\n            DrawerMenuItem(\r\n                text = stringResource(id = R.string.title_inicio),\r\n                onClick = { navigateTo(AppRoutes.INICIO) }\r\n            )\r\n            DrawerMenuItem(\r\n                text = stringResource(id = R.string.menu_info),\r\n                onClick = { navigateTo(AppRoutes.INFO) }\r\n            )\r\n            DrawerMenuItem(\r\n                text = stringResource(id = R.string.menu_history),\r\n                onClick = { navigateTo(AppRoutes.HISTORIA) }\r\n            )\r\n            DrawerMenuItem(\r\n                text = stringResource(id = R.string.menu_gallery),\r\n                onClick = { navigateTo(AppRoutes.GALERIA) }\r\n            )\r\n            DrawerMenuItem(\r\n                text = stringResource(id = R.string.menu_profile),\r\n                onClick = { navigateTo(AppRoutes.PERFIL) }\r\n            )\r\n            DrawerMenuItem(\r\n                text = stringResource(id = R.string.menu_settings),\r\n                onClick = { navigateTo(AppRoutes.AJUSTES) }\r\n            )\r\n        }\r\n    }\r\n}\r\n\r\n@Composable\r\nfun DrawerMenuItem(\r\n    text: String,\r\n    onClick: () -> Unit\r\n) {\r\n    Row(\r\n        modifier = Modifier\r\n            .fillMaxWidth()\r\n            .clickable(onClick = onClick)\r\n            .padding(vertical = 12.dp),\r\n        verticalAlignment = Alignment.CenterVertically\r\n    ) {\r\n        Icon(\r\n            painter = painterResource(id = R.drawable.arrow_right),\r\n            contentDescription = null,\r\n            modifier = Modifier.size(20.dp)\r\n        )\r\n        Spacer(modifier = Modifier.width(16.dp))\r\n        Text(\r\n            text = text,\r\n            color = White,\r\n            style = MaterialTheme.typography.bodyMedium\r\n        )\r\n    }\r\n}
+--Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+--<+>UTF-8
+--===================================================================
+--diff --git a/app/src/main/java/com/nextapp/monasterio/ui/navigation/AppNavigation.kt b/app/src/main/java/com/nextapp/monasterio/ui/navigation/AppNavigation.kt
+----- a/app/src/main/java/com/nextapp/monasterio/ui/navigation/AppNavigation.kt	(revision 908520697335b64df4dc786e407d3b983b76a621)
+--+++ b/app/src/main/java/com/nextapp/monasterio/ui/navigation/AppNavigation.kt	(date 1762358031480)
+--@@ -11,13 +11,13 @@
+-- import androidx.compose.ui.unit.dp
+-- import androidx.navigation.NavGraph.Companion.findStartDestination
+-- import androidx.navigation.NavHostController
+---import androidx.navigation.NavType
+---import androidx.navigation.navArgument
+--+import androidx.navigation.NavType // <-- Asegúrate de que este import existe
+--+import androidx.navigation.navArgument // <-- Asegúrate de que este import existe
+-- import androidx.navigation.compose.NavHost
+-- import androidx.navigation.compose.composable
+-- import com.nextapp.monasterio.AppRoutes
+-- import com.nextapp.monasterio.R
+---import com.nextapp.monasterio.ui.screens.*
+--+import com.nextapp.monasterio.ui.screens.* // <-- Asegúrate de importar PanoramaScreen
+-- import com.nextapp.monasterio.ui.theme.MonasteryRed
+-- import com.nextapp.monasterio.ui.theme.White
+-- import kotlinx.coroutines.CoroutineScope
+--@@ -37,9 +37,33 @@
+--         composable(AppRoutes.INICIO)   { HomeScreenContent(navController = navController) }
+--         composable(AppRoutes.INFO)     { InfoScreen() }
+--         composable(AppRoutes.HISTORIA) { HistoriaScreen() }
+---        composable(AppRoutes.GALERIA)  { GaleriaScreen() }
+--+
+--+        // --- ESTA LÍNEA ESTÁ CORRECTA ---
+--+        // Pasa el NavController a GaleriaScreen para que su botón funcione
+--+        composable(AppRoutes.GALERIA)  { GaleriaScreen(navController = navController) }
+--+
+--         composable(AppRoutes.PERFIL)   { ProfileScreen() }
+--         composable(AppRoutes.AJUSTES)  { AjustesScreen() }
+--+
+--+        // --- ESTA ES LA MODIFICACIÓN FINAL ---
+--+        // Reemplazamos la línea simple de 'PANORAMA' por esta con argumentos
+--+        composable(
+--+            route = AppRoutes.PANORAMA + "/{vistaId}", // 1. La ruta espera un ID
+--+            arguments = listOf(navArgument("vistaId") { type = NavType.StringType }) // 2. Definimos el ID
+--+        ) { backStackEntry ->
+--+            // 3. Recogemos el ID de la URL
+--+            val vistaId = backStackEntry.arguments?.getString("vistaId")
+--+
+--+            // 4. Se lo pasamos a PanoramaScreen
+--+            if (vistaId != null) {
+--+                PanoramaScreen(
+--+                    vistaId = vistaId,
+--+                    navController = navController
+--+                )
+--+            }
+--+        }
+--+
+--+        // --- RESTO DE TUS RUTAS (sin cambios) ---
+--         composable(AppRoutes.OPCIONES_RESERVA) { OpcionesReservaScreen(navController = navController) }
+--         composable(AppRoutes.RESERVA) { ReservaScreen(navController = navController) }
+--         composable(
+--@@ -64,19 +88,19 @@
+--             )
+--         }
+-- 
+---        // ✅ Corrección aquí: pasamos el navController principal
+--         composable(AppRoutes.VIRTUAL_VISIT) {
+--             VirtualVisitScreen(navController = navController)
+--         }
+-- 
+---        // 👇 Ruta inmersiva
+--         composable(AppRoutes.PIN_DETALLE) {
+--             PinDetalleScreen(navController = navController)
+---
+--         }
+--     }
+-- }
+-- 
+--+//
+--+// --- EL RESTO DEL ARCHIVO SE QUEDA EXACTAMENTE IGUAL ---
+--+//
+-- @OptIn(ExperimentalMaterial3Api::class)
+-- @Composable
+-- fun AppDrawerContent(
+--Index: app/build.gradle.kts
+--IDEA additional info:
+--Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+--<+>plugins {\r\n    alias(libs.plugins.android.application)\r\n    alias(libs.plugins.kotlin.android)\r\n    alias(libs.plugins.kotlin.compose)\r\n    alias(libs.plugins.firebase.gservices)\r\n}\r\n\r\nandroid {\r\n    namespace = \"com.nextapp.monasterio\"\r\n    compileSdk = 36\r\n\r\n    defaultConfig {\r\n        applicationId = \"com.nextapp.monasterio\"\r\n        minSdk = 24\r\n        targetSdk = 36\r\n        versionCode = 1\r\n        versionName = \"1.0\"\r\n\r\n        testInstrumentationRunner = \"androidx.test.runner.AndroidJUnitRunner\"\r\n    }\r\n\r\n    buildTypes {\r\n        release {\r\n            isMinifyEnabled = false\r\n            proguardFiles(\r\n                getDefaultProguardFile(\"proguard-android-optimize.txt\"),\r\n                \"proguard-rules.pro\"\r\n            )\r\n        }\r\n    }\r\n    compileOptions {\r\n        sourceCompatibility = JavaVersion.VERSION_11\r\n        targetCompatibility = JavaVersion.VERSION_11\r\n    }\r\n    kotlinOptions {\r\n        jvmTarget = \"11\"\r\n    }\r\n    buildFeatures {\r\n        compose = true\r\n    }\r\n}\r\n\r\ndependencies {\r\n\r\n    implementation(libs.androidx.core.ktx)\r\n    implementation(libs.androidx.lifecycle.runtime.ktx)\r\n    implementation(libs.androidx.activity.compose)\r\n    implementation(platform(libs.androidx.compose.bom))\r\n    implementation(libs.androidx.ui)\r\n    implementation(libs.androidx.ui.graphics)\r\n    implementation(libs.androidx.ui.tooling.preview)\r\n    implementation(libs.androidx.material3)\r\n    implementation(libs.androidx.compose.foundation)\r\n    testImplementation(libs.junit)\r\n    androidTestImplementation(libs.androidx.junit)\r\n    androidTestImplementation(libs.androidx.espresso.core)\r\n    androidTestImplementation(platform(libs.androidx.compose.bom))\r\n    androidTestImplementation(libs.androidx.ui.test.junit4)\r\n    debugImplementation(libs.androidx.ui.tooling)\r\n    debugImplementation(libs.androidx.ui.test.manifest)\r\n    //Practica\r\n    implementation(libs.constraintlayout.compose)\r\n    implementation(libs.navigation.compose)\r\n    implementation (libs.androidx.appcompat)\r\n    implementation (libs.google.material)\r\n\r\n    // Firebase\r\n    implementation(platform(libs.firebase.bom))\r\n    implementation(libs.firebase.firestore)\r\n    implementation(\"com.google.firebase:firebase-auth-ktx\")\r\n\r\n    implementation(\"com.caverock:androidsvg:1.4\")\r\n    implementation(\"androidx.core:core-ktx:1.12.0\")\r\n    implementation(\"com.google.android.material:material:1.10.0\")\r\n\r\n    // Plano Interactivo\r\n    implementation(\"io.github.chrisbanes:PhotoView:2.3.0\")\r\n\r\n\r\n}\r\n
+--Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+--<+>UTF-8
+--===================================================================
+--diff --git a/app/build.gradle.kts b/app/build.gradle.kts
+----- a/app/build.gradle.kts	(revision 908520697335b64df4dc786e407d3b983b76a621)
+--+++ b/app/build.gradle.kts	(date 1762361761297)
+--@@ -76,5 +76,7 @@
+--     // Plano Interactivo
+--     implementation("io.github.chrisbanes:PhotoView:2.3.0")
+-- 
+--+    // Panoramica
+--+    implementation("com.github.hannesa2:panoramagl:1.14")
+-- 
+-- }
+--Index: app/src/main/java/com/nextapp/monasterio/ui/screens/PlaceHolderScreens.kt
+--IDEA additional info:
+--Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+--<+>package com.nextapp.monasterio.ui.screens\r\n\r\nimport androidx.compose.foundation.layout.Box\r\nimport androidx.compose.foundation.layout.fillMaxSize\r\nimport androidx.compose.material3.MaterialTheme\r\nimport androidx.compose.material3.Text\r\nimport androidx.compose.runtime.Composable\r\nimport androidx.compose.ui.Alignment\r\nimport androidx.compose.ui.Modifier\r\n\r\n//Pantallas aun vacias, borrar archivo cuando las pantallas tengan contenido\r\n\r\n@Composable\r\nfun GaleriaScreen() {\r\n    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {\r\n        Text(text = \"Contenido de Galería\", style = MaterialTheme.typography.headlineMedium)\r\n    }\r\n}\r\n\r\n/*@Composable\r\nfun PerfilScreen() {\r\n    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {\r\n        Text(text = \"Contenido de Perfil\", style = MaterialTheme.typography.headlineMedium)\r\n    }\r\n}*/
+--Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+--<+>UTF-8
+--===================================================================
+--diff --git a/app/src/main/java/com/nextapp/monasterio/ui/screens/PlaceHolderScreens.kt b/app/src/main/java/com/nextapp/monasterio/ui/screens/PlaceHolderScreens.kt
+----- a/app/src/main/java/com/nextapp/monasterio/ui/screens/PlaceHolderScreens.kt	(revision 908520697335b64df4dc786e407d3b983b76a621)
+--+++ b/app/src/main/java/com/nextapp/monasterio/ui/screens/PlaceHolderScreens.kt	(date 1762358031411)
+--@@ -1,25 +1,56 @@
+--+// En: ui/screens/PlaceholderScreens.kt (o donde esté GaleriaScreen)
+--+
+-- package com.nextapp.monasterio.ui.screens
+-- 
+---import androidx.compose.foundation.layout.Box
+--+import androidx.compose.foundation.layout.fillMaxWidth
+--+import androidx.compose.foundation.layout.Arrangement
+--+import androidx.compose.foundation.layout.Column
+--+import androidx.compose.foundation.layout.Spacer
+-- import androidx.compose.foundation.layout.fillMaxSize
+---import androidx.compose.material3.MaterialTheme
+--+import androidx.compose.foundation.layout.height
+--+import androidx.compose.foundation.layout.padding
+--+import androidx.compose.foundation.lazy.LazyColumn // ¡Importante!
+--+import androidx.compose.material3.Button
+-- import androidx.compose.material3.Text
+-- import androidx.compose.runtime.Composable
+-- import androidx.compose.ui.Alignment
+-- import androidx.compose.ui.Modifier
+---
+---//Pantallas aun vacias, borrar archivo cuando las pantallas tengan contenido
+--+import androidx.compose.ui.unit.dp
+--+import androidx.navigation.NavController
+--+import com.nextapp.monasterio.AppRoutes
+--+import com.nextapp.monasterio.data.MonasterioMapRepository // ¡Importante!
+-- 
+-- @Composable
+---fun GaleriaScreen() {
+---    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+---        Text(text = "Contenido de Galería", style = MaterialTheme.typography.headlineMedium)
+--+fun GaleriaScreen(navController: NavController) { // Recuerda que recibe NavController
+--+
+--+    // 1. Obtenemos la lista completa de vistas del repositorio
+--+    val vistas = MonasterioMapRepository.getVistas()
+--+
+--+    // 2. Usamos LazyColumn para mostrar eficientemente la lista de botones
+--+    LazyColumn(
+--+        modifier = Modifier
+--+            .fillMaxSize()
+--+            .padding(horizontal = 32.dp), // Añadimos padding
+--+        verticalArrangement = Arrangement.Center,
+--+        horizontalAlignment = Alignment.CenterHorizontally
+--+    ) {
+--+        // 3. Creamos un item (un botón) por cada vista en la lista
+--+        items(vistas.size) { index ->
+--+            val vista = vistas[index]
+--+
+--+            Button(
+--+                onClick = {
+--+                    // 4. Al hacer clic, navega a PanoramaScreen con el ID de la vista
+--+                    navController.navigate(AppRoutes.PANORAMA + "/${vista.id}")
+--+                },
+--+                modifier = Modifier.fillMaxWidth() // Hacemos que los botones sean anchos
+--+            ) {
+--+                Text(text = vista.nombre) // Mostramos el nombre descriptivo
+--+            }
+--+
+--+            Spacer(modifier = Modifier.height(16.dp))
+--+        }
+--     }
+-- }
+-- 
+---/*@Composable
+---fun PerfilScreen() {
+---    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+---        Text(text = "Contenido de Perfil", style = MaterialTheme.typography.headlineMedium)
+---    }
+---}*/
+--\ No newline at end of file
+--+// ... (tus otros PlaceholderScreens como PerfilScreen, etc.)
+--\ No newline at end of file
+--Index: .idea/inspectionProfiles/Project_Default.xml
+--===================================================================
+--diff --git a/.idea/inspectionProfiles/Project_Default.xml b/.idea/inspectionProfiles/Project_Default.xml
+--deleted file mode 100644
+----- a/.idea/inspectionProfiles/Project_Default.xml	(revision 908520697335b64df4dc786e407d3b983b76a621)
+--+++ /dev/null	(revision 908520697335b64df4dc786e407d3b983b76a621)
+--@@ -1,61 +0,0 @@
+---<component name="InspectionProjectProfileManager">
+---  <profile version="1.0">
+---    <option name="myName" value="Project Default" />
+---    <inspection_tool class="ComposePreviewDimensionRespectsLimit" enabled="true" level="WARNING" enabled_by_default="true">
+---      <option name="composableFile" value="true" />
+---      <option name="previewFile" value="true" />
+---    </inspection_tool>
+---    <inspection_tool class="ComposePreviewMustBeTopLevelFunction" enabled="true" level="ERROR" enabled_by_default="true">
+---      <option name="composableFile" value="true" />
+---      <option name="previewFile" value="true" />
+---    </inspection_tool>
+---    <inspection_tool class="ComposePreviewNeedsComposableAnnotation" enabled="true" level="ERROR" enabled_by_default="true">
+---      <option name="composableFile" value="true" />
+---      <option name="previewFile" value="true" />
+---    </inspection_tool>
+---    <inspection_tool class="ComposePreviewNotSupportedInUnitTestFiles" enabled="true" level="ERROR" enabled_by_default="true">
+---      <option name="composableFile" value="true" />
+---      <option name="previewFile" value="true" />
+---    </inspection_tool>
+---    <inspection_tool class="GlancePreviewDimensionRespectsLimit" enabled="true" level="WARNING" enabled_by_default="true">
+---      <option name="composableFile" value="true" />
+---    </inspection_tool>
+---    <inspection_tool class="GlancePreviewMustBeTopLevelFunction" enabled="true" level="ERROR" enabled_by_default="true">
+---      <option name="composableFile" value="true" />
+---    </inspection_tool>
+---    <inspection_tool class="GlancePreviewNeedsComposableAnnotation" enabled="true" level="ERROR" enabled_by_default="true">
+---      <option name="composableFile" value="true" />
+---    </inspection_tool>
+---    <inspection_tool class="GlancePreviewNotSupportedInUnitTestFiles" enabled="true" level="ERROR" enabled_by_default="true">
+---      <option name="composableFile" value="true" />
+---    </inspection_tool>
+---    <inspection_tool class="PreviewAnnotationInFunctionWithParameters" enabled="true" level="ERROR" enabled_by_default="true">
+---      <option name="composableFile" value="true" />
+---      <option name="previewFile" value="true" />
+---    </inspection_tool>
+---    <inspection_tool class="PreviewApiLevelMustBeValid" enabled="true" level="ERROR" enabled_by_default="true">
+---      <option name="composableFile" value="true" />
+---      <option name="previewFile" value="true" />
+---    </inspection_tool>
+---    <inspection_tool class="PreviewDeviceShouldUseNewSpec" enabled="true" level="WEAK WARNING" enabled_by_default="true">
+---      <option name="composableFile" value="true" />
+---      <option name="previewFile" value="true" />
+---    </inspection_tool>
+---    <inspection_tool class="PreviewFontScaleMustBeGreaterThanZero" enabled="true" level="ERROR" enabled_by_default="true">
+---      <option name="composableFile" value="true" />
+---      <option name="previewFile" value="true" />
+---    </inspection_tool>
+---    <inspection_tool class="PreviewMultipleParameterProviders" enabled="true" level="ERROR" enabled_by_default="true">
+---      <option name="composableFile" value="true" />
+---      <option name="previewFile" value="true" />
+---    </inspection_tool>
+---    <inspection_tool class="PreviewParameterProviderOnFirstParameter" enabled="true" level="ERROR" enabled_by_default="true">
+---      <option name="composableFile" value="true" />
+---      <option name="previewFile" value="true" />
+---    </inspection_tool>
+---    <inspection_tool class="PreviewPickerAnnotation" enabled="true" level="ERROR" enabled_by_default="true">
+---      <option name="composableFile" value="true" />
+---      <option name="previewFile" value="true" />
+---    </inspection_tool>
+---  </profile>
+---</component>
+--\ No newline at end of file
+--Index: .idea/studiobot.xml
+--===================================================================
+--diff --git a/.idea/studiobot.xml b/.idea/studiobot.xml
+--deleted file mode 100644
+----- a/.idea/studiobot.xml	(revision 908520697335b64df4dc786e407d3b983b76a621)
+--+++ /dev/null	(revision 908520697335b64df4dc786e407d3b983b76a621)
+--@@ -1,6 +0,0 @@
+---<?xml version="1.0" encoding="UTF-8"?>
+---<project version="4">
+---  <component name="StudioBotProjectSettings">
+---    <option name="shareContext" value="OptedIn" />
+---  </component>
+---</project>
+--\ No newline at end of file
+--Index: .idea/codeStyles/codeStyleConfig.xml
+--===================================================================
+--diff --git a/.idea/codeStyles/codeStyleConfig.xml b/.idea/codeStyles/codeStyleConfig.xml
+--deleted file mode 100644
+----- a/.idea/codeStyles/codeStyleConfig.xml	(revision 908520697335b64df4dc786e407d3b983b76a621)
+--+++ /dev/null	(revision 908520697335b64df4dc786e407d3b983b76a621)
+--@@ -1,5 +0,0 @@
+---<component name="ProjectCodeStyleConfiguration">
+---  <state>
+---    <option name="USE_PER_PROJECT_SETTINGS" value="true" />
+---  </state>
+---</component>
+--\ No newline at end of file
+--Index: .idea/androidTestResultsUserPreferences.xml
+--===================================================================
+--diff --git a/.idea/androidTestResultsUserPreferences.xml b/.idea/androidTestResultsUserPreferences.xml
+--deleted file mode 100644
+----- a/.idea/androidTestResultsUserPreferences.xml	(revision 908520697335b64df4dc786e407d3b983b76a621)
+--+++ /dev/null	(revision 908520697335b64df4dc786e407d3b983b76a621)
+--@@ -1,22 +0,0 @@
+---<?xml version="1.0" encoding="UTF-8"?>
+---<project version="4">
+---  <component name="AndroidTestResultsUserPreferences">
+---    <option name="androidTestResultsTableState">
+---      <map>
+---        <entry key="28629151">
+---          <value>
+---            <AndroidTestResultsTableState>
+---              <option name="preferredColumnWidths">
+---                <map>
+---                  <entry key="Duration" value="90" />
+---                  <entry key="Medium_Phone_API_36.0" value="120" />
+---                  <entry key="Tests" value="360" />
+---                </map>
+---              </option>
+---            </AndroidTestResultsTableState>
+---          </value>
+---        </entry>
+---      </map>
+---    </option>
+---  </component>
+---</project>
+--\ No newline at end of file
+--Index: .idea/codeStyles/Project.xml
+--===================================================================
+--diff --git a/.idea/codeStyles/Project.xml b/.idea/codeStyles/Project.xml
+--deleted file mode 100644
+----- a/.idea/codeStyles/Project.xml	(revision 908520697335b64df4dc786e407d3b983b76a621)
+--+++ /dev/null	(revision 908520697335b64df4dc786e407d3b983b76a621)
+--@@ -1,123 +0,0 @@
+---<component name="ProjectCodeStyleConfiguration">
+---  <code_scheme name="Project" version="173">
+---    <JetCodeStyleSettings>
+---      <option name="CODE_STYLE_DEFAULTS" value="KOTLIN_OFFICIAL" />
+---    </JetCodeStyleSettings>
+---    <codeStyleSettings language="XML">
+---      <option name="FORCE_REARRANGE_MODE" value="1" />
+---      <indentOptions>
+---        <option name="CONTINUATION_INDENT_SIZE" value="4" />
+---      </indentOptions>
+---      <arrangement>
+---        <rules>
+---          <section>
+---            <rule>
+---              <match>
+---                <AND>
+---                  <NAME>xmlns:android</NAME>
+---                  <XML_ATTRIBUTE />
+---                  <XML_NAMESPACE>^$</XML_NAMESPACE>
+---                </AND>
+---              </match>
+---            </rule>
+---          </section>
+---          <section>
+---            <rule>
+---              <match>
+---                <AND>
+---                  <NAME>xmlns:.*</NAME>
+---                  <XML_ATTRIBUTE />
+---                  <XML_NAMESPACE>^$</XML_NAMESPACE>
+---                </AND>
+---              </match>
+---              <order>BY_NAME</order>
+---            </rule>
+---          </section>
+---          <section>
+---            <rule>
+---              <match>
+---                <AND>
+---                  <NAME>.*:id</NAME>
+---                  <XML_ATTRIBUTE />
+---                  <XML_NAMESPACE>http://schemas.android.com/apk/res/android</XML_NAMESPACE>
+---                </AND>
+---              </match>
+---            </rule>
+---          </section>
+---          <section>
+---            <rule>
+---              <match>
+---                <AND>
+---                  <NAME>.*:name</NAME>
+---                  <XML_ATTRIBUTE />
+---                  <XML_NAMESPACE>http://schemas.android.com/apk/res/android</XML_NAMESPACE>
+---                </AND>
+---              </match>
+---            </rule>
+---          </section>
+---          <section>
+---            <rule>
+---              <match>
+---                <AND>
+---                  <NAME>name</NAME>
+---                  <XML_ATTRIBUTE />
+---                  <XML_NAMESPACE>^$</XML_NAMESPACE>
+---                </AND>
+---              </match>
+---            </rule>
+---          </section>
+---          <section>
+---            <rule>
+---              <match>
+---                <AND>
+---                  <NAME>style</NAME>
+---                  <XML_ATTRIBUTE />
+---                  <XML_NAMESPACE>^$</XML_NAMESPACE>
+---                </AND>
+---              </match>
+---            </rule>
+---          </section>
+---          <section>
+---            <rule>
+---              <match>
+---                <AND>
+---                  <NAME>.*</NAME>
+---                  <XML_ATTRIBUTE />
+---                  <XML_NAMESPACE>^$</XML_NAMESPACE>
+---                </AND>
+---              </match>
+---              <order>BY_NAME</order>
+---            </rule>
+---          </section>
+---          <section>
+---            <rule>
+---              <match>
+---                <AND>
+---                  <NAME>.*</NAME>
+---                  <XML_ATTRIBUTE />
+---                  <XML_NAMESPACE>http://schemas.android.com/apk/res/android</XML_NAMESPACE>
+---                </AND>
+---              </match>
+---              <order>ANDROID_ATTRIBUTE_ORDER</order>
+---            </rule>
+---          </section>
+---          <section>
+---            <rule>
+---              <match>
+---                <AND>
+---                  <NAME>.*</NAME>
+---                  <XML_ATTRIBUTE />
+---                  <XML_NAMESPACE>.*</XML_NAMESPACE>
+---                </AND>
+---              </match>
+---              <order>BY_NAME</order>
+---            </rule>
+---          </section>
+---        </rules>
+---      </arrangement>
+---    </codeStyleSettings>
+---    <codeStyleSettings language="kotlin">
+---      <option name="CODE_STYLE_DEFAULTS" value="KOTLIN_OFFICIAL" />
+---    </codeStyleSettings>
+---  </code_scheme>
+---</component>
+--\ No newline at end of file
+--Index: .idea/.gitignore
+--===================================================================
+--diff --git a/.idea/.gitignore b/.idea/.gitignore
+--deleted file mode 100644
+----- a/.idea/.gitignore	(revision 908520697335b64df4dc786e407d3b983b76a621)
+--+++ /dev/null	(revision 908520697335b64df4dc786e407d3b983b76a621)
+--@@ -1,3 +0,0 @@
+---# Default ignored files
+---/shelf/
+---/workspace.xml
+--Index: .idea/misc.xml
+--IDEA additional info:
+--Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+--<+><project version=\"4\">\r\n  <component name=\"ExternalStorageConfigurationManager\" enabled=\"true\" />\r\n  <component name=\"ProjectRootManager\" version=\"2\" languageLevel=\"JDK_21\" default=\"true\" project-jdk-name=\"jbr-21\" project-jdk-type=\"JavaSDK\">\r\n    <output url=\"file://$PROJECT_DIR$/build/classes\" />\r\n  </component>\r\n  <component name=\"ProjectType\">\r\n    <option name=\"id\" value=\"Android\" />\r\n  </component>\r\n</project>
+--Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+--<+>UTF-8
+--===================================================================
+--diff --git a/.idea/misc.xml b/.idea/misc.xml
+----- a/.idea/misc.xml	(revision 908520697335b64df4dc786e407d3b983b76a621)
+--+++ b/.idea/misc.xml	(date 1762365946520)
+--@@ -1,9 +1,5 @@
+--+<?xml version="1.0" encoding="UTF-8"?>
+-- <project version="4">
+--   <component name="ExternalStorageConfigurationManager" enabled="true" />
+---  <component name="ProjectRootManager" version="2" languageLevel="JDK_21" default="true" project-jdk-name="jbr-21" project-jdk-type="JavaSDK">
+---    <output url="file://$PROJECT_DIR$/build/classes" />
+---  </component>
+---  <component name="ProjectType">
+---    <option name="id" value="Android" />
+---  </component>
+--+  <component name="ProjectRootManager" version="2" languageLevel="JDK_21" default="true" project-jdk-name="jbr-21" project-jdk-type="JavaSDK" />
+-- </project>
+--\ No newline at end of file
+--Index: .idea/gradle.xml
+--IDEA additional info:
+--Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+--<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"GradleMigrationSettings\" migrationVersion=\"1\" />\r\n  <component name=\"GradleSettings\">\r\n    <option name=\"linkedExternalProjectsSettings\">\r\n      <GradleProjectSettings>\r\n        <option name=\"testRunner\" value=\"CHOOSE_PER_TEST\" />\r\n        <option name=\"externalProjectPath\" value=\"$PROJECT_DIR$\" />\r\n        <option name=\"gradleJvm\" value=\"#GRADLE_LOCAL_JAVA_HOME\" />\r\n        <option name=\"modules\">\r\n          <set>\r\n            <option value=\"$PROJECT_DIR$\" />\r\n            <option value=\"$PROJECT_DIR$/app\" />\r\n          </set>\r\n        </option>\r\n      </GradleProjectSettings>\r\n    </option>\r\n  </component>\r\n</project>
+--Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+--<+>UTF-8
+--===================================================================
+--diff --git a/.idea/gradle.xml b/.idea/gradle.xml
+----- a/.idea/gradle.xml	(revision 908520697335b64df4dc786e407d3b983b76a621)
+--+++ b/.idea/gradle.xml	(date 1762365946571)
+--@@ -1,6 +1,5 @@
+-- <?xml version="1.0" encoding="UTF-8"?>
+-- <project version="4">
+---  <component name="GradleMigrationSettings" migrationVersion="1" />
+--   <component name="GradleSettings">
+--     <option name="linkedExternalProjectsSettings">
+--       <GradleProjectSettings>
+--Index: .idea/vcs.xml
+--IDEA additional info:
+--Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+--<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"VcsDirectoryMappings\">\r\n    <mapping directory=\"$PROJECT_DIR$\" vcs=\"Git\" />\r\n  </component>\r\n</project>
+--Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+--<+>UTF-8
+--===================================================================
+--diff --git a/.idea/vcs.xml b/.idea/vcs.xml
+----- a/.idea/vcs.xml	(revision 908520697335b64df4dc786e407d3b983b76a621)
+--+++ b/.idea/vcs.xml	(date 1762365792809)
+--@@ -1,6 +1,6 @@
+-- <?xml version="1.0" encoding="UTF-8"?>
+-- <project version="4">
+--   <component name="VcsDirectoryMappings">
+---    <mapping directory="$PROJECT_DIR$" vcs="Git" />
+--+    <mapping directory="" vcs="Git" />
+--   </component>
+-- </project>
+--\ No newline at end of file
+--Index: .idea/deploymentTargetSelector.xml
+--IDEA additional info:
+--Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+--<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"deploymentTargetSelector\">\r\n    <selectionStates>\r\n      <SelectionState runConfigName=\"app\">\r\n        <option name=\"selectionMode\" value=\"DROPDOWN\" />\r\n        <DropdownSelection timestamp=\"2025-11-02T21:37:26.652388500Z\">\r\n          <Target type=\"DEFAULT_BOOT\">\r\n            <handle>\r\n              <DeviceId pluginId=\"PhysicalDevice\" identifier=\"serial=R52T40GVQQB\" />\r\n            </handle>\r\n          </Target>\r\n        </DropdownSelection>\r\n        <DialogSelection>\r\n          <targets>\r\n            <Target type=\"DEFAULT_BOOT\">\r\n              <handle>\r\n                <DeviceId pluginId=\"PhysicalDevice\" identifier=\"serial=RZCX7216PCM\" />\r\n              </handle>\r\n            </Target>\r\n            <Target type=\"DEFAULT_BOOT\">\r\n              <handle>\r\n                <DeviceId pluginId=\"PhysicalDevice\" identifier=\"serial=R52T40GVQQB\" />\r\n              </handle>\r\n            </Target>\r\n          </targets>\r\n        </DialogSelection>\r\n      </SelectionState>\r\n    </selectionStates>\r\n  </component>\r\n</project>
+--Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+--<+>UTF-8
+--===================================================================
+--diff --git a/.idea/deploymentTargetSelector.xml b/.idea/deploymentTargetSelector.xml
+----- a/.idea/deploymentTargetSelector.xml	(revision 908520697335b64df4dc786e407d3b983b76a621)
+--+++ b/.idea/deploymentTargetSelector.xml	(date 1762365792841)
+--@@ -4,27 +4,6 @@
+--     <selectionStates>
+--       <SelectionState runConfigName="app">
+--         <option name="selectionMode" value="DROPDOWN" />
+---        <DropdownSelection timestamp="2025-11-02T21:37:26.652388500Z">
+---          <Target type="DEFAULT_BOOT">
+---            <handle>
+---              <DeviceId pluginId="PhysicalDevice" identifier="serial=R52T40GVQQB" />
+---            </handle>
+---          </Target>
+---        </DropdownSelection>
+---        <DialogSelection>
+---          <targets>
+---            <Target type="DEFAULT_BOOT">
+---              <handle>
+---                <DeviceId pluginId="PhysicalDevice" identifier="serial=RZCX7216PCM" />
+---              </handle>
+---            </Target>
+---            <Target type="DEFAULT_BOOT">
+---              <handle>
+---                <DeviceId pluginId="PhysicalDevice" identifier="serial=R52T40GVQQB" />
+---              </handle>
+---            </Target>
+---          </targets>
+---        </DialogSelection>
+--       </SelectionState>
+--     </selectionStates>
+--   </component>
+--Index: app/src/main/java/com/nextapp/monasterio/AppRoutes.kt
+--IDEA additional info:
+--Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+--<+>package com.nextapp.monasterio\r\n\r\n/**\r\n * Define todas las rutas (llaves) de navegación en un solo lugar\r\n * para evitar errores de escritura y centralizar la gestión.\r\n */\r\nobject AppRoutes {\r\n    const val INICIO = \"inicio\"\r\n    const val INFO = \"info\"\r\n    const val HISTORIA = \"historia\"\r\n    const val GALERIA = \"galeria\"\r\n    const val PERFIL = \"perfil\"\r\n    const val AJUSTES = \"ajustes\"\r\n    const val OPCIONES_RESERVA = \"opciones_reserva\"\r\n    const val RESERVA = \"reserva\"\r\n    const val CONFIRMACION_RESERVA = \"confirmacion_reserva\"\r\n    const val VIRTUAL_VISIT = \"virtual_visit\"\r\n    const val PIN_DETALLE = \"pin_detalle\"\r\n}\r\n
+--Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+--<+>UTF-8
+--===================================================================
+--diff --git a/app/src/main/java/com/nextapp/monasterio/AppRoutes.kt b/app/src/main/java/com/nextapp/monasterio/AppRoutes.kt
+----- a/app/src/main/java/com/nextapp/monasterio/AppRoutes.kt	(revision 908520697335b64df4dc786e407d3b983b76a621)
+--+++ b/app/src/main/java/com/nextapp/monasterio/AppRoutes.kt	(date 1762358031507)
+--@@ -16,4 +16,5 @@
+--     const val CONFIRMACION_RESERVA = "confirmacion_reserva"
+--     const val VIRTUAL_VISIT = "virtual_visit"
+--     const val PIN_DETALLE = "pin_detalle"
+--+    const val PANORAMA = "panorama"
+-- }
+-Index: .idea/shelf/Uncommitted_changes_before_Update_at_05_11_2025_19_15__Changes_.xml
+-===================================================================
+-diff --git a/.idea/shelf/Uncommitted_changes_before_Update_at_05_11_2025_19_15__Changes_.xml b/.idea/shelf/Uncommitted_changes_before_Update_at_05_11_2025_19_15__Changes_.xml
+-deleted file mode 100644
+---- a/.idea/shelf/Uncommitted_changes_before_Update_at_05_11_2025_19_15__Changes_.xml	(revision 1ce74093873ec1b16c413750e558114559284ef6)
+-+++ /dev/null	(revision 1ce74093873ec1b16c413750e558114559284ef6)
+-@@ -1,7 +0,0 @@
+--<changelist name="Uncommitted_changes_before_Update_at_05_11_2025_19_15_[Changes]" date="1762366521209" recycled="true" deleted="true">
+--  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_05_11_2025_19_15_[Changes]/shelved.patch" />
+--  <option name="DESCRIPTION" value="Uncommitted changes before Update at 05/11/2025 19:15 [Changes]" />
+--  <binary>
+--    <option name="BEFORE_PATH" value=".idea/.name" />
+--  </binary>
+--</changelist>
+-\ No newline at end of file
+-Index: .idea/shelf/Uncommitted_changes_before_Update_at_08_11_2025_11_47_[Changes]/shelved.patch
+-===================================================================
+-diff --git a/.idea/shelf/Uncommitted_changes_before_Update_at_08_11_2025_11_47_[Changes]/shelved.patch b/.idea/shelf/Uncommitted_changes_before_Update_at_08_11_2025_11_47_[Changes]/shelved.patch
+-deleted file mode 100644
+---- a/.idea/shelf/Uncommitted_changes_before_Update_at_08_11_2025_11_47_[Changes]/shelved.patch	(revision 1ce74093873ec1b16c413750e558114559284ef6)
+-+++ /dev/null	(revision 1ce74093873ec1b16c413750e558114559284ef6)
+-@@ -1,32 +0,0 @@
+--Index: .idea/misc.xml
+--IDEA additional info:
+--Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+--<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"ExternalStorageConfigurationManager\" enabled=\"true\" />\r\n  <component name=\"ProjectRootManager\" version=\"2\" languageLevel=\"JDK_21\" default=\"true\" project-jdk-name=\"jbr-21\" project-jdk-type=\"JavaSDK\" />\r\n</project>
+--Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+--<+>UTF-8
+--===================================================================
+--diff --git a/.idea/misc.xml b/.idea/misc.xml
+----- a/.idea/misc.xml	(revision 708c6a78c122aaa13d5546fe078947800d0c3b61)
+--+++ b/.idea/misc.xml	(date 1762598797154)
+--@@ -1,4 +1,3 @@
+---<?xml version="1.0" encoding="UTF-8"?>
+-- <project version="4">
+--   <component name="ExternalStorageConfigurationManager" enabled="true" />
+--   <component name="ProjectRootManager" version="2" languageLevel="JDK_21" default="true" project-jdk-name="jbr-21" project-jdk-type="JavaSDK" />
+--Index: .idea/gradle.xml
+--IDEA additional info:
+--Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+--<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"GradleSettings\">\r\n    <option name=\"linkedExternalProjectsSettings\">\r\n      <GradleProjectSettings>\r\n        <option name=\"testRunner\" value=\"CHOOSE_PER_TEST\" />\r\n        <option name=\"externalProjectPath\" value=\"$PROJECT_DIR$\" />\r\n        <option name=\"gradleJvm\" value=\"#GRADLE_LOCAL_JAVA_HOME\" />\r\n        <option name=\"modules\">\r\n          <set>\r\n            <option value=\"$PROJECT_DIR$\" />\r\n            <option value=\"$PROJECT_DIR$/app\" />\r\n          </set>\r\n        </option>\r\n      </GradleProjectSettings>\r\n    </option>\r\n  </component>\r\n</project>
+--Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+--<+>UTF-8
+--===================================================================
+--diff --git a/.idea/gradle.xml b/.idea/gradle.xml
+----- a/.idea/gradle.xml	(revision 708c6a78c122aaa13d5546fe078947800d0c3b61)
+--+++ b/.idea/gradle.xml	(date 1762598845132)
+--@@ -1,5 +1,6 @@
+-- <?xml version="1.0" encoding="UTF-8"?>
+-- <project version="4">
+--+  <component name="GradleMigrationSettings" migrationVersion="1" />
+--   <component name="GradleSettings">
+--     <option name="linkedExternalProjectsSettings">
+--       <GradleProjectSettings>
+-Index: .idea/shelf/Uncommitted_changes_before_Update_at_08_11_2025_11_47__Changes_.xml
+-===================================================================
+-diff --git a/.idea/shelf/Uncommitted_changes_before_Update_at_08_11_2025_11_47__Changes_.xml b/.idea/shelf/Uncommitted_changes_before_Update_at_08_11_2025_11_47__Changes_.xml
+-deleted file mode 100644
+---- a/.idea/shelf/Uncommitted_changes_before_Update_at_08_11_2025_11_47__Changes_.xml	(revision 1ce74093873ec1b16c413750e558114559284ef6)
+-+++ /dev/null	(revision 1ce74093873ec1b16c413750e558114559284ef6)
+-@@ -1,4 +0,0 @@
+--<changelist name="Uncommitted_changes_before_Update_at_08_11_2025_11_47_[Changes]" date="1762598854800" recycled="false" toDelete="true">
+--  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_08_11_2025_11_47_[Changes]/shelved.patch" />
+--  <option name="DESCRIPTION" value="Uncommitted changes before Update at 08/11/2025 11:47 [Changes]" />
+--</changelist>
+-\ No newline at end of file
+-Index: .idea/vcs.xml
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"VcsDirectoryMappings\">\r\n    <mapping directory=\"\" vcs=\"Git\" />\r\n  </component>\r\n</project>
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+-diff --git a/.idea/vcs.xml b/.idea/vcs.xml
+---- a/.idea/vcs.xml	(revision 1ce74093873ec1b16c413750e558114559284ef6)
+-+++ b/.idea/vcs.xml	(date 1762631952646)
+-@@ -1,6 +1,6 @@
+- <?xml version="1.0" encoding="UTF-8"?>
+- <project version="4">
+-   <component name="VcsDirectoryMappings">
+--    <mapping directory="" vcs="Git" />
+-+    <mapping directory="$PROJECT_DIR$" vcs="Git" />
+-   </component>
+- </project>
+-\ No newline at end of file
+-Index: .idea/misc.xml
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"ExternalStorageConfigurationManager\" enabled=\"true\" />\r\n  <component name=\"ProjectRootManager\" version=\"2\" languageLevel=\"JDK_21\" default=\"true\" project-jdk-name=\"jbr-21\" project-jdk-type=\"JavaSDK\" />\r\n</project>
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+-diff --git a/.idea/misc.xml b/.idea/misc.xml
+---- a/.idea/misc.xml	(revision 1ce74093873ec1b16c413750e558114559284ef6)
+-+++ b/.idea/misc.xml	(date 1762637952730)
+-@@ -1,4 +1,3 @@
+--<?xml version="1.0" encoding="UTF-8"?>
+- <project version="4">
+-   <component name="ExternalStorageConfigurationManager" enabled="true" />
+-   <component name="ProjectRootManager" version="2" languageLevel="JDK_21" default="true" project-jdk-name="jbr-21" project-jdk-type="JavaSDK" />
+-Index: .idea/deploymentTargetSelector.xml
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"deploymentTargetSelector\">\r\n    <selectionStates>\r\n      <SelectionState runConfigName=\"app\">\r\n        <option name=\"selectionMode\" value=\"DROPDOWN\" />\r\n        <DropdownSelection timestamp=\"2025-11-07T14:58:50.699472400Z\">\r\n          <Target type=\"DEFAULT_BOOT\">\r\n            <template>\r\n              <DeviceId pluginId=\"FirebaseDirectAccess\" type=\"TEMPLATE\" identifier=\"model_id=akita/34\" />\r\n            </template>\r\n          </Target>\r\n        </DropdownSelection>\r\n        <DialogSelection>\r\n          <targets>\r\n            <Target type=\"DEFAULT_BOOT\">\r\n              <handle>\r\n                <DeviceId pluginId=\"PhysicalDevice\" identifier=\"serial=RZCX7216PCM\" />\r\n              </handle>\r\n            </Target>\r\n            <Target type=\"DEFAULT_BOOT\">\r\n              <handle>\r\n                <DeviceId pluginId=\"PhysicalDevice\" identifier=\"serial=R52T40GVQQB\" />\r\n              </handle>\r\n            </Target>\r\n          </targets>\r\n        </DialogSelection>\r\n      </SelectionState>\r\n    </selectionStates>\r\n  </component>\r\n</project>
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+-diff --git a/.idea/deploymentTargetSelector.xml b/.idea/deploymentTargetSelector.xml
+---- a/.idea/deploymentTargetSelector.xml	(revision 1ce74093873ec1b16c413750e558114559284ef6)
+-+++ b/.idea/deploymentTargetSelector.xml	(date 1762631952663)
+-@@ -4,27 +4,6 @@
+-     <selectionStates>
+-       <SelectionState runConfigName="app">
+-         <option name="selectionMode" value="DROPDOWN" />
+--        <DropdownSelection timestamp="2025-11-07T14:58:50.699472400Z">
+--          <Target type="DEFAULT_BOOT">
+--            <template>
+--              <DeviceId pluginId="FirebaseDirectAccess" type="TEMPLATE" identifier="model_id=akita/34" />
+--            </template>
+--          </Target>
+--        </DropdownSelection>
+--        <DialogSelection>
+--          <targets>
+--            <Target type="DEFAULT_BOOT">
+--              <handle>
+--                <DeviceId pluginId="PhysicalDevice" identifier="serial=RZCX7216PCM" />
+--              </handle>
+--            </Target>
+--            <Target type="DEFAULT_BOOT">
+--              <handle>
+--                <DeviceId pluginId="PhysicalDevice" identifier="serial=R52T40GVQQB" />
+--              </handle>
+--            </Target>
+--          </targets>
+--        </DialogSelection>
+-       </SelectionState>
+-     </selectionStates>
+-   </component>
+-Index: .idea/gradle.xml
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"GradleSettings\">\r\n    <option name=\"linkedExternalProjectsSettings\">\r\n      <GradleProjectSettings>\r\n        <option name=\"testRunner\" value=\"CHOOSE_PER_TEST\" />\r\n        <option name=\"externalProjectPath\" value=\"$PROJECT_DIR$\" />\r\n        <option name=\"gradleJvm\" value=\"#GRADLE_LOCAL_JAVA_HOME\" />\r\n        <option name=\"modules\">\r\n          <set>\r\n            <option value=\"$PROJECT_DIR$\" />\r\n            <option value=\"$PROJECT_DIR$/app\" />\r\n          </set>\r\n        </option>\r\n      </GradleProjectSettings>\r\n    </option>\r\n  </component>\r\n</project>
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+-diff --git a/.idea/gradle.xml b/.idea/gradle.xml
+---- a/.idea/gradle.xml	(revision 1ce74093873ec1b16c413750e558114559284ef6)
+-+++ b/.idea/gradle.xml	(date 1762632722244)
+-@@ -1,5 +1,6 @@
+- <?xml version="1.0" encoding="UTF-8"?>
+- <project version="4">
+-+  <component name="GradleMigrationSettings" migrationVersion="1" />
+-   <component name="GradleSettings">
+-     <option name="linkedExternalProjectsSettings">
+-       <GradleProjectSettings>
+Index: .idea/shelf/Uncommitted_changes_before_Checkout_at_08_11_2025_22_08_[Changes]1/shelved.patch
+===================================================================
+diff --git a/.idea/shelf/Uncommitted_changes_before_Checkout_at_08_11_2025_22_08_[Changes]1/shelved.patch b/.idea/shelf/Uncommitted_changes_before_Checkout_at_08_11_2025_22_08_[Changes]1/shelved.patch
+deleted file mode 100644
+--- a/.idea/shelf/Uncommitted_changes_before_Checkout_at_08_11_2025_22_08_[Changes]1/shelved.patch	(revision d076f828ce2f52136802345ea495ef475f1af8b2)
++++ /dev/null	(revision d076f828ce2f52136802345ea495ef475f1af8b2)
+@@ -1,17 +0,0 @@
+-Index: .idea/gradle.xml
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"GradleSettings\">\r\n    <option name=\"linkedExternalProjectsSettings\">\r\n      <GradleProjectSettings>\r\n        <option name=\"testRunner\" value=\"CHOOSE_PER_TEST\" />\r\n        <option name=\"externalProjectPath\" value=\"$PROJECT_DIR$\" />\r\n        <option name=\"gradleJvm\" value=\"#GRADLE_LOCAL_JAVA_HOME\" />\r\n        <option name=\"modules\">\r\n          <set>\r\n            <option value=\"$PROJECT_DIR$\" />\r\n            <option value=\"$PROJECT_DIR$/app\" />\r\n          </set>\r\n        </option>\r\n      </GradleProjectSettings>\r\n    </option>\r\n  </component>\r\n</project>
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+-diff --git a/.idea/gradle.xml b/.idea/gradle.xml
+---- a/.idea/gradle.xml	(revision 1c0bfc618ece38c61714e2813735e3a928424a11)
+-+++ b/.idea/gradle.xml	(date 1762636093999)
+-@@ -1,5 +1,6 @@
+- <?xml version="1.0" encoding="UTF-8"?>
+- <project version="4">
+-+  <component name="GradleMigrationSettings" migrationVersion="1" />
+-   <component name="GradleSettings">
+-     <option name="linkedExternalProjectsSettings">
+-       <GradleProjectSettings>
+Index: .idea/shelf/Uncommitted_changes_before_Checkout_at_08_11_2025_22_07__Changes_.xml
+===================================================================
+diff --git a/.idea/shelf/Uncommitted_changes_before_Checkout_at_08_11_2025_22_07__Changes_.xml b/.idea/shelf/Uncommitted_changes_before_Checkout_at_08_11_2025_22_07__Changes_.xml
+deleted file mode 100644
+--- a/.idea/shelf/Uncommitted_changes_before_Checkout_at_08_11_2025_22_07__Changes_.xml	(revision d076f828ce2f52136802345ea495ef475f1af8b2)
++++ /dev/null	(revision d076f828ce2f52136802345ea495ef475f1af8b2)
+@@ -1,4 +0,0 @@
+-<changelist name="Uncommitted_changes_before_Checkout_at_08_11_2025_22_07_[Changes]" date="1762636073541" recycled="true" deleted="true">
+-  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_08_11_2025_22_07_[Changes]/shelved.patch" />
+-  <option name="DESCRIPTION" value="Uncommitted changes before Checkout at 08/11/2025 22:07 [Changes]" />
+-</changelist>
+\ No newline at end of file
+Index: .idea/shelf/Uncommitted_changes_before_Update_at_08_11_2025_12_05_[Changes]1/shelved.patch
+===================================================================
+diff --git a/.idea/shelf/Uncommitted_changes_before_Update_at_08_11_2025_12_05_[Changes]1/shelved.patch b/.idea/shelf/Uncommitted_changes_before_Update_at_08_11_2025_12_05_[Changes]1/shelved.patch
+deleted file mode 100644
+--- a/.idea/shelf/Uncommitted_changes_before_Update_at_08_11_2025_12_05_[Changes]1/shelved.patch	(revision d076f828ce2f52136802345ea495ef475f1af8b2)
++++ /dev/null	(revision d076f828ce2f52136802345ea495ef475f1af8b2)
+@@ -1,186 +0,0 @@
+-Index: app/src/main/java/com/nextapp/monasterio/MainActivity.kt
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+>package com.nextapp.monasterio\r\n\r\nimport android.os.Bundle\r\nimport android.widget.Toast\r\nimport androidx.activity.ComponentActivity\r\nimport androidx.activity.compose.setContent\r\nimport androidx.compose.foundation.layout.*\r\nimport androidx.compose.material3.*\r\nimport androidx.compose.runtime.*\r\nimport androidx.compose.ui.Modifier\r\nimport androidx.compose.ui.platform.LocalContext\r\nimport androidx.compose.ui.res.painterResource\r\nimport androidx.compose.ui.res.stringResource\r\nimport androidx.navigation.compose.rememberNavController\r\nimport com.nextapp.monasterio.ui.navigation.AppDrawerContent\r\nimport com.nextapp.monasterio.ui.navigation.AppNavigationHost\r\nimport com.nextapp.monasterio.ui.theme.*\r\nimport kotlinx.coroutines.launch\r\nimport androidx.appcompat.app.AppCompatActivity\r\nimport androidx.appcompat.app.AppCompatDelegate\r\nimport androidx.compose.ui.platform.LocalDensity\r\nimport androidx.compose.ui.unit.Density\r\nimport androidx.navigation.compose.currentBackStackEntryAsState\r\nimport com.nextapp.monasterio.utils.FontSize\r\n\r\nclass MainActivity : AppCompatActivity() {\r\n    override fun onCreate(savedInstanceState: Bundle?) {\r\n        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)\r\n        super.onCreate(savedInstanceState)\r\n        LanguageHelper.loadLocale(this)\r\n        setContent {\r\n            val appFontScale = FontSize.devolverFontScale(this)\r\n            val currentDensity = LocalDensity.current\r\n            val newDensity= Density(\r\n                density= currentDensity.density,\r\n                fontScale = currentDensity.fontScale*appFontScale\r\n            )\r\n            CompositionLocalProvider(LocalDensity provides newDensity) {\r\n                Smov_monasterioTheme {\r\n                    MonasteryAppScreen()\r\n                }\r\n            }\r\n        }\r\n    }\r\n}\r\n\r\n@OptIn(ExperimentalMaterial3Api::class)\r\n@Composable\r\nfun MonasteryAppScreen() {\r\n    val context = LocalContext.current\r\n    val navController = rememberNavController()\r\n    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)\r\n    val scope = rememberCoroutineScope()\r\n\r\n    val currentTitle = remember { mutableStateOf(context.getString(R.string.title_inicio)) }\r\n\r\n    // ✅ Detectar ruta actual\r\n    val currentBackStackEntry by navController.currentBackStackEntryAsState()\r\n    val currentRoute = currentBackStackEntry?.destination?.route\r\n\r\n    // ✅ Rutas inmersivas\r\n    val immersiveRoutes = listOf(AppRoutes.PIN_DETALLE)\r\n    val isImmersive = currentRoute in immersiveRoutes\r\n\r\n    val gesturesEnabled = when(currentRoute){\r\n        AppRoutes.VIRTUAL_VISIT -> false\r\n        else -> true\r\n    }\r\n\r\n    // ✅ Actualizar título\r\n    LaunchedEffect(navController) {\r\n        navController.currentBackStackEntryFlow.collect { backStackEntry ->\r\n            val route = backStackEntry.destination.route\r\n            currentTitle.value = when (route) {\r\n                AppRoutes.INFO -> context.getString(R.string.title_info_general)\r\n                AppRoutes.HISTORIA -> context.getString(R.string.title_history)\r\n                AppRoutes.GALERIA -> context.getString(R.string.title_gallery)\r\n                AppRoutes.PERFIL -> context.getString(R.string.title_profile)\r\n                AppRoutes.AJUSTES -> context.getString(R.string.title_settings)\r\n                AppRoutes.OPCIONES_RESERVA,\r\n                AppRoutes.RESERVA,\r\n                AppRoutes.CONFIRMACION_RESERVA -> context.getString(R.string.title_appointment)\r\n                AppRoutes.VIRTUAL_VISIT -> context.getString(R.string.title_monasterio)\r\n                else -> context.getString(R.string.title_inicio)\r\n            }\r\n        }\r\n    }\r\n\r\n    if (isImmersive) {\r\n        // \uD83C\uDF0C Vista inmersiva sin barra ni menú\r\n        AppNavigationHost(\r\n            navController = navController,\r\n            modifier = Modifier.fillMaxSize()\r\n        )\r\n    } else {\r\n        // \uD83E\uDDF1 Vista normal con barra y menú\r\n        ModalNavigationDrawer(\r\n            drawerState = drawerState,\r\n            drawerContent = {\r\n                AppDrawerContent(\r\n                    navController = navController,\r\n                    scope = scope,\r\n                    drawerState = drawerState\r\n                )\r\n            },\r\n            gesturesEnabled = gesturesEnabled\r\n        ) {\r\n            Scaffold(\r\n                topBar = {\r\n                    CenterAlignedTopAppBar(\r\n                        title = { Text(currentTitle.value) },\r\n                        colors = TopAppBarDefaults.topAppBarColors(\r\n                            containerColor = MonasteryRed,\r\n                            titleContentColor = White,\r\n                            navigationIconContentColor = White,\r\n                            actionIconContentColor = White\r\n                        ),\r\n                        navigationIcon = {\r\n                            IconButton(onClick = {\r\n                                scope.launch {\r\n                                    drawerState.apply {\r\n                                        if (isClosed) open() else close()\r\n                                    }\r\n                                }\r\n                            }) {\r\n                                val iconRes = if (drawerState.isOpen) R.drawable.menu_close else R.drawable.ic_menu_24\r\n                                Icon(\r\n                                    painter = painterResource(id = iconRes),\r\n                                    contentDescription = stringResource(id = R.string.navigation_drawer_open)\r\n                                )\r\n                            }\r\n                        },\r\n                        actions = {\r\n                            IconButton(onClick = {\r\n                                Toast.makeText(context, \"Modo edición (próximamente)\", Toast.LENGTH_SHORT).show()\r\n                            }) {\r\n                                Icon(\r\n                                    painter = painterResource(id = R.drawable.lapiz),\r\n                                    contentDescription = stringResource(id = R.string.edit_mode)\r\n                                )\r\n                            }\r\n                        }\r\n                    )\r\n                }\r\n            ) { paddingValues ->\r\n                AppNavigationHost(\r\n                    navController = navController,\r\n                    modifier = Modifier.padding(paddingValues)\r\n                )\r\n            }\r\n        }\r\n    }\r\n}
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+-diff --git a/app/src/main/java/com/nextapp/monasterio/MainActivity.kt b/app/src/main/java/com/nextapp/monasterio/MainActivity.kt
+---- a/app/src/main/java/com/nextapp/monasterio/MainActivity.kt	(revision 7bf4f8b6f6cb424fd6f3fce44f84f0a52360e3bc)
+-+++ b/app/src/main/java/com/nextapp/monasterio/MainActivity.kt	(date 1762555781669)
+-@@ -1,8 +1,8 @@
+- package com.nextapp.monasterio
+- 
+-+
+- import android.os.Bundle
+- import android.widget.Toast
+--import androidx.activity.ComponentActivity
+- import androidx.activity.compose.setContent
+- import androidx.compose.foundation.layout.*
+- import androidx.compose.material3.*
+-@@ -18,6 +18,8 @@
+- import kotlinx.coroutines.launch
+- import androidx.appcompat.app.AppCompatActivity
+- import androidx.appcompat.app.AppCompatDelegate
+-+import androidx.compose.ui.graphics.Color
+-+import androidx.compose.ui.platform.LocalConfiguration
+- import androidx.compose.ui.platform.LocalDensity
+- import androidx.compose.ui.unit.Density
+- import androidx.navigation.compose.currentBackStackEntryAsState
+-@@ -52,6 +54,20 @@
+-     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+-     val scope = rememberCoroutineScope()
+- 
+-+    val stringEspanyol= stringResource(R.string.spanish_language)
+-+    val stringAleman= stringResource(R.string.german_language)
+-+    val stringIngles= stringResource(R.string.english_language)
+-+
+-+
+-+    var mostrarIdioma by remember { mutableStateOf(false) }
+-+
+-+    val configuration = LocalConfiguration.current
+-+    val currentLanguageCode = configuration.locales[0].language
+-+
+-+    var idioma by remember { mutableStateOf(currentLanguageCode) }
+-+
+-+    var idiomasDisponibles = listOf(stringEspanyol,stringIngles,stringAleman)
+-+
+-     val currentTitle = remember { mutableStateOf(context.getString(R.string.title_inicio)) }
+- 
+-     // ✅ Detectar ruta actual
+-@@ -131,15 +147,53 @@
+-                             }
+-                         },
+-                         actions = {
+--                            IconButton(onClick = {
+--                                Toast.makeText(context, "Modo edición (próximamente)", Toast.LENGTH_SHORT).show()
+--                            }) {
+--                                Icon(
+--                                    painter = painterResource(id = R.drawable.lapiz),
+--                                    contentDescription = stringResource(id = R.string.edit_mode)
+--                                )
+--                            }
+--                        }
+-+                            Box {
+-+                                IconButton(onClick = {
+-+                                    mostrarIdioma = true
+-+                                }) {
+-+                                    val iconRes =
+-+                                        if (idioma == "es" || idioma == stringEspanyol) R.drawable.espanya else if (idioma == "de" || idioma == stringAleman) R.drawable.alemania else R.drawable.reinounido
+-+                                    Icon(
+-+                                        painter = painterResource(id = iconRes),
+-+                                        tint = Color.Unspecified,
+-+                                        contentDescription = if (idioma == "es" || idioma == stringEspanyol ) stringEspanyol
+-+                                         else if (idioma == "de" || idioma == stringAleman) stringAleman else stringIngles
+-+                                    )
+-+                                }
+-+                                DropdownMenu(
+-+                                    expanded = mostrarIdioma,
+-+                                    onDismissRequest = { mostrarIdioma = false },
+-+                                    modifier = Modifier.fillMaxWidth(0.8f),
+-+                                ) {
+-+                                    idiomasDisponibles.forEach { idiomaSlot ->
+-+                                        DropdownMenuItem(
+-+                                            text = { Text(idiomaSlot) },
+-+                                            onClick = {
+-+                                                idioma = idiomaSlot
+-+                                                mostrarIdioma = false
+-+                                                if(idiomaSlot == stringEspanyol)
+-+                                                    LanguageHelper.saveLocale(context, "es")
+-+                                                else if(idiomaSlot == stringAleman){
+-+                                                    LanguageHelper.saveLocale(context, "de")
+-+                                                } else LanguageHelper.saveLocale(context, "en")
+-+                                            }
+-+                                        )
+-+                                    }
+-+                                }
+-+                            }
+-+                                IconButton(onClick = {
+-+                                    Toast.makeText(
+-+                                        context,
+-+                                        "Modo edición (próximamente)",
+-+                                        Toast.LENGTH_SHORT
+-+                                    ).show()
+-+                                }) {
+-+                                    Icon(
+-+                                        painter = painterResource(id = R.drawable.lapiz),
+-+                                        contentDescription = stringResource(id = R.string.edit_mode)
+-+                                    )
+-+                                }
+-+                            }
+-                     )
+-                 }
+-             ) { paddingValues ->
+-@@ -150,4 +204,4 @@
+-             }
+-         }
+-     }
+--}
+-\ No newline at end of file
+-+}
+-Index: app/src/main/res/values/strings.xml
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+><resources>\r\n    <string name=\"app_name\">Santa María\\nla Real de Huelgas</string>\r\n    <string name=\"title_inicio\">Inicio</string>\r\n    <string name=\"virtual_visit\">VISITA VIRTUAL</string>\r\n    <string name=\"book_appointment\">RESERVA CITA</string>\r\n    <string name=\"monastery_name\">Santa María\\nla Real de Huelgas</string>\r\n    <string name=\"edit_mode\">Modo edición</string>\r\n    <string name=\"navigation_drawer_open\">Abrir menú</string>\r\n    <string name=\"navigation_drawer_close\">Cerrar menú</string>\r\n    <string name=\"menu_info\">Información monasterio</string>\r\n    <string name=\"menu_history\">Historia</string>\r\n    <string name=\"menu_gallery\">Galería</string>\r\n    <string name=\"menu_profile\">Perfil</string>\r\n    <string name=\"menu_settings\">Ajustes</string>\r\n    <string name=\"title_info_general\">Información General</string>\r\n    <string name=\"title_history\">Historia</string>\r\n    <string name=\"title_gallery\">Galería</string>\r\n    <string name=\"title_profile\">Perfil</string>\r\n    <string name=\"title_settings\">Ajustes</string>\r\n    <string name=\"info_location\">C/…</string>\r\n    <string name=\"info_hours\">C/XX:XX - YY:YY</string>\r\n    <string name=\"general_info\">Información general:</string>\r\n    <string name=\"history_1800\">1800</string>\r\n    <string name=\"history_1900\">1900-1950</string>\r\n    <string name=\"history_1950\">1950-2000</string>\r\n    <string name=\"history_actualidad\">Actualidad</string>\r\n    <string name=\"title_appointment\">Reservar Cita</string>\r\n    <string name=\"option_phone_appointment\">Reservar por teléfono</string>\r\n    <string name=\"option_online_appointment\">Reservar online</string>\r\n    <string name=\"name_appointment\">Nombre y apellidos</string>\r\n    <string name=\"email_appointment\">Correo electrónico</string>\r\n    <string name=\"date_appointment\">Fecha</string>\r\n    <string name=\"hour_appointment\">Hora</string>\r\n    <string name=\"placeholdername_appointment\">Introduce tu nombre y apellidos</string>\r\n    <string name=\"placeholderemail_appointment\">Introduce tu correo electrónico</string>\r\n    <string name=\"placeholderdate_appointment\">Selecciona una fecha</string>\r\n    <string name=\"placeholderhour_appointment\">Selecciona una hora</string>\r\n    <string name=\"compulsory_name\">El nombre es obligatorio</string>\r\n    <string name=\"valid_name\">El nombre contiene algún simbolo no válido</string>\r\n    <string name=\"compulsory_email\">El email es obligatorio</string>\r\n    <string name=\"valid_email\">El formato del email no es válido</string>\r\n    <string name=\"date_no_selected\">Se debe seleccionar una fecha</string>\r\n    <string name=\"hour_no_selected\">Se debe seleccionar una hora</string>\r\n    <string name=\"datepicker_ok\">Ok</string>\r\n    <string name=\"datepicker_cancel\">Cancelar</string>\r\n    <string name=\"confirm_button\">CONFIRMAR</string>\r\n    <string name=\"contentimage_confirmation\">Confirmado</string>\r\n    <string name=\"confirmation_appointment\">¡CASI LISTO!</string>\r\n    <string name=\"details_appointment\">Tu solicitud de reserva está preparada. Por favor, pulsa \\'enviar\\' en la aplicación de correo que se acaba de abrir para finalizar tu solicitud. Te responderemos a ese correo para confirmar la disponibilidad.</string>\r\n    <string name=\"email_subject\">Solicitud de Reserva de Vista - %1$s</string>\r\n    <string name=\"email_message\">Hola,\\n\\nMe gustaría solicitar una reserva para una visita al monasterio con los siguientes datos:\\n\\n* Nombre: %1$s\\n* Email: %2$s\\n* Fecha de la visita: %3$s\\n* Hora de la visita: %4$s\\n\\nQuedo a la espera de su amable confirmación.\\n\\nMuchas gracias,\\nAtentamente,\\n\\n%1$s</string>\r\n    <string name=\"email_error\">No se encontró ninguna app de correo</string>\r\n    <string name=\"history_content_placeholder\">Mauris vel nisi id metus vestibulum vehicula nec ac orci. Curabitur massa diam, fermentum sit amet augue sit, volutpat efficitur enim. Phasellus a cursus orci, id laoreet dolor. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</string>\r\n    <string name=\"language_select\">Seleccionar Idioma</string>\r\n    <string name=\"font_size_select\">Selecciona el tamaño de la letra</string>\r\n    <string name=\"font_extrabig\">Extra Grande</string>\r\n    <string name=\"font_normal\">Mediana</string>\r\n    <string name=\"font_big\">Grande</string>\r\n    <string name=\"title_monasterio\">Monasterio</string>\r\n</resources>
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+-diff --git a/app/src/main/res/values/strings.xml b/app/src/main/res/values/strings.xml
+---- a/app/src/main/res/values/strings.xml	(revision 7bf4f8b6f6cb424fd6f3fce44f84f0a52360e3bc)
+-+++ b/app/src/main/res/values/strings.xml	(date 1762551297909)
+-@@ -1,5 +1,5 @@
+- <resources>
+--    <string name="app_name">Santa María\nla Real de Huelgas</string>
+-+    <string name="app_name">Santa María la Real de Huelgas</string>
+-     <string name="title_inicio">Inicio</string>
+-     <string name="virtual_visit">VISITA VIRTUAL</string>
+-     <string name="book_appointment">RESERVA CITA</string>
+-@@ -57,4 +57,7 @@
+-     <string name="font_normal">Mediana</string>
+-     <string name="font_big">Grande</string>
+-     <string name="title_monasterio">Monasterio</string>
+-+    <string name="spanish_language">Español</string>
+-+    <string name="german_language">Alemán</string>
+-+    <string name="english_language">Inglés</string>
+- </resources>
+-\ No newline at end of file
+-Index: app/src/main/res/values-en/strings.xml
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<resources>\r\n    <string name=\"app_name\">Museum360</string>\r\n    <string name=\"title_inicio\">Home</string>\r\n    <string name=\"virtual_visit\">VIRTUAL VISIT</string>\r\n    <string name=\"book_appointment\">BOOK APPOINTMENT</string>\r\n    <string name=\"monastery_name\">Santa María\\nla Real de Huelgas</string>\r\n    <string name=\"edit_mode\">Edit mode</string>\r\n    <string name=\"navigation_drawer_open\">Open menu</string>\r\n    <string name=\"navigation_drawer_close\">Close menu</string>\r\n    <string name=\"menu_info\">Monastery information</string>\r\n    <string name=\"menu_history\">History</string>\r\n    <string name=\"menu_gallery\">Gallery</string>\r\n    <string name=\"menu_profile\">Profile</string>\r\n    <string name=\"menu_settings\">Settings</string>\r\n    <string name=\"title_info_general\">General Information</string>\r\n    <string name=\"title_history\">History</string>\r\n    <string name=\"title_gallery\">Gallery</string>\r\n    <string name=\"title_profile\">Profile</string>\r\n    <string name=\"title_settings\">Settings</string>\r\n\r\n    <string name=\"info_location\">Street: …</string>\r\n\r\n    <string name=\"info_hours\">Hours: XX:XX - YY:YY</string>\r\n    <string name=\"general_info\">General information:</string>\r\n\r\n    <string name=\"history_1800\">1800</string>\r\n    <string name=\"history_1900\">1900-1950</string>\r\n    <string name=\"history_1950\">1950-2000</string>\r\n    <string name=\"history_actualidad\">Present Day</string>\r\n    <string name=\"title_appointment\">Book Appointment</string>\r\n    <string name=\"option_phone_appointment\">Book by phone</string>\r\n    <string name=\"option_online_appointment\">Book online</string>\r\n    <string name=\"name_appointment\">Name</string>\r\n    <string name=\"email_appointment\">Email</string>\r\n    <string name=\"date_appointment\">Date</string>\r\n    <string name=\"hour_appointment\">Time</string>\r\n    <string name=\"placeholdername_appointment\">Enter your full name</string>\r\n    <string name=\"placeholderemail_appointment\">Enter your email address</string>\r\n    <string name=\"placeholderdate_appointment\">Select a date</string>\r\n    <string name=\"placeholderhour_appointment\">Select a time</string>\r\n    <string name=\"compulsory_name\">Name is required</string>\r\n    <string name=\"valid_name\">The name contains an invalid symbol</string>\r\n    <string name=\"compulsory_email\">Email is required</string>\r\n    <string name=\"valid_email\">The email format is invalid</string>\r\n    <string name=\"date_no_selected\">A date must be selected</string>\r\n    <string name=\"hour_no_selected\">A time must be selected</string>\r\n    <string name=\"datepicker_ok\">Ok</string>\r\n    <string name=\"datepicker_cancel\">Cancel</string>\r\n    <string name=\"confirm_button\">CONFIRM</string>\r\n    <string name=\"contentimage_confirmation\">Confirmed</string>\r\n    <string name=\"confirmation_appointment\">ALMOST READY!!</string>\r\n    <string name=\"details_appointment\">Your booking request is ready. Please click \\'send\\' in the email application that just opened to finalize your request. We will reply to that email to confirm availability..</string>\r\n    <string name=\"email_subject\">View Reservation Request - %1$s</string>\r\n    <string name=\"email_message\">Hello,\\n\\nI would like to request a reservation for a visit to the monastery with the following details:\\n\\n* Name: %1$s\\n* Email: %2$s\\n* Date of visit: %3$s\\n* Time of visit: %4$s\\n\\nI look forward to your kind confirmation.\\n\\nThank you very much,\\nSincerely,\\n\\n%1$s</string>\r\n    <string name=\"email_error\">No email app was found</string>\r\n    <string name=\"history_content_placeholder\">Mauris vel nisi id metus vestibulum vehicula nec ac orci. Curabitur massa diam, fermentum sit amet augue sit, volutpat efficitur enim. Phasellus a cursus orci, id laoreet dolor. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</string>\r\n    <string name=\"language_select\">Select language</string>\r\n    <string name=\"font_size_select\">Select the font size</string>\r\n    <string name=\"font_extrabig\">Extra Big</string>\r\n    <string name=\"font_normal\">Medium</string>\r\n    <string name=\"font_big\">Big</string>\r\n    <string name=\"title_monasterio\">Monastery</string>\r\n\r\n</resources>
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+-diff --git a/app/src/main/res/values-en/strings.xml b/app/src/main/res/values-en/strings.xml
+---- a/app/src/main/res/values-en/strings.xml	(revision 7bf4f8b6f6cb424fd6f3fce44f84f0a52360e3bc)
+-+++ b/app/src/main/res/values-en/strings.xml	(date 1762551373956)
+-@@ -61,5 +61,8 @@
+-     <string name="font_normal">Medium</string>
+-     <string name="font_big">Big</string>
+-     <string name="title_monasterio">Monastery</string>
+-+    <string name="spanish_language">Spanish</string>
+-+    <string name="german_language">German</string>
+-+    <string name="english_language">English</string>
+- 
+- </resources>
+-\ No newline at end of file
+-Index: app/src/main/res/values-de/strings.xml
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<resources>\r\n    <string name=\"app_name\">Museum360</string>\r\n    <string name=\"title_inicio\">Startseite</string>\r\n    <string name=\"virtual_visit\">VIRTUELLER BESUCH</string>\r\n    <string name=\"book_appointment\">TERMIN BUCHEN</string>\r\n    <string name=\"monastery_name\">Santa María\\nla Real de Huelgas</string>\r\n    <string name=\"edit_mode\">Bearbeiten</string>\r\n    <string name=\"navigation_drawer_open\">Menü öffnen</string>\r\n    <string name=\"navigation_drawer_close\">Menü schließen</string>\r\n    <string name=\"menu_info\">Klosterinformationen</string>\r\n    <string name=\"menu_history\">Geschichte</string>\r\n    <string name=\"menu_gallery\">Galerie</string>\r\n    <string name=\"menu_profile\">Profil</string>\r\n    <string name=\"menu_settings\">Einstellungen</string>\r\n    <string name=\"title_info_general\">Allgemeine Informationen</string>\r\n    <string name=\"title_history\">Geschichte</string>\r\n    <string name=\"title_gallery\">Galerie</string>\r\n    <string name=\"title_profile\">Profil</string>\r\n    <string name=\"title_settings\">Einstellungen</string>\r\n\r\n\r\n    <string name=\"info_location\">Straße: …</string>\r\n\r\n    <string name=\"info_hours\">Öffnungszeiten: XX:XX - YY:YY</string>\r\n    <string name=\"general_info\">Allgemeine Informationen:</string>\r\n\r\n    <string name=\"history_1800\">1800</string>\r\n    <string name=\"history_1900\">1900-1950</string>\r\n    <string name=\"history_1950\">1950-2000</string>\r\n    <string name=\"history_actualidad\">Heute</string>\r\n    <string name=\"title_appointment\">Termin vereinbaren</string>\r\n    <string name=\"option_phone_appointment\">Buchen Sie telefonisch</string>\r\n    <string name=\"option_online_appointment\">Online buchen</string>\r\n    <string name=\"name_appointment\">Name</string>\r\n    <string name=\"email_appointment\">E-Mail</string>\r\n    <string name=\"date_appointment\">Datum</string>\r\n    <string name=\"hour_appointment\">Stunde</string>\r\n    <string name=\"placeholdername_appointment\">Geben Sie Ihren vollständigen Namen ein</string>\r\n    <string name=\"placeholderemail_appointment\">Geben Sie Ihre E-Mail-Adresse ein</string>\r\n    <string name=\"placeholderdate_appointment\">Datum auswählen</string>\r\n    <string name=\"placeholderhour_appointment\">Wählen Sie eine Uhrzeit</string>\r\n    <string name=\"compulsory_name\">Name erforderlich</string>\r\n    <string name=\"valid_name\">Der Name enthält ein ungültiges Symbol</string>\r\n    <string name=\"compulsory_email\">E-Mail-Adresse erforderlich</string>\r\n    <string name=\"valid_email\">Das E-Mail-Format ist ungültig.</string>\r\n    <string name=\"date_no_selected\">Ein Datum muss ausgewählt werden.</string>\r\n    <string name=\"hour_no_selected\">Es muss ein Zeitpunkt ausgewählt werden.</string>\r\n    <string name=\"datepicker_ok\">Ok</string>\r\n    <string name=\"datepicker_cancel\">Stornieren</string>\r\n    <string name=\"confirm_button\">BESTÄTIGEN</string>\r\n    <string name=\"contentimage_confirmation\">Bestätigt</string>\r\n    <string name=\"confirmation_appointment\">FAST FERTIG!!</string>\r\n    <string name=\"details_appointment\">Ihre Buchungsanfrage ist fertig. Bitte klicken Sie in der soeben geöffneten E-Mail-Anwendung auf „Senden“, um Ihre Anfrage abzuschließen. Wir werden Ihnen die Verfügbarkeit per E-Mail bestätigen..</string>\r\n    <string name=\"email_subject\">Reservierungsanfrage ansehen - %1$s</string>\r\n    <string name=\"email_message\">Hallo,\\n\\nich möchte hiermit eine Reservierung für einen Besuch im Kloster anfragen. Bitte geben Sie folgende Daten an:\\n\\n* Name: %1$s\\n* E-Mail: %2$s\\n* Besuchsdatum: %3$s\\n* Besuchszeit: %4$s\\n\\nIch freue mich auf Ihre Bestätigung.\\n\\nVielen Dank,\\nMit freundlichen Grüßen,\\n\\n%1$s</string>\r\n    <string name=\"email_error\">Es wurde keine E-Mail-App gefunden.</string>\r\n    <string name=\"history_content_placeholder\">Mauris vel nisi id metus vestibulum vehicula nec ac orci. Curabitur massa diam, fermentum sit amet augue sit, volutpat efficitur enim. Phasellus a cursus orci, id laoreet dolor. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</string>\r\n    <string name=\"language_select\">Sprache auswählen</string>\r\n    <string name=\"font_size_select\">Wählen Sie die Schriftgröße aus</string>\r\n    <string name=\"font_extrabig\">Extra groß</string>\r\n    <string name=\"font_normal\">Mittlere</string>\r\n    <string name=\"font_big\">Groß</string>\r\n    <string name=\"title_monasterio\">Kloster</string>\r\n\r\n</resources>
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+-diff --git a/app/src/main/res/values-de/strings.xml b/app/src/main/res/values-de/strings.xml
+---- a/app/src/main/res/values-de/strings.xml	(revision 7bf4f8b6f6cb424fd6f3fce44f84f0a52360e3bc)
+-+++ b/app/src/main/res/values-de/strings.xml	(date 1762551335139)
+-@@ -62,5 +62,8 @@
+-     <string name="font_normal">Mittlere</string>
+-     <string name="font_big">Groß</string>
+-     <string name="title_monasterio">Kloster</string>
+-+    <string name="spanish_language">Spanisch</string>
+-+    <string name="german_language">Deutsch</string>
+-+    <string name="english_language">Englisch</string>
+- 
+- </resources>
+-\ No newline at end of file
+Index: .idea/shelf/Uncommitted_changes_before_Update_at_08_11_2025_23_00__Changes_.xml
+===================================================================
+diff --git a/.idea/shelf/Uncommitted_changes_before_Update_at_08_11_2025_23_00__Changes_.xml b/.idea/shelf/Uncommitted_changes_before_Update_at_08_11_2025_23_00__Changes_.xml
+deleted file mode 100644
+--- a/.idea/shelf/Uncommitted_changes_before_Update_at_08_11_2025_23_00__Changes_.xml	(revision d076f828ce2f52136802345ea495ef475f1af8b2)
++++ /dev/null	(revision d076f828ce2f52136802345ea495ef475f1af8b2)
+@@ -1,4 +0,0 @@
+-<changelist name="Uncommitted_changes_before_Update_at_08_11_2025_23_00_[Changes]" date="1762639210614" recycled="true" deleted="true">
+-  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_08_11_2025_23_00_[Changes]/shelved.patch" />
+-  <option name="DESCRIPTION" value="Uncommitted changes before Update at 08/11/2025 23:00 [Changes]" />
+-</changelist>
+\ No newline at end of file
+Index: .idea/shelf/Uncommitted_changes_before_Checkout_at_08_11_2025_22_07_[Changes]/shelved.patch
+===================================================================
+diff --git a/.idea/shelf/Uncommitted_changes_before_Checkout_at_08_11_2025_22_07_[Changes]/shelved.patch b/.idea/shelf/Uncommitted_changes_before_Checkout_at_08_11_2025_22_07_[Changes]/shelved.patch
+deleted file mode 100644
+--- a/.idea/shelf/Uncommitted_changes_before_Checkout_at_08_11_2025_22_07_[Changes]/shelved.patch	(revision d076f828ce2f52136802345ea495ef475f1af8b2)
++++ /dev/null	(revision d076f828ce2f52136802345ea495ef475f1af8b2)
+@@ -1,17 +0,0 @@
+-Index: .idea/gradle.xml
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"GradleSettings\">\r\n    <option name=\"linkedExternalProjectsSettings\">\r\n      <GradleProjectSettings>\r\n        <option name=\"testRunner\" value=\"CHOOSE_PER_TEST\" />\r\n        <option name=\"externalProjectPath\" value=\"$PROJECT_DIR$\" />\r\n        <option name=\"gradleJvm\" value=\"#GRADLE_LOCAL_JAVA_HOME\" />\r\n        <option name=\"modules\">\r\n          <set>\r\n            <option value=\"$PROJECT_DIR$\" />\r\n            <option value=\"$PROJECT_DIR$/app\" />\r\n          </set>\r\n        </option>\r\n      </GradleProjectSettings>\r\n    </option>\r\n  </component>\r\n</project>
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+-diff --git a/.idea/gradle.xml b/.idea/gradle.xml
+---- a/.idea/gradle.xml	(revision 1c0bfc618ece38c61714e2813735e3a928424a11)
+-+++ b/.idea/gradle.xml	(date 1762635811330)
+-@@ -1,5 +1,6 @@
+- <?xml version="1.0" encoding="UTF-8"?>
+- <project version="4">
+-+  <component name="GradleMigrationSettings" migrationVersion="1" />
+-   <component name="GradleSettings">
+-     <option name="linkedExternalProjectsSettings">
+-       <GradleProjectSettings>
+Index: .idea/shelf/Uncommitted_changes_before_Checkout_at_08_11_2025_22_08__Changes_1.xml
+===================================================================
+diff --git a/.idea/shelf/Uncommitted_changes_before_Checkout_at_08_11_2025_22_08__Changes_1.xml b/.idea/shelf/Uncommitted_changes_before_Checkout_at_08_11_2025_22_08__Changes_1.xml
+deleted file mode 100644
+--- a/.idea/shelf/Uncommitted_changes_before_Checkout_at_08_11_2025_22_08__Changes_1.xml	(revision d076f828ce2f52136802345ea495ef475f1af8b2)
++++ /dev/null	(revision d076f828ce2f52136802345ea495ef475f1af8b2)
+@@ -1,4 +0,0 @@
+-<changelist name="Uncommitted_changes_before_Checkout_at_08_11_2025_22_08_[Changes]1" date="1762636134377" recycled="true" deleted="true">
+-  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_08_11_2025_22_08_[Changes]1/shelved.patch" />
+-  <option name="DESCRIPTION" value="Uncommitted changes before Checkout at 08/11/2025 22:08 [Changes]" />
+-</changelist>
+\ No newline at end of file
+Index: .idea/shelf/Uncommitted_changes_before_Checkout_at_08_11_2025_21_48__Changes_.xml
+===================================================================
+diff --git a/.idea/shelf/Uncommitted_changes_before_Checkout_at_08_11_2025_21_48__Changes_.xml b/.idea/shelf/Uncommitted_changes_before_Checkout_at_08_11_2025_21_48__Changes_.xml
+deleted file mode 100644
+--- a/.idea/shelf/Uncommitted_changes_before_Checkout_at_08_11_2025_21_48__Changes_.xml	(revision d076f828ce2f52136802345ea495ef475f1af8b2)
++++ /dev/null	(revision d076f828ce2f52136802345ea495ef475f1af8b2)
+@@ -1,4 +0,0 @@
+-<changelist name="Uncommitted_changes_before_Checkout_at_08_11_2025_21_48_[Changes]" date="1762634936332" recycled="true" deleted="true">
+-  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_08_11_2025_21_48_[Changes]/shelved.patch" />
+-  <option name="DESCRIPTION" value="Uncommitted changes before Checkout at 08/11/2025 21:48 [Changes]" />
+-</changelist>
+\ No newline at end of file
+Index: .idea/shelf/Uncommitted_changes_before_Update_at_08_11_2025_20_07_[Changes]/shelved.patch
+===================================================================
+diff --git a/.idea/shelf/Uncommitted_changes_before_Update_at_08_11_2025_20_07_[Changes]/shelved.patch b/.idea/shelf/Uncommitted_changes_before_Update_at_08_11_2025_20_07_[Changes]/shelved.patch
+deleted file mode 100644
+--- a/.idea/shelf/Uncommitted_changes_before_Update_at_08_11_2025_20_07_[Changes]/shelved.patch	(revision d076f828ce2f52136802345ea495ef475f1af8b2)
++++ /dev/null	(revision d076f828ce2f52136802345ea495ef475f1af8b2)
+@@ -1,192 +0,0 @@
+-Index: app/src/main/java/com/nextapp/monasterio/MainActivity.kt
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+>package com.nextapp.monasterio\r\n\r\nimport android.os.Bundle\r\nimport android.widget.Toast\r\nimport androidx.activity.ComponentActivity\r\nimport androidx.activity.compose.setContent\r\nimport androidx.compose.foundation.layout.*\r\nimport androidx.compose.material3.*\r\nimport androidx.compose.runtime.*\r\nimport androidx.compose.ui.Modifier\r\nimport androidx.compose.ui.platform.LocalContext\r\nimport androidx.compose.ui.res.painterResource\r\nimport androidx.compose.ui.res.stringResource\r\nimport androidx.navigation.compose.rememberNavController\r\nimport com.nextapp.monasterio.ui.navigation.AppDrawerContent\r\nimport com.nextapp.monasterio.ui.navigation.AppNavigationHost\r\nimport com.nextapp.monasterio.ui.theme.*\r\nimport kotlinx.coroutines.launch\r\nimport androidx.appcompat.app.AppCompatActivity\r\nimport androidx.appcompat.app.AppCompatDelegate\r\nimport androidx.compose.ui.platform.LocalDensity\r\nimport androidx.compose.ui.unit.Density\r\nimport androidx.navigation.compose.currentBackStackEntryAsState\r\nimport com.nextapp.monasterio.utils.FontSize\r\n\r\nclass MainActivity : AppCompatActivity() {\r\n    override fun onCreate(savedInstanceState: Bundle?) {\r\n        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)\r\n        super.onCreate(savedInstanceState)\r\n        LanguageHelper.loadLocale(this)\r\n        setContent {\r\n            val appFontScale = FontSize.devolverFontScale(this)\r\n            val currentDensity = LocalDensity.current\r\n            val newDensity= Density(\r\n                density= currentDensity.density,\r\n                fontScale = currentDensity.fontScale*appFontScale\r\n            )\r\n            CompositionLocalProvider(LocalDensity provides newDensity) {\r\n                Smov_monasterioTheme {\r\n                    MonasteryAppScreen()\r\n                }\r\n            }\r\n        }\r\n    }\r\n}\r\n\r\n@OptIn(ExperimentalMaterial3Api::class)\r\n@Composable\r\nfun MonasteryAppScreen() {\r\n    val context = LocalContext.current\r\n    val navController = rememberNavController()\r\n    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)\r\n    val scope = rememberCoroutineScope()\r\n\r\n    val currentTitle = remember { mutableStateOf(context.getString(R.string.title_inicio)) }\r\n\r\n    // ✅ Detectar ruta actual\r\n    val currentBackStackEntry by navController.currentBackStackEntryAsState()\r\n    val currentRoute = currentBackStackEntry?.destination?.route\r\n\r\n    // ✅ Rutas inmersivas\r\n    val immersiveRoutes = listOf(AppRoutes.PIN_DETALLE)\r\n    val isImmersive = currentRoute in immersiveRoutes\r\n\r\n    val gesturesEnabled = when(currentRoute){\r\n        AppRoutes.VIRTUAL_VISIT -> false\r\n        else -> true\r\n    }\r\n\r\n    // ✅ Actualizar título\r\n    LaunchedEffect(navController) {\r\n        navController.currentBackStackEntryFlow.collect { backStackEntry ->\r\n            val route = backStackEntry.destination.route\r\n            currentTitle.value = when (route) {\r\n                AppRoutes.INFO -> context.getString(R.string.title_info_general)\r\n                AppRoutes.HISTORIA -> context.getString(R.string.title_history)\r\n                AppRoutes.GALERIA -> context.getString(R.string.title_gallery)\r\n                AppRoutes.PERFIL -> context.getString(R.string.title_profile)\r\n                AppRoutes.AJUSTES -> context.getString(R.string.title_settings)\r\n                AppRoutes.OPCIONES_RESERVA,\r\n                AppRoutes.RESERVA,\r\n                AppRoutes.CONFIRMACION_RESERVA -> context.getString(R.string.title_appointment)\r\n                AppRoutes.VIRTUAL_VISIT -> context.getString(R.string.title_monasterio)\r\n                else -> context.getString(R.string.title_inicio)\r\n            }\r\n        }\r\n    }\r\n\r\n    if (isImmersive) {\r\n        // \uD83C\uDF0C Vista inmersiva sin barra ni menú\r\n        AppNavigationHost(\r\n            navController = navController,\r\n            modifier = Modifier.fillMaxSize()\r\n        )\r\n    } else {\r\n        // \uD83E\uDDF1 Vista normal con barra y menú\r\n        ModalNavigationDrawer(\r\n            drawerState = drawerState,\r\n            drawerContent = {\r\n                AppDrawerContent(\r\n                    navController = navController,\r\n                    scope = scope,\r\n                    drawerState = drawerState\r\n                )\r\n            },\r\n            gesturesEnabled = gesturesEnabled\r\n        ) {\r\n            Scaffold(\r\n                topBar = {\r\n                    CenterAlignedTopAppBar(\r\n                        title = { Text(currentTitle.value) },\r\n                        colors = TopAppBarDefaults.topAppBarColors(\r\n                            containerColor = MonasteryRed,\r\n                            titleContentColor = White,\r\n                            navigationIconContentColor = White,\r\n                            actionIconContentColor = White\r\n                        ),\r\n                        navigationIcon = {\r\n                            IconButton(onClick = {\r\n                                scope.launch {\r\n                                    drawerState.apply {\r\n                                        if (isClosed) open() else close()\r\n                                    }\r\n                                }\r\n                            }) {\r\n                                val iconRes = if (drawerState.isOpen) R.drawable.menu_close else R.drawable.ic_menu_24\r\n                                Icon(\r\n                                    painter = painterResource(id = iconRes),\r\n                                    contentDescription = stringResource(id = R.string.navigation_drawer_open)\r\n                                )\r\n                            }\r\n                        },\r\n                        actions = {\r\n                            IconButton(onClick = {\r\n                                Toast.makeText(context, \"Modo edición (próximamente)\", Toast.LENGTH_SHORT).show()\r\n                            }) {\r\n                                Icon(\r\n                                    painter = painterResource(id = R.drawable.lapiz),\r\n                                    contentDescription = stringResource(id = R.string.edit_mode)\r\n                                )\r\n                            }\r\n                        }\r\n                    )\r\n                }\r\n            ) { paddingValues ->\r\n                AppNavigationHost(\r\n                    navController = navController,\r\n                    modifier = Modifier.padding(paddingValues)\r\n                )\r\n            }\r\n        }\r\n    }\r\n}
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+-diff --git a/app/src/main/java/com/nextapp/monasterio/MainActivity.kt b/app/src/main/java/com/nextapp/monasterio/MainActivity.kt
+---- a/app/src/main/java/com/nextapp/monasterio/MainActivity.kt	(revision 6455732f5969476c18d5bc46e33a52869ec3e410)
+-+++ b/app/src/main/java/com/nextapp/monasterio/MainActivity.kt	(date 1762624578235)
+-@@ -1,8 +1,8 @@
+- package com.nextapp.monasterio
+- 
+-+
+- import android.os.Bundle
+- import android.widget.Toast
+--import androidx.activity.ComponentActivity
+- import androidx.activity.compose.setContent
+- import androidx.compose.foundation.layout.*
+- import androidx.compose.material3.*
+-@@ -18,8 +18,14 @@
+- import kotlinx.coroutines.launch
+- import androidx.appcompat.app.AppCompatActivity
+- import androidx.appcompat.app.AppCompatDelegate
+-+import androidx.compose.foundation.Image
+-+import androidx.compose.foundation.border
+-+import androidx.compose.ui.graphics.Color
+-+import androidx.compose.ui.layout.ContentScale
+-+import androidx.compose.ui.platform.LocalConfiguration
+- import androidx.compose.ui.platform.LocalDensity
+- import androidx.compose.ui.unit.Density
+-+import androidx.compose.ui.unit.dp
+- import androidx.navigation.compose.currentBackStackEntryAsState
+- import com.nextapp.monasterio.utils.FontSize
+- 
+-@@ -52,6 +58,20 @@
+-     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+-     val scope = rememberCoroutineScope()
+- 
+-+    val stringEspanyol= "Español"
+-+    val stringAleman= "Deutsch"
+-+    val stringIngles= "English"
+-+
+-+
+-+    var mostrarIdioma by remember { mutableStateOf(false) }
+-+
+-+    val configuration = LocalConfiguration.current
+-+    val currentLanguageCode = configuration.locales[0].language
+-+
+-+    var idioma by remember { mutableStateOf(currentLanguageCode) }
+-+
+-+    var idiomasDisponibles = listOf(stringEspanyol,stringIngles,stringAleman)
+-+
+-     val currentTitle = remember { mutableStateOf(context.getString(R.string.title_inicio)) }
+- 
+-     // ✅ Detectar ruta actual
+-@@ -131,15 +151,53 @@
+-                             }
+-                         },
+-                         actions = {
+--                            IconButton(onClick = {
+--                                Toast.makeText(context, "Modo edición (próximamente)", Toast.LENGTH_SHORT).show()
+--                            }) {
+--                                Icon(
+--                                    painter = painterResource(id = R.drawable.lapiz),
+--                                    contentDescription = stringResource(id = R.string.edit_mode)
+--                                )
+--                            }
+--                        }
+-+                            Box {
+-+                                OutlinedIconButton(onClick = {
+-+                                    mostrarIdioma = true
+-+                                }) {
+-+                                    val iconRes =
+-+                                        if (idioma == "es" || idioma == stringEspanyol) R.drawable.espanya else if (idioma == "de" || idioma == stringAleman) R.drawable.alemania else R.drawable.reinounido
+-+                                    Image(
+-+                                        painter = painterResource(id = iconRes),
+-+                                        contentDescription = if (idioma == "es" || idioma == stringEspanyol ) stringEspanyol
+-+                                         else if (idioma == "de" || idioma == stringAleman) stringAleman else stringIngles,
+-+                                        contentScale = ContentScale.Crop
+-+                                    )
+-+                                }
+-+                                DropdownMenu(
+-+                                    expanded = mostrarIdioma,
+-+                                    onDismissRequest = { mostrarIdioma = false },
+-+                                    modifier = Modifier.fillMaxWidth(0.8f),
+-+                                ) {
+-+                                    idiomasDisponibles.forEach { idiomaSlot ->
+-+                                        DropdownMenuItem(
+-+                                            text = { Text(idiomaSlot) },
+-+                                            onClick = {
+-+                                                idioma = idiomaSlot
+-+                                                mostrarIdioma = false
+-+                                                if(idiomaSlot == stringEspanyol)
+-+                                                    LanguageHelper.saveLocale(context, "es")
+-+                                                else if(idiomaSlot == stringAleman){
+-+                                                    LanguageHelper.saveLocale(context, "de")
+-+                                                } else LanguageHelper.saveLocale(context, "en")
+-+                                            }
+-+                                        )
+-+                                    }
+-+                                }
+-+                            }
+-+                                IconButton(onClick = {
+-+                                    Toast.makeText(
+-+                                        context,
+-+                                        "Modo edición (próximamente)",
+-+                                        Toast.LENGTH_SHORT
+-+                                    ).show()
+-+                                }) {
+-+                                    Icon(
+-+                                        painter = painterResource(id = R.drawable.lapiz),
+-+                                        contentDescription = stringResource(id = R.string.edit_mode)
+-+                                    )
+-+                                }
+-+                            }
+-                     )
+-                 }
+-             ) { paddingValues ->
+-@@ -150,4 +208,4 @@
+-             }
+-         }
+-     }
+--}
+-\ No newline at end of file
+-+}
+-Index: app/src/main/res/values/strings.xml
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+><resources>\r\n    <string name=\"app_name\">Santa María\\nla Real de Huelgas</string>\r\n    <string name=\"title_inicio\">Inicio</string>\r\n    <string name=\"virtual_visit\">VISITA VIRTUAL</string>\r\n    <string name=\"book_appointment\">RESERVA CITA</string>\r\n    <string name=\"monastery_name\">Santa María\\nla Real de Huelgas</string>\r\n    <string name=\"edit_mode\">Modo edición</string>\r\n    <string name=\"navigation_drawer_open\">Abrir menú</string>\r\n    <string name=\"navigation_drawer_close\">Cerrar menú</string>\r\n    <string name=\"menu_info\">Información monasterio</string>\r\n    <string name=\"menu_history\">Historia</string>\r\n    <string name=\"menu_gallery\">Galería</string>\r\n    <string name=\"menu_profile\">Perfil</string>\r\n    <string name=\"menu_settings\">Ajustes</string>\r\n    <string name=\"title_info_general\">Información General</string>\r\n    <string name=\"title_history\">Historia</string>\r\n    <string name=\"title_gallery\">Galería</string>\r\n    <string name=\"title_profile\">Perfil</string>\r\n    <string name=\"title_settings\">Ajustes</string>\r\n    <string name=\"info_location\">C/…</string>\r\n    <string name=\"info_hours\">C/XX:XX - YY:YY</string>\r\n    <string name=\"general_info\">Información general:</string>\r\n    <string name=\"history_1800\">1800</string>\r\n    <string name=\"history_1900\">1900-1950</string>\r\n    <string name=\"history_1950\">1950-2000</string>\r\n    <string name=\"history_actualidad\">Actualidad</string>\r\n    <string name=\"title_appointment\">Reservar Cita</string>\r\n    <string name=\"option_phone_appointment\">Reservar por teléfono</string>\r\n    <string name=\"option_online_appointment\">Reservar online</string>\r\n    <string name=\"name_appointment\">Nombre y apellidos</string>\r\n    <string name=\"email_appointment\">Correo electrónico</string>\r\n    <string name=\"date_appointment\">Fecha</string>\r\n    <string name=\"hour_appointment\">Hora</string>\r\n    <string name=\"placeholdername_appointment\">Introduce tu nombre y apellidos</string>\r\n    <string name=\"placeholderemail_appointment\">Introduce tu correo electrónico</string>\r\n    <string name=\"placeholderdate_appointment\">Selecciona una fecha</string>\r\n    <string name=\"placeholderhour_appointment\">Selecciona una hora</string>\r\n    <string name=\"compulsory_name\">El nombre es obligatorio</string>\r\n    <string name=\"valid_name\">El nombre contiene algún simbolo no válido</string>\r\n    <string name=\"compulsory_email\">El email es obligatorio</string>\r\n    <string name=\"valid_email\">El formato del email no es válido</string>\r\n    <string name=\"date_no_selected\">Se debe seleccionar una fecha</string>\r\n    <string name=\"hour_no_selected\">Se debe seleccionar una hora</string>\r\n    <string name=\"datepicker_ok\">Ok</string>\r\n    <string name=\"datepicker_cancel\">Cancelar</string>\r\n    <string name=\"confirm_button\">CONFIRMAR</string>\r\n    <string name=\"contentimage_confirmation\">Confirmado</string>\r\n    <string name=\"confirmation_appointment\">¡CASI LISTO!</string>\r\n    <string name=\"details_appointment\">Tu solicitud de reserva está preparada. Por favor, pulsa \\'enviar\\' en la aplicación de correo que se acaba de abrir para finalizar tu solicitud. Te responderemos a ese correo para confirmar la disponibilidad.</string>\r\n    <string name=\"email_subject\">Solicitud de Reserva de Vista - %1$s</string>\r\n    <string name=\"email_message\">Hola,\\n\\nMe gustaría solicitar una reserva para una visita al monasterio con los siguientes datos:\\n\\n* Nombre: %1$s\\n* Email: %2$s\\n* Fecha de la visita: %3$s\\n* Hora de la visita: %4$s\\n\\nQuedo a la espera de su amable confirmación.\\n\\nMuchas gracias,\\nAtentamente,\\n\\n%1$s</string>\r\n    <string name=\"email_error\">No se encontró ninguna app de correo</string>\r\n    <string name=\"history_content_placeholder\">Mauris vel nisi id metus vestibulum vehicula nec ac orci. Curabitur massa diam, fermentum sit amet augue sit, volutpat efficitur enim. Phasellus a cursus orci, id laoreet dolor. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</string>\r\n    <string name=\"language_select\">Seleccionar Idioma</string>\r\n    <string name=\"font_size_select\">Selecciona el tamaño de la letra</string>\r\n    <string name=\"font_extrabig\">Extra Grande</string>\r\n    <string name=\"font_normal\">Mediana</string>\r\n    <string name=\"font_big\">Grande</string>\r\n    <string name=\"title_monasterio\">Monasterio</string>\r\n</resources>
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+-diff --git a/app/src/main/res/values/strings.xml b/app/src/main/res/values/strings.xml
+---- a/app/src/main/res/values/strings.xml	(revision 6455732f5969476c18d5bc46e33a52869ec3e410)
+-+++ b/app/src/main/res/values/strings.xml	(date 1762599962270)
+-@@ -1,5 +1,5 @@
+- <resources>
+--    <string name="app_name">Santa María\nla Real de Huelgas</string>
+-+    <string name="app_name">Santa María la Real de Huelgas</string>
+-     <string name="title_inicio">Inicio</string>
+-     <string name="virtual_visit">VISITA VIRTUAL</string>
+-     <string name="book_appointment">RESERVA CITA</string>
+-@@ -57,4 +57,7 @@
+-     <string name="font_normal">Mediana</string>
+-     <string name="font_big">Grande</string>
+-     <string name="title_monasterio">Monasterio</string>
+-+    <string name="spanish_language">Español</string>
+-+    <string name="german_language">Alemán</string>
+-+    <string name="english_language">Inglés</string>
+- </resources>
+-\ No newline at end of file
+-Index: app/src/main/res/values-en/strings.xml
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<resources>\r\n    <string name=\"app_name\">Museum360</string>\r\n    <string name=\"title_inicio\">Home</string>\r\n    <string name=\"virtual_visit\">VIRTUAL VISIT</string>\r\n    <string name=\"book_appointment\">BOOK APPOINTMENT</string>\r\n    <string name=\"monastery_name\">Santa María\\nla Real de Huelgas</string>\r\n    <string name=\"edit_mode\">Edit mode</string>\r\n    <string name=\"navigation_drawer_open\">Open menu</string>\r\n    <string name=\"navigation_drawer_close\">Close menu</string>\r\n    <string name=\"menu_info\">Monastery information</string>\r\n    <string name=\"menu_history\">History</string>\r\n    <string name=\"menu_gallery\">Gallery</string>\r\n    <string name=\"menu_profile\">Profile</string>\r\n    <string name=\"menu_settings\">Settings</string>\r\n    <string name=\"title_info_general\">General Information</string>\r\n    <string name=\"title_history\">History</string>\r\n    <string name=\"title_gallery\">Gallery</string>\r\n    <string name=\"title_profile\">Profile</string>\r\n    <string name=\"title_settings\">Settings</string>\r\n\r\n    <string name=\"info_location\">Street: …</string>\r\n\r\n    <string name=\"info_hours\">Hours: XX:XX - YY:YY</string>\r\n    <string name=\"general_info\">General information:</string>\r\n\r\n    <string name=\"history_1800\">1800</string>\r\n    <string name=\"history_1900\">1900-1950</string>\r\n    <string name=\"history_1950\">1950-2000</string>\r\n    <string name=\"history_actualidad\">Present Day</string>\r\n    <string name=\"title_appointment\">Book Appointment</string>\r\n    <string name=\"option_phone_appointment\">Book by phone</string>\r\n    <string name=\"option_online_appointment\">Book online</string>\r\n    <string name=\"name_appointment\">Name</string>\r\n    <string name=\"email_appointment\">Email</string>\r\n    <string name=\"date_appointment\">Date</string>\r\n    <string name=\"hour_appointment\">Time</string>\r\n    <string name=\"placeholdername_appointment\">Enter your full name</string>\r\n    <string name=\"placeholderemail_appointment\">Enter your email address</string>\r\n    <string name=\"placeholderdate_appointment\">Select a date</string>\r\n    <string name=\"placeholderhour_appointment\">Select a time</string>\r\n    <string name=\"compulsory_name\">Name is required</string>\r\n    <string name=\"valid_name\">The name contains an invalid symbol</string>\r\n    <string name=\"compulsory_email\">Email is required</string>\r\n    <string name=\"valid_email\">The email format is invalid</string>\r\n    <string name=\"date_no_selected\">A date must be selected</string>\r\n    <string name=\"hour_no_selected\">A time must be selected</string>\r\n    <string name=\"datepicker_ok\">Ok</string>\r\n    <string name=\"datepicker_cancel\">Cancel</string>\r\n    <string name=\"confirm_button\">CONFIRM</string>\r\n    <string name=\"contentimage_confirmation\">Confirmed</string>\r\n    <string name=\"confirmation_appointment\">ALMOST READY!!</string>\r\n    <string name=\"details_appointment\">Your booking request is ready. Please click \\'send\\' in the email application that just opened to finalize your request. We will reply to that email to confirm availability..</string>\r\n    <string name=\"email_subject\">View Reservation Request - %1$s</string>\r\n    <string name=\"email_message\">Hello,\\n\\nI would like to request a reservation for a visit to the monastery with the following details:\\n\\n* Name: %1$s\\n* Email: %2$s\\n* Date of visit: %3$s\\n* Time of visit: %4$s\\n\\nI look forward to your kind confirmation.\\n\\nThank you very much,\\nSincerely,\\n\\n%1$s</string>\r\n    <string name=\"email_error\">No email app was found</string>\r\n    <string name=\"history_content_placeholder\">Mauris vel nisi id metus vestibulum vehicula nec ac orci. Curabitur massa diam, fermentum sit amet augue sit, volutpat efficitur enim. Phasellus a cursus orci, id laoreet dolor. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</string>\r\n    <string name=\"language_select\">Select language</string>\r\n    <string name=\"font_size_select\">Select the font size</string>\r\n    <string name=\"font_extrabig\">Extra Big</string>\r\n    <string name=\"font_normal\">Medium</string>\r\n    <string name=\"font_big\">Big</string>\r\n    <string name=\"title_monasterio\">Monastery</string>\r\n\r\n</resources>
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+-diff --git a/app/src/main/res/values-en/strings.xml b/app/src/main/res/values-en/strings.xml
+---- a/app/src/main/res/values-en/strings.xml	(revision 6455732f5969476c18d5bc46e33a52869ec3e410)
+-+++ b/app/src/main/res/values-en/strings.xml	(date 1762599962278)
+-@@ -61,5 +61,8 @@
+-     <string name="font_normal">Medium</string>
+-     <string name="font_big">Big</string>
+-     <string name="title_monasterio">Monastery</string>
+-+    <string name="spanish_language">Spanish</string>
+-+    <string name="german_language">German</string>
+-+    <string name="english_language">English</string>
+- 
+- </resources>
+-\ No newline at end of file
+-Index: app/src/main/res/values-de/strings.xml
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<resources>\r\n    <string name=\"app_name\">Museum360</string>\r\n    <string name=\"title_inicio\">Startseite</string>\r\n    <string name=\"virtual_visit\">VIRTUELLER BESUCH</string>\r\n    <string name=\"book_appointment\">TERMIN BUCHEN</string>\r\n    <string name=\"monastery_name\">Santa María\\nla Real de Huelgas</string>\r\n    <string name=\"edit_mode\">Bearbeiten</string>\r\n    <string name=\"navigation_drawer_open\">Menü öffnen</string>\r\n    <string name=\"navigation_drawer_close\">Menü schließen</string>\r\n    <string name=\"menu_info\">Klosterinformationen</string>\r\n    <string name=\"menu_history\">Geschichte</string>\r\n    <string name=\"menu_gallery\">Galerie</string>\r\n    <string name=\"menu_profile\">Profil</string>\r\n    <string name=\"menu_settings\">Einstellungen</string>\r\n    <string name=\"title_info_general\">Allgemeine Informationen</string>\r\n    <string name=\"title_history\">Geschichte</string>\r\n    <string name=\"title_gallery\">Galerie</string>\r\n    <string name=\"title_profile\">Profil</string>\r\n    <string name=\"title_settings\">Einstellungen</string>\r\n\r\n\r\n    <string name=\"info_location\">Straße: …</string>\r\n\r\n    <string name=\"info_hours\">Öffnungszeiten: XX:XX - YY:YY</string>\r\n    <string name=\"general_info\">Allgemeine Informationen:</string>\r\n\r\n    <string name=\"history_1800\">1800</string>\r\n    <string name=\"history_1900\">1900-1950</string>\r\n    <string name=\"history_1950\">1950-2000</string>\r\n    <string name=\"history_actualidad\">Heute</string>\r\n    <string name=\"title_appointment\">Termin vereinbaren</string>\r\n    <string name=\"option_phone_appointment\">Buchen Sie telefonisch</string>\r\n    <string name=\"option_online_appointment\">Online buchen</string>\r\n    <string name=\"name_appointment\">Name</string>\r\n    <string name=\"email_appointment\">E-Mail</string>\r\n    <string name=\"date_appointment\">Datum</string>\r\n    <string name=\"hour_appointment\">Stunde</string>\r\n    <string name=\"placeholdername_appointment\">Geben Sie Ihren vollständigen Namen ein</string>\r\n    <string name=\"placeholderemail_appointment\">Geben Sie Ihre E-Mail-Adresse ein</string>\r\n    <string name=\"placeholderdate_appointment\">Datum auswählen</string>\r\n    <string name=\"placeholderhour_appointment\">Wählen Sie eine Uhrzeit</string>\r\n    <string name=\"compulsory_name\">Name erforderlich</string>\r\n    <string name=\"valid_name\">Der Name enthält ein ungültiges Symbol</string>\r\n    <string name=\"compulsory_email\">E-Mail-Adresse erforderlich</string>\r\n    <string name=\"valid_email\">Das E-Mail-Format ist ungültig.</string>\r\n    <string name=\"date_no_selected\">Ein Datum muss ausgewählt werden.</string>\r\n    <string name=\"hour_no_selected\">Es muss ein Zeitpunkt ausgewählt werden.</string>\r\n    <string name=\"datepicker_ok\">Ok</string>\r\n    <string name=\"datepicker_cancel\">Stornieren</string>\r\n    <string name=\"confirm_button\">BESTÄTIGEN</string>\r\n    <string name=\"contentimage_confirmation\">Bestätigt</string>\r\n    <string name=\"confirmation_appointment\">FAST FERTIG!!</string>\r\n    <string name=\"details_appointment\">Ihre Buchungsanfrage ist fertig. Bitte klicken Sie in der soeben geöffneten E-Mail-Anwendung auf „Senden“, um Ihre Anfrage abzuschließen. Wir werden Ihnen die Verfügbarkeit per E-Mail bestätigen..</string>\r\n    <string name=\"email_subject\">Reservierungsanfrage ansehen - %1$s</string>\r\n    <string name=\"email_message\">Hallo,\\n\\nich möchte hiermit eine Reservierung für einen Besuch im Kloster anfragen. Bitte geben Sie folgende Daten an:\\n\\n* Name: %1$s\\n* E-Mail: %2$s\\n* Besuchsdatum: %3$s\\n* Besuchszeit: %4$s\\n\\nIch freue mich auf Ihre Bestätigung.\\n\\nVielen Dank,\\nMit freundlichen Grüßen,\\n\\n%1$s</string>\r\n    <string name=\"email_error\">Es wurde keine E-Mail-App gefunden.</string>\r\n    <string name=\"history_content_placeholder\">Mauris vel nisi id metus vestibulum vehicula nec ac orci. Curabitur massa diam, fermentum sit amet augue sit, volutpat efficitur enim. Phasellus a cursus orci, id laoreet dolor. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</string>\r\n    <string name=\"language_select\">Sprache auswählen</string>\r\n    <string name=\"font_size_select\">Wählen Sie die Schriftgröße aus</string>\r\n    <string name=\"font_extrabig\">Extra groß</string>\r\n    <string name=\"font_normal\">Mittlere</string>\r\n    <string name=\"font_big\">Groß</string>\r\n    <string name=\"title_monasterio\">Kloster</string>\r\n\r\n</resources>
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+-diff --git a/app/src/main/res/values-de/strings.xml b/app/src/main/res/values-de/strings.xml
+---- a/app/src/main/res/values-de/strings.xml	(revision 6455732f5969476c18d5bc46e33a52869ec3e410)
+-+++ b/app/src/main/res/values-de/strings.xml	(date 1762599962287)
+-@@ -62,5 +62,8 @@
+-     <string name="font_normal">Mittlere</string>
+-     <string name="font_big">Groß</string>
+-     <string name="title_monasterio">Kloster</string>
+-+    <string name="spanish_language">Spanisch</string>
+-+    <string name="german_language">Deutsch</string>
+-+    <string name="english_language">Englisch</string>
+- 
+- </resources>
+-\ No newline at end of file
+Index: .idea/shelf/Uncommitted_changes_before_Checkout_at_08_11_2025_22_08__Changes_.xml
+===================================================================
+diff --git a/.idea/shelf/Uncommitted_changes_before_Checkout_at_08_11_2025_22_08__Changes_.xml b/.idea/shelf/Uncommitted_changes_before_Checkout_at_08_11_2025_22_08__Changes_.xml
+deleted file mode 100644
+--- a/.idea/shelf/Uncommitted_changes_before_Checkout_at_08_11_2025_22_08__Changes_.xml	(revision d076f828ce2f52136802345ea495ef475f1af8b2)
++++ /dev/null	(revision d076f828ce2f52136802345ea495ef475f1af8b2)
+@@ -1,4 +0,0 @@
+-<changelist name="Uncommitted_changes_before_Checkout_at_08_11_2025_22_08_[Changes]" date="1762636094033" recycled="true" deleted="true">
+-  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_08_11_2025_22_08_[Changes]/shelved.patch" />
+-  <option name="DESCRIPTION" value="Uncommitted changes before Checkout at 08/11/2025 22:08 [Changes]" />
+-</changelist>
+\ No newline at end of file
+Index: .idea/shelf/Uncommitted_changes_before_Checkout_at_08_11_2025_22_54__Changes_.xml
+===================================================================
+diff --git a/.idea/shelf/Uncommitted_changes_before_Checkout_at_08_11_2025_22_54__Changes_.xml b/.idea/shelf/Uncommitted_changes_before_Checkout_at_08_11_2025_22_54__Changes_.xml
+deleted file mode 100644
+--- a/.idea/shelf/Uncommitted_changes_before_Checkout_at_08_11_2025_22_54__Changes_.xml	(revision d076f828ce2f52136802345ea495ef475f1af8b2)
++++ /dev/null	(revision d076f828ce2f52136802345ea495ef475f1af8b2)
+@@ -1,4 +0,0 @@
+-<changelist name="Uncommitted_changes_before_Checkout_at_08_11_2025_22_54_[Changes]" date="1762638861779" recycled="true" deleted="true">
+-  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_08_11_2025_22_54_[Changes]/shelved.patch" />
+-  <option name="DESCRIPTION" value="Uncommitted changes before Checkout at 08/11/2025 22:54 [Changes]" />
+-</changelist>
+\ No newline at end of file
+Index: .idea/shelf/Uncommitted_changes_before_Update_at_08_11_2025_12_05__Changes_1.xml
+===================================================================
+diff --git a/.idea/shelf/Uncommitted_changes_before_Update_at_08_11_2025_12_05__Changes_1.xml b/.idea/shelf/Uncommitted_changes_before_Update_at_08_11_2025_12_05__Changes_1.xml
+deleted file mode 100644
+--- a/.idea/shelf/Uncommitted_changes_before_Update_at_08_11_2025_12_05__Changes_1.xml	(revision d076f828ce2f52136802345ea495ef475f1af8b2)
++++ /dev/null	(revision d076f828ce2f52136802345ea495ef475f1af8b2)
+@@ -1,4 +0,0 @@
+-<changelist name="Uncommitted_changes_before_Update_at_08_11_2025_12_05_[Changes]1" date="1762599965498" recycled="true" deleted="true">
+-  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_08_11_2025_12_05_[Changes]1/shelved.patch" />
+-  <option name="DESCRIPTION" value="Uncommitted changes before Update at 08/11/2025 12:05 [Changes]" />
+-</changelist>
+\ No newline at end of file
+Index: .idea/shelf/Uncommitted_changes_before_Checkout_at_08_11_2025_22_08_[Changes]/shelved.patch
+===================================================================
+diff --git a/.idea/shelf/Uncommitted_changes_before_Checkout_at_08_11_2025_22_08_[Changes]/shelved.patch b/.idea/shelf/Uncommitted_changes_before_Checkout_at_08_11_2025_22_08_[Changes]/shelved.patch
+deleted file mode 100644
+--- a/.idea/shelf/Uncommitted_changes_before_Checkout_at_08_11_2025_22_08_[Changes]/shelved.patch	(revision d076f828ce2f52136802345ea495ef475f1af8b2)
++++ /dev/null	(revision d076f828ce2f52136802345ea495ef475f1af8b2)
+@@ -1,17 +0,0 @@
+-Index: .idea/gradle.xml
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"GradleSettings\">\r\n    <option name=\"linkedExternalProjectsSettings\">\r\n      <GradleProjectSettings>\r\n        <option name=\"testRunner\" value=\"CHOOSE_PER_TEST\" />\r\n        <option name=\"externalProjectPath\" value=\"$PROJECT_DIR$\" />\r\n        <option name=\"gradleJvm\" value=\"#GRADLE_LOCAL_JAVA_HOME\" />\r\n        <option name=\"modules\">\r\n          <set>\r\n            <option value=\"$PROJECT_DIR$\" />\r\n            <option value=\"$PROJECT_DIR$/app\" />\r\n          </set>\r\n        </option>\r\n      </GradleProjectSettings>\r\n    </option>\r\n  </component>\r\n</project>
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+-diff --git a/.idea/gradle.xml b/.idea/gradle.xml
+---- a/.idea/gradle.xml	(revision 1c0bfc618ece38c61714e2813735e3a928424a11)
+-+++ b/.idea/gradle.xml	(date 1762636073534)
+-@@ -1,5 +1,6 @@
+- <?xml version="1.0" encoding="UTF-8"?>
+- <project version="4">
+-+  <component name="GradleMigrationSettings" migrationVersion="1" />
+-   <component name="GradleSettings">
+-     <option name="linkedExternalProjectsSettings">
+-       <GradleProjectSettings>
+Index: .idea/shelf/Uncommitted_changes_before_Checkout_at_08_11_2025_22_54_[Changes]/shelved.patch
+===================================================================
+diff --git a/.idea/shelf/Uncommitted_changes_before_Checkout_at_08_11_2025_22_54_[Changes]/shelved.patch b/.idea/shelf/Uncommitted_changes_before_Checkout_at_08_11_2025_22_54_[Changes]/shelved.patch
+deleted file mode 100644
+--- a/.idea/shelf/Uncommitted_changes_before_Checkout_at_08_11_2025_22_54_[Changes]/shelved.patch	(revision d076f828ce2f52136802345ea495ef475f1af8b2)
++++ /dev/null	(revision d076f828ce2f52136802345ea495ef475f1af8b2)
+@@ -1,258 +0,0 @@
+-Index: app/src/main/java/com/nextapp/monasterio/MainActivity.kt
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+>package com.nextapp.monasterio\r\n\r\nimport android.os.Bundle\r\nimport android.widget.Toast\r\nimport androidx.activity.ComponentActivity\r\nimport androidx.activity.compose.setContent\r\nimport androidx.compose.foundation.layout.*\r\nimport androidx.compose.material3.*\r\nimport androidx.compose.runtime.*\r\nimport androidx.compose.ui.Modifier\r\nimport androidx.compose.ui.platform.LocalContext\r\nimport androidx.compose.ui.res.painterResource\r\nimport androidx.compose.ui.res.stringResource\r\nimport androidx.navigation.compose.rememberNavController\r\nimport com.nextapp.monasterio.ui.navigation.AppDrawerContent\r\nimport com.nextapp.monasterio.ui.navigation.AppNavigationHost\r\nimport com.nextapp.monasterio.ui.theme.*\r\nimport kotlinx.coroutines.launch\r\nimport androidx.appcompat.app.AppCompatActivity\r\nimport androidx.appcompat.app.AppCompatDelegate\r\nimport androidx.compose.ui.platform.LocalDensity\r\nimport androidx.compose.ui.unit.Density\r\nimport androidx.navigation.compose.currentBackStackEntryAsState\r\nimport com.nextapp.monasterio.utils.FontSize\r\n\r\nclass MainActivity : AppCompatActivity() {\r\n    override fun onCreate(savedInstanceState: Bundle?) {\r\n        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)\r\n        super.onCreate(savedInstanceState)\r\n        LanguageHelper.loadLocale(this)\r\n        setContent {\r\n            val appFontScale = FontSize.devolverFontScale(this)\r\n            val currentDensity = LocalDensity.current\r\n            val newDensity= Density(\r\n                density= currentDensity.density,\r\n                fontScale = currentDensity.fontScale*appFontScale\r\n            )\r\n            CompositionLocalProvider(LocalDensity provides newDensity) {\r\n                Smov_monasterioTheme {\r\n                    MonasteryAppScreen()\r\n                }\r\n            }\r\n        }\r\n    }\r\n}\r\n\r\n@OptIn(ExperimentalMaterial3Api::class)\r\n@Composable\r\nfun MonasteryAppScreen() {\r\n    val context = LocalContext.current\r\n    val navController = rememberNavController()\r\n    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)\r\n    val scope = rememberCoroutineScope()\r\n\r\n    val currentTitle = remember { mutableStateOf(context.getString(R.string.title_inicio)) }\r\n\r\n    // ✅ Detectar ruta actual\r\n    val currentBackStackEntry by navController.currentBackStackEntryAsState()\r\n    val currentRoute = currentBackStackEntry?.destination?.route\r\n\r\n    // ✅ Rutas inmersivas\r\n    val immersiveRoutes = listOf(AppRoutes.PIN_DETALLE)\r\n    val isImmersive = currentRoute in immersiveRoutes\r\n\r\n    val gesturesEnabled = when(currentRoute){\r\n        AppRoutes.VIRTUAL_VISIT -> false\r\n        else -> true\r\n    }\r\n\r\n    // ✅ Actualizar título\r\n    LaunchedEffect(navController) {\r\n        navController.currentBackStackEntryFlow.collect { backStackEntry ->\r\n            val route = backStackEntry.destination.route\r\n            currentTitle.value = when (route) {\r\n                AppRoutes.INFO -> context.getString(R.string.title_info_general)\r\n                AppRoutes.HISTORIA -> context.getString(R.string.title_history)\r\n                AppRoutes.GALERIA -> context.getString(R.string.title_gallery)\r\n                AppRoutes.PERFIL -> context.getString(R.string.title_profile)\r\n                AppRoutes.AJUSTES -> context.getString(R.string.title_settings)\r\n                AppRoutes.OPCIONES_RESERVA,\r\n                AppRoutes.RESERVA,\r\n                AppRoutes.CONFIRMACION_RESERVA -> context.getString(R.string.title_appointment)\r\n                AppRoutes.VIRTUAL_VISIT -> context.getString(R.string.title_monasterio)\r\n                else -> context.getString(R.string.title_inicio)\r\n            }\r\n        }\r\n    }\r\n\r\n    if (isImmersive) {\r\n        // \uD83C\uDF0C Vista inmersiva sin barra ni menú\r\n        AppNavigationHost(\r\n            navController = navController,\r\n            modifier = Modifier.fillMaxSize()\r\n        )\r\n    } else {\r\n        // \uD83E\uDDF1 Vista normal con barra y menú\r\n        ModalNavigationDrawer(\r\n            drawerState = drawerState,\r\n            drawerContent = {\r\n                AppDrawerContent(\r\n                    navController = navController,\r\n                    scope = scope,\r\n                    drawerState = drawerState\r\n                )\r\n            },\r\n            gesturesEnabled = gesturesEnabled\r\n        ) {\r\n            Scaffold(\r\n                topBar = {\r\n                    CenterAlignedTopAppBar(\r\n                        title = { Text(currentTitle.value) },\r\n                        colors = TopAppBarDefaults.topAppBarColors(\r\n                            containerColor = MonasteryRed,\r\n                            titleContentColor = White,\r\n                            navigationIconContentColor = White,\r\n                            actionIconContentColor = White\r\n                        ),\r\n                        navigationIcon = {\r\n                            IconButton(onClick = {\r\n                                scope.launch {\r\n                                    drawerState.apply {\r\n                                        if (isClosed) open() else close()\r\n                                    }\r\n                                }\r\n                            }) {\r\n                                val iconRes = if (drawerState.isOpen) R.drawable.menu_close else R.drawable.ic_menu_24\r\n                                Icon(\r\n                                    painter = painterResource(id = iconRes),\r\n                                    contentDescription = stringResource(id = R.string.navigation_drawer_open)\r\n                                )\r\n                            }\r\n                        },\r\n                        actions = {\r\n                            IconButton(onClick = {\r\n                                Toast.makeText(context, \"Modo edición (próximamente)\", Toast.LENGTH_SHORT).show()\r\n                            }) {\r\n                                Icon(\r\n                                    painter = painterResource(id = R.drawable.lapiz),\r\n                                    contentDescription = stringResource(id = R.string.edit_mode)\r\n                                )\r\n                            }\r\n                        }\r\n                    )\r\n                }\r\n            ) { paddingValues ->\r\n                AppNavigationHost(\r\n                    navController = navController,\r\n                    modifier = Modifier.padding(paddingValues)\r\n                )\r\n            }\r\n        }\r\n    }\r\n}
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+-diff --git a/app/src/main/java/com/nextapp/monasterio/MainActivity.kt b/app/src/main/java/com/nextapp/monasterio/MainActivity.kt
+---- a/app/src/main/java/com/nextapp/monasterio/MainActivity.kt	(revision 39a86368e80442156ba767c8ea88d7fdae822333)
+-+++ b/app/src/main/java/com/nextapp/monasterio/MainActivity.kt	(date 1762637290372)
+-@@ -1,8 +1,8 @@
+- package com.nextapp.monasterio
+- 
+-+
+- import android.os.Bundle
+- import android.widget.Toast
+--import androidx.activity.ComponentActivity
+- import androidx.activity.compose.setContent
+- import androidx.compose.foundation.layout.*
+- import androidx.compose.material3.*
+-@@ -18,8 +18,14 @@
+- import kotlinx.coroutines.launch
+- import androidx.appcompat.app.AppCompatActivity
+- import androidx.appcompat.app.AppCompatDelegate
+-+import androidx.compose.foundation.Image
+-+import androidx.compose.foundation.border
+-+import androidx.compose.ui.graphics.Color
+-+import androidx.compose.ui.layout.ContentScale
+-+import androidx.compose.ui.platform.LocalConfiguration
+- import androidx.compose.ui.platform.LocalDensity
+- import androidx.compose.ui.unit.Density
+-+import androidx.compose.ui.unit.dp
+- import androidx.navigation.compose.currentBackStackEntryAsState
+- import com.nextapp.monasterio.utils.FontSize
+- 
+-@@ -52,15 +58,39 @@
+-     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+-     val scope = rememberCoroutineScope()
+- 
+-+    val stringEspanyol= "Español"
+-+    val stringAleman= "Deutsch"
+-+    val stringIngles= "English"
+-+
+-+
+-+    var mostrarIdioma by remember { mutableStateOf(false) }
+-+
+-+    val configuration = LocalConfiguration.current
+-+    val currentLanguageCode = configuration.locales[0].language
+-+
+-+    var idioma by remember { mutableStateOf(currentLanguageCode) }
+-+
+-+    var idiomasDisponibles = listOf(stringEspanyol,stringIngles,stringAleman)
+-+
+-     val currentTitle = remember { mutableStateOf(context.getString(R.string.title_inicio)) }
+- 
+-     // ✅ Detectar ruta actual
+-     val currentBackStackEntry by navController.currentBackStackEntryAsState()
+-     val currentRoute = currentBackStackEntry?.destination?.route
+- 
+--    // ✅ Rutas inmersivas
+--    val immersiveRoutes = listOf(AppRoutes.PIN_DETALLE)
+--    val isImmersive = currentRoute in immersiveRoutes
+-+    // --- ¡AQUÍ ESTÁ LA CORRECCIÓN! ---
+-+    // En lugar de una lista, comprobamos si la ruta "empieza por" la ruta base,
+-+    // ya que ahora tiene argumentos (ej: "panorama/monastery_1")
+-+
+-+    // Comprueba si la ruta actual empieza por "panorama"
+-+    val isPanorama = currentRoute?.startsWith(AppRoutes.PANORAMA) == true
+-+    // Comprueba si la ruta actual es exactamente "pin_detalle"
+-+    val isPinDetalle = currentRoute == AppRoutes.PIN_DETALLE
+-+
+-+    // La vista es inmersiva si CUALQUIERA de las dos es verdadera
+-+    val isImmersive = isPanorama || isPinDetalle
+-+    // --- FIN DE LA CORRECCIÓN ---
+-+
+- 
+-     val gesturesEnabled = when(currentRoute){
+-         AppRoutes.VIRTUAL_VISIT -> false
+-@@ -71,7 +101,11 @@
+-     LaunchedEffect(navController) {
+-         navController.currentBackStackEntryFlow.collect { backStackEntry ->
+-             val route = backStackEntry.destination.route
+--            currentTitle.value = when (route) {
+-+            // --- MODIFICACIÓN SUGERIDA ---
+-+            // Añadimos esto para que no intente buscar un título para la ruta con argumento
+-+            val routeBase = route?.split("/")?.firstOrNull() ?: route
+-+
+-+            currentTitle.value = when (routeBase) { // <-- Usamos routeBase
+-                 AppRoutes.INFO -> context.getString(R.string.title_info_general)
+-                 AppRoutes.HISTORIA -> context.getString(R.string.title_history)
+-                 AppRoutes.GALERIA -> context.getString(R.string.title_gallery)
+-@@ -81,6 +115,7 @@
+-                 AppRoutes.RESERVA,
+-                 AppRoutes.CONFIRMACION_RESERVA -> context.getString(R.string.title_appointment)
+-                 AppRoutes.VIRTUAL_VISIT -> context.getString(R.string.title_monasterio)
+-+                // (No es necesario añadir PANORAMA aquí, ya que será inmersiva y no mostrará título)
+-                 else -> context.getString(R.string.title_inicio)
+-             }
+-         }
+-@@ -131,8 +166,46 @@
+-                             }
+-                         },
+-                         actions = {
+-+                            Box {
+-+                                OutlinedIconButton(onClick = {
+-+                                    mostrarIdioma = true
+-+                                }) {
+-+                                    val iconRes =
+-+                                        if (idioma == "es" || idioma == stringEspanyol) R.drawable.espanya else if (idioma == "de" || idioma == stringAleman) R.drawable.alemania else R.drawable.reinounido
+-+                                    Image(
+-+                                        painter = painterResource(id = iconRes),
+-+                                        contentDescription = if (idioma == "es" || idioma == stringEspanyol ) stringEspanyol
+-+                                        else if (idioma == "de" || idioma == stringAleman) stringAleman else stringIngles,
+-+                                        contentScale = ContentScale.Crop
+-+                                    )
+-+                                }
+-+                                DropdownMenu(
+-+                                    expanded = mostrarIdioma,
+-+                                    onDismissRequest = { mostrarIdioma = false },
+-+                                    modifier = Modifier.fillMaxWidth(0.8f),
+-+                                ) {
+-+                                    idiomasDisponibles.forEach { idiomaSlot ->
+-+                                        DropdownMenuItem(
+-+                                            text = { Text(idiomaSlot) },
+-+                                            onClick = {
+-+                                                idioma = idiomaSlot
+-+                                                mostrarIdioma = false
+-+                                                if(idiomaSlot == stringEspanyol)
+-+                                                    LanguageHelper.saveLocale(context, "es")
+-+                                                else if(idiomaSlot == stringAleman){
+-+                                                    LanguageHelper.saveLocale(context, "de")
+-+                                                } else LanguageHelper.saveLocale(context, "en")
+-+                                            }
+-+                                        )
+-+                                    }
+-+                                }
+-+                            }
+-                             IconButton(onClick = {
+--                                Toast.makeText(context, "Modo edición (próximamente)", Toast.LENGTH_SHORT).show()
+-+                                Toast.makeText(
+-+                                    context,
+-+                                    "Modo edición (próximamente)",
+-+                                    Toast.LENGTH_SHORT
+-+                                ).show()
+-                             }) {
+-                                 Icon(
+-                                     painter = painterResource(id = R.drawable.lapiz),
+-Index: settings.gradle.kts
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+>pluginManagement {\r\n    repositories {\r\n        google {\r\n            content {\r\n                includeGroupByRegex(\"com\\\\.android.*\")\r\n                includeGroupByRegex(\"com\\\\.google.*\")\r\n                includeGroupByRegex(\"androidx.*\")\r\n            }\r\n        }\r\n        mavenCentral()\r\n        gradlePluginPortal()\r\n    }\r\n}\r\ndependencyResolutionManagement {\r\n    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)\r\n    repositories {\r\n        google()\r\n        mavenCentral( )\r\n        maven { url = uri(\"https://www.jitpack.io\") }\r\n    }\r\n}\r\n\r\nrootProject.name = \"SMOV_Monasterio\"\r\ninclude(\":app\")\r\n 
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+-diff --git a/settings.gradle.kts b/settings.gradle.kts
+---- a/settings.gradle.kts	(revision 39a86368e80442156ba767c8ea88d7fdae822333)
+-+++ b/settings.gradle.kts	(date 1762637928480)
+-@@ -16,7 +16,7 @@
+-     repositories {
+-         google()
+-         mavenCentral( )
+--        maven { url = uri("https://www.jitpack.io") }
+-+        maven { url = uri("https://jitpack.io") }
+-     }
+- }
+- 
+-Index: app/src/main/java/com/nextapp/monasterio/ui/navigation/AppNavigation.kt
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+>package com.nextapp.monasterio.ui.navigation\r\n\r\nimport androidx.compose.foundation.clickable\r\nimport androidx.compose.foundation.layout.*\r\nimport androidx.compose.material3.*\r\nimport androidx.compose.runtime.Composable\r\nimport androidx.compose.ui.Alignment\r\nimport androidx.compose.ui.Modifier\r\nimport androidx.compose.ui.res.painterResource\r\nimport androidx.compose.ui.res.stringResource\r\nimport androidx.compose.ui.unit.dp\r\nimport androidx.navigation.NavGraph.Companion.findStartDestination\r\nimport androidx.navigation.NavHostController\r\nimport androidx.navigation.NavType\r\nimport androidx.navigation.navArgument\r\nimport androidx.navigation.compose.NavHost\r\nimport androidx.navigation.compose.composable\r\nimport com.nextapp.monasterio.AppRoutes\r\nimport com.nextapp.monasterio.R\r\nimport com.nextapp.monasterio.ui.screens.*\r\nimport com.nextapp.monasterio.ui.virtualvisit.screens.*\r\nimport com.nextapp.monasterio.ui.theme.MonasteryRed\r\nimport com.nextapp.monasterio.ui.theme.White\r\nimport kotlinx.coroutines.CoroutineScope\r\nimport kotlinx.coroutines.launch\r\n\r\n@Composable\r\nfun AppNavigationHost(\r\n    navController: NavHostController,\r\n    modifier: Modifier = Modifier\r\n) {\r\n    NavHost(\r\n        navController = navController,\r\n        startDestination = AppRoutes.INICIO,\r\n        modifier = modifier\r\n    ) {\r\n        composable(AppRoutes.INICIO)   { HomeScreenContent(navController = navController) }\r\n        composable(AppRoutes.INFO)     { InfoScreen() }\r\n        composable(AppRoutes.HISTORIA) { HistoriaScreen() }\r\n        composable(AppRoutes.GALERIA)  { GaleriaScreen() }\r\n        composable(AppRoutes.PERFIL)   { ProfileScreen() }\r\n        composable(AppRoutes.AJUSTES)  { AjustesScreen() }\r\n        composable(AppRoutes.OPCIONES_RESERVA) { OpcionesReservaScreen(navController = navController) }\r\n        composable(AppRoutes.RESERVA) { ReservaScreen(navController = navController) }\r\n\r\n        composable(\r\n            route = AppRoutes.CONFIRMACION_RESERVA + \"/{nombre}/{email}/{fecha}/{hora}\",\r\n            arguments = listOf(\r\n                navArgument(\"nombre\") { type = NavType.StringType },\r\n                navArgument(\"email\") { type = NavType.StringType },\r\n                navArgument(\"fecha\") { type = NavType.StringType },\r\n                navArgument(\"hora\") { type = NavType.StringType }\r\n            )\r\n        ) { backStackEntry ->\r\n            val nombre = backStackEntry.arguments?.getString(\"nombre\") ?: \"\"\r\n            val email = backStackEntry.arguments?.getString(\"email\") ?: \"\"\r\n            val fecha = backStackEntry.arguments?.getString(\"fecha\") ?: \"\"\r\n            val hora = backStackEntry.arguments?.getString(\"hora\") ?: \"\"\r\n            ConfirmacionReservaScreen(\r\n                navController = navController,\r\n                nombre = nombre,\r\n                email = email,\r\n                fecha = fecha,\r\n                hora = hora\r\n            )\r\n        }\r\n\r\n        // \uD83E\uDDED Módulo de visita virtual\r\n        composable(AppRoutes.VIRTUAL_VISIT) {\r\n            VirtualVisitScreen(navController = navController)\r\n        }\r\n\r\n        composable(\r\n            route = \"pin_detalle/{pinId}\",\r\n            arguments = listOf(navArgument(\"pinId\") { type = NavType.StringType })\r\n        ) { backStackEntry ->\r\n            val pinId = backStackEntry.arguments?.getString(\"pinId\") ?: \"\"\r\n            PinDetalleFirestoreScreen(\r\n                pinId = pinId,\r\n                navController = navController\r\n            )\r\n        }\r\n\r\n\r\n\r\n\r\n\r\n    }\r\n}\r\n\r\n@OptIn(ExperimentalMaterial3Api::class)\r\n@Composable\r\nfun AppDrawerContent(\r\n    navController: NavHostController,\r\n    scope: CoroutineScope,\r\n    drawerState: DrawerState\r\n) {\r\n    val navigateTo: (String) -> Unit = { route ->\r\n        navController.navigate(route) {\r\n            popUpTo(navController.graph.findStartDestination().id)\r\n            launchSingleTop = true\r\n        }\r\n        scope.launch { drawerState.close() }\r\n    }\r\n\r\n    ModalDrawerSheet(\r\n        modifier = Modifier.fillMaxHeight(),\r\n        drawerContainerColor = MonasteryRed,\r\n        drawerContentColor = White\r\n    ) {\r\n        Column(\r\n            modifier = Modifier\r\n                .fillMaxSize()\r\n                .padding(16.dp)\r\n        ) {\r\n            IconButton(onClick = { scope.launch { drawerState.close() } }) {\r\n                Icon(\r\n                    painter = painterResource(id = R.drawable.ic_menu_24),\r\n                    contentDescription = stringResource(id = R.string.navigation_drawer_close)\r\n                )\r\n            }\r\n            Spacer(modifier = Modifier.height(32.dp))\r\n\r\n            DrawerMenuItem(text = stringResource(id = R.string.title_inicio)) { navigateTo(AppRoutes.INICIO) }\r\n            DrawerMenuItem(text = stringResource(id = R.string.menu_info)) { navigateTo(AppRoutes.INFO) }\r\n            DrawerMenuItem(text = stringResource(id = R.string.menu_history)) { navigateTo(AppRoutes.HISTORIA) }\r\n            DrawerMenuItem(text = stringResource(id = R.string.menu_gallery)) { navigateTo(AppRoutes.GALERIA) }\r\n            DrawerMenuItem(text = stringResource(id = R.string.menu_profile)) { navigateTo(AppRoutes.PERFIL) }\r\n            DrawerMenuItem(text = stringResource(id = R.string.menu_settings)) { navigateTo(AppRoutes.AJUSTES) }\r\n        }\r\n    }\r\n}\r\n\r\n@Composable\r\nfun DrawerMenuItem(text: String, onClick: () -> Unit) {\r\n    Row(\r\n        modifier = Modifier\r\n            .fillMaxWidth()\r\n            .clickable(onClick = onClick)\r\n            .padding(vertical = 12.dp),\r\n        verticalAlignment = Alignment.CenterVertically\r\n    ) {\r\n        Icon(\r\n            painter = painterResource(id = R.drawable.arrow_right),\r\n            contentDescription = null,\r\n            modifier = Modifier.size(20.dp)\r\n        )\r\n        Spacer(modifier = Modifier.width(16.dp))\r\n        Text(text = text, color = White, style = MaterialTheme.typography.bodyMedium)\r\n    }\r\n}\r\n
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+-diff --git a/app/src/main/java/com/nextapp/monasterio/ui/navigation/AppNavigation.kt b/app/src/main/java/com/nextapp/monasterio/ui/navigation/AppNavigation.kt
+---- a/app/src/main/java/com/nextapp/monasterio/ui/navigation/AppNavigation.kt	(revision 39a86368e80442156ba767c8ea88d7fdae822333)
+-+++ b/app/src/main/java/com/nextapp/monasterio/ui/navigation/AppNavigation.kt	(date 1762638506592)
+-@@ -40,9 +40,27 @@
+-         composable(AppRoutes.GALERIA)  { GaleriaScreen() }
+-         composable(AppRoutes.PERFIL)   { ProfileScreen() }
+-         composable(AppRoutes.AJUSTES)  { AjustesScreen() }
+-+
+-+        composable(
+-+            route = AppRoutes.PANORAMA + "/{vistaId}", // Define la ruta con argumento
+-+            arguments = listOf(navArgument("vistaId") { type = NavType.StringType })
+-+        ) { backStackEntry ->
+-+            // Recoge el argumento
+-+            val vistaId = backStackEntry.arguments?.getString("vistaId")
+-+
+-+            // Llama a PanoramaScreen con el ID y el NavController
+-+            if (vistaId != null) {
+-+                PanoramaScreen(
+-+                    vistaId = vistaId,
+-+                    navController = navController
+-+                )
+-+            }
+-+        }
+-+
+-         composable(AppRoutes.OPCIONES_RESERVA) { OpcionesReservaScreen(navController = navController) }
+-         composable(AppRoutes.RESERVA) { ReservaScreen(navController = navController) }
+- 
+-+
+-         composable(
+-             route = AppRoutes.CONFIRMACION_RESERVA + "/{nombre}/{email}/{fecha}/{hora}",
+-             arguments = listOf(
+-Index: app/build.gradle.kts
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+>plugins {\r\n    alias(libs.plugins.android.application)\r\n    alias(libs.plugins.kotlin.android)\r\n    alias(libs.plugins.kotlin.compose)\r\n    alias(libs.plugins.firebase.gservices)\r\n}\r\n\r\nandroid {\r\n    namespace = \"com.nextapp.monasterio\"\r\n    compileSdk = 36\r\n\r\n    defaultConfig {\r\n        applicationId = \"com.nextapp.monasterio\"\r\n        minSdk = 24\r\n        targetSdk = 36\r\n        versionCode = 1\r\n        versionName = \"1.0\"\r\n\r\n        testInstrumentationRunner = \"androidx.test.runner.AndroidJUnitRunner\"\r\n    }\r\n\r\n    buildTypes {\r\n        release {\r\n            isMinifyEnabled = false\r\n            proguardFiles(\r\n                getDefaultProguardFile(\"proguard-android-optimize.txt\"),\r\n                \"proguard-rules.pro\"\r\n            )\r\n        }\r\n    }\r\n    compileOptions {\r\n        sourceCompatibility = JavaVersion.VERSION_11\r\n        targetCompatibility = JavaVersion.VERSION_11\r\n    }\r\n    kotlinOptions {\r\n        jvmTarget = \"11\"\r\n    }\r\n    buildFeatures {\r\n        compose = true\r\n    }\r\n}\r\n\r\ndependencies {\r\n\r\n    implementation(libs.androidx.core.ktx)\r\n    implementation(libs.androidx.lifecycle.runtime.ktx)\r\n    implementation(libs.androidx.activity.compose)\r\n    implementation(platform(libs.androidx.compose.bom))\r\n    implementation(libs.androidx.ui)\r\n    implementation(libs.androidx.ui.graphics)\r\n    implementation(libs.androidx.ui.tooling.preview)\r\n    implementation(libs.androidx.material3)\r\n    implementation(libs.androidx.compose.foundation)\r\n    implementation(libs.google.firebase.firestore)\r\n    testImplementation(libs.junit)\r\n    androidTestImplementation(libs.androidx.junit)\r\n    androidTestImplementation(libs.androidx.espresso.core)\r\n    androidTestImplementation(platform(libs.androidx.compose.bom))\r\n    androidTestImplementation(libs.androidx.ui.test.junit4)\r\n    debugImplementation(libs.androidx.ui.tooling)\r\n    debugImplementation(libs.androidx.ui.test.manifest)\r\n    //Practica\r\n    implementation(libs.constraintlayout.compose)\r\n    implementation(libs.navigation.compose)\r\n    implementation (libs.androidx.appcompat)\r\n    implementation (libs.google.material)\r\n\r\n    // Firebase\r\n    implementation(platform(libs.firebase.bom))\r\n    implementation(libs.firebase.firestore)\r\n    implementation(\"com.google.firebase:firebase-auth-ktx\")\r\n\r\n    implementation(\"com.caverock:androidsvg:1.4\")\r\n    implementation(\"androidx.core:core-ktx:1.12.0\")\r\n    implementation(\"com.google.android.material:material:1.10.0\")\r\n\r\n    // Plano Interactivo\r\n    implementation(\"io.github.chrisbanes:PhotoView:2.3.0\")\r\n\r\n    // Cloudinary\r\n    implementation(\"io.coil-kt:coil-compose:2.7.0\")\r\n\r\n\r\n\r\n}\r\n
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+-diff --git a/app/build.gradle.kts b/app/build.gradle.kts
+---- a/app/build.gradle.kts	(revision 39a86368e80442156ba767c8ea88d7fdae822333)
+-+++ b/app/build.gradle.kts	(date 1762638050671)
+-@@ -80,6 +80,8 @@
+-     // Cloudinary
+-     implementation("io.coil-kt:coil-compose:2.7.0")
+- 
+-+    implementation("com.github.hannesa2:panoramagl:1.14")
+-+
+- 
+- 
+- }
+-Index: app/src/main/java/com/nextapp/monasterio/AppRoutes.kt
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+>package com.nextapp.monasterio\r\n\r\n/**\r\n * Define todas las rutas (llaves) de navegación en un solo lugar\r\n * para evitar errores de escritura y centralizar la gestión.\r\n */\r\nobject AppRoutes {\r\n    const val INICIO = \"inicio\"\r\n    const val INFO = \"info\"\r\n    const val HISTORIA = \"historia\"\r\n    const val GALERIA = \"galeria\"\r\n    const val PERFIL = \"perfil\"\r\n    const val AJUSTES = \"ajustes\"\r\n    const val OPCIONES_RESERVA = \"opciones_reserva\"\r\n    const val RESERVA = \"reserva\"\r\n    const val CONFIRMACION_RESERVA = \"confirmacion_reserva\"\r\n    const val VIRTUAL_VISIT = \"virtual_visit\"\r\n    const val PIN_DETALLE = \"pin_detalle\"\r\n}\r\n
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+-diff --git a/app/src/main/java/com/nextapp/monasterio/AppRoutes.kt b/app/src/main/java/com/nextapp/monasterio/AppRoutes.kt
+---- a/app/src/main/java/com/nextapp/monasterio/AppRoutes.kt	(revision 39a86368e80442156ba767c8ea88d7fdae822333)
+-+++ b/app/src/main/java/com/nextapp/monasterio/AppRoutes.kt	(date 1762638506598)
+-@@ -16,4 +16,6 @@
+-     const val CONFIRMACION_RESERVA = "confirmacion_reserva"
+-     const val VIRTUAL_VISIT = "virtual_visit"
+-     const val PIN_DETALLE = "pin_detalle"
+-+
+-+    const val PANORAMA = "panorama"
+- }
+-Index: gradle/libs.versions.toml
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+>[versions]\r\nagp = \"8.11.1\" #no cambiar de la 8.11.1\r\nkotlin = \"2.0.21\"\r\ncoreKtx = \"1.17.0\"\r\njunit = \"4.13.2\"\r\njunitVersion = \"1.3.0\"\r\nespressoCore = \"3.7.0\"\r\nlifecycleRuntimeKtx = \"2.9.4\"\r\nactivityCompose = \"1.11.0\"\r\ncomposeBom = \"2025.10.01\"\r\n#Practica\r\nconstraintlayoutCompose = \"1.1.1\"\r\nnavigationCompose = \"2.9.5\"\r\nfoundation = \"1.9.4\"\r\nappcompat = \"1.7.0\"\r\nmaterial = \"1.12.0\"\r\nfirebase-gservices = \"4.4.4\"\r\nfirebase-bom = \"33.1.0\"\r\nfirebaseFirestore = \"26.0.2\"\r\n\r\n[libraries]\r\nandroidx-core-ktx = { group = \"androidx.core\", name = \"core-ktx\", version.ref = \"coreKtx\" }\r\njunit = { group = \"junit\", name = \"junit\", version.ref = \"junit\" }\r\nandroidx-junit = { group = \"androidx.test.ext\", name = \"junit\", version.ref = \"junitVersion\" }\r\nandroidx-espresso-core = { group = \"androidx.test.espresso\", name = \"espresso-core\", version.ref = \"espressoCore\" }\r\nandroidx-lifecycle-runtime-ktx = { group = \"androidx.lifecycle\", name = \"lifecycle-runtime-ktx\", version.ref = \"lifecycleRuntimeKtx\" }\r\nandroidx-activity-compose = { group = \"androidx.activity\", name = \"activity-compose\", version.ref = \"activityCompose\" }\r\nandroidx-compose-bom = { group = \"androidx.compose\", name = \"compose-bom\", version.ref = \"composeBom\" }\r\nandroidx-ui = { group = \"androidx.compose.ui\", name = \"ui\" }\r\nandroidx-ui-graphics = { group = \"androidx.compose.ui\", name = \"ui-graphics\" }\r\nandroidx-ui-tooling = { group = \"androidx.compose.ui\", name = \"ui-tooling\" }\r\nandroidx-ui-tooling-preview = { group = \"androidx.compose.ui\", name = \"ui-tooling-preview\" }\r\nandroidx-ui-test-manifest = { group = \"androidx.compose.ui\", name = \"ui-test-manifest\" }\r\nandroidx-ui-test-junit4 = { group = \"androidx.compose.ui\", name = \"ui-test-junit4\" }\r\nandroidx-material3 = { group = \"androidx.compose.material3\", name = \"material3\" }\r\n#Practica\r\nconstraintlayout-compose = { module = \"androidx.constraintlayout:constraintlayout-compose\", version.ref = \"constraintlayoutCompose\" }\r\nnavigation-compose = { module = \"androidx.navigation:navigation-compose\", version.ref = \"navigationCompose\" }\r\nandroidx-compose-foundation = { group = \"androidx.compose.foundation\", name = \"foundation\", version.ref = \"foundation\" }\r\nandroidx-appcompat = { module = \"androidx.appcompat:appcompat\", version.ref = \"appcompat\" }\r\ngoogle-material = { module = \"com.google.android.material:material\", version.ref = \"material\" }\r\nfirebase-bom = { module = \"com.google.firebase:firebase-bom\", version.ref = \"firebase-bom\" }\r\nfirebase-firestore = { module = \"com.google.firebase:firebase-firestore-ktx\" }\r\ngoogle-firebase-firestore = { group = \"com.google.firebase\", name = \"firebase-firestore\", version.ref = \"firebaseFirestore\" }\r\n\r\n[plugins]\r\nandroid-application = { id = \"com.android.application\", version.ref = \"agp\" }\r\nkotlin-android = { id = \"org.jetbrains.kotlin.android\", version.ref = \"kotlin\" }\r\nkotlin-compose = { id = \"org.jetbrains.kotlin.plugin.compose\", version.ref = \"kotlin\" }\r\nfirebase-gservices = { id = \"com.google.gms.google-services\", version.ref = \"firebase-gservices\" }\r\n\r\n\r\n
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+-diff --git a/gradle/libs.versions.toml b/gradle/libs.versions.toml
+---- a/gradle/libs.versions.toml	(revision 39a86368e80442156ba767c8ea88d7fdae822333)
+-+++ b/gradle/libs.versions.toml	(date 1762638710995)
+-@@ -1,6 +1,6 @@
+- [versions]
+- agp = "8.11.1" #no cambiar de la 8.11.1
+--kotlin = "2.0.21"
+-+kotlin = "2.2.0"
+- coreKtx = "1.17.0"
+- junit = "4.13.2"
+- junitVersion = "1.3.0"
+Index: .idea/shelf/Uncommitted_changes_before_Checkout_at_08_11_2025_22_18__Changes_.xml
+===================================================================
+diff --git a/.idea/shelf/Uncommitted_changes_before_Checkout_at_08_11_2025_22_18__Changes_.xml b/.idea/shelf/Uncommitted_changes_before_Checkout_at_08_11_2025_22_18__Changes_.xml
+deleted file mode 100644
+--- a/.idea/shelf/Uncommitted_changes_before_Checkout_at_08_11_2025_22_18__Changes_.xml	(revision d076f828ce2f52136802345ea495ef475f1af8b2)
++++ /dev/null	(revision d076f828ce2f52136802345ea495ef475f1af8b2)
+@@ -1,4 +0,0 @@
+-<changelist name="Uncommitted_changes_before_Checkout_at_08_11_2025_22_18_[Changes]" date="1762636735672" recycled="true" deleted="true">
+-  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_08_11_2025_22_18_[Changes]/shelved.patch" />
+-  <option name="DESCRIPTION" value="Uncommitted changes before Checkout at 08/11/2025 22:18 [Changes]" />
+-</changelist>
+\ No newline at end of file

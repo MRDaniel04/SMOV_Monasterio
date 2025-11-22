@@ -99,6 +99,10 @@
     <string name="visit_schedule">Horarios de Visita</string>
     <string name="monday_to_friday">Lunes a Viernes:</string>
     <string name="play_audio" />
+    <string name="four_pieces">4 piezas</string>
+    <string name="nine_pieces">9 piezas</string>
+    <string name="sixteen_pieces">16 piezas</string>
+    <string name="twentyfive_pieces">25 piezas</string>
     <string name="dont_show_again">No volver a mostrar</string>
     <string name="understand">Entendido</string>
     <string name="map_tutorial_body">Este es el cuerpo del tutorial</string>
@@ -131,5 +135,9 @@
     <string name="image_upload_success">Imagen subida correctamente</string>
     <string name="image_upload_error">Error al subir la imagen</string>
     <string name="image_select_error">Error al cargar la imagen</string>
+    <string name="congratulations">¡Felicidades!</string>
+    <string name="message_puzzle_completed">¡Has resuelto el puzzle! ¿Listo para el siguiente desafío?</string>
+    <string name="ready">Listo</string>
+    <string name="original_image">Ver imagen</string>
     <string name="image_gallery_title">Imágenes</string>
 </resources>

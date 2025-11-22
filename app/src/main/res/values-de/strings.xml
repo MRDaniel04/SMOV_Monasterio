@@ -117,4 +117,12 @@
     <string name="image_upload_success">Bild erfolgreich hochgeladen</string>
     <string name="image_upload_error">Fehler beim Hochladen des Bildes</string>
     <string name="image_select_error">Fehler beim Auswählen des Bildes</string>
+    <string name="four_pieces">4 Stück</string>
+    <string name="nine_pieces">9 Stück</string>
+    <string name="sixteen_pieces">16 Stück</string>
+    <string name="twentyfive_pieces">25 Stück</string>
+    <string name="congratulations">Glückwunsch!</string>
+    <string name="message_puzzle_completed">Du hast das Rätsel gelöst! Bereit für die nächste Herausforderung?</string>
+    <string name="original_image">Bild ansehen</string>
+    <string name="ready">Bereit</string>
 </resources>

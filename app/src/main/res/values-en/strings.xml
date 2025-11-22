@@ -103,6 +103,11 @@
     <string name="visit_schedule">Opening Hours</string>
     <string name="monday_to_friday">Monday to Friday:</string>
     <string name="play_audio" />
+    <string name="four_pieces">4 pieces</string>
+    <string name="nine_pieces">9 pieces</string>
+    <string name="sixteen_pieces">16 pieces</string>
+    <string name="twentyfive_pieces">25 pieces</string>
+
     <string name="confirm_save_title">Save changes?</string>
     <string name="confirm_save_message">Are you sure you want to save the changes?</string>
     <string name="confirm_save_button">Save</string>
@@ -118,4 +123,8 @@
     <string name="image_upload_error">Error uploading image</string>
     <string name="image_select_error">Error selecting image</string>
     <string name="image_gallery_title">Images</string>
+    <string name="congratulations">Congratulations!</string>
+    <string name="message_puzzle_completed">You\'ve solved the puzzle! Ready for the next challenge?</string>
+    <string name="original_image">View image</string>
+    <string name="ready">Ready</string>
 </resources>

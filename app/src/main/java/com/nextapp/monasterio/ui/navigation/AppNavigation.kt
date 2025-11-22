@@ -18,6 +18,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.nextapp.monasterio.AppRoutes
 import com.nextapp.monasterio.R
+import com.nextapp.monasterio.models.PuzzleData
+import com.nextapp.monasterio.models.PuzzleSize
 import com.nextapp.monasterio.ui.screens.* // Asegúrate de importar PanoramaScreen y GaleriaScreen
 import com.nextapp.monasterio.ui.theme.MonasteryRed
 import com.nextapp.monasterio.ui.theme.White
@@ -30,12 +32,12 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun AppNavigationHost(
+    modifier: Modifier = Modifier,
     authViewModel: AuthViewModel = viewModel(),
     historiaViewModel: HistoriaViewModel = viewModel(),
     ajustesViewModel: AjustesViewModel = viewModel(),
     navController: NavHostController,
     isEditing: Boolean = false,
-    modifier: Modifier = Modifier
 ) {
     NavHost(
         navController = navController,
@@ -47,7 +49,12 @@ fun AppNavigationHost(
         composable(AppRoutes.HISTORIA) { HistoriaScreen(isEditing = isEditing, viewModel = historiaViewModel) }
         composable(AppRoutes.GALERIA)  { GaleriaScreen(navController = navController) }
         composable(AppRoutes.MODO_NINYOS)   { OpcionesModoNiño(navController = navController) }
-        composable(AppRoutes.VIDEO_NINYOS)   { VideoNinyos()}
+        composable(AppRoutes.VIDEO_NINYOS)   { VideoNinyosScreen()}
+        composable(AppRoutes.PUZZLENIVEL1){PuzzleScreen(navController=navController,tamaño = PuzzleSize(2,2),imagenes= PuzzleData.IMAGENES_NIVEL1,imagenCompleta=R.drawable.p1)}
+        composable(AppRoutes.PUZZLENIVEL2){PuzzleScreen(navController=navController,tamaño = PuzzleSize(3,3),imagenes= PuzzleData.IMAGENES_NIVEL2, imagenCompleta = R.drawable.p2)}
+        composable(AppRoutes.PUZZLENIVEL3){PuzzleScreen(navController=navController,tamaño = PuzzleSize(4,4),imagenes= PuzzleData.IMAGENES_NIVEL3,imagenCompleta = R.drawable.p3)}
+        composable(AppRoutes.PUZZLENIVEL4){PuzzleScreen(navController=navController,tamaño= PuzzleSize(5,5),imagenes= PuzzleData.IMAGENES_NIVEL4,imagenCompleta = R.drawable.p4)}
+        composable(AppRoutes.JUEGO_NINYOS){JuegoNinyosScreen(navController=navController)}
         composable(route=AppRoutes.MODO_EDICION) { OpcionesModoEdicion(navController = navController)}
         composable(AppRoutes.EDICION_FONDO_INICIO) {EdicionFondoInicio(navController = navController)}
         composable(AppRoutes.EDICION_PINES) { EdicionPines(navController) }

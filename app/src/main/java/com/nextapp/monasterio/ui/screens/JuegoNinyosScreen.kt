@@ -26,6 +26,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.NavController
@@ -37,7 +38,7 @@ import com.nextapp.monasterio.ui.theme.MonasteryOrange
 
 
 @Composable
-fun OpcionesModoNiño(navController:NavController,modifier: Modifier = Modifier) {
+fun JuegoNinyosScreen(navController:NavController,modifier: Modifier = Modifier) {
     val context = LocalContext.current
 
     val activity = (context as? Activity)
@@ -51,17 +52,19 @@ fun OpcionesModoNiño(navController:NavController,modifier: Modifier = Modifier)
     }
 
     ConstraintLayout(modifier = modifier.fillMaxSize().background(Color.White).verticalScroll(rememberScrollState())) {
-        val (btnVideo,btnJuego) = createRefs()
-        val centerGuide = createGuidelineFromTop(0.5f)
+        val (btn4,btn9,btn16,btn25) = createRefs()
+        createVerticalChain(btn4,btn9,btn16,btn25, chainStyle = ChainStyle.Packed)
         Button(
             onClick = {
-                navController.navigate(AppRoutes.VIDEO_NINYOS)
+                navController.navigate(AppRoutes.PUZZLENIVEL1)
             },
-            colors = ButtonDefaults.buttonColors(containerColor = MonasteryOrange),
+            colors = ButtonDefaults.buttonColors(containerColor = MonasteryBlue),
             shape = RoundedCornerShape(20.dp),
             modifier = Modifier
-                .constrainAs(btnVideo) {
-                    bottom.linkTo(centerGuide, margin = 24.dp)
+                .padding(bottom = 40.dp)
+                .constrainAs(btn4) {
+                    top.linkTo(parent.top)
+                    bottom.linkTo(btn9.top, margin = 40.dp)
                     start.linkTo(parent.start, margin = 40.dp)
                     end.linkTo(parent.end, margin = 40.dp)
                     width = Dimension.fillToConstraints
@@ -72,15 +75,8 @@ fun OpcionesModoNiño(navController:NavController,modifier: Modifier = Modifier)
                     .padding(horizontal = 20.dp),
                 verticalAlignment = Alignment.CenterVertically
             )  {
-                Icon(
-                    painter = painterResource(id = R.drawable.youtube),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .padding(end = 18.dp)
-                        .size(48.dp)
-                )
                 Text(
-                    stringResource(id = R.string.video_child),
+                    stringResource(id = R.string.four_pieces),
                     fontSize = 22.sp,
                     textAlign = TextAlign.Center
                 )
@@ -88,13 +84,15 @@ fun OpcionesModoNiño(navController:NavController,modifier: Modifier = Modifier)
         }
         Button(
             onClick = {
-                navController.navigate(AppRoutes.JUEGO_NINYOS)
+                navController.navigate(AppRoutes.PUZZLENIVEL2)
             },
             colors = ButtonDefaults.buttonColors(containerColor = MonasteryBlue),
             shape = RoundedCornerShape(20.dp),
             modifier = Modifier
-                .constrainAs(btnJuego) {
-                    top.linkTo(centerGuide, margin = 24.dp)
+                .padding(bottom = 40.dp)
+                .constrainAs(btn9) {
+                    top.linkTo(btn4.bottom, margin = 40.dp)
+                    bottom.linkTo(btn16.top,margin=40.dp)
                     start.linkTo(parent.start, margin = 40.dp)
                     end.linkTo(parent.end, margin = 40.dp)
                     width = Dimension.fillToConstraints
@@ -105,16 +103,64 @@ fun OpcionesModoNiño(navController:NavController,modifier: Modifier = Modifier)
                     .padding(horizontal = 20.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.console),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .padding(end = 16.dp)
-                        .size(48.dp)
-
-                )
                 Text(
-                    stringResource(id = R.string.game_child),
+                    stringResource(id = R.string.nine_pieces),
+                    fontSize = 22.sp,
+                    textAlign = TextAlign.Center
+                )
+            }
+        }
+        Button(
+            onClick = {
+                navController.navigate(AppRoutes.PUZZLENIVEL3)
+            },
+            colors = ButtonDefaults.buttonColors(containerColor = MonasteryBlue),
+            shape = RoundedCornerShape(20.dp),
+            modifier = Modifier
+                .padding(bottom = 40.dp)
+                .constrainAs(btn16) {
+                    top.linkTo(btn9.bottom, margin = 40.dp)
+                    bottom.linkTo(btn25.top,margin=40.dp)
+                    start.linkTo(parent.start, margin = 40.dp)
+                    end.linkTo(parent.end, margin = 40.dp)
+                    width = Dimension.fillToConstraints
+                }
+        ) {
+            Row(
+                modifier=Modifier
+                    .padding(horizontal = 20.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    stringResource(id = R.string.sixteen_pieces),
+                    fontSize = 22.sp,
+                    textAlign = TextAlign.Center
+                )
+            }
+        }
+        Button(
+            onClick = {
+                navController.navigate(AppRoutes.PUZZLENIVEL4)
+            },
+            colors = ButtonDefaults.buttonColors(containerColor = MonasteryBlue),
+            shape = RoundedCornerShape(20.dp),
+            modifier = Modifier
+                .padding(bottom = 40.dp)
+                .constrainAs(btn25) {
+                    top.linkTo(btn16.bottom, margin = 40.dp)
+                    bottom.linkTo(parent.bottom)
+                    start.linkTo(parent.start, margin = 40.dp)
+                    end.linkTo(parent.end, margin = 40.dp)
+                    width = Dimension.fillToConstraints
+                }
+        ) {
+            Row(
+                modifier=Modifier
+                    .padding(horizontal = 20.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    stringResource(id = R.string.twentyfive_pieces),
                     fontSize = 22.sp,
                     textAlign = TextAlign.Center
                 )

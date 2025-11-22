@@ -29,7 +29,7 @@ import androidx.media3.ui.PlayerView
 
 
 @Composable
-fun VideoNinyos(modifier: Modifier = Modifier) {
+fun VideoNinyosScreen(modifier: Modifier = Modifier) {
     val context = LocalContext.current
 
     val activity = (context as? Activity)
