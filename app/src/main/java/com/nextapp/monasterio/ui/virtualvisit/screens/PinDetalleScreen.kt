@@ -2,6 +2,7 @@ package com.nextapp.monasterio.ui.virtualvisit.screens
 
 import android.app.Activity
 import android.content.pm.ActivityInfo
+import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
@@ -13,11 +14,17 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInRoot
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -26,30 +33,20 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.core.view.WindowCompat
+import androidx.media3.common.MediaItem
+import androidx.media3.common.Player
+import androidx.media3.exoplayer.ExoPlayer
 import coil.compose.AsyncImage
 import coil.load
 import com.github.chrisbanes.photoview.PhotoView
 import com.nextapp.monasterio.R
 import com.nextapp.monasterio.models.PinData
 import com.nextapp.monasterio.models.Ubicacion
-import java.util.Locale
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.res.stringResource
-// Imports de Media3 (ExoPlayer)
-import androidx.media3.common.MediaItem
-import androidx.media3.common.Player
-import androidx.media3.exoplayer.ExoPlayer
-import android.util.Log
-import androidx.compose.foundation.layout.Arrangement
-import com.nextapp.monasterio.viewModels.AjustesViewModel
 import com.nextapp.monasterio.ui.virtualvisit.components.GenericTutorialOverlay
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size // Importante para el foco cuadrado
+import com.nextapp.monasterio.viewModels.AjustesViewModel
+import java.util.Locale
 
-// Clase privada para definir los pasos del tutorial del Pin
+// Clase privada para definir los pasos del tutorial del Pin de forma dinámica
 private data class PinTutorialStep(
     val description: String,
     val focusCenter: Offset,
@@ -66,6 +63,7 @@ fun PinDetalleScreen(
     onBack: () -> Unit,
     onVer360: (() -> Unit)? = null
 ) {
+    // --- Configuración de Ventana y Orientación ---
     val view = LocalView.current
     LaunchedEffect(Unit) {
         val window = (view.context as? Activity)?.window
@@ -84,11 +82,17 @@ fun PinDetalleScreen(
     // --- LÓGICA DE ESTADO DEL TUTORIAL ---
     val isPinDismissed by viewModel.isPinDismissed.collectAsState()
     var showTutorialSession by remember { mutableStateOf(true) }
-    // Índice para recorrer los pasos (Atrás -> Imagen -> Audio -> 360)
     var currentStepIndex by remember { mutableIntStateOf(0) }
 
-    val imagenes = if (pin.imagenesDetalladas.isNotEmpty()) pin.imagenesDetalladas else emptyList()
+    // --- VARIABLES PARA CAPTURAR POSICIONES REALES (LAYOUT) ---
+    // Estas variables se llenarán cuando Android dibuje la pantalla
+    var backButtonLayout by remember { mutableStateOf<Pair<Offset, Size>?>(null) }
+    var imageLayout by remember { mutableStateOf<Pair<Offset, Size>?>(null) }
+    var audioButtonLayout by remember { mutableStateOf<Pair<Offset, Size>?>(null) }
+    var button360Layout by remember { mutableStateOf<Pair<Offset, Size>?>(null) }
 
+    // --- Datos del Pin ---
+    val imagenes = if (pin.imagenesDetalladas.isNotEmpty()) pin.imagenesDetalladas else emptyList()
     val pagerState = rememberPagerState(pageCount = { imagenes.size })
     var selectedImageUrl by remember { mutableStateOf<String?>(null) }
     var selectedImageTitle by remember { mutableStateOf<String?>(null) }
@@ -120,7 +124,7 @@ fun PinDetalleScreen(
         }
     }
 
-    // --- AUDIO ---
+    // --- LÓGICA DE AUDIO ---
     val context = LocalContext.current
     val audioUrl = when (language) {
         "es" -> pin.audioUrl_es
@@ -129,7 +133,7 @@ fun PinDetalleScreen(
         else -> pin.audioUrl_es
     }
 
-    Log.d("AudioDebug", "Pin: '${pin.titulo}', URL Audio: [$audioUrl]")
+    Log.d("AudioDebug", "Pin: '${pin.titulo}', Idioma: $language, URL Audio: [$audioUrl]")
 
     val exoPlayer = remember { ExoPlayer.Builder(context).build() }
     var isPlaying by remember { mutableStateOf(false) }
@@ -162,42 +166,7 @@ fun PinDetalleScreen(
         onDispose { exoPlayer.release() }
     }
 
-    // =====================================================================
-    // CÁLCULO DE COORDENADAS PARA EL TUTORIAL
-    // =====================================================================
-    val density = LocalDensity.current
-    val screenWidthPx = with(density) { configuration.screenWidthDp.dp.toPx() }
-    val screenHeightPx = with(density) { configuration.screenHeightDp.dp.toPx() }
-
-    // 1. Botón Atrás (Aprox Top-Left)
-    val backButtonPos = remember(density) {
-        with(density) { Offset(30.dp.toPx(), 85.dp.toPx()) }
-    }
-
-    // 2. Imagen Principal (Carrusel) - Aprox Centro-Superior
-    // Título(~100dp) + Imagen(250dp). Centro aprox en Y=240dp
-    val imageCenterPos = remember(density) {
-        with(density) { Offset(screenWidthPx / 2, 280.dp.toPx()) }
-    }
-    val imageRectSize = remember(density, screenWidthPx) {
-        with(density) { Size(screenWidthPx - 32.dp.toPx(), 250.dp.toPx()) }
-    }
-
-    // 3. Botón Audio - Debajo de la imagen, izquierda.
-    // Aprox Y = 100(titulo) + 250(img) + 20(pads) + 24(mitad btn) ≈ 400dp
-    val audioBtnPos = remember(density) {
-        with(density) { Offset(40.dp.toPx(), 450.dp.toPx()) }
-    }
-
-    // 4. Botón 360 - Abajo del todo
-    val btn360Pos = remember(density, screenHeightPx) {
-        with(density) { Offset(screenWidthPx / 2, screenHeightPx - 100.dp.toPx()) }
-    }
-    val btn360Size = remember(density, screenWidthPx) {
-        with(density) { Size(screenWidthPx - 32.dp.toPx(), 60.dp.toPx()) }
-    }
-
-
+    // --- UI PRINCIPAL ---
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -211,11 +180,17 @@ fun PinDetalleScreen(
                 .padding(bottom = 40.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // 🔙 Botón atrás
+            // 1. BOTÓN ATRÁS
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 16.dp),
+                    .padding(top = 16.dp)
+                    // 👇 CAPTURAMOS POSICIÓN REAL
+                    .onGloballyPositioned { coordinates ->
+                        val position = coordinates.positionInRoot()
+                        val size = coordinates.size
+                        backButtonLayout = position to Size(size.width.toFloat(), size.height.toFloat())
+                    },
                 contentAlignment = Alignment.CenterStart
             ) {
                 Image(
@@ -229,6 +204,7 @@ fun PinDetalleScreen(
 
             Spacer(modifier = Modifier.height(8.dp))
 
+            // Título
             Text(
                 text = buildString {
                     append(titulo_pin)
@@ -243,7 +219,7 @@ fun PinDetalleScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // 🖼️ Carrusel
+            // 2. CARRUSEL DE IMÁGENES
             if (imagenes.isNotEmpty()) {
                 Box(
                     modifier = Modifier
@@ -251,6 +227,12 @@ fun PinDetalleScreen(
                         .height(250.dp)
                         .clip(RoundedCornerShape(16.dp))
                         .border(3.dp, Color.Black, RoundedCornerShape(16.dp))
+                        // 👇 CAPTURAMOS POSICIÓN REAL
+                        .onGloballyPositioned { coordinates ->
+                            val position = coordinates.positionInRoot()
+                            val size = coordinates.size
+                            imageLayout = position to Size(size.width.toFloat(), size.height.toFloat())
+                        }
                 ) {
                     HorizontalPager(state = pagerState) { page ->
                         val imagen = imagenes[page]
@@ -282,7 +264,9 @@ fun PinDetalleScreen(
                         }
                     }
                     Row(
-                        Modifier.align(Alignment.BottomCenter).padding(bottom = 6.dp)
+                        Modifier
+                            .align(Alignment.BottomCenter)
+                            .padding(bottom = 6.dp)
                     ) {
                         repeat(imagenes.size) { index ->
                             val selected = pagerState.currentPage == index
@@ -290,7 +274,10 @@ fun PinDetalleScreen(
                                 Modifier
                                     .padding(3.dp)
                                     .size(if (selected) 8.dp else 6.dp)
-                                    .background(Color.White.copy(alpha = if (selected) 1f else 0.6f), CircleShape)
+                                    .background(
+                                        Color.White.copy(alpha = if (selected) 1f else 0.6f),
+                                        CircleShape
+                                    )
                             )
                         }
                     }
@@ -298,7 +285,7 @@ fun PinDetalleScreen(
                 Spacer(modifier = Modifier.height(12.dp))
             }
 
-            // 🔊 Botón Audio
+            // 3. BOTÓN DE AUDIO
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
@@ -310,13 +297,24 @@ fun PinDetalleScreen(
                         else -> R.drawable.play_arrow
                     }
                     Row(
-                        modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 8.dp),
                         horizontalArrangement = Arrangement.Start
                     ) {
-                        IconButton(onClick = {
-                            hasUserInteracted = true
-                            if (isPlaying) exoPlayer.pause() else exoPlayer.play()
-                        }) {
+                        IconButton(
+                            onClick = {
+                                hasUserInteracted = true
+                                if (isPlaying) exoPlayer.pause() else exoPlayer.play()
+                            },
+                            modifier = Modifier
+                                // 👇 CAPTURAMOS POSICIÓN REAL
+                                .onGloballyPositioned { coordinates ->
+                                    val position = coordinates.positionInRoot()
+                                    val size = coordinates.size
+                                    audioButtonLayout = position to Size(size.width.toFloat(), size.height.toFloat())
+                                }
+                        ) {
                             Box(
                                 modifier = Modifier
                                     .size(48.dp)
@@ -336,7 +334,7 @@ fun PinDetalleScreen(
                 }
             }
 
-            // 📝 Descripción
+            // Descripción Deslizable
             val descripcion = descripcion_pin ?: ""
             if (descripcion.isNotBlank()) {
                 val textScrollState = rememberScrollState()
@@ -360,19 +358,26 @@ fun PinDetalleScreen(
                 }
             }
 
-            Spacer(modifier=Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
-            // 🔘 Botón 360
+            // 4. BOTÓN 360
             onVer360?.let {
                 Box(
                     modifier = Modifier
                         .background(Color.White)
                         .navigationBarsPadding()
                         .padding(horizontal = 16.dp, vertical = 2.dp)
+                        .onGloballyPositioned { coordinates ->
+                            val position = coordinates.positionInRoot()
+                            val size = coordinates.size
+                            button360Layout = position to Size(size.width.toFloat(), size.height.toFloat())
+                        }
                 ) {
                     Button(
                         onClick = it,
-                        modifier = Modifier.fillMaxWidth().height(56.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(56.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = Color.Black),
                         shape = RoundedCornerShape(12.dp)
                     ) {
@@ -388,62 +393,75 @@ fun PinDetalleScreen(
         }
 
         // ====================================================================
-        // LOGICA VISUAL DEL TUTORIAL
+        // LOGICA VISUAL DEL TUTORIAL (CON COORDENADAS REALES)
         // ====================================================================
 
-        if (!isPinDismissed && showTutorialSession) {
-            // Construimos la lista de pasos dinámicamente
-            // (Solo mostramos el paso de audio si hay audio, y el de 360 si hay 360)
-            val steps = remember(audioUrl, onVer360) {
+        // Verificar que tenemos al menos las coordenadas básicas (Botón atrás es lo mínimo)
+        val isLayoutReady = backButtonLayout != null
+
+        if (!isPinDismissed && showTutorialSession && isLayoutReady) {
+
+            // Construimos la lista de pasos usando las coordenadas CAPTURADAS
+            val steps = remember(backButtonLayout, imageLayout, audioButtonLayout, button360Layout, audioUrl, onVer360) {
                 val list = mutableListOf<PinTutorialStep>()
 
-                // PASO 1: Volver (Círculo, Texto Abajo)
-                list.add(
-                    PinTutorialStep(
-                        description = activity?.getString(R.string.pin_1) ?: "Volver",
-                        focusCenter = backButtonPos,
-                        focusRadius = 70f,
-                        alignment = Alignment.BottomCenter
-                    )
-                )
-
-                // PASO 2: Imágenes (Cuadrado, Texto Abajo)
-                list.add(
-                    PinTutorialStep(
-                        description = activity?.getString(R.string.pin_2) ?: "Volver",
-                        focusCenter = imageCenterPos,
-                        rectSize = imageRectSize,
-                        alignment = Alignment.BottomCenter
-                    )
-                )
-
-                // PASO 3: Audio (Solo si existe) (Círculo, Texto Abajo)
-                if (!audioUrl.isNullOrBlank()) {
+                // PASO 1: Volver (Usamos las coordenadas reales del botón atrás)
+                backButtonLayout?.let { (pos, size) ->
                     list.add(
                         PinTutorialStep(
-                            description = activity?.getString(R.string.pin_3) ?: "Volver",
-                            focusCenter = audioBtnPos,
-                            focusRadius = 80f,
+                            description = activity?.getString(R.string.pin_1) ?: "Volver",
+                            // Calculamos el centro geométrico
+                            focusCenter = Offset(pos.x + size.width / 20, pos.y + size.height / 2),
+                            // Radio un poco más grande que el botón
+                            focusRadius = (size.width / 15),
                             alignment = Alignment.BottomCenter
                         )
                     )
                 }
 
-                // PASO 4: Botón 360 (Solo si existe) (Rectángulo, Texto ARRIBA)
-                if (onVer360 != null) {
+                // PASO 2: Imágenes (Usamos coordenadas reales del carrusel)
+                imageLayout?.let { (pos, size) ->
                     list.add(
                         PinTutorialStep(
-                            description = activity?.getString(R.string.pin_4) ?: "Volver",
-                            focusCenter = btn360Pos,
-                            rectSize = btn360Size,
-                            alignment = Alignment.TopCenter // 👈 EL CAMBIO CLAVE: Texto arriba
+                            description = activity?.getString(R.string.pin_2) ?: "Imágenes",
+                            focusCenter = Offset(pos.x + size.width / 2, pos.y + size.height / 2),
+                            rectSize = size, // Usamos el tamaño exacto
+                            alignment = Alignment.BottomCenter
                         )
                     )
+                }
+
+                // PASO 3: Audio (Solo si existe y se ha medido)
+                if (!audioUrl.isNullOrBlank() && audioButtonLayout != null) {
+                    audioButtonLayout?.let { (pos, size) ->
+                        list.add(
+                            PinTutorialStep(
+                                description = activity?.getString(R.string.pin_3) ?: "Audio",
+                                focusCenter = Offset(pos.x + size.width / 2, pos.y + size.height / 2),
+                                focusRadius = (size.width / 2) + 20f,
+                                alignment = Alignment.TopCenter
+                            )
+                        )
+                    }
+                }
+
+                // PASO 4: Botón 360 (Solo si existe y se ha medido)
+                if (onVer360 != null && button360Layout != null) {
+                    button360Layout?.let { (pos, size) ->
+                        list.add(
+                            PinTutorialStep(
+                                description = activity?.getString(R.string.pin_4) ?: "360",
+                                focusCenter = Offset(pos.x + size.width / 2, pos.y + size.height / 2),
+                                rectSize = size,
+                                alignment = Alignment.TopCenter // Dialogo ARRIBA
+                            )
+                        )
+                    }
                 }
                 list
             }
 
-            if (currentStepIndex < steps.size) {
+            if (steps.isNotEmpty() && currentStepIndex < steps.size) {
                 val step = steps[currentStepIndex]
                 val isLastStep = currentStepIndex == steps.size - 1
                 val btnText = if (isLastStep) stringResource(R.string.understand) else stringResource(R.string.next)
@@ -454,7 +472,7 @@ fun PinDetalleScreen(
                     highlightRadius = step.focusRadius,
                     highlightRectSize = step.rectSize,
                     buttonText = btnText,
-                    dialogAlignment = step.alignment, // 👈 Pasamos la alineación
+                    dialogAlignment = step.alignment,
 
                     onCloseClicked = { permanent ->
                         if (isLastStep) {
@@ -468,7 +486,6 @@ fun PinDetalleScreen(
                 )
             }
         }
-
 
         // 🔍 Zoom Dialog
         if (selectedImageUrl != null) {
@@ -504,9 +521,14 @@ private fun ZoomableImageDialog(imageUrl: String, label: String, onDismiss: () -
             modifier = Modifier.fillMaxSize().background(Color.Black.copy(alpha = 0.95f))
         ) {
             AndroidView(
-                factory = { context -> PhotoView(context).apply { load(imageUrl) { crossfade(true) } } },
+                factory = { context ->
+                    PhotoView(context).apply {
+                        load(imageUrl) { crossfade(true) }
+                    }
+                },
                 modifier = Modifier.fillMaxSize()
             )
+
             Text(
                 text = label,
                 color = Color.White,
@@ -517,10 +539,11 @@ private fun ZoomableImageDialog(imageUrl: String, label: String, onDismiss: () -
                     .background(Color.Black.copy(alpha = 0.7f))
                     .padding(horizontal = 12.dp, vertical = 8.dp)
             )
+
             IconButton(
                 onClick = onDismiss,
                 modifier = Modifier
-                    .align(Alignment.TopStart)
+                    .align(Alignment.TopEnd)
                     .statusBarsPadding()
                     .padding(16.dp)
                     .background(Color.Black.copy(alpha = 0.5f), CircleShape)

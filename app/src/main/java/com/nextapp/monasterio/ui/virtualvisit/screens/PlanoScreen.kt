@@ -16,8 +16,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -46,7 +49,9 @@ private data class TutorialStep(
     val title: String? = null,
     val description: String,
     val focusCenter: Offset,
-    val focusRadius: Float
+    val focusRadius: Float = 0f,
+    val rectSize: Size? = null, // Añadido para soportar focos rectangulares (ej. Zoom)
+    val alignment: Alignment = Alignment.BottomCenter // Para controlar si el texto sale arriba o abajo
 )
 
 @Composable
@@ -64,40 +69,32 @@ fun PlanoScreen(
         onDispose {}
     }
 
+
+
     // -----------------------------------------------------------
-    // 1. CÁLCULOS DE COORDENADAS PARA LOS FOCOS DEL TUTORIAL
+    // 1. CAPTURA DE COORDENADAS REALES (LAYOUT)
     // -----------------------------------------------------------
     val configuration = LocalConfiguration.current
     val density = LocalDensity.current
+
+    // Calculamos el ancho y alto total en píxeles
     val screenWidthPx = with(density) { configuration.screenWidthDp.dp.toPx() }
     val screenHeightPx = with(density) { configuration.screenHeightDp.dp.toPx() }
 
-    // A. Centro de la pantalla (Para el Mapa / Bienvenida)
-    val centerOffset = remember(configuration) {
-        Offset(screenWidthPx / 3.5f, screenHeightPx / 2.1f)
-    }
-
-    val backButtonOffset = remember(density) {
-        Offset(screenWidthPx / 9.5f, screenHeightPx / 8.6f)
-    }
-
-    val rightbuttons = remember(density) {
-        Offset(screenWidthPx / 1f, screenHeightPx / 2.2f)
-    }
-
-    val pins = remember(density) {
-        Offset(screenWidthPx / 2.5f, screenHeightPx / 6f)
-    }
-
-    // C. Controles de Zoom (Abajo Derecha)
-    val zoomControlsOffset = remember(density, configuration) {
+    // El centro de la pantalla siempre se puede calcular matemáticamente
+    val screenCenter = remember(configuration) {
         with(density) {
             Offset(
-                x = screenWidthPx - 40.dp.toPx(),
-                y = screenHeightPx - 160.dp.toPx()
+                x = configuration.screenWidthDp.dp.toPx() / 2,
+                y = configuration.screenHeightDp.dp.toPx() / 2
             )
         }
     }
+
+    // Variables de estado para guardar la posición real de los elementos flotantes
+    // Se rellenarán automáticamente gracias a .onGloballyPositioned
+    var backButtonLayout by remember { mutableStateOf<Pair<Offset, Size>?>(null) }
+    var zoomControlsLayout by remember { mutableStateOf<Pair<Offset, Size>?>(null) }
 
     val scope = rememberCoroutineScope()
 
@@ -111,6 +108,7 @@ fun PlanoScreen(
     var activePath by remember { mutableStateOf<Path?>(null) }
     var activeHighlight by remember { mutableStateOf<Color?>(null) }
     var isPinPressed by remember { mutableStateOf(false) }
+
     // --- LOGICA DE TUTORIAL ---
     val isMainDismissed by viewModel.isMainMapDismissed.collectAsState()
     val isSubDismissed by viewModel.isSubMapDismissed.collectAsState()
@@ -190,7 +188,7 @@ fun PlanoScreen(
             update = { photoView ->
                 photoView.staticZones = figuras.map {
                     DebugPhotoView.StaticZoneData(
-                        createPathFromFirebase(it), // Ahora sí encontrará la función
+                        createPathFromFirebase(it),
                         it.colorResaltado.toUInt().toInt()
                     )
                 }
@@ -258,7 +256,13 @@ fun PlanoScreen(
         Column(
             modifier = Modifier
                 .align(Alignment.CenterEnd)
-                .padding(end = 16.dp, bottom = 80.dp),
+                .padding(end = 16.dp, bottom = 80.dp)
+                // 👇 CAPTURAR POSICIÓN REAL (Para que el tutorial no se descuadre)
+                .onGloballyPositioned { coordinates ->
+                    val position = coordinates.positionInRoot()
+                    val size = coordinates.size
+                    zoomControlsLayout = position to Size(size.width.toFloat(), size.height.toFloat())
+                },
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             if (botonesVisibles) {
@@ -347,6 +351,12 @@ fun PlanoScreen(
                 .statusBarsPadding()
                 .padding(16.dp)
                 .background(Color.Black.copy(alpha = 0.5f), shape = RoundedCornerShape(12.dp))
+                // 👇 CAPTURAR POSICIÓN REAL (Para que el tutorial no se descuadre)
+                .onGloballyPositioned { coordinates ->
+                    val position = coordinates.positionInRoot()
+                    val size = coordinates.size
+                    backButtonLayout = position to Size(size.width.toFloat(), size.height.toFloat())
+                }
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.arrow_back),
@@ -355,34 +365,59 @@ fun PlanoScreen(
             )
         }
 
-        // 4. TUTORIALES (Lógica Step-by-Step)
+        // 4. TUTORIALES (Lógica Step-by-Step Dinámica)
         val isMainMap = (planoId == "monasterio_exterior")
 
-        if (showTutorialSession) {
-            if (isMainMap && !isMainDismissed) {
-                // --- TUTORIAL MAPA PRINCIPAL (3 Pasos) ---
-                val steps = listOf(
-                    // Paso 0: Bienvenida -> Foco Centro
-                    TutorialStep(
-                        description = stringResource(R.string.map_tutorial_body1),
-                        focusCenter = backButtonOffset,
-                        focusRadius = 120f
-                    ),
-                    // Paso 1: Zoom -> Foco Abajo Derecha
-                    TutorialStep(
-                        description = stringResource(R.string.map_tutorial_body1_2),
-                        focusCenter = centerOffset,
-                        focusRadius = 220f
-                    ),
-                    // Paso 2: Atrás -> Foco Arriba Izquierda
-                    TutorialStep(
-                        description = stringResource(R.string.map_tutorial_body1_3),
-                        focusCenter = rightbuttons,
-                        focusRadius = 400f
-                    )
-                )
+        // Solo mostrar si tenemos las coordenadas capturadas
+        val isLayoutReady = backButtonLayout != null
 
-                if (currentStepIndex < steps.size) {
+        if (showTutorialSession && isLayoutReady) {
+            if (isMainMap && !isMainDismissed) {
+
+                // --- TUTORIAL MAPA PRINCIPAL (3 Pasos) ---
+                val steps = remember(backButtonLayout, zoomControlsLayout) {
+                    val list = mutableListOf<TutorialStep>()
+
+                    // Paso 0: Bienvenida (Foco Botón Atrás)
+                    if (backButtonLayout != null) {
+                        val (pos, size) = backButtonLayout!!
+                        list.add(
+                            TutorialStep(
+                                description = context.getString(R.string.map_tutorial_body1),
+                                focusCenter = Offset(pos.x + size.width / 2, pos.y + size.height / 2),
+                                focusRadius = 100f,
+                                alignment = Alignment.BottomCenter
+                            )
+                        )
+                    }
+
+                    // Paso 1: Zoom (Foco Mapa Centro)
+                    list.add(
+                        TutorialStep(
+                            description = context.getString(R.string.map_tutorial_body1_2),
+                            focusCenter = Offset(screenWidthPx * 0.3f, screenHeightPx * 0.45f),
+                            focusRadius = 250f,
+                            alignment = Alignment.BottomCenter
+                        )
+                    )
+
+                    // Paso 2: Zoom Controls (Foco Rectangular en controles)
+                    if (zoomControlsLayout != null) {
+                        val (pos, size) = zoomControlsLayout!!
+                        list.add(
+                            TutorialStep(
+                                description = context.getString(R.string.map_tutorial_body1_3),
+                                focusCenter = Offset(pos.x + size.width / 2, pos.y + size.height / 2),
+                                rectSize = size, // Usamos foco cuadrado para los botones
+                                focusRadius = 0f, // No usamos radio
+                                alignment = Alignment.BottomCenter // Diálogo arriba para no tapar botones
+                            )
+                        )
+                    }
+                    list
+                }
+
+                if (steps.isNotEmpty() && currentStepIndex < steps.size) {
                     val step = steps[currentStepIndex]
                     val isLastStep = currentStepIndex == steps.size - 1
                     val btnText =
@@ -393,42 +428,52 @@ fun PlanoScreen(
                         description = step.description,
                         highlightCenter = step.focusCenter,
                         highlightRadius = step.focusRadius,
-                        buttonText = btnText, // Pasamos el texto dinámico
+                        highlightRectSize = step.rectSize,
+                        dialogAlignment = step.alignment,
+                        buttonText = btnText,
                         onCloseClicked = { permanent ->
                             if (isLastStep) {
-                                // Fin del tutorial
                                 showTutorialSession = false
                                 if (permanent) viewModel.dismissMainMap()
                             } else {
-                                // Siguiente paso
                                 currentStepIndex++
-                                if (permanent) viewModel.dismissMainMap() // Guardar preferencia si marca
+                                if (permanent) viewModel.dismissMainMap()
                             }
                         }
                     )
                 }
 
             } else if (!isMainMap && !isSubDismissed) {
-                // --- TUTORIAL SUB-MAPA (2 Pasos) ---
 
-                val subSteps = listOf(
-                    // PASO 1: Bienvenida a la sala (Foco Circular en el centro)
-                    TutorialStep(
-                        description = stringResource(R.string.submapa_1),
-                        focusCenter = backButtonOffset,
-                        focusRadius = 120f
-                    ),
+                val subSteps = remember(backButtonLayout) {
+                    val list = mutableListOf<TutorialStep>()
 
-                    // PASO 2: Cómo salir (Foco Cuadrado en el botón atrás)
-                    TutorialStep(
-                        description = stringResource(R.string.submapa_2),
-                        focusCenter = pins,
-                        focusRadius = 300f,
+                    if (backButtonLayout != null) {
+                        val (pos, size) = backButtonLayout!!
+                        list.add(
+                            TutorialStep(
+                                description = context.getString(R.string.submapa_1),
+                                focusCenter = Offset(pos.x + size.width / 2, pos.y + size.height / 2),
+                                focusRadius = 100f,
+                                alignment = Alignment.BottomCenter
+                            )
+                        )
+                    }
+
+                    val (pos, size) = backButtonLayout!!
+                    list.add(
+                        TutorialStep(
+                            description = context.getString(R.string.submapa_2),
+                            focusCenter = Offset(screenWidthPx * 0.5f, screenHeightPx * 0.2f),
+                            focusRadius = 300f,
+                            alignment = Alignment.BottomCenter
+                        )
                     )
-                )
 
-                // Lógica de control de pasos
-                if (currentStepIndex < subSteps.size) {
+                    list
+                }
+
+                if (subSteps.isNotEmpty() && currentStepIndex < subSteps.size) {
                     val step = subSteps[currentStepIndex]
                     val isLastStep = currentStepIndex == subSteps.size - 1
                     val btnText =
@@ -438,7 +483,9 @@ fun PlanoScreen(
                         description = step.description,
                         highlightCenter = step.focusCenter,
                         highlightRadius = step.focusRadius,
+                        highlightRectSize = step.rectSize,
                         buttonText = btnText,
+                        dialogAlignment = step.alignment,
                         onCloseClicked = { permanent ->
                             if (isLastStep) {
                                 showTutorialSession = false
@@ -453,9 +500,9 @@ fun PlanoScreen(
             }
         }
     }
-} // <--- AQUÍ TERMINA LA FUNCIÓN PlanoScreen
+}
 
-// --- Helper para crear Paths (AHORA ESTÁ FUERA, COMO DEBE SER) ---
+// --- Helper para crear Paths (Fuera del composable) ---
 private fun createPathFromFirebase(figura: FiguraData): Path {
     val path = Path()
     if (figura.path.isEmpty()) return path

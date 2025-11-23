@@ -37,13 +37,30 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         LanguageHelper.loadLocale(this)
         setContent {
+            // 1. Leemos el tamaño guardado en preferencias (ej. 1.3f)
             val appFontScale = FontSize.devolverFontScale(this)
+
             val currentDensity = LocalDensity.current
-            val newDensity= Density(
-                density= currentDensity.density,
-                fontScale = currentDensity.fontScale*appFontScale
+            val currentConfig = LocalConfiguration.current
+
+            // 2. Calculamos la nueva Densidad (Para que el texto SE VEA grande)
+            // Nota: Si 'appFontScale' ya es el valor absoluto (ej 1.3), úsalo directamente.
+            // Si es un multiplicador, se multiplica. Asumo que FontSize devuelve 1.0, 1.3, 1.6...
+            val newDensity = Density(
+                density = currentDensity.density,
+                fontScale = appFontScale
             )
-            CompositionLocalProvider(LocalDensity provides newDensity) {
+
+            // 3. (NUEVO) Actualizamos la Configuración (Para que el RadioButton SEPA que es grande)
+            val newConfiguration = android.content.res.Configuration(currentConfig).apply {
+                fontScale = appFontScale
+            }
+
+            // 4. Inyectamos AMBOS valores a toda la app
+            CompositionLocalProvider(
+                LocalDensity provides newDensity,
+                LocalConfiguration provides newConfiguration // <--- ESTO FALTABA
+            ) {
                 Smov_monasterioTheme {
                     MonasteryAppScreen()
                 }
