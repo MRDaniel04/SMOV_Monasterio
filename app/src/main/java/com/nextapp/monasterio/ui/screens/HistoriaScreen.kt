@@ -25,6 +25,13 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.nextapp.monasterio.R
 import com.nextapp.monasterio.viewModels.HistoriaViewModel
 
+// Clase de datos auxiliar para mapear los recursos de strings con un ID
+private data class StaticHistoryPeriod(
+    val id: String,
+    val titleRes: Int,
+    val contentRes: Int
+)
+
 @Composable
 fun HistoriaScreen(
     isEditing: Boolean = false,
@@ -33,8 +40,21 @@ fun HistoriaScreen(
     val context = LocalContext.current
     val activity = (context as? Activity)
 
-    val historyPeriods by viewModel.historyPeriods.collectAsState()
+    // Datos dinámicos (Imágenes) del ViewModel
+    val historyPeriodsFromVm by viewModel.historyPeriods.collectAsState()
     val uploadingPeriodId by viewModel.uploadingPeriodId.collectAsState()
+
+    // Datos estáticos (Textos traducibles) definidos en strings.xml
+    // Usamos los IDs como clave para vincular con las imágenes del ViewModel
+    val definedPeriods = remember {
+        listOf(
+            StaticHistoryPeriod("1328", R.string.history_1328, R.string.history_1328_body),
+            StaticHistoryPeriod("1579", R.string.history_1579, R.string.history_579_body),
+            StaticHistoryPeriod("1869", R.string.history_1869, R.string.history_1869_body),
+            StaticHistoryPeriod("XX", R.string.history_XX, R.string.history_XX_body),
+            StaticHistoryPeriod("2007", R.string.history_2007, R.string.history_2007_body)
+        )
+    }
 
     // Estado para controlar qué período está seleccionando imagen
     var selectedPeriodId by remember { mutableStateOf<String?>(null) }
@@ -62,19 +82,26 @@ fun HistoriaScreen(
             .verticalScroll(rememberScrollState())
             .padding(16.dp)
     ) {
-        historyPeriods.forEach { period ->
+        // Iteramos sobre la lista estática para garantizar el orden y los textos correctos
+        definedPeriods.forEach { staticPeriod ->
+
+            // Buscamos si hay imágenes en el ViewModel asociadas a este ID
+            val dynamicData = historyPeriodsFromVm.find { it.id == staticPeriod.id }
+            val currentImages = dynamicData?.imageUrls ?: emptyList()
+
             ExpandableHistoryCard(
-                title = period.title,
-                content = period.content,
-                imageUrls = period.imageUrls,
+                // Usamos stringResource para que soporte el cambio de idioma
+                title = stringResource(staticPeriod.titleRes),
+                content = stringResource(staticPeriod.contentRes),
+                imageUrls = currentImages,
                 isEditing = isEditing,
-                isUploading = uploadingPeriodId == period.id,
+                isUploading = uploadingPeriodId == staticPeriod.id,
                 onAddImage = {
-                    selectedPeriodId = period.id
+                    selectedPeriodId = staticPeriod.id
                     imagePickerLauncher.launch("image/*")
                 },
                 onDeleteImage = { imageUrl ->
-                    viewModel.deleteImage(period.id, imageUrl)
+                    viewModel.deleteImage(staticPeriod.id, imageUrl)
                 }
             )
         }
@@ -133,6 +160,7 @@ fun ExpandableHistoryCard(
 
                 // Galería de imágenes (solo muestra si hay imágenes o está editando)
                 if (imageUrls.isNotEmpty() || isEditing) {
+                    // Asegúrate de que este componente exista en tu proyecto o sustitúyelo por tu lógica de galería
                     com.nextapp.monasterio.ui.components.EditableImageGallery(
                         imageUrls = imageUrls,
                         isEditing = isEditing,

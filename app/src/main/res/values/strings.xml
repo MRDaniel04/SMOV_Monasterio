@@ -28,10 +28,16 @@
     <string name="info_location">C/…</string>
     <string name="info_hours">C/XX:XX - YY:YY</string>
     <string name="general_info">Información general:</string>
-    <string name="history_1800">1800</string>
-    <string name="history_1900">1900-1950</string>
-    <string name="history_1950">1950-2000</string>
-    <string name="history_actualidad">Actualidad</string>
+    <string name="history_1328">1328 🔥 Incendio y reconstrucción</string>
+    <string name="history_1328_body">Durante un incendio en Valladolid provocado por tropas de Alfonso XI, el monasterio en los palacios de la Magdalena quedó gravemente dañado. Las monjas comenzaron su reconstrucción gracias a la ayuda económica de Álvaro Nuño Pérez de Monroy.</string>
+    <string name="history_1579">1579 🏰 Reconstrucción de la iglesia y el claustro</string>
+    <string name="history_579_body">Las monjas levantaron la iglesia siguiendo el diseño del maestro italiano Pietro Palladio. El retablo fue obra de Gregorio Fernández y el nuevo claustro, de Francisco de Praves. Todo esto se hizo posible gracias a las donaciones de las abadesas Ana e Isabel de Mendoza.</string>
+    <string name="history_1869">1869 🎓 Nace la escuela del monasterio</string>
+    <string name="history_1869_body">La comunidad de las Huelgas Reales abrió su propia escuela, acogiendo a niñas de la nobleza vallisoletana como medio pensionistas.</string>
+    <string name="history_XX">Siglo XX-XXI ✨ Restauración y vida moderna</string>
+    <string name="history_XX_body">El monasterio fue totalmente restaurado. La disminución de vocaciones impulsó la creación de la Hermandad Laica Cisterciense, que mantiene vivo el espíritu de la Regla de San Benito.</string>
+    <string name="history_2007">2007 en adelante 👩‍🦳 Liderazgo y Congregación femenina</string>
+    <string name="history_2007_body">El monasterio forma parte de la Congregación de Castilla de la Orden del Cister, activa como congregación femenina desde 2007. La primera abadesa presidenta fue María del Mar Martínez; tras su fallecimiento en 2013, Sor Isabel Vallés Gallego asumió el cargo. Actualmente, Sor María dirige el monasterio y el colegio.</string>
     <string name="title_appointment">Reservar Cita</string>
     <string name="option_phone_appointment">Reservar por teléfono</string>
     <string name="option_online_appointment">Reservar online</string>
@@ -98,7 +104,6 @@
     <string name="phone_data">Teléfono</string>
     <string name="visit_schedule">Horarios de Visita</string>
     <string name="monday_to_friday">Lunes a Viernes:</string>
-    <string name="play_audio" />
     <string name="four_pieces">4 piezas</string>
     <string name="nine_pieces">9 piezas</string>
     <string name="sixteen_pieces">16 piezas</string>
@@ -149,4 +154,5 @@
     <string name="font_small">Pequeña</string>
     <string name="font_medium">Mediana</string>
     <string name="font_large">Grande</string>
+    <string name="play_audio"></string>
 </resources>
