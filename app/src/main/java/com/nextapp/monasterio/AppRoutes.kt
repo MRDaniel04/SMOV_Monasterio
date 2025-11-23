@@ -31,6 +31,8 @@ object AppRoutes {
     const val EDICION_FONDO_INICIO = "edicion_fondo_inicio"
     const val EDICION_PINES = "edicion_pines"
 
+    const val CREACION_PINES = "creacion_pines"
+
 
 
     const val PIN_360 = "pin_360"

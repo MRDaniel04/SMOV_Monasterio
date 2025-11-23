@@ -9,6 +9,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.nextapp.monasterio.AppRoutes
 
 @Composable
 fun EdicionPinesHost(navController: NavHostController) {
@@ -27,6 +28,11 @@ fun EdicionPinesHost(navController: NavHostController) {
     ) {
         composable("editor") {
             EdicionPines(navController = localNav, rootNavController = navController)
+        }
+
+
+        composable(AppRoutes.CREACION_PINES) {
+            CreacionPines(navController = localNav)
         }
 
     }

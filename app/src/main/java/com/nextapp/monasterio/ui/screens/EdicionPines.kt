@@ -47,6 +47,8 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.layout.onGloballyPositioned // Necesario para obtener el tamaño de la caja
 import androidx.compose.ui.unit.IntSize // Necesario para obtener el tamaño de la caja
 import androidx.compose.ui.platform.LocalDensity
+import com.nextapp.monasterio.AppRoutes
+
 @Composable
 fun EdicionPines(
     navController: NavController,
@@ -580,7 +582,8 @@ fun EdicionPines(
             },
 
             onPinAddClick = {
-                Toast.makeText(context, "Añadir Pin", Toast.LENGTH_SHORT).show()
+                navController.navigate(AppRoutes.CREACION_PINES)
+                Toast.makeText(context, "Navegando a la creación de Pin", Toast.LENGTH_SHORT).show()
             },
             onCrosshairClick = {
                 // LÓGICA DE REAJUSTE
