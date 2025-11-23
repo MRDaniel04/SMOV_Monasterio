@@ -1,5 +1,7 @@
 package com.nextapp.monasterio
 
+import android.R.attr.text
+import android.app.Activity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.compose.setContent
@@ -13,25 +15,26 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.Density
-import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.nextapp.monasterio.ui.navigation.AppDrawerContent
 import com.nextapp.monasterio.ui.navigation.AppNavigationHost
 import com.nextapp.monasterio.ui.theme.*
+import kotlinx.coroutines.launch
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.nextapp.monasterio.utils.FontSize
 import com.nextapp.monasterio.viewModels.AuthViewModel
-import kotlinx.coroutines.launch
+
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -102,26 +105,38 @@ fun MonasteryAppScreen(activity: AppCompatActivity) { // 👈 Recibimos la activ
         AppRoutes.VIRTUAL_VISIT -> false
         else -> true
     }
+    LaunchedEffect(navController) {
+        navController.currentBackStackEntryFlow.collect { backStackEntry ->
+            val route = backStackEntry.destination.route
+            val routeBase = route?.split("/")?.firstOrNull() ?: route
 
-    // Actualizar título
-    LaunchedEffect(navController, currentRoute) {
-        val routeBase = currentRoute?.split("/")?.firstOrNull() ?: currentRoute
-        currentTitle.value = when (routeBase) {
-            AppRoutes.INFO -> context.getString(R.string.title_info_general)
-            AppRoutes.HISTORIA -> context.getString(R.string.title_history)
-            AppRoutes.GALERIA -> context.getString(R.string.title_gallery)
-            AppRoutes.PERFIL -> context.getString(R.string.title_profile)
-            AppRoutes.AJUSTES -> context.getString(R.string.title_settings)
-            AppRoutes.OPCIONES_RESERVA,
-            AppRoutes.RESERVA,
-            AppRoutes.CONFIRMACION_RESERVA -> context.getString(R.string.title_appointment)
-            AppRoutes.VIRTUAL_VISIT -> context.getString(R.string.title_monasterio)
-            AppRoutes.MODO_NINYOS -> context.getString(R.string.child_mode_view)
-            AppRoutes.VIDEO_NINYOS -> context.getString(R.string.video_view)
-            AppRoutes.JUEGO_NINYOS -> context.getString(R.string.game_view)
-            AppRoutes.MODO_EDICION -> context.getString(R.string.edit_mode)
-            AppRoutes.PIN_ENTRADA_MONASTERIO -> context.getString(R.string.title_entrada)
-            else -> context.getString(R.string.title_inicio)
+            currentTitle.value = when (routeBase) { // <-- Usamos routeBase
+                AppRoutes.INFO -> context.getString(R.string.title_info_general)
+                AppRoutes.HISTORIA -> context.getString(R.string.title_history)
+                AppRoutes.GALERIA -> context.getString(R.string.title_gallery)
+                AppRoutes.PERFIL -> context.getString(R.string.title_profile)
+                AppRoutes.AJUSTES -> context.getString(R.string.title_settings)
+                AppRoutes.OPCIONES_RESERVA,
+                AppRoutes.RESERVA,
+                AppRoutes.CONFIRMACION_RESERVA -> context.getString(R.string.title_appointment)
+                AppRoutes.VIRTUAL_VISIT -> context.getString(R.string.title_monasterio)
+                AppRoutes.MODO_NINYOS -> context.getString(R.string.child_mode_view)
+                AppRoutes.VIDEO_NINYOS -> context.getString(R.string.video_view)
+                AppRoutes.JUEGO_NINYOS -> context.getString(R.string.game_view)
+                AppRoutes.MODO_EDICION -> context.getString(R.string.edit_mode)
+                AppRoutes.PIN_ENTRADA_MONASTERIO -> context.getString(R.string.title_entrada)
+                AppRoutes.JUEGO_PUZZLE -> context.getString(R.string.puzzle_screen)
+                AppRoutes.JUEGO_PAREJAS -> context.getString(R.string.memory_screen)
+                AppRoutes.PUZZLENIVEL1 -> context.getString(R.string.puzzle_screen)
+                AppRoutes.PUZZLENIVEL2 -> context.getString(R.string.puzzle_screen)
+                AppRoutes.PUZZLENIVEL3 -> context.getString(R.string.puzzle_screen)
+                AppRoutes.PUZZLENIVEL4 -> context.getString(R.string.puzzle_screen)
+                AppRoutes.PAREJASNIVEL1 -> context.getString(R.string.memory_screen)
+                AppRoutes.PAREJASNIVEL2 -> context.getString(R.string.memory_screen)
+                AppRoutes.PAREJASNIVEL3 -> context.getString(R.string.memory_screen)
+                AppRoutes.PAREJASNIVEL4 -> context.getString(R.string.memory_screen)
+                else -> context.getString(R.string.title_inicio)
+            }
         }
     }
 

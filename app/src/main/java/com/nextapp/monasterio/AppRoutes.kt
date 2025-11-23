@@ -21,10 +21,18 @@ object AppRoutes {
     const val MODO_NINYOS = "modo_niños"
 
     const val VIDEO_NINYOS = "video_modo_niños"
+
+    const val JUEGO_PUZZLE = "juego_puzzle"
+
+    const val JUEGO_PAREJAS = "juego_parejas"
     const val PUZZLENIVEL1 ="puzzle_nivel_1"
     const val PUZZLENIVEL2 ="puzzle_nivel_2"
     const val PUZZLENIVEL3 ="puzzle_nivel_3"
     const val PUZZLENIVEL4 ="puzzle_nivel_4"
+    const val PAREJASNIVEL1 ="parejas_nivel_1"
+    const val PAREJASNIVEL2 ="parejas_nivel_2"
+    const val PAREJASNIVEL3 ="parejas_nivel_3"
+    const val PAREJASNIVEL4 ="parejas_nivel_4"
 
     const val JUEGO_NINYOS = "juego_modo_niños"
     const val MODO_EDICION = "modo_edicion"

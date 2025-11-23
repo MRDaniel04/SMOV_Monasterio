@@ -99,9 +99,9 @@
     <string name="child_mode">KINDERMODUS</string>
     <string name="child_mode_view">Kindermodus</string>
     <string name="video_view">Video</string>
-    <string name="game_view">Spiel</string>
+    <string name="game_view">Spiele</string>
     <string name="video_child">VIDEO</string>
-    <string name="game_child">SPIEL</string>
+    <string name="game_child">SPIELE</string>
     <string name="edit_mode">BEARBEITUNGSMODUS</string>
     <string name="edit_home_background">Startseiten-Hintergrund bearbeiten</string>
     <string name="edit_pins">Pins bearbeiten</string>
@@ -130,8 +130,12 @@
     <string name="nine_pieces">9 Stück</string>
     <string name="sixteen_pieces">16 Stück</string>
     <string name="twentyfive_pieces">25 Stück</string>
+    <string name="three_pairs">3 Paare</string>
+    <string name="four_pairs">4 Paare</string>
+    <string name="five_pairs">5 Paare</string>
+    <string name="six_pairs">6 Paare</string>
     <string name="congratulations">Glückwunsch!</string>
-    <string name="message_puzzle_completed">Du hast das Rätsel gelöst! Bereit für die nächste Herausforderung?</string>
+    <string name="message_game_completed">Du hast das Spiel gelöst! Bereit für die nächste Herausforderung?</string>
     <string name="original_image">Bild ansehen</string>
     <string name="ready">Bereit</string>
     <string name="dont_show_again">Nicht mehr anzeigen</string>
@@ -165,4 +169,11 @@
     <string name="font_small">Klein</string>
     <string name="font_medium">Mittel</string>
     <string name="font_large">Groß</string>
+    <string name="puzzle_screen">Puzzle</string>
+    <string name="puzzle_option">PUZZLE</string>
+    <string name="memory_screen">Memory</string>
+    <string name="memory_option">MEMORY</string>
+    <string name="back_piece">Rückseite des Stückes</string>
+    <string name="left_pairs">Verbleibende Paare: %1$s</string>
+    <string name="left_pieces">Restliche Stücke: %1$s</string>
 </resources>

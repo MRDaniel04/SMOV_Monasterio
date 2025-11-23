@@ -18,8 +18,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.nextapp.monasterio.AppRoutes
 import com.nextapp.monasterio.R
-import com.nextapp.monasterio.models.PuzzleData
+import com.nextapp.monasterio.models.ParejasData
+import com.nextapp.monasterio.models.ParejasSize
+/*import com.nextapp.monasterio.models.ParejasData*/
 import com.nextapp.monasterio.models.PuzzleSize
+import com.nextapp.monasterio.models.PuzzleData
 import com.nextapp.monasterio.ui.screens.* // Asegúrate de importar PanoramaScreen y GaleriaScreen
 import com.nextapp.monasterio.ui.theme.MonasteryRed
 import com.nextapp.monasterio.ui.theme.White
@@ -54,12 +57,18 @@ fun AppNavigationHost(
         composable(AppRoutes.PUZZLENIVEL2){PuzzleScreen(navController=navController,tamaño = PuzzleSize(3,3),imagenes= PuzzleData.IMAGENES_NIVEL2, imagenCompleta = R.drawable.p2)}
         composable(AppRoutes.PUZZLENIVEL3){PuzzleScreen(navController=navController,tamaño = PuzzleSize(4,4),imagenes= PuzzleData.IMAGENES_NIVEL3,imagenCompleta = R.drawable.p3)}
         composable(AppRoutes.PUZZLENIVEL4){PuzzleScreen(navController=navController,tamaño= PuzzleSize(5,5),imagenes= PuzzleData.IMAGENES_NIVEL4,imagenCompleta = R.drawable.p4)}
-        composable(AppRoutes.JUEGO_NINYOS){JuegoNinyosScreen(navController=navController)}
+        composable(AppRoutes.JUEGO_NINYOS){OpcionesJuegoNinyos(navController=navController)}
         composable(route=AppRoutes.MODO_EDICION) { OpcionesModoEdicion(navController = navController)}
         composable(AppRoutes.EDICION_FONDO_INICIO) {EdicionFondoInicio(navController = navController)}
         composable(AppRoutes.EDICION_PINES) { EdicionPines(navController) }
         composable(AppRoutes.PERFIL)   { ProfileScreen(isEditing = isEditing, viewModel = authViewModel ) }
         composable(AppRoutes.AJUSTES)  { AjustesScreen(viewModel = ajustesViewModel) }
+        composable (AppRoutes.JUEGO_PUZZLE) {JuegoPuzzleScreen(navController = navController)}
+        composable(AppRoutes.JUEGO_PAREJAS) {JuegoParejasScreen(navController = navController)}
+        composable(AppRoutes.PAREJASNIVEL1){ParejasScreen(navController=navController, size = ParejasSize(3,2),imagenes= ParejasData.IMAGENES_NIVEL1)}
+        composable(AppRoutes.PAREJASNIVEL2){ParejasScreen(navController=navController,size = ParejasSize(4,2),imagenes= ParejasData.IMAGENES_NIVEL2)}
+        composable(AppRoutes.PAREJASNIVEL3){ParejasScreen(navController=navController,size = ParejasSize(5,2),imagenes= ParejasData.IMAGENES_NIVEL3)}
+        composable(AppRoutes.PAREJASNIVEL4){ParejasScreen(navController=navController,size= ParejasSize(4,3),imagenes= ParejasData.IMAGENES_NIVEL4)}
 
         // Ruta de Panorama 360 (Inmersiva, desde Galería / res/raw)
         composable(

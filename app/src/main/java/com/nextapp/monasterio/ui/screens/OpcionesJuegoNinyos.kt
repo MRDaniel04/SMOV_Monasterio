@@ -33,11 +33,11 @@ import androidx.navigation.compose.rememberNavController
 import com.nextapp.monasterio.AppRoutes
 import com.nextapp.monasterio.R
 import com.nextapp.monasterio.ui.theme.MonasteryBlue
-import com.nextapp.monasterio.ui.theme.MonasteryOrange
+import com.nextapp.monasterio.ui.theme.MonasteryRed
 
 
 @Composable
-fun OpcionesModoNiño(navController:NavController,modifier: Modifier = Modifier) {
+fun OpcionesJuegoNinyos(navController:NavController,modifier: Modifier = Modifier) {
     val context = LocalContext.current
 
     val activity = (context as? Activity)
@@ -51,16 +51,16 @@ fun OpcionesModoNiño(navController:NavController,modifier: Modifier = Modifier)
     }
 
     ConstraintLayout(modifier = modifier.fillMaxSize().background(Color.White).verticalScroll(rememberScrollState())) {
-        val (btnVideo,btnJuego) = createRefs()
+        val (btnMemory,btnPuzle) = createRefs()
         val centerGuide = createGuidelineFromTop(0.5f)
         Button(
             onClick = {
-                navController.navigate(AppRoutes.VIDEO_NINYOS)
+                navController.navigate(AppRoutes.JUEGO_PUZZLE)
             },
-            colors = ButtonDefaults.buttonColors(containerColor = MonasteryOrange),
+            colors = ButtonDefaults.buttonColors(containerColor = MonasteryBlue),
             shape = RoundedCornerShape(20.dp),
             modifier = Modifier
-                .constrainAs(btnVideo) {
+                .constrainAs(btnPuzle) {
                     bottom.linkTo(centerGuide, margin = 24.dp)
                     start.linkTo(parent.start, margin = 40.dp)
                     end.linkTo(parent.end, margin = 40.dp)
@@ -73,14 +73,14 @@ fun OpcionesModoNiño(navController:NavController,modifier: Modifier = Modifier)
                 verticalAlignment = Alignment.CenterVertically
             )  {
                 Icon(
-                    painter = painterResource(id = R.drawable.youtube),
+                    painter = painterResource(id = R.drawable.puzzle),
                     contentDescription = null,
                     modifier = Modifier
                         .padding(end = 18.dp)
                         .size(48.dp)
                 )
                 Text(
-                    stringResource(id = R.string.video_child),
+                    stringResource(id = R.string.puzzle_option),
                     fontSize = 22.sp,
                     textAlign = TextAlign.Center
                 )
@@ -88,12 +88,12 @@ fun OpcionesModoNiño(navController:NavController,modifier: Modifier = Modifier)
         }
         Button(
             onClick = {
-                navController.navigate(AppRoutes.JUEGO_NINYOS)
+                navController.navigate(AppRoutes.JUEGO_PAREJAS)
             },
-            colors = ButtonDefaults.buttonColors(containerColor = MonasteryBlue),
+            colors = ButtonDefaults.buttonColors(containerColor = MonasteryRed),
             shape = RoundedCornerShape(20.dp),
             modifier = Modifier
-                .constrainAs(btnJuego) {
+                .constrainAs(btnMemory) {
                     top.linkTo(centerGuide, margin = 24.dp)
                     start.linkTo(parent.start, margin = 40.dp)
                     end.linkTo(parent.end, margin = 40.dp)
@@ -106,7 +106,7 @@ fun OpcionesModoNiño(navController:NavController,modifier: Modifier = Modifier)
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.console),
+                    painter = painterResource(id = R.drawable.memory),
                     contentDescription = null,
                     modifier = Modifier
                         .padding(end = 16.dp)
@@ -114,7 +114,7 @@ fun OpcionesModoNiño(navController:NavController,modifier: Modifier = Modifier)
 
                 )
                 Text(
-                    stringResource(id = R.string.game_child),
+                    stringResource(id = R.string.memory_option),
                     fontSize = 22.sp,
                     textAlign = TextAlign.Center
                 )

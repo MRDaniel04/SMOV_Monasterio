@@ -91,9 +91,9 @@
     <string name="child_mode">MODO NIÑOS</string>
     <string name="child_mode_view">Modo Niños</string>
     <string name="video_view">Video</string>
-    <string name="game_view">Juego</string>
+    <string name="game_view">Juegos</string>
     <string name="video_child">VIDEO</string>
-    <string name="game_child">JUEGO</string>
+    <string name="game_child">JUEGOS</string>
     <string name="edit_mode">MODO EDICIÓN</string>
     <string name="edit_home_background">Edición fondo inicio</string>
     <string name="edit_pins">Edición pines</string>
@@ -108,6 +108,10 @@
     <string name="nine_pieces">9 piezas</string>
     <string name="sixteen_pieces">16 piezas</string>
     <string name="twentyfive_pieces">25 piezas</string>
+    <string name="three_pairs">3 Parejas</string>
+    <string name="four_pairs">4 Parejas</string>
+    <string name="five_pairs">5 parejas</string>
+    <string name="six_pairs">6 Parejas</string>
     <string name="dont_show_again">No volver a mostrar</string>
     <string name="understand">Entendido</string>
     <string name="map_tutorial_body">Este es el cuerpo del tutorial</string>
@@ -115,7 +119,7 @@
     <string name="map_tutorial_body2">Este es el cuerpo del tutorial del mapa 2</string>
     <string name="map_tutorial_title2">Este es el titulo del tutorial del mapa 2</string>
     <string name="pin_tutorial_body">Este es el cuerpo del tutorial del pin</string>
-    <string name="pin_tutorial_title">Este es el titulo del tutorial del pin</string>
+    <string name="pineºº_tutorial_title">Este es el titulo del tutorial del pin</string>
     <string name="next">Siguiente</string>
     <string name="map_tutorial_body1">En la parte superior izquierda, el símbolo (←) permite volver al inicio</string>
     <string name="map_tutorial_body1_2">Tocando en las zonas con color del mapa podemos entrar a las distintas partes visualizables</string>
@@ -141,7 +145,7 @@
     <string name="image_upload_error">Error al subir la imagen</string>
     <string name="image_select_error">Error al cargar la imagen</string>
     <string name="congratulations">¡Felicidades!</string>
-    <string name="message_puzzle_completed">¡Has resuelto el puzzle! ¿Listo para el siguiente desafío?</string>
+    <string name="message_game_completed">¡Has resuelto el juego! ¿Listo para el siguiente desafío?</string>
     <string name="ready">Listo</string>
     <string name="original_image">Ver imagen</string>
     <string name="image_gallery_title">Imágenes</string>
@@ -154,5 +158,13 @@
     <string name="font_small">Pequeña</string>
     <string name="font_medium">Mediana</string>
     <string name="font_large">Grande</string>
+    <string name="puzzle_screen">Puzle</string>
+    <string name="puzzle_option">PUZLE</string>
+    <string name="memory_screen">Parejas</string>
+    <string name="memory_option">PAREJAS</string>
+    <string name="back_piece">Parte de atrás de la pieza</string>
+    <string name="left_pairs">Parejas restantes: %1$s</string>
+    <string name="left_pieces">Piezas restantes: %1$s</string>
+
     <string name="play_audio"></string>
 </resources>
