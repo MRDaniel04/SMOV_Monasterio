@@ -30,13 +30,22 @@
 
     <string name="info_location">Straße: …</string>
 
+    <string name="history_1328">1328 🔥 Brand und Wiederaufbau</string>
+    <string name="history_1328_body">Während eines Brandes in Valladolid, ausgelöst durch die Truppen Alfons’ XI., wurde das Kloster in den Palästen von La Magdalena schwer beschädigt. Die Nonnen begannen mit dem Wiederaufbau dank der finanziellen Unterstützung von Álvaro Nuño Pérez de Monroy.</string>
+
+    <string name="history_1579">1579 🏰 Wiederaufbau der Kirche und des Kreuzgangs</string>
+    <string name="history_579_body">Die Nonnen errichteten die Kirche nach dem Entwurf des italienischen Meisters Pietro Palladio. Der Altaraufsatz stammte von Gregorio Fernández, und der neue Kreuzgang wurde von Francisco de Praves gebaut. All dies wurde durch die Spenden der Äbtissinnen Ana und Isabel de Mendoza ermöglicht.</string>
+
+    <string name="history_1869">1869 🎓 Gründung der Klosterschule</string>
+    <string name="history_1869_body">Die Gemeinschaft der Huelgas Reales eröffnete ihre eigene Schule und nahm adlige Mädchen aus Valladolid als Halbinternats­schülerinnen auf.</string>
+
+    <string name="history_XX">20.–21. Jahrhundert ✨ Restaurierung und modernes Leben</string>
+    <string name="history_XX_body">Das Kloster wurde vollständig restauriert. Der Rückgang der Berufungen führte zur Gründung der Laien-Zisterzienserbruderschaft, die den Geist der Regula Benedicti lebendig hält.</string>
+
+    <string name="history_2007">Seit 2007 👩‍🦳 Leitung und weibliche Kongregation</string>
+    <string name="history_2007_body">Das Kloster gehört zur Kastilischen Kongregation des Zisterzienserordens, die seit 2007 als weibliche Kongregation aktiv ist. Die erste Präsidentin der Äbtissinnen war María del Mar Martínez; nach ihrem Tod im Jahr 2013 übernahm Schwester Isabel Vallés Gallego das Amt. Derzeit leitet Schwester María das Kloster und die Schule.</string>
     <string name="info_hours">Öffnungszeiten: XX:XX - YY:YY</string>
     <string name="general_info">Allgemeine Informationen:</string>
-
-    <string name="history_1800">1800</string>
-    <string name="history_1900">1900-1950</string>
-    <string name="history_1950">1950-2000</string>
-    <string name="history_actualidad">Gegenwart</string>
     <string name="title_appointment">Termin buchen</string>
     <string name="option_phone_appointment">Telefonisch buchen</string>
     <string name="option_online_appointment">Online buchen</string>
@@ -103,7 +112,6 @@
     <string name="phone_data">Telefon</string>
     <string name="visit_schedule">Öffnungszeiten</string>
     <string name="monday_to_friday">Montag bis Freitag:</string>
-    <string name="play_audio" />
     <string name="confirm_save_title">Änderungen speichern?</string>
     <string name="confirm_save_message">Sind Sie sicher, dass Sie die Änderungen speichern möchten?</string>
     <string name="confirm_save_button">Speichern</string>
