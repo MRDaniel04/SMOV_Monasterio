@@ -97,9 +97,9 @@
     <string name="child_mode">KIDS MODE</string>
     <string name="child_mode_view">Kids Mode</string>
     <string name="video_view">Video</string>
-    <string name="game_view">Game</string>
+    <string name="game_view">Games</string>
     <string name="video_child">VIDEO</string>
-    <string name="game_child">GAME</string>
+    <string name="game_child">GAMES</string>
     <string name="edit_mode">EDIT MODE</string>
     <string name="edit_home_background">Edit home background</string>
     <string name="edit_pins">Edit pins</string>
@@ -114,6 +114,10 @@
     <string name="nine_pieces">9 pieces</string>
     <string name="sixteen_pieces">16 pieces</string>
     <string name="twentyfive_pieces">25 pieces</string>
+    <string name="three_pairs">3 Pairs</string>
+    <string name="four_pairs">4 Pairs</string>
+    <string name="five_pairs">5 Pairs</string>
+    <string name="six_pairs">6 Pairs</string>
     <string name="confirm_save_title">Save changes?</string>
     <string name="confirm_save_message">Are you sure you want to save the changes?</string>
     <string name="confirm_save_button">Save</string>
@@ -130,7 +134,7 @@
     <string name="image_select_error">Error selecting image</string>
     <string name="image_gallery_title">Images</string>
     <string name="congratulations">Congratulations!</string>
-    <string name="message_puzzle_completed">You\'ve solved the puzzle! Ready for the next challenge?</string>
+    <string name="message_game_completed">You\'ve solved the game! Ready for the next challenge?</string>
     <string name="original_image">View image</string>
     <string name="ready">Ready</string>
     <string name="lang_de">Deutsch</string>
@@ -163,4 +167,11 @@
     <string name="lang_en">English</string>
     <string name="lang_es">Español</string>
     <string name="sample_text">Ejemplo</string>
+    <string name="puzzle_screen">Puzzle</string>
+    <string name="puzzle_option">PUZZLE</string>
+    <string name="memory_screen">Memory</string>
+    <string name="memory_option">MEMORY</string>
+    <string name="back_piece">Back of the piece</string>
+    <string name="left_pairs">Remaining couples: %1$s</string>
+    <string name="left_pieces">Remaining pieces: %1$s</string>
 </resources>

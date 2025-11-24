@@ -1,5 +1,7 @@
 package com.nextapp.monasterio.ui.screens
 
+import android.app.Activity
+import android.content.pm.ActivityInfo
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -11,6 +13,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
@@ -23,6 +26,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInWindow
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -37,7 +42,6 @@ import com.nextapp.monasterio.models.PiezaPuzzle
 import com.nextapp.monasterio.models.PuzzleSize
 import com.nextapp.monasterio.viewModels.PuzzleViewModel
 import com.nextapp.monasterio.viewModels.PuzzleViewModelFactory
-import kotlin.math.round
 import com.nextapp.monasterio.R
 
 @Composable
@@ -52,6 +56,9 @@ fun PuzzleScreen(
     val state by viewModel.uiState.collectAsState()
     val density = LocalDensity.current
 
+    val context = LocalContext.current
+    val activity = context as? Activity
+
     // Estado del Grid y la celda
     var tamañoCelda by remember { mutableStateOf(0.dp) }
     var gridOriginOffset by remember { mutableStateOf(Offset.Zero) }
@@ -63,6 +70,17 @@ fun PuzzleScreen(
     // Mapa de posiciones iniciales de las piezas SUELTAS en la bandeja (llenado por LazyRow)
     val trayPositionsMap = remember { mutableStateMapOf<Int, Offset>() }
     var showImagePreviewDialog by remember { mutableStateOf(false) }
+
+    val screenWidth = LocalConfiguration.current.screenWidthDp
+    val isTablet = screenWidth > 600
+
+    DisposableEffect(Unit) {
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        onDispose {
+
+        }
+    }
+
     // El Box principal actúa como la capa de superposición (Overlay) para la pieza arrastrada.
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -74,11 +92,11 @@ fun PuzzleScreen(
             // --- 1. PUZZLE GRID (Drop Targets y Piezas Encajadas) ---
             LazyVerticalGrid(
                 columns = GridCells.Fixed(tamaño.columns),
-                // ... (Arreglos y Paddings)
                 modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentWidth(Alignment.CenterHorizontally)
                     .background(Color.LightGray.copy(0.5f))
+                    .border(1.dp,Color.Black)
                     .onGloballyPositioned { coordinates ->
                         val gridWith = coordinates.size.width
                         if (gridWith > 0) {
@@ -169,14 +187,19 @@ fun PuzzleScreen(
                         val centroRelativeX = relativeX + (piezaSize / 2f)
                         val centroRelativeY = relativeY + (piezaSize / 2f)
 
-                        val Y_Compensado = centroRelativeY + piezaSize * 1.0f
 
-                        val newColumn = (centroRelativeX / piezaSize).toInt().coerceIn(0, tamaño.columns - 1)
-                        val newRow = (Y_Compensado / piezaSize).toInt().coerceIn(0, tamaño.rows - 1)
+                        if((tamaño.columns==2 || tamaño.columns == 3) && isTablet) {
+                            val newColumn = (centroRelativeX / piezaSize).toInt().coerceIn(0, tamaño.columns - 1)
+                            val newRow = (centroRelativeY / piezaSize).toInt().coerceIn(0, tamaño.rows - 1)
+                            viewModel.soltarPieza(piezaArrastradaId!!, GridPosicion(newRow, newColumn))
+                        }
+                        else{
+                            val Y_Compensado = centroRelativeY + piezaSize * 1.0f
 
-                        Log.d("PUZZLE_DROP", "Pieza ${piezaArrastradaId} destino: R$newRow C$newColumn")
-                        Log.d("PUZZLE_DROP_2", "Pieza ${piezaArrastradaId} posicion correcta: R${piezaActual.posicionCorrecta.row} C${piezaActual.posicionCorrecta.column}")
-                        viewModel.soltarPieza(piezaArrastradaId!!, GridPosicion(newRow, newColumn))
+                            val newColumn = (centroRelativeX / piezaSize).toInt().coerceIn(0, tamaño.columns - 1)
+                            val newRow = (Y_Compensado / piezaSize).toInt().coerceIn(0, tamaño.rows - 1)
+                            viewModel.soltarPieza(piezaArrastradaId!!, GridPosicion(newRow, newColumn))
+                        }
                     }
                     piezaArrastradaId = null
                     desplazamientoPiezaArrastrada = Offset.Zero
@@ -196,6 +219,7 @@ fun GridCell(pieza: PiezaPuzzle?) {
         modifier = Modifier
             .aspectRatio(1f)
             .padding(1.dp)
+            .border(1.dp, Color.Black)
             .background(Color.LightGray.copy(alpha = 0.1f)),
         contentAlignment = Alignment.Center
     ) {
@@ -223,7 +247,7 @@ fun PuzzleTray(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Piezas Faltantes (${piezas.size})",
+            text = stringResource(R.string.left_pieces,piezas.size),
             style = androidx.compose.material3.MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(bottom = 8.dp)
         )
@@ -244,7 +268,6 @@ fun PuzzleTray(
                             onPiecePositioned(pieza.id, coordinates.positionInWindow())
                         }
                         .pointerInput(isDragInProgress) {
-                            if (isDragInProgress) return@pointerInput
                             detectDragGestures(
                                 onDragStart = { offset ->
                                     // 2. INICIAR EL DRAG: Avisar a PuzzleScreen para activar la pieza flotante
@@ -327,7 +350,7 @@ fun PuzzleDialog(
             Text(stringResource(R.string.congratulations))
         },
         text = {
-            Text(stringResource(R.string.message_puzzle_completed))
+            Text(stringResource(R.string.message_game_completed))
         },
         confirmButton = {
             Button(
