@@ -215,16 +215,7 @@ fun CreacionPines(
             TopAppBar(
                 // 1. Título Centrado
                 title = {
-                    Box(
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            "Crear Nuevo Pin",
-                            // ⭐ Título principal: 16.sp
-                            style = MaterialTheme.typography.titleMedium.copy(fontSize = 16.sp),
-                            maxLines = 1
-                        )
-                    }
+
                 },
                 navigationIcon = {
                     // 2. Botón de Atrás (Integrado)
@@ -239,22 +230,24 @@ fun CreacionPines(
                 },
 
                 actions = {
-                    // 3. Botón Guardar Pin (SIN FONDO, solo el icono)
-                    IconButton(
+
+                    Button(
                         onClick = {
-                            // ⭐ CORRECCIÓN: Acción del Toast
                             Toast.makeText(context, "Pin creado", Toast.LENGTH_SHORT).show()
                         },
-                        // La propiedad 'enabled' gestiona la capacidad de pulsación
+
                         enabled = allMandatoryFieldsFilled,
-                        // No se usa ningún modificador de fondo o forma.
+
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = GreenPinSave,
+                            disabledContainerColor = Color.LightGray,
+                            contentColor = Color.White,
+                            disabledContentColor = Color.DarkGray
+                        ),
+
+                        modifier = Modifier.padding(end = 8.dp)
                     ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_check_pin),
-                            contentDescription = "Guardar Pin",
-                            // El color del icono cambia según el estado: Verde si se puede guardar, Gris si no.
-                            tint = if (allMandatoryFieldsFilled) GreenPinSave else Color.Gray,
-                        )
+                        Text("Crear Pin")
                     }
                 }
             )

@@ -107,7 +107,7 @@ fun PlanoScreen(
     // --- Estados Visuales ---
     var activePath by remember { mutableStateOf<Path?>(null) }
     var activeHighlight by remember { mutableStateOf<Color?>(null) }
-    var isPinPressed by remember { mutableStateOf(false) }
+    var selectedPinId by remember { mutableStateOf<String?>(null) }
 
     // --- LOGICA DE TUTORIAL ---
     val isMainDismissed by viewModel.isMainMapDismissed.collectAsState()
@@ -192,8 +192,21 @@ fun PlanoScreen(
                         it.colorResaltado.toUInt().toInt()
                     )
                 }
-                photoView.pins =
-                    pines.map { DebugPhotoView.PinData(it.x, it.y, R.drawable.pin3, isPinPressed) }
+
+                photoView.pins = pines.map { pin ->
+                    // Calcular el color base, usando el color del modelo (si existe) o Rojo por defecto (Android Color)
+                    val baseColorInt = pin.color?.toArgb() ?: android.graphics.Color.RED
+
+                    DebugPhotoView.PinData(
+                        x = pin.x,
+                        y = pin.y,
+                        iconId = R.drawable.pin3,
+                        isPressed = pin.id == selectedPinId, // ⭐ CAMBIO: Compara el ID
+                        isMoving = false,
+                        pinColor = baseColorInt
+                    )
+                }
+
                 photoView.blinkingAlpha = blinkAlpha
                 photoView.interactivePath = activePath
                 photoView.highlightColor = activeHighlight?.toArgb() ?: Color.Transparent.toArgb()
@@ -229,9 +242,9 @@ fun PlanoScreen(
                         }
 
                         pin != null -> {
-                            isPinPressed = true
+                            selectedPinId = pin.id // ⭐ CAMBIO: Almacena el ID del pin tocado
                             Handler(Looper.getMainLooper()).postDelayed({
-                                isPinPressed = false
+                                selectedPinId = null // ⭐ CAMBIO: Restaura a nulo después del delay (deselección)
                                 when (pin.tipoDestino?.lowercase()) {
                                     "ruta" -> if (pin.valorDestino != null) rootNavController?.navigate(
                                         "${AppRoutes.PIN_ENTRADA_MONASTERIO}/${pin.id}"
@@ -241,11 +254,15 @@ fun PlanoScreen(
                             }, 200)
                         }
 
-                        else -> Toast.makeText(
-                            context,
-                            context.getString(R.string.out_interactive_area),
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        else -> { // ⭐ CAMBIO: Abrimos un bloque para añadir la lógica de deselección
+                            selectedPinId = null // ⭐ ADICIÓN: Deseleccionar cualquier pin activo
+                            Toast.makeText(
+                                context,
+                                context.getString(R.string.out_interactive_area),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+
                     }
                 }
                 photoViewRef = photoView

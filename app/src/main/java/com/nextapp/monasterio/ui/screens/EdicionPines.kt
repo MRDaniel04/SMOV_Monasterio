@@ -52,6 +52,8 @@ import androidx.compose.ui.layout.onGloballyPositioned // Necesario para obtener
 import androidx.compose.ui.unit.IntSize // Necesario para obtener el tamaño de la caja
 import androidx.compose.ui.platform.LocalDensity
 import com.nextapp.monasterio.AppRoutes
+import androidx.compose.ui.graphics.toArgb
+import android.graphics.Color as AndroidColor
 
 @Composable
 fun EdicionPines(
@@ -152,12 +154,22 @@ fun EdicionPines(
             },
             update = { photoView ->
 
-                photoView.pins = if (isPinMoving) emptyList() else pines.map {
+                photoView.pins = if (isPinMoving) emptyList() else pines.map { pin -> // Cambio 'it' a 'pin' para claridad
+                    // 1. Cálculo del color base
+                    // Usa pin.color del modelo (Compose Color) y lo convierte a Android Int.
+                    // Si pin.color es nulo, usa android.graphics.Color.RED como valor por defecto.
+                    val baseColorInt = pin.color?.toArgb() ?: android.graphics.Color.RED
+
                     DebugPhotoView.PinData(
-                        x = it.x,
-                        y = it.y,
-                        iconId = R.drawable.pin3,
-                        isPressed = it.id == selectedPin?.id
+                        x = pin.x,
+                        y = pin.y,
+                        // Utilizamos pin.iconRes si lo tiene, si no, mantenemos el pin3 por defecto
+                        iconId = pin.iconRes ?: R.drawable.pin3,
+                        isPressed = pin.id == selectedPin?.id,
+                        // ⭐ 2. Estado de movimiento (Gestionado localmente en Compose)
+                        isMoving = pin.id == pinBeingMoved?.id,
+                        // ⭐ 3. Color Base
+                        pinColor = baseColorInt
                     )
                 }
 
@@ -295,7 +307,6 @@ fun EdicionPines(
                             val neededShiftY = pinScreenYCoord - pinTargetY
                             photoViewRef?.moveVerticalFree(-neededShiftY)
 
-                            // Mostrar Toast combinado
                             val totalShift = if (neededShiftX != 0f) "X:${
                                 String.format(
                                     "%.0f",
@@ -555,6 +566,8 @@ fun EdicionPines(
             MovingPinOverlay(
                 pinData = pinBeingMoved!!,
                 initialOffset = pinDragOffset,
+
+                isPressed = true, // ⭐ ADICIÓN CLAVE: Fuerza el color verde
                 onPinDrag = { newOffset ->
                     // Guardamos la nueva posición de pantalla
                     pinDragOffset = newOffset
@@ -584,7 +597,7 @@ fun EdicionPines(
                         val newY = normalizedCoords!!.y
                         val pinToUpdate = pinBeingMoved!! // Guardamos una referencia
 
-
+                        // ⭐ LÓGICA DE ACTUALIZACIÓN EN FIREBASE ⭐
                         scope.launch {
                             try {
                                 PinRepository.updatePinPosition(
@@ -686,28 +699,14 @@ fun EdicionPines(
             confirmButton = {
                 Button(
                     onClick = {
+
+                        Log.d("EdicionPines", "Acción de Eliminación Bloqueada temporalmente.")
+                        Toast.makeText(context, "Acción de Borrado BLOQUEADA (Temporalmente)", Toast.LENGTH_SHORT).show()
+
+                        // Cerrar el diálogo, dando la sensación de que el botón se pulsó
                         isDeleteDialogOpen = false
-                        selectedPin?.let { pin ->
-                            // Lógica de borrado (la que ya teníamos)
-                            scope.launch {
-                                try {
-                                    if (PinRepository.deletePin(pin.id)) {
-                                        Toast.makeText(context, "✅ Pin '${pin.titulo}' borrado.", Toast.LENGTH_LONG).show()
-                                        pines = pines.filter { it.id != pin.id }
-                                    } else {
-                                        Toast.makeText(context, "❌ Error al borrar el pin.", Toast.LENGTH_LONG).show()
-                                    }
-                                } catch (e: Exception) {
-                                    Toast.makeText(context, "❌ Error de conexión al borrar pin.", Toast.LENGTH_LONG).show()
-                                }
-                                // Cerrar el panel después de intentar borrar
-                                selectedPin = null
-                                photoViewRef?.translationY = 0f
-                                photoViewRef?.translationX = 0f
-                            }
-                        }
                     },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF5722)) // Botón de confirmación en color de advertencia
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFF44336)) // Mantiene el color Rojo
                 ) {
                     Text("Eliminar Pin")
                 }
@@ -730,6 +729,7 @@ fun EdicionPines(
 fun MovingPinOverlay(
     pinData: PinData,
     initialOffset: Offset,
+    isPressed: Boolean = false,
     onPinDrag: (Offset) -> Unit,
     onCancel: () -> Unit,
     onConfirm: () -> Unit,

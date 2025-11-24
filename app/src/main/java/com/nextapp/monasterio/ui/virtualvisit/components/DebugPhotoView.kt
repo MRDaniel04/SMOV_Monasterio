@@ -23,7 +23,14 @@ class DebugPhotoView @JvmOverloads constructor(
     var blinkingAlpha:Float=1.0f
 
 
-    data class PinData(val x: Float, val y: Float, val iconId: Int?, val isPressed: Boolean)
+    data class PinData(
+        val x: Float,
+        val y: Float,
+        val iconId: Int?,
+        val isPressed: Boolean,
+        val isMoving: Boolean,
+        val pinColor: Int
+    )
     var pins: List<PinData> = emptyList()
 
     private val highlightPaint = Paint().apply {
@@ -89,6 +96,20 @@ class DebugPhotoView @JvmOverloads constructor(
 
             val screenX = imageX * scaleX + transX
             val screenY = imageY * scaleY + transY
+
+
+            val finalColor = when {
+                // 1. Si se está moviendo (Máxima prioridad: Amarillo)
+                pin.isMoving -> android.graphics.Color.YELLOW
+                // 2. Si está pulsado/seleccionado (Verde)
+                pin.isPressed -> android.graphics.Color.GREEN
+                // 3. Color Base (Usar el color que viene de PinData o Rojo por defecto)
+                else -> pin.pinColor
+            }
+
+            // Aplicar el tinte (tint) al icono antes de dibujar
+            icon.setTint(finalColor)
+
 
             val scale = if (pin.isPressed) 0.85f else 1.0f
             val sizePx = 80f * scale
