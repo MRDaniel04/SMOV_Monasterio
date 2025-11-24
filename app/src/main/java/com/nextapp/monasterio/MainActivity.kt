@@ -98,8 +98,9 @@ fun MonasteryAppScreen(activity: AppCompatActivity) { // 👈 Recibimos la activ
     val isVirtualVisit = currentRoute == AppRoutes.VIRTUAL_VISIT
     val isPin360 = currentRoute?.startsWith(AppRoutes.PIN_360) == true
     val isEdicion = currentRoute == AppRoutes.EDICION_PINES
+    val isEdicionFondo = currentRoute == AppRoutes.EDICION_FONDO_INICIO
 
-    val isImmersive = isPanorama || isVirtualVisit || isPin360 || isEdicion
+    val isImmersive = isPanorama || isVirtualVisit || isPin360 || isEdicion || isEdicionFondo
 
     val gesturesEnabled = when(currentRoute){
         AppRoutes.VIRTUAL_VISIT -> false

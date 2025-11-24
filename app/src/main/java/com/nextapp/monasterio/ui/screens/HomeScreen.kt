@@ -14,6 +14,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,10 +33,15 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.AsyncImage
 import com.nextapp.monasterio.AppRoutes
 import com.nextapp.monasterio.R
+import com.nextapp.monasterio.data.ImagenRepository
 import com.nextapp.monasterio.ui.theme.MonasteryBlue
 import com.nextapp.monasterio.ui.theme.MonasteryOrange
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+
 
 
 @Composable
@@ -41,6 +49,14 @@ fun HomeScreenContent(navController:NavController, modifier: Modifier = Modifier
     val context = LocalContext.current
 
     val activity = (context as? Activity)
+    val repo = ImagenRepository()
+    var imagenFondoInicio by remember { mutableStateOf<String?>(null) }
+
+    LaunchedEffect(Unit) {
+        val data = repo.getImagenFondoInicio()   // ← trae 'imagen_fondo_inicio'
+        imagenFondoInicio = data?.url
+    }
+
 
     DisposableEffect(Unit) {
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
@@ -52,21 +68,36 @@ fun HomeScreenContent(navController:NavController, modifier: Modifier = Modifier
 
     ConstraintLayout(modifier = modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
         val (background, crest, title, btnVisit, btnChild,btnBook, btnEdit) = createRefs()
-        Image(
-            painter = painterResource(id = R.drawable.monastery_background),
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.constrainAs(background) {
-                top.linkTo(parent.top)
-                bottom.linkTo(parent.bottom)
-                start.linkTo(parent.start)
-                end.linkTo(parent.end)
-                width = Dimension.fillToConstraints
-                height = Dimension.fillToConstraints
+        if (imagenFondoInicio != null) {
+            AsyncImage(
+                model = imagenFondoInicio,
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.constrainAs(background) {
+                    top.linkTo(parent.top)
+                    bottom.linkTo(parent.bottom)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                    width = Dimension.fillToConstraints
+                    height = Dimension.fillToConstraints
+                }
+            )
+        } else {
+            Image(
+                painter = painterResource(id = R.drawable.monastery_background),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.constrainAs(background) {
+                    top.linkTo(parent.top)
+                    bottom.linkTo(parent.bottom)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                    width = Dimension.fillToConstraints
+                    height = Dimension.fillToConstraints
+                }
+            )
+        }
 
-                centerVerticallyTo(parent)
-            }
-        )
         Image(
             painter = painterResource(id = R.drawable.huelgas_inicio),
             contentDescription = "Escudo",
