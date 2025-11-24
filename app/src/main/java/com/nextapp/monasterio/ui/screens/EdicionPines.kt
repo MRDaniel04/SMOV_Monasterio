@@ -3,6 +3,7 @@ package com.nextapp.monasterio.ui.screens
 import android.app.Activity
 import android.content.pm.ActivityInfo
 import android.graphics.Matrix
+import android.graphics.PointF
 import android.util.Log
 import android.widget.FrameLayout
 import android.widget.Toast
@@ -43,6 +44,9 @@ import com.nextapp.monasterio.ui.virtualvisit.components.DebugPhotoView
 import kotlinx.coroutines.launch
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.layout.onGloballyPositioned // Necesario para obtener el tamaño de la caja
 import androidx.compose.ui.unit.IntSize // Necesario para obtener el tamaño de la caja
@@ -82,6 +86,7 @@ fun EdicionPines(
     var pinDragOffset by remember { mutableStateOf(Offset.Zero) } // Posición en píxeles de pantalla durante el arrastre
     var pinTapScreenPosition by remember { mutableStateOf<Offset?>(null) } // Posición inicial en píxeles de pantalla al hacer tap/abrir panel
     var photoViewSize by remember { mutableStateOf(IntSize.Zero) } // Tamaño del Box principal
+    var isDeleteDialogOpen by remember { mutableStateOf(false) }
 
     // --- Carga inicial del plano y pines ---
     LaunchedEffect(Unit) {
@@ -274,15 +279,7 @@ fun EdicionPines(
                         if (neededShiftX != 0f) {
                             // Aplicar el desplazamiento horizontal (moveHorizontalFree(deltaX))
                             photoViewRef?.moveHorizontalFree(neededShiftX)
-                            Log.w(
-                                "EdicionPines",
-                                "Pin Lateral. Desplazando X: ${
-                                    String.format(
-                                        "%.0f",
-                                        neededShiftX
-                                    )
-                                }px para centrar."
-                            )
+
                         }
 
                         // --- GESTIÓN DEL DESPLAZAMIENTO VERTICAL (Se mantiene) ---
@@ -310,11 +307,7 @@ fun EdicionPines(
                                     neededShiftY
                                 )
                             }" else "Y:${String.format("%.0f", neededShiftY)}"
-                            Toast.makeText(
-                                context,
-                                "Desplazando plano: $totalShift px",
-                                Toast.LENGTH_SHORT
-                            ).show()
+
                             Log.w(
                                 "EdicionPines",
                                 "Pin oculto. Desplazando Y: -${
@@ -398,61 +391,76 @@ fun EdicionPines(
                     modifier = Modifier.fillMaxSize()
                 ) {
 
-                    // --- 1. Botones de Control (Esquina Superior DERECHA) ---
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.End,
+                        horizontalArrangement = Arrangement.SpaceBetween, // Alineación izquierda y derecha
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        // ⭐ MODIFICACIÓN: LÓGICA DE INICIO DEL MODO MOVER ⭐
-                        IconButton(onClick = {
-                            selectedPin?.let { pin ->
-                                // Comprobación: Necesitamos la posición en pantalla para el drag de Compose.
-                                val initialScreenPos = pinTapScreenPosition
-                                if (initialScreenPos == null) {
-                                    Toast.makeText(context, "Error: No se encontró la posición inicial del pin.", Toast.LENGTH_SHORT).show()
-                                    return@IconButton
+                        // Grupo Izquierdo: Acciones de Edición (Mover, Editar, BORRAR)
+                        Row(
+                            // 💡 CAMBIO 2: Ampliar el espaciado
+                            horizontalArrangement = Arrangement.spacedBy(12.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            // 💡 CAMBIO 1: Botón 1: Mover Pin (Ahora es el primero)
+                            IconButton(onClick = {
+                                selectedPin?.let { pin ->
+                                    val initialScreenPos = pinTapScreenPosition
+                                    if (initialScreenPos == null) {
+                                        Toast.makeText(context, "Error: No se encontró la posición inicial del pin.", Toast.LENGTH_SHORT).show()
+                                        return@IconButton
+                                    }
+
+                                    Log.d("EdicionPines", "Iniciando modo Mover Pin para ID: ${pin.id}")
+                                    pinBeingMoved = pin
+                                    pinDragOffset = initialScreenPos
+                                    selectedPin = null
+                                    isPinMoving = true
+                                    photoViewRef?.translationY = 0f
+                                    photoViewRef?.translationX = 0f
+
+                                    Toast.makeText(context, "Modo Mover Pin activado. Arrastre.", Toast.LENGTH_LONG).show()
                                 }
-
-                                Log.d("EdicionPines", "Iniciando modo Mover Pin para ID: ${pin.id}")
-
-                                // 1. Guardar el pin original y su posición
-                                pinBeingMoved = pin
-                                pinDragOffset = initialScreenPos // Posición inicial de arrastre
-
-                                // 2. Cerrar el panel informativo
-                                selectedPin = null
-
-                                // 3. Entrar en modo movimiento
-                                isPinMoving = true
-
-                                // Desplazar el plano a la posición inicial (buena práctica)
-                                photoViewRef?.translationY = 0f
-                                photoViewRef?.translationX = 0f
-
-                                Toast.makeText(context, "Modo Mover Pin activado. Arrastre.", Toast.LENGTH_LONG).show()
+                            }) {
+                                Icon(
+                                    painter = painterResource(R.drawable.ic_move), // Asume el icono de mover
+                                    contentDescription = "Mover Pin"
+                                )
                             }
-                        }) {
-                            Icon(
-                                painter = painterResource(R.drawable.ic_move),
-                                contentDescription = "Mover Pin"
-                            )
+
+                            // 💡 CAMBIO 1: Botón 2: Editar Pin (Ahora es el segundo)
+                            IconButton(onClick = {
+                                Toast.makeText(context, "Editar Pin", Toast.LENGTH_SHORT).show()
+                            }) {
+                                Icon(
+                                    painter = painterResource(R.drawable.lapiz), // Asume el icono de lápiz/editar
+                                    contentDescription = "Editar Pin"
+                                )
+                            }
+
+                            // 💡 CAMBIO 1: Botón 3: Borrar Pin (Ahora es el tercero)
+                            IconButton(onClick = {
+                                // 💡 CAMBIO 3: Mostrar el diálogo de confirmación
+                                selectedPin?.let { pin ->
+                                    isDeleteDialogOpen = true
+                                }
+                            }) {
+                                Icon(
+                                    painter = painterResource(R.drawable.ic_trash), // Asume el icono de borrar/papelera
+                                    contentDescription = "Borrar Pin",
+                                    tint = Color(0xFFFF5722) // Rojo para advertencia
+                                )
+                            }
                         }
-                        IconButton(onClick = {
-                            Toast.makeText(context, "Editar Pin", Toast.LENGTH_SHORT).show()
-                        }) {
-                            Icon(
-                                painter = painterResource(R.drawable.lapiz),
-                                contentDescription = "Editar Pin"
-                            )
-                        }
+
+                        // Grupo Derecho: Cerrar Panel (Acción de UI)
                         IconButton(onClick = {
                             photoViewRef?.translationY = 0f
                             photoViewRef?.translationX = 0f
-                            selectedPin = null
+                            selectedPin = null // Cierra el panel
                         }) {
                             Icon(
-                                painter = painterResource(R.drawable.ic_close_24),
+                                painter = painterResource(R.drawable.ic_close_24), // Asume el icono de cerrar
                                 contentDescription = "Cerrar Panel"
                             )
                         }
@@ -560,13 +568,57 @@ fun EdicionPines(
                     Toast.makeText(context, "Movimiento cancelado. Pin restaurado.", Toast.LENGTH_SHORT).show()
                 },
                 onConfirm = {
-                    // Acción de Confirmar: Restaurar estado anterior (simulación)
-                    // NOTA: En la simulación, Confirmar hace lo mismo que Cancelar/Restaurar.
+                    val currentScreenPos = pinDragOffset
+                    var normalizedCoords: PointF? = null
+
+                    photoViewRef?.let { photoView ->
+                        // La punta del pin es la posición de arrastre
+                        normalizedCoords = photoView.getNormalizedImageCoords(
+                            screenX = currentScreenPos.x,
+                            screenY = currentScreenPos.y
+                        )
+                    }
+
+                    if (normalizedCoords != null) {
+                        val newX = normalizedCoords!!.x
+                        val newY = normalizedCoords!!.y
+                        val pinToUpdate = pinBeingMoved!! // Guardamos una referencia
+
+
+                        scope.launch {
+                            try {
+                                PinRepository.updatePinPosition(
+                                    pinId = pinToUpdate.id,
+                                    newX = newX,
+                                    newY = newY
+                                )
+
+                                // Actualizar el estado local (para forzar el redibujo del mapa)
+                                pines = pines.map { pin ->
+                                    if (pin.id == pinToUpdate.id) {
+                                        pin.copy(x = newX, y = newY)
+                                    } else {
+                                        pin
+                                    }
+                                }
+
+
+
+                            } catch (e: Exception) {
+                                Log.e("EdicionPines", "Error al guardar posición en Firebase", e)
+                            }
+                        }
+
+                    } else {
+                        Log.e("EdicionPines", "Error al convertir coordenadas a normalizadas.")
+                    }
+
+                    // 2. Salir del modo movimiento
                     isPinMoving = false
-                    selectedPin = pinBeingMoved // Vuelve a abrir el panel con el pin original
+                    // No reabrimos el panel para forzar la actualización del mapa con las nuevas coordenadas.
+                    selectedPin = null
                     pinBeingMoved = null
                     pinDragOffset = Offset.Zero
-                    Toast.makeText(context, "Posición restaurada y reconfirmada.", Toast.LENGTH_SHORT).show()
                 },
                 boxSize = photoViewSize
             )
@@ -613,6 +665,61 @@ fun EdicionPines(
             },
             onHelpClick = {
                 Toast.makeText(context, "Mostrar Ayuda", Toast.LENGTH_SHORT).show()
+            }
+        )
+    }
+
+    // Archivo: EdicionPines.kt (al final del composable, pero dentro de su función)
+
+    // ⭐ DIÁLOGO DE CONFIRMACIÓN DE BORRADO PERMANENTE
+    if (isDeleteDialogOpen) {
+        AlertDialog(
+            onDismissRequest = {
+                isDeleteDialogOpen = false // Cerrar el diálogo al pulsar fuera
+            },
+            title = {
+                Text(text = "Confirmar Eliminación")
+            },
+            text = {
+                Text("Estás a punto de eliminar permanentemente el pin '${selectedPin?.titulo ?: "seleccionado"}'. Esta acción no se puede deshacer. ¿Deseas continuar?")
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        isDeleteDialogOpen = false
+                        selectedPin?.let { pin ->
+                            // Lógica de borrado (la que ya teníamos)
+                            scope.launch {
+                                try {
+                                    if (PinRepository.deletePin(pin.id)) {
+                                        Toast.makeText(context, "✅ Pin '${pin.titulo}' borrado.", Toast.LENGTH_LONG).show()
+                                        pines = pines.filter { it.id != pin.id }
+                                    } else {
+                                        Toast.makeText(context, "❌ Error al borrar el pin.", Toast.LENGTH_LONG).show()
+                                    }
+                                } catch (e: Exception) {
+                                    Toast.makeText(context, "❌ Error de conexión al borrar pin.", Toast.LENGTH_LONG).show()
+                                }
+                                // Cerrar el panel después de intentar borrar
+                                selectedPin = null
+                                photoViewRef?.translationY = 0f
+                                photoViewRef?.translationX = 0f
+                            }
+                        }
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF5722)) // Botón de confirmación en color de advertencia
+                ) {
+                    Text("Eliminar Pin")
+                }
+            },
+            dismissButton = {
+                Button(
+                    onClick = {
+                        isDeleteDialogOpen = false // Simplemente cerrar
+                    }
+                ) {
+                    Text("Cancelar")
+                }
             }
         )
     }

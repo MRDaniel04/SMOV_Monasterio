@@ -115,10 +115,36 @@ object PinRepository {
             }
         }
 
-
-        Log.d("PinRepository", "📊 Resultado final para pin $id → ${imagenesDetalladas.size} imágenes cargadas")
-
         return basePin.copy(imagenesDetalladas = imagenesDetalladas)
+    }
+
+    suspend fun deletePin(pinId: String): Boolean {
+        return try {
+            collection.document(pinId)
+                .delete()
+                .await()
+            Log.d("PinRepository", "✅ Pin '$pinId' eliminado correctamente.")
+            true
+        } catch (e: Exception) {
+            Log.e("PinRepository", "❌ Error al eliminar el pin '$pinId'", e)
+            false
+        }
+    }
+
+    suspend fun updatePinPosition(pinId: String, newX: Float, newY: Float) {
+        val payload = mapOf(
+            "x" to newX.toDouble(), // Firebase usa Double para números
+            "y" to newY.toDouble()
+        )
+        try {
+            collection.document(pinId)
+                .update(payload)
+                .await()
+
+        } catch (e: Exception) {
+
+            throw e // Propagar el error para manejo en la UI
+        }
     }
 
     // -----------------------

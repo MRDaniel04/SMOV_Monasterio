@@ -114,6 +114,36 @@ class DebugPhotoView @JvmOverloads constructor(
         }
     }
 
+    fun getNormalizedImageCoords(screenX: Float, screenY: Float): PointF? {
+        val d = drawable ?: return null // Necesitas un Drawable para obtener sus dimensiones
+        val matrixValues = FloatArray(9)
+        imageMatrix.getValues(matrixValues)
+
+        val scaleX = matrixValues[Matrix.MSCALE_X]
+        val transX = matrixValues[Matrix.MTRANS_X]
+        val transY = matrixValues[Matrix.MTRANS_Y]
+
+        // 1. Convertir coordenadas de pantalla (X/Y) a coordenadas de imagen escaladas y trasladadas
+        // Coordenada de imagen (píxeles) = (Coordenada de pantalla - Traslación) / Escala
+
+        val imageX = (screenX - transX) / scaleX
+        val imageY = (screenY - transY) / scaleX // Asumimos scaleY = scaleX
+
+        // 2. Normalizar las coordenadas (0-1) dividiendo por las dimensiones intrínsecas del Drawable
+        // Coordenada normalizada = Coordenada de imagen / Dimensión intrínseca
+
+        val normalizedX = imageX / d.intrinsicWidth
+        val normalizedY = imageY / d.intrinsicHeight
+
+        // Log.d("CONVERSION", "Screen($screenX, $screenY) -> Image($imageX, $imageY) -> Norm($normalizedX, $normalizedY)")
+
+        // Pequeña corrección de límites por si acaso
+        val finalX = normalizedX.coerceIn(0f, 1f)
+        val finalY = normalizedY.coerceIn(0f, 1f)
+
+        return PointF(finalX, finalY)
+    }
+
 
     fun moveVerticalFree(deltaY: Float) {
 
