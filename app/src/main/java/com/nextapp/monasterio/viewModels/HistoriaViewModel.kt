@@ -58,10 +58,18 @@ class HistoriaViewModel : ViewModel() {
 
                 val periods = snapshot.documents.mapNotNull { doc ->
                     try {
+                        // Parsear el contenido: puede ser un String (legacy) o un Map (nuevo)
+                        val rawContent = doc.get("content")
+                        val contentMap = when (rawContent) {
+                            is Map<*, *> -> rawContent.mapKeys { it.key.toString() }.mapValues { it.value.toString() }
+                            is String -> mapOf("es" to rawContent) // Migración al vuelo para datos antiguos
+                            else -> emptyMap()
+                        }
+
                         HistoriaPeriod(
                             id = doc.id,
                             title = doc.getString("title") ?: "",
-                            content = doc.getString("content") ?: "",
+                            content = contentMap,
                             imageUrls = (doc.get("imageUrls") as? List<*>)?.mapNotNull { it as? String } ?: emptyList(),
                             order = doc.getLong("order")?.toInt() ?: 0
                         )
@@ -76,6 +84,31 @@ class HistoriaViewModel : ViewModel() {
 
             } catch (e: Exception) {
                 Log.e(TAG, "Error al cargar períodos históricos", e)
+                _error.value = e.message
+            }
+        }
+    }
+
+    /**
+     * Actualiza el contenido (textos) de un período histórico
+     */
+    fun updatePeriodContent(periodId: String, newContent: Map<String, String>) {
+        viewModelScope.launch {
+            try {
+                Log.d(TAG, "Actualizando contenido para período: $periodId")
+                
+                historyCollection.document(periodId)
+                    .update("content", newContent)
+                    .await()
+
+                // Actualizar estado local optimísticamente o recargar
+                _historyPeriods.value = _historyPeriods.value.map { 
+                    if (it.id == periodId) it.copy(content = newContent) else it 
+                }
+                
+                Log.d(TAG, "Contenido actualizado exitosamente")
+            } catch (e: Exception) {
+                Log.e(TAG, "Error al actualizar contenido", e)
                 _error.value = e.message
             }
         }
