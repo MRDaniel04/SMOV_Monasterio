@@ -66,9 +66,17 @@ class HistoriaViewModel : ViewModel() {
                             else -> emptyMap()
                         }
 
+                        // Parsear el título: puede ser un String (legacy) o un Map (nuevo)
+                        val rawTitle = doc.get("title")
+                        val titleMap = when (rawTitle) {
+                            is Map<*, *> -> rawTitle.mapKeys { it.key.toString() }.mapValues { it.value.toString() }
+                            is String -> mapOf("es" to rawTitle)
+                            else -> emptyMap()
+                        }
+
                         HistoriaPeriod(
                             id = doc.id,
-                            title = doc.getString("title") ?: "",
+                            title = titleMap,
                             content = contentMap,
                             imageUrls = (doc.get("imageUrls") as? List<*>)?.mapNotNull { it as? String } ?: emptyList(),
                             order = doc.getLong("order")?.toInt() ?: 0

@@ -88,7 +88,7 @@ fun HistoriaScreen(
 
 @Composable
 fun ExpandableHistoryCard(
-    title: String,
+    title: Map<String, String>,
     contentMap: Map<String, String>,
     imageUrls: List<String> = emptyList(),
     isEditing: Boolean = false,
@@ -103,6 +103,11 @@ fun ExpandableHistoryCard(
         label = "rotation"
     )
 
+    // Resolver el título a mostrar según el idioma del sistema
+    val currentSystemLanguage = java.util.Locale.getDefault().language
+    val displayLanguage = if (title.containsKey(currentSystemLanguage)) currentSystemLanguage else "es"
+    val displayTitle = title[displayLanguage] ?: title["es"] ?: "—"
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -116,7 +121,7 @@ fun ExpandableHistoryCard(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = title,
+                text = displayTitle,
                 style = MaterialTheme.typography.titleLarge,
                 modifier = Modifier.weight(1f)
             )
