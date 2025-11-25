@@ -65,4 +65,16 @@ class ImagenRepository(
             false
         }
     }
+
+    suspend fun updateImagenFondoInicio(nuevaUrl: String) {
+        try {
+            firestore.collection("imagenes")
+                .document("imagen_fondo_inicio")
+                .update("url", nuevaUrl)
+                .await()
+        } catch (e: Exception) {
+            throw e
+        }
+    }
+
 }

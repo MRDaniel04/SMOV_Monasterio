@@ -6,6 +6,7 @@ package com.nextapp.monasterio.ui.screens
 import android.app.Activity
 import android.content.pm.ActivityInfo
 import android.net.Uri
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
@@ -36,8 +37,10 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.nextapp.monasterio.R
 import com.nextapp.monasterio.data.ImagenRepository
+import com.nextapp.monasterio.services.CloudinaryService
 import com.nextapp.monasterio.ui.theme.MonasteryBlue
 import com.nextapp.monasterio.ui.theme.MonasteryOrange
+import kotlinx.coroutines.launch
 
 // COLORES
 val EditModePurple = Color(0xFF9C27B0)
@@ -92,6 +95,8 @@ fun EdicionFondoInicio(navController: NavController) {
     val activity = (context as? Activity)
     val repo = ImagenRepository()
     var imagenFondoInicio by remember { mutableStateOf<String?>(null) }
+    val coroutineScope = rememberCoroutineScope()
+
 
     LaunchedEffect(Unit) {
         val data = repo.getImagenFondoInicio()
@@ -344,10 +349,24 @@ fun EdicionFondoInicio(navController: NavController) {
             ) {
                 ActionControlBar(
                     onConfirm = {
-                        currentSavedImageUrl = selectedImageUri.toString()
-                        selectedImageUri = null
-                        navController.popBackStack()
-                    },
+                        coroutineScope.launch {
+                            val result = CloudinaryService.uploadImage(selectedImageUri!!, context)
+
+                            result.onSuccess { url ->
+
+                                repo.updateImagenFondoInicio(url)
+
+                                currentSavedImageUrl = url
+                                selectedImageUri = null
+                                navController.popBackStack()
+                            }
+
+                            result.onFailure {
+                                Toast.makeText(context, "Error subiendo la imagen", Toast.LENGTH_LONG).show()
+                            }
+                        }
+                    }
+                    ,
                     onCancel = {
                         selectedImageUri = null
                     }
