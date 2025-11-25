@@ -1,6 +1,3 @@
-// Archivo generado: EdicionFondoInicio.kt (versión corregida)
-// NOTA: Ajustado según tus indicaciones
-
 package com.nextapp.monasterio.ui.screens
 
 import android.app.Activity
@@ -31,6 +28,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.NavController
@@ -49,17 +47,14 @@ val RedTopBar = Color(0xFFC00000)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EdicionFondoTopBar() {
-    TopAppBar(
+    // 💡 PASO 1: Usamos CenterAlignedTopAppBar para centrar el título y mantener la altura estándar (56.dp)
+    CenterAlignedTopAppBar(
         title = {
-            Box(
-                modifier = Modifier.fillMaxWidth(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = stringResource(id = R.string.title_inicio),
-                    color = Color.White
-                )
-            }
+            // 💡 PASO 2: Quitamos el Box con fillMaxWidth() y Alignment.Center, ya que CenterAlignedTopAppBar se encarga de esto.
+            Text(
+                text = stringResource(id = R.string.title_inicio),
+                color = Color.White
+            )
         },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = RedTopBar,
@@ -94,13 +89,29 @@ fun EdicionFondoInicio(navController: NavController) {
     val context = LocalContext.current
     val activity = (context as? Activity)
     val repo = ImagenRepository()
-    var imagenFondoInicio by remember { mutableStateOf<String?>(null) }
     val coroutineScope = rememberCoroutineScope()
+
+    // 💡 SOLUCIÓN: Declaramos todos los estados al inicio de la función.
+    var imagenFondoInicio by remember { mutableStateOf<String?>(null) }
+    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
+    var currentSavedImageUrl by remember { mutableStateOf<String?>(null) } // AHORA DISPONIBLE
+    var isUploading by remember { mutableStateOf(false)}
+    var showConfirmationToast by remember { mutableStateOf(false) }
 
 
     LaunchedEffect(Unit) {
         val data = repo.getImagenFondoInicio()
+        // Ahora podemos asignar el valor sin error
         imagenFondoInicio = data?.url
+        currentSavedImageUrl = data?.url
+    }
+
+    // El LaunchedEffect para el Toast también funciona aquí
+    LaunchedEffect(showConfirmationToast) {
+        if (showConfirmationToast) {
+            Toast.makeText(context, "Imagen de fondo actualizada", Toast.LENGTH_LONG).show()
+            showConfirmationToast = false
+        }
     }
 
 
@@ -114,10 +125,22 @@ fun EdicionFondoInicio(navController: NavController) {
         modifier = Modifier.fillMaxSize()
     ) { paddingValues ->
 
+        // Indicador de carga lineal (como acordamos)
+        if (isUploading) {
+            LinearProgressIndicator(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .offset(y = paddingValues.calculateTopPadding())
+                    .zIndex(1f),
+                color = MonasteryBlue
+            )
+        }
+
+
         ConstraintLayout(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
+                .padding(top = paddingValues.calculateTopPadding())
                 .verticalScroll(rememberScrollState())
         ) {
             val (background, crest, btnsContainer, actionControls) = createRefs()
@@ -131,11 +154,13 @@ fun EdicionFondoInicio(navController: NavController) {
                 height = Dimension.fillToConstraints
             }
 
-            // ESTADO
-            var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
-            var currentSavedImageUrl by remember { mutableStateOf<String?>(null) }
+            // ❌ Eliminado el bloque ESTADO redundante que causaba la confusión
+            // Las variables de estado ahora vienen de la parte superior de la función.
 
-            val backgroundUriToDisplay = selectedImageUri ?: currentSavedImageUrl?.let { Uri.parse(it) }
+            val backgroundUriToDisplay = selectedImageUri
+                ?: currentSavedImageUrl?.let { Uri.parse(it) }
+                ?: imagenFondoInicio?.let { Uri.parse(it) }
+
 
             val imagePickerLauncher = rememberLauncherForActivityResult(
                 contract = ActivityResultContracts.GetContent()
@@ -155,24 +180,14 @@ fun EdicionFondoInicio(navController: NavController) {
                 }
 
                 else -> {
-                    if (imagenFondoInicio != null) {
-                        AsyncImage(
-                            model = imagenFondoInicio,
-                            contentDescription = null,
-                            contentScale = ContentScale.Crop,
-                            modifier = backgroundModifier
-                        )
-                    } else {
-                        // fallback mientras carga o si Firestore falla
-                        Image(
-                            painter = painterResource(id = R.drawable.monastery_background),
-                            contentDescription = null,
-                            contentScale = ContentScale.Crop,
-                            modifier = backgroundModifier
-                        )
-                    }
+                    // fallback si no hay URI seleccionada ni guardada
+                    Image(
+                        painter = painterResource(id = R.drawable.monastery_background),
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                        modifier = backgroundModifier
+                    )
                 }
-
             }
 
             // LOGO SUPERIOR
@@ -337,7 +352,7 @@ fun EdicionFondoInicio(navController: NavController) {
 
             // BARRA DE ACCIÓN INFERIOR (Confirmar / Cancelar)
             AnimatedVisibility(
-                visible = selectedImageUri != null,
+                visible = selectedImageUri != null && !isUploading,
                 enter = fadeIn(),
                 exit = fadeOut(),
                 modifier = Modifier.constrainAs(actionControls) {
@@ -350,20 +365,21 @@ fun EdicionFondoInicio(navController: NavController) {
                 ActionControlBar(
                     onConfirm = {
                         coroutineScope.launch {
+                            isUploading = true
                             val result = CloudinaryService.uploadImage(selectedImageUri!!, context)
 
                             result.onSuccess { url ->
-
                                 repo.updateImagenFondoInicio(url)
-
                                 currentSavedImageUrl = url
                                 selectedImageUri = null
-                                navController.popBackStack()
+                                showConfirmationToast = true // 🟢 Mostrar Toast de éxito
                             }
 
                             result.onFailure {
                                 Toast.makeText(context, "Error subiendo la imagen", Toast.LENGTH_LONG).show()
                             }
+
+                            isUploading = false // 🔴 FINALIZA LA CARGA
                         }
                     }
                     ,
@@ -415,3 +431,5 @@ fun ActionControlBar(
         }
     }
 }
+
+// ❌ Se elimina la función FullScreenLoadingDialog()
