@@ -10,6 +10,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.nextapp.monasterio.AppRoutes
+import com.nextapp.monasterio.ui.screens.pinCreation.CreacionPinesScreen
+
 
 @Composable
 fun EdicionPinesHost(navController: NavHostController) {
@@ -30,10 +32,10 @@ fun EdicionPinesHost(navController: NavHostController) {
             EdicionPines(navController = localNav, rootNavController = navController)
         }
 
-
         composable(AppRoutes.CREACION_PINES) {
-            CreacionPines(navController = localNav)
+            CreacionPinesScreen(navController = localNav)
         }
+
 
     }
 }
