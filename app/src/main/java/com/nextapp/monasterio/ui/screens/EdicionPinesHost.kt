@@ -8,6 +8,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.nextapp.monasterio.AppRoutes
 import com.nextapp.monasterio.ui.screens.pinCreation.CreacionPinesScreen
@@ -26,16 +27,27 @@ fun EdicionPinesHost(navController: NavHostController) {
 
     NavHost(
         navController = localNav,
-        startDestination = "editor"
+        startDestination = "pins_graph"
     ) {
-        composable("editor") {
-            EdicionPines(navController = localNav, rootNavController = navController)
+
+        navigation(
+            startDestination = "editor",
+            route = "pins_graph"
+        ) {
+
+            composable("editor") {
+                EdicionPines(
+                    navController = localNav,
+                    rootNavController = navController
+                )
+            }
+
+            composable(AppRoutes.CREACION_PINES) {
+                CreacionPinesScreen(navController = localNav)
+            }
         }
-
-        composable(AppRoutes.CREACION_PINES) {
-            CreacionPinesScreen(navController = localNav)
-        }
-
-
     }
+
+
+
 }

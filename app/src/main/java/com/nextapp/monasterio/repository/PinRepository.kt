@@ -27,7 +27,7 @@ object PinRepository {
             "ubicacion" to pin.ubicacion?.name,
             "x" to pin.x.toDouble(),
             "y" to pin.y.toDouble(),
-            "tema" to pin.tema.name,
+            "tema" to pin.tema?.name,
             "imagenes" to pin.imagenes,
             "descripcion" to pin.descripcion,
             "tapRadius" to pin.tapRadius.toDouble(),
@@ -38,6 +38,51 @@ object PinRepository {
         )
         return createPinAutoId(payload)
     }
+
+    // -----------------------
+// CREATE desde formulario (EdicionPines)
+// -----------------------
+    suspend fun createPinFromForm(
+        titulo: String,
+        descripcion: String,
+        imagenes: List<String>,
+        imagenes360: List<String>,
+        ubicacion: String,
+        x: Float,
+        y: Float
+    ): String {
+
+        val payload = mapOf(
+            "titulo" to titulo,
+            "tituloIngles" to "",
+            "tituloAleman" to "",
+
+            "descripcion" to descripcion,
+            "descripcionIngles" to "",
+            "descripcionAleman" to "",
+
+            "ubicacion" to ubicacion,
+            "ubicacionIngles" to ubicacion,
+            "ubicacionAleman" to ubicacion,
+
+            "x" to x.toDouble(),
+            "y" to y.toDouble(),
+
+            // Imágenes: convertimos a referencias de Firestore
+            "imagenes" to imagenes.map {
+                firestore.collection("imagenes").document().path
+            },
+
+            // Por ahora guardamos solo como URL (si Cloudinary ya devuelve URL)
+            "vista360Url" to imagenes360.firstOrNull(),
+
+            "tipoDestino" to "detalle",
+            "valorDestino" to "pin_detalle"
+        )
+
+        return createPinAutoId(payload)
+    }
+
 
     // -----------------------
     // READ: todos los pines

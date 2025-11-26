@@ -10,6 +10,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.nextapp.monasterio.ui.screens.pinCreation.components.PinTopBar
 import com.nextapp.monasterio.ui.screens.pinCreation.state.*
@@ -19,14 +20,21 @@ import com.nextapp.monasterio.ui.screens.pinCreation.state.*
 fun CreacionPinesScreen(
     navController: NavController
 ) {
+
+    val parentEntry = remember {
+        navController.getBackStackEntry("pins_graph")
+    }
+    val vm = viewModel<CreacionPinSharedViewModel>(parentEntry)
+
     // -------------------------
     // ESTADOS
     // -------------------------
-    val tituloState = remember { TituloState() }
-    val descripcionState = remember { DescripcionState() }
-    val imagenesState = remember { ImagenesState() }
-    val imagenes360State = remember { ImagenesState() }
-    val ubicacionState = remember { UbicacionState() }
+    val tituloState = vm.titulo
+    val descripcionState = vm.descripcion
+    val imagenesState = vm.imagenes
+    val imagenes360State = vm.imagenes360
+    val ubicacionState = vm.ubicacion
+
 
     val isFormValid = remember(
         tituloState.es,
@@ -44,7 +52,9 @@ fun CreacionPinesScreen(
             PinTopBar(
                 enabled = isFormValid,
                 onSave = {
-                    // TODO guardar pin
+                    vm.formSubmitted = true
+                    navController.popBackStack()
+
                 },
                 onBack = { navController.popBackStack() }
             )

@@ -2,6 +2,7 @@ package com.nextapp.monasterio.repository
 
 import android.util.Log
 import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.nextapp.monasterio.models.PlanoData
 import kotlinx.coroutines.tasks.await
@@ -93,4 +94,15 @@ object PlanoRepository {
             pines = pines
         )
     }
+
+    suspend fun addPinToPlano(planoId: String, pinId: String) {
+        val pinRef = firestore.collection("pines").document(pinId)
+
+        firestore.collection("planos")
+            .document(planoId)
+            .update("pines", FieldValue.arrayUnion(pinRef))
+            .await()
+    }
+
+
 }

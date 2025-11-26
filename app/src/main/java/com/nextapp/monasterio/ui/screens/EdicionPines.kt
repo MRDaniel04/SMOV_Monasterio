@@ -53,7 +53,10 @@ import androidx.compose.ui.unit.IntSize // Necesario para obtener el tamaño de 
 import androidx.compose.ui.platform.LocalDensity
 import com.nextapp.monasterio.AppRoutes
 import androidx.compose.ui.graphics.toArgb
-import android.graphics.Color as AndroidColor
+import androidx.compose.ui.zIndex
+import com.nextapp.monasterio.ui.screens.pinCreation.CreacionPinSharedViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.coroutines.delay
 
 @Composable
 fun EdicionPines(
@@ -82,13 +85,33 @@ fun EdicionPines(
     var planoUrl by remember { mutableStateOf("") }
     val scope = rememberCoroutineScope()
 
+
     // ⭐ ESTADOS PARA EL MODO MOVIMIENTO ⭐
     var isPinMoving by remember { mutableStateOf(false) }
+    var ignoreNextMatrixChange by remember { mutableStateOf(false) }
+    var ignoreMatrixChangesCount by remember { mutableStateOf(0) }
     var pinBeingMoved by remember { mutableStateOf<PinData?>(null) }
     var pinDragOffset by remember { mutableStateOf(Offset.Zero) } // Posición en píxeles de pantalla durante el arrastre
     var pinTapScreenPosition by remember { mutableStateOf<Offset?>(null) } // Posición inicial en píxeles de pantalla al hacer tap/abrir panel
     var photoViewSize by remember { mutableStateOf(IntSize.Zero) } // Tamaño del Box principal
     var isDeleteDialogOpen by remember { mutableStateOf(false) }
+
+    val parentEntry = remember(navController) {
+        try {
+            navController.getBackStackEntry("pins_graph")
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    val vm = if (parentEntry != null)
+        viewModel<CreacionPinSharedViewModel>(parentEntry)
+    else
+        viewModel<CreacionPinSharedViewModel>()
+
+
+    var isNewPinMode by remember { mutableStateOf(false) }  // <- identifica modo mover NUEVO pin
+
 
     // --- Carga inicial del plano y pines ---
     LaunchedEffect(Unit) {
@@ -102,15 +125,6 @@ fun EdicionPines(
                 val pinRefs = plano?.pines?.map { it.substringAfterLast("/") } ?: emptyList()
                 pines = allPins.filter { pinRefs.contains(it.id) }
 
-
-                Log.d("DIAG_PINES", "Total de pines cargados: ${pines.size}")
-                val pinConImagenes = pines.firstOrNull { it.imagenesDetalladas.isNotEmpty() }
-                if (pinConImagenes != null) {
-                    Log.d("DIAG_PINES", "✅ Pin con ID '${pinConImagenes.id}' tiene ${pinConImagenes.imagenesDetalladas.size} imágenes detalladas.")
-                } else {
-                    Log.e("DIAG_PINES", "❌ Ningún pin cargado contiene imágenes detalladas. Revisar el repositorio o el filtro.")
-                }
-
             } catch (e: Exception) {
                 Log.e("EdicionPines", "❌ Error al cargar plano/pines", e)
             } finally {
@@ -118,6 +132,66 @@ fun EdicionPines(
             }
         }
     }
+
+    /**
+     * 🚀 ESTE ES EL EFECTO CORRECTO:
+     * Se activa SOLO cuando photoViewSize cambia.
+     * Y SOLO cuando ya hay un tamaño válido.
+     */
+    LaunchedEffect(vm.formSubmitted) {
+        if (!vm.formSubmitted) return@LaunchedEffect
+
+        // Esperar 1 frame para que photoViewSize tenga valor real
+        kotlinx.coroutines.delay(50)
+
+        if (photoViewSize.width == 0 || photoViewSize.height == 0) {
+            Log.e("EdicionPines", "Tamaño aún no disponible, reintentando…")
+            return@LaunchedEffect
+        }
+
+        Log.w("EdicionPines", "CHECKPOINT → vm.formSubmitted = TRUE → Activando modo mover")
+
+        vm.formSubmitted = false
+
+        selectedPin = null
+        photoViewRef?.translationX = 0f
+        photoViewRef?.translationY = 0f
+
+        isNewPinMode = true
+
+        // Crear pin en movimiento
+        pinBeingMoved = PinData(
+            id = "temp",
+            titulo = vm.titulo.es,
+            tituloIngles = vm.titulo.en,
+            tituloAleman = vm.titulo.de,
+            x = 0.5f,
+            y = 0.5f,
+            iconRes = R.drawable.pin3,
+            imagenes = vm.imagenes.uris.map { it.toString() },
+            descripcion = vm.descripcion.es
+        )
+
+        pinDragOffset = Offset(
+            x = photoViewSize.width / 2f,
+            y = photoViewSize.height / 2f
+        )
+
+        isPinMoving = true
+        ignoreNextMatrixChange = true
+
+// Ignorar matrix-changes durante 500ms
+        scope.launch {
+            ignoreNextMatrixChange = true
+            delay(500)
+            ignoreNextMatrixChange = false
+        }
+
+        Log.e("MOVER_PIN", "🚀 ACTIVADO modo mover pin. ignoreNextMatrixChange=TRUE")
+        Log.d("EdicionPines", "¡MODO MOVER PIN ACTIVADO!")
+    }
+
+
 
     Box(
         modifier = Modifier
@@ -154,44 +228,42 @@ fun EdicionPines(
             },
             update = { photoView ->
 
-                photoView.pins = if (isPinMoving) emptyList() else pines.map { pin -> // Cambio 'it' a 'pin' para claridad
-                    // 1. Cálculo del color base
-                    // Usa pin.color del modelo (Compose Color) y lo convierte a Android Int.
-                    // Si pin.color es nulo, usa android.graphics.Color.RED como valor por defecto.
-                    val baseColorInt = pin.color?.toArgb() ?: android.graphics.Color.RED
+                photoView.pins =
+                    if (isPinMoving) emptyList() else pines.map { pin -> // Cambio 'it' a 'pin' para claridad
+                        // 1. Cálculo del color base
+                        // Usa pin.color del modelo (Compose Color) y lo convierte a Android Int.
+                        // Si pin.color es nulo, usa android.graphics.Color.RED como valor por defecto.
+                        val baseColorInt = pin.color?.toArgb() ?: android.graphics.Color.RED
 
-                    DebugPhotoView.PinData(
-                        x = pin.x,
-                        y = pin.y,
-                        // Utilizamos pin.iconRes si lo tiene, si no, mantenemos el pin3 por defecto
-                        iconId = pin.iconRes ?: R.drawable.pin3,
-                        isPressed = pin.id == selectedPin?.id,
-                        // ⭐ 2. Estado de movimiento (Gestionado localmente en Compose)
-                        isMoving = pin.id == pinBeingMoved?.id,
-                        // ⭐ 3. Color Base
-                        pinColor = baseColorInt
-                    )
-                }
+                        DebugPhotoView.PinData(
+                            x = pin.x,
+                            y = pin.y,
+                            // Utilizamos pin.iconRes si lo tiene, si no, mantenemos el pin3 por defecto
+                            iconId = pin.iconRes ?: R.drawable.pin3,
+                            isPressed = pin.id == selectedPin?.id,
+                            // ⭐ 2. Estado de movimiento (Gestionado localmente en Compose)
+                            isMoving = pin.id == pinBeingMoved?.id,
+                            // ⭐ 3. Color Base
+                            pinColor = baseColorInt
+                        )
+                    }
 
                 // ⭐ LÓGICA: OCULTAR PANEL AL DESPLAZAR/HACER ZOOM (PAN/MATRIX CHANGE) ⭐
                 photoView.attacher.setOnMatrixChangeListener {
-                    if (selectedPin != null || isPinMoving) { // ⭐ MODIFICACIÓN: Añadir || isPinMoving
-                        Log.d(
-                            "EdicionPines",
-                            "Matrix cambió (Pan/Zoom detectado). Cancelando modo/Ocultando panel."
-                        )
-                        selectedPin = null
-                        isPinMoving = false // ⭐ ADICIÓN: Cancelar el modo mover si hay zoom/pan
+                    if (ignoreNextMatrixChange) {
+                        Log.e("MATRIX", "🟩 MatrixChange ignorado por TIEMPO (protección al activar modo mover)")
+                        return@setOnMatrixChangeListener
+                    }
 
-                        if (photoView.translationY != 0f) {
-                            photoView.translationY = 0f
-                            Log.d(
-                                "EdicionPines",
-                                "Restaurando translationY a 0f tras desplazamiento manual."
-                            )
-                        }
+                    if (isPinMoving || selectedPin != null) {
+                        Log.e("MATRIX", "❌ MatrixChange REAL → cancelando modo mover/panel")
+                        isPinMoving = false
+                        selectedPin = null
+                        return@setOnMatrixChangeListener
                     }
                 }
+
+
 
                 photoView.setOnPhotoTapListener { _, tapX, tapY ->
 
@@ -377,6 +449,7 @@ fun EdicionPines(
                 selectedPin!!.imagenesDetalladas // Asumimos que esta lista contiene objetos ImagenData
             Box(
                 modifier = Modifier
+                    .zIndex(50f)
                     .align(Alignment.BottomCenter)
                     .fillMaxWidth()
                     .fillMaxHeight(PANEL_HEIGHT_FRACTION)
@@ -418,11 +491,18 @@ fun EdicionPines(
                                 selectedPin?.let { pin ->
                                     val initialScreenPos = pinTapScreenPosition
                                     if (initialScreenPos == null) {
-                                        Toast.makeText(context, "Error: No se encontró la posición inicial del pin.", Toast.LENGTH_SHORT).show()
+                                        Toast.makeText(
+                                            context,
+                                            "Error: No se encontró la posición inicial del pin.",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
                                         return@IconButton
                                     }
 
-                                    Log.d("EdicionPines", "Iniciando modo Mover Pin para ID: ${pin.id}")
+                                    Log.d(
+                                        "EdicionPines",
+                                        "Iniciando modo Mover Pin para ID: ${pin.id}"
+                                    )
                                     pinBeingMoved = pin
                                     pinDragOffset = initialScreenPos
                                     selectedPin = null
@@ -430,7 +510,11 @@ fun EdicionPines(
                                     photoViewRef?.translationY = 0f
                                     photoViewRef?.translationX = 0f
 
-                                    Toast.makeText(context, "Modo Mover Pin activado. Arrastre.", Toast.LENGTH_LONG).show()
+                                    Toast.makeText(
+                                        context,
+                                        "Modo Mover Pin activado. Arrastre.",
+                                        Toast.LENGTH_LONG
+                                    ).show()
                                 }
                             }) {
                                 Icon(
@@ -563,123 +647,200 @@ fun EdicionPines(
         // ⭐ ADICIÓN: OVERLAY DE PIN EN MOVIMIENTO ⭐
         // -------------------------
         if (isPinMoving && pinBeingMoved != null) {
-            MovingPinOverlay(
-                pinData = pinBeingMoved!!,
-                initialOffset = pinDragOffset,
 
-                isPressed = true, // ⭐ ADICIÓN CLAVE: Fuerza el color verde
-                onPinDrag = { newOffset ->
-                    // Guardamos la nueva posición de pantalla
-                    pinDragOffset = newOffset
-                },
-                onCancel = {
-                    // Acción de Cancelar: Restaurar estado anterior
-                    isPinMoving = false
-                    selectedPin = pinBeingMoved // Vuelve a abrir el panel con el pin original
-                    pinBeingMoved = null
-                    pinDragOffset = Offset.Zero
-                    Toast.makeText(context, "Movimiento cancelado. Pin restaurado.", Toast.LENGTH_SHORT).show()
-                },
-                onConfirm = {
-                    val currentScreenPos = pinDragOffset
-                    var normalizedCoords: PointF? = null
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .zIndex(999f)   // 👈 SUPER IMPORTANTE
+            ) {
+                MovingPinOverlay(
+                    pinData = pinBeingMoved!!,
+                    initialOffset = pinDragOffset,
 
-                    photoViewRef?.let { photoView ->
-                        // La punta del pin es la posición de arrastre
-                        normalizedCoords = photoView.getNormalizedImageCoords(
-                            screenX = currentScreenPos.x,
-                            screenY = currentScreenPos.y
-                        )
-                    }
+                    isPressed = true, // ⭐ ADICIÓN CLAVE: Fuerza el color verde
+                    onPinDrag = { newOffset ->
+                        // Guardamos la nueva posición de pantalla
+                        pinDragOffset = newOffset
+                    },
+                    onCancel = {
 
-                    if (normalizedCoords != null) {
-                        val newX = normalizedCoords!!.x
-                        val newY = normalizedCoords!!.y
-                        val pinToUpdate = pinBeingMoved!! // Guardamos una referencia
+                        if (isNewPinMode) {
+                            vm.formSubmitted = false
+                            // Volver al formulario con estados preservados
+                            navController.navigate(AppRoutes.CREACION_PINES)
+                            isNewPinMode = false
+                        }
+                        // Acción de Cancelar: Restaurar estado anterior
+                        isPinMoving = false
+                        selectedPin = pinBeingMoved // Vuelve a abrir el panel con el pin original
+                        pinBeingMoved = null
+                        pinDragOffset = Offset.Zero
+                        Toast.makeText(
+                            context,
+                            "Movimiento cancelado. Pin restaurado.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    },
+                    onConfirm = {
+                        val currentScreenPos = pinDragOffset
+                        var normalizedCoords: PointF? = null
 
-                        // ⭐ LÓGICA DE ACTUALIZACIÓN EN FIREBASE ⭐
-                        scope.launch {
-                            try {
-                                PinRepository.updatePinPosition(
-                                    pinId = pinToUpdate.id,
-                                    newX = newX,
-                                    newY = newY
-                                )
-
-                                // Actualizar el estado local (para forzar el redibujo del mapa)
-                                pines = pines.map { pin ->
-                                    if (pin.id == pinToUpdate.id) {
-                                        pin.copy(x = newX, y = newY)
-                                    } else {
-                                        pin
-                                    }
-                                }
-
-
-
-                            } catch (e: Exception) {
-                                Log.e("EdicionPines", "Error al guardar posición en Firebase", e)
-                            }
+                        photoViewRef?.let { photoView ->
+                            // La punta del pin es la posición de arrastre
+                            normalizedCoords = photoView.getNormalizedImageCoords(
+                                screenX = currentScreenPos.x,
+                                screenY = currentScreenPos.y
+                            )
                         }
 
-                    } else {
-                        Log.e("EdicionPines", "Error al convertir coordenadas a normalizadas.")
-                    }
+                        if (normalizedCoords != null) {
+                            val newX = normalizedCoords!!.x
+                            val newY = normalizedCoords!!.y
+                            val pinToUpdate = pinBeingMoved!! // Guardamos una referencia
 
-                    // 2. Salir del modo movimiento
-                    isPinMoving = false
-                    // No reabrimos el panel para forzar la actualización del mapa con las nuevas coordenadas.
-                    selectedPin = null
-                    pinBeingMoved = null
-                    pinDragOffset = Offset.Zero
-                },
-                boxSize = photoViewSize
-            )
+                            // ⭐ LÓGICA DE ACTUALIZACIÓN EN FIREBASE ⭐
+                            scope.launch {
+                                try {
+                                    PinRepository.updatePinPosition(
+                                        pinId = pinToUpdate.id,
+                                        newX = newX,
+                                        newY = newY
+                                    )
+
+                                    // Actualizar el estado local (para forzar el redibujo del mapa)
+                                    pines = pines.map { pin ->
+                                        if (pin.id == pinToUpdate.id) {
+                                            pin.copy(x = newX, y = newY)
+                                        } else {
+                                            pin
+                                        }
+                                    }
+
+
+                                } catch (e: Exception) {
+                                    Log.e(
+                                        "EdicionPines",
+                                        "Error al guardar posición en Firebase",
+                                        e
+                                    )
+                                }
+                            }
+
+                        } else {
+                            Log.e("EdicionPines", "Error al convertir coordenadas a normalizadas.")
+                        }
+
+                        if (isNewPinMode) {
+                            val newX = normalizedCoords!!.x
+                            val newY = normalizedCoords!!.y
+
+                            scope.launch {
+                                val newPinId = PinRepository.createPinFromForm(
+                                    titulo = vm.titulo.es,
+                                    descripcion = vm.descripcion.es,
+                                    imagenes = vm.imagenes.uris.map { it.toString() },
+                                    imagenes360 = vm.imagenes360.uris.map { it.toString() },
+                                    ubicacion = vm.ubicacion.displayName,
+                                    x = newX,
+                                    y = newY
+                                )
+
+
+                                // ⭐ Añadir la referencia del pin al plano del monasterio
+                                PlanoRepository.addPinToPlano(
+                                    planoId = "monasterio_interior",
+                                    pinId = newPinId
+                                )
+
+
+                                // Recargar pantalla
+                                val plano = PlanoRepository.getPlanoById("monasterio_interior")
+                                val allPins = PinRepository.getAllPins()
+                                val pinRefs =
+                                    plano?.pines?.map { it.substringAfterLast("/") } ?: emptyList()
+                                pines = allPins.filter { pinRefs.contains(it.id) }
+                            }
+
+                            vm.formSubmitted = false
+
+                            // Salir del modo
+                            isNewPinMode = false
+                            isPinMoving = false
+                            pinBeingMoved = null
+
+                            return@MovingPinOverlay
+                        }
+
+
+                        // 2. Salir del modo movimiento
+                        isPinMoving = false
+                        // No reabrimos el panel para forzar la actualización del mapa con las nuevas coordenadas.
+                        selectedPin = null
+                        pinBeingMoved = null
+                        pinDragOffset = Offset.Zero
+                    },
+                    boxSize = photoViewSize
+                )
+            }
         }
 
         // -------------------------
         // ⭐ TOOLBAR SUPERIOR FIJA ⭐
         // -------------------------
-        ToolbarEdicionPines(
-            onBackClick = {
-                if (rootNavController != null) rootNavController.popBackStack()
-                else navController.popBackStack()
-            },
+        Box(modifier = Modifier.zIndex(100f)){
 
-            onPinAddClick = {
-                navController.navigate(AppRoutes.CREACION_PINES)
-                Toast.makeText(context, "Navegando a la creación de Pin", Toast.LENGTH_SHORT).show()
-            },
-            onCrosshairClick = {
-                // LÓGICA DE REAJUSTE
-                Log.d("EdicionPines", "Botón Reajustar Plano pulsado. Restaurando posición inicial.")
+            ToolbarEdicionPines(
+                onBackClick = {
+                    if (rootNavController != null) rootNavController.popBackStack()
+                    else navController.popBackStack()
+                },
 
-                // 1. Ocultar el panel informativo
-                selectedPin = null
-                isPinMoving = false // ⭐ ADICIÓN: Cancelar modo mover al reajustar
+                onPinAddClick = {
+                    vm.reset()
+                    navController.navigate(AppRoutes.CREACION_PINES)
+                },
+                onCrosshairClick = {
+                    // LÓGICA DE REAJUSTE
+                    Log.d(
+                        "EdicionPines",
+                        "Botón Reajustar Plano pulsado. Restaurando posición inicial."
+                    )
 
-                // 2. Restaurar la posición y zoom del PhotoView
-                photoViewRef?.let { photoView ->
+                    // 1. Ocultar el panel informativo
+                    selectedPin = null
+                    isPinMoving = false // ⭐ ADICIÓN: Cancelar modo mover al reajustar
 
-                    photoView.attacher.setScale(1f, true) // Zoom a 1.0 (tamaño original) con animación.
+                    // 2. Restaurar la posición y zoom del PhotoView
+                    photoViewRef?.let { photoView ->
 
-                    photoView.attacher.setRotationTo(0f) // Resetea la rotación
-                    photoView.attacher.setScaleType(android.widget.ImageView.ScaleType.FIT_END)
+                        photoView.attacher.setScale(
+                            1f,
+                            true
+                        ) // Zoom a 1.0 (tamaño original) con animación.
 
-                    // Eliminar traslación manual residual (aplicada para centrar pines)
-                    photoView.translationY = 0f
-                    photoView.translationX = 0f
+                        photoView.attacher.setRotationTo(0f) // Resetea la rotación
+                        photoView.attacher.setScaleType(android.widget.ImageView.ScaleType.FIT_END)
 
-                    Toast.makeText(context, "Plano reajustado a la posición inicial.", Toast.LENGTH_SHORT).show()
+                        // Eliminar traslación manual residual (aplicada para centrar pines)
+                        photoView.translationY = 0f
+                        photoView.translationX = 0f
+
+                        Toast.makeText(
+                            context,
+                            "Plano reajustado a la posición inicial.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                },
+                onCancelEditClick = {
+                    Toast.makeText(context, "Bloquear Edición", Toast.LENGTH_SHORT).show()
+                },
+                onHelpClick = {
+                    Toast.makeText(context, "Mostrar Ayuda", Toast.LENGTH_SHORT).show()
                 }
-            },
-            onCancelEditClick = {
-                Toast.makeText(context, "Bloquear Edición", Toast.LENGTH_SHORT).show()
-            },
-            onHelpClick = {
-                Toast.makeText(context, "Mostrar Ayuda", Toast.LENGTH_SHORT).show()
-            }
-        )
+            )
+
+        }
     }
 
     // Archivo: EdicionPines.kt (al final del composable, pero dentro de su función)
