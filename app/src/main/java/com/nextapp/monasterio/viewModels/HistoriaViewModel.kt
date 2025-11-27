@@ -123,6 +123,31 @@ class HistoriaViewModel : ViewModel() {
     }
 
     /**
+     * Actualiza el título de un período histórico
+     */
+    fun updatePeriodTitle(periodId: String, newTitle: Map<String, String>) {
+        viewModelScope.launch {
+            try {
+                Log.d(TAG, "Actualizando título para período: $periodId")
+
+                historyCollection.document(periodId)
+                    .update("title", newTitle)
+                    .await()
+
+                // Actualizar estado local optimísticamente
+                _historyPeriods.value = _historyPeriods.value.map {
+                    if (it.id == periodId) it.copy(title = newTitle) else it
+                }
+
+                Log.d(TAG, "Título actualizado exitosamente")
+            } catch (e: Exception) {
+                Log.e(TAG, "Error al actualizar título", e)
+                _error.value = e.message
+            }
+        }
+    }
+
+    /**
      * Sube una imagen a Cloudinary y la añade al array de imágenes en Firebase
      * @param uri URI de la imagen seleccionada
      * @param context Contexto de la aplicación

@@ -80,6 +80,9 @@ fun HistoriaScreen(
                 },
                 onUpdateContent = { newContentMap ->
                     viewModel.updatePeriodContent(period.id, newContentMap)
+                },
+                onUpdateTitle = { newTitleMap ->
+                    viewModel.updatePeriodTitle(period.id, newTitleMap)
                 }
             )
         }
@@ -95,18 +98,14 @@ fun ExpandableHistoryCard(
     isUploading: Boolean = false,
     onAddImage: () -> Unit = {},
     onDeleteImage: (String) -> Unit = {},
-    onUpdateContent: (Map<String, String>) -> Unit = {}
+    onUpdateContent: (Map<String, String>) -> Unit = {},
+    onUpdateTitle: (Map<String, String>) -> Unit = {}
 ) {
     var expanded by remember { mutableStateOf(false) }
     val rotationAngle by animateFloatAsState(
         targetValue = if (expanded) 180f else 0f,
         label = "rotation"
     )
-
-    // Resolver el título a mostrar según el idioma del sistema
-    val currentSystemLanguage = java.util.Locale.getDefault().language
-    val displayLanguage = if (title.containsKey(currentSystemLanguage)) currentSystemLanguage else "es"
-    val displayTitle = title[displayLanguage] ?: title["es"] ?: "—"
 
     Column(
         modifier = Modifier
@@ -120,11 +119,15 @@ fun ExpandableHistoryCard(
                 .padding(vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = displayTitle,
-                style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier.weight(1f)
+            // Título editable
+            com.nextapp.monasterio.ui.components.EditableText(
+                textMap = title,
+                isEditing = isEditing,
+                onTextMapChange = onUpdateTitle,
+                modifier = Modifier.weight(1f),
+                readOnlyStyle = MaterialTheme.typography.titleLarge
             )
+            
             Icon(
                 painter = painterResource(id = R.drawable.arrow_down),
                 contentDescription = "Expandir/Colapsar",
