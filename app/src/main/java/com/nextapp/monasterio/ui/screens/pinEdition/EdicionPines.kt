@@ -2,10 +2,9 @@ package com.nextapp.monasterio.ui.screens.pinEdition
 
 import android.app.Activity
 import android.content.pm.ActivityInfo
-import android.graphics.Matrix
 import android.graphics.PointF
+import android.net.Uri
 import android.util.Log
-import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -21,7 +20,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavController
 import com.nextapp.monasterio.R
 import com.nextapp.monasterio.models.PinData
@@ -34,10 +32,11 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.layout.onGloballyPositioned // Necesario para obtener el tamaño de la caja
 import androidx.compose.ui.unit.IntSize // Necesario para obtener el tamaño de la caja
 import com.nextapp.monasterio.AppRoutes
-import androidx.compose.ui.graphics.toArgb
+
 import androidx.compose.ui.zIndex
 import com.nextapp.monasterio.ui.screens.pinCreation.CreacionPinSharedViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.nextapp.monasterio.services.CloudinaryService
 import com.nextapp.monasterio.ui.screens.pinEdition.components.InteractivePlanoViewer
 import com.nextapp.monasterio.ui.screens.pinEdition.components.MovingPinOverlay
 import com.nextapp.monasterio.ui.screens.pinEdition.components.PinDetailsPanel
@@ -324,89 +323,128 @@ fun EdicionPines(
                         var normalizedCoords: PointF? = null
 
                         photoViewRef?.let { photoView ->
-                            // La punta del pin es la posición de arrastre
                             normalizedCoords = photoView.getNormalizedImageCoords(
                                 screenX = currentScreenPos.x,
                                 screenY = currentScreenPos.y
                             )
                         }
 
-                        if (normalizedCoords != null) {
-                            val newX = normalizedCoords!!.x
-                            val newY = normalizedCoords!!.y
-                            val pinToUpdate = pinBeingMoved!! // Guardamos una referencia
 
-                            // ⭐ LÓGICA DE ACTUALIZACIÓN EN FIREBASE ⭐
+                        if (normalizedCoords == null) {
+                            Log.e("EdicionPines", "Error al convertir coordenadas a normalizadas. Confirmación cancelada.")
+                            Toast.makeText(context, "Error al obtener la posición del pin.", Toast.LENGTH_SHORT).show()
+                            // Si falla, el valor de retorno ya fue manejado.
+                            return@MovingPinOverlay
+                        }
+
+                        val finalX = normalizedCoords.x // Ya no es necesario '!!' si se ha comprobado antes
+                        val finalY = normalizedCoords.y // Ya no es necesario '!!'
+                        val pinToUpdate = pinBeingMoved!!
+
+                        if (isNewPinMode) {
+
+                            // A. VALIDACIÓN DE CAMPOS OBLIGATORIOS (Aunque se valida en CreacionPines.kt, se re-valida por seguridad)
+                            val isPinValid = vm.titulo.es.isNotBlank() &&
+                                    vm.descripcion.es.isNotBlank() &&
+                                    vm.imagenes.uris.isNotEmpty()
+
+                            if (!isPinValid) {
+                                Toast.makeText(context, "Error: Faltan datos obligatorios (Título/Descripción/Imágenes).", Toast.LENGTH_LONG).show()
+                                return@MovingPinOverlay
+                            }
+
+                            scope.launch {
+
+                                Log.d("EdicionPines", "Confirmando posición final. Iniciando subida de imágenes a Cloudinary...")
+
+                                // 1. SUBIR IMÁGENES NORMALES
+                                val uploadedImageUrls = vm.imagenes.uris.mapNotNull { uri ->
+                                    val result = CloudinaryService.uploadImage(uri, context)
+                                    result.getOrNull()
+                                }
+
+                                val uploaded360Url: String? = vm.imagen360?.let { uri ->
+                                    val result = CloudinaryService.uploadImage(uri, context)
+                                    result.getOrNull()
+                                }
+
+                                // C. VALIDACIÓN FINAL DE SUBIDA
+                                if (uploadedImageUrls.isEmpty()) {
+                                    Toast.makeText(context, "Error: No se pudo subir ninguna imagen. Pin NO creado.", Toast.LENGTH_LONG).show()
+                                    Log.e("EdicionPines", "ERROR: Subida de imágenes falló o se descartaron las URIs.")
+                                    return@launch
+                                }
+
+                                // D. CREAR PIN CON LAS URLs Y COORDENADAS FINALES
+                                try {
+                                    val newPinId = PinRepository.createPinFromForm(
+                                        titulo = vm.titulo.es,
+                                        descripcion = vm.descripcion.es,
+
+                                        // Campos de Traducción Opcionales
+                                        tituloIngles = vm.titulo.en.ifBlank { null },
+                                        tituloAleman = vm.titulo.de.ifBlank { null },
+                                        descripcionIngles = vm.descripcion.en.ifBlank { null },
+                                        descripcionAleman = vm.descripcion.de.ifBlank { null },
+
+                                        ubicacion = vm.ubicacion.displayName,
+                                        imagenes = uploadedImageUrls,
+                                        imagen360 = uploaded360Url,
+                                        x = finalX, // ✅ Coordenadas Normalizadas
+                                        y = finalY // ✅ Coordenadas Normalizadas
+                                    )
+
+                                    // E. AÑADIR A PLANO
+                                    PlanoRepository.addPinToPlano(
+                                        planoId = "monasterio_interior",
+                                        pinId = newPinId
+                                    )
+
+                                    // F. ÉXITO
+                                    Toast.makeText(context, "Pin Creado. ID: $newPinId", Toast.LENGTH_LONG).show()
+                                    Log.d("EdicionPines", "Pin con ID:$newPinId creado correctamente en (x=$finalX, y=$finalY)")
+
+                                    // Recargar la lista de pines para mostrar el nuevo pin
+                                    val plano = PlanoRepository.getPlanoById("monasterio_interior")
+                                    val allPins = PinRepository.getAllPins()
+                                    val pinRefs = plano?.pines?.map { it.substringAfterLast("/") } ?: emptyList()
+                                    pines = allPins.filter { pinRefs.contains(it.id) }
+
+                                } catch (e: Exception) {
+                                    Log.e("EdicionPines", "Error en PinRepository.createPinFromForm", e)
+                                    Toast.makeText(context, "Error al guardar el Pin en Firebase.", Toast.LENGTH_LONG).show()
+                                }
+                            }
+
+                            vm.formSubmitted = false
+                            isNewPinMode = false
+
+                        } else {
+                            // Este es el bloque de código que YA tenías para actualizar la posición
+                            // de un pin que ya existía.
                             scope.launch {
                                 try {
                                     PinRepository.updatePinPosition(
                                         pinId = pinToUpdate.id,
-                                        newX = newX,
-                                        newY = newY
+                                        newX = finalX,
+                                        newY = finalY
                                     )
 
                                     // Actualizar el estado local (para forzar el redibujo del mapa)
                                     pines = pines.map { pin ->
                                         if (pin.id == pinToUpdate.id) {
-                                            pin.copy(x = newX, y = newY)
+                                            pin.copy(x = finalX, y = finalY)
                                         } else {
                                             pin
                                         }
                                     }
-
+                                    Toast.makeText(context, "Pin ${pinToUpdate.id} movido a (x=$finalX, y=$finalY)", Toast.LENGTH_SHORT).show()
 
                                 } catch (e: Exception) {
-                                    Log.e(
-                                        "EdicionPines",
-                                        "Error al guardar posición en Firebase",
-                                        e
-                                    )
+                                    Log.e("EdicionPines", "Error al guardar posición en Firebase", e)
+                                    Toast.makeText(context, "Error al mover el pin existente.", Toast.LENGTH_SHORT).show()
                                 }
                             }
-
-                        } else {
-                            Log.e("EdicionPines", "Error al convertir coordenadas a normalizadas.")
-                        }
-
-                        if (isNewPinMode) {
-                            val newX = normalizedCoords!!.x
-                            val newY = normalizedCoords!!.y
-
-                            scope.launch {
-                                val newPinId = PinRepository.createPinFromForm(
-                                    titulo = vm.titulo.es,
-                                    descripcion = vm.descripcion.es,
-                                    imagenes = vm.imagenes.uris.map { it.toString() },
-                                    imagenes360 = vm.imagenes360.uris.map { it.toString() },
-                                    ubicacion = vm.ubicacion.displayName,
-                                    x = newX,
-                                    y = newY
-                                )
-
-
-                                // ⭐ Añadir la referencia del pin al plano del monasterio
-                                PlanoRepository.addPinToPlano(
-                                    planoId = "monasterio_interior",
-                                    pinId = newPinId
-                                )
-
-
-                                // Recargar pantalla
-                                val plano = PlanoRepository.getPlanoById("monasterio_interior")
-                                val allPins = PinRepository.getAllPins()
-                                val pinRefs =
-                                    plano?.pines?.map { it.substringAfterLast("/") } ?: emptyList()
-                                pines = allPins.filter { pinRefs.contains(it.id) }
-                            }
-
-                            vm.formSubmitted = false
-
-                            // Salir del modo
-                            isNewPinMode = false
-                            isPinMoving = false
-                            pinBeingMoved = null
-
-                            return@MovingPinOverlay
                         }
 
 
