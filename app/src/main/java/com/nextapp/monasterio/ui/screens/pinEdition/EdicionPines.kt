@@ -1,4 +1,4 @@
-package com.nextapp.monasterio.ui.screens
+package com.nextapp.monasterio.ui.screens.pinEdition
 
 import android.app.Activity
 import android.content.pm.ActivityInfo
@@ -6,57 +6,42 @@ import android.graphics.Matrix
 import android.graphics.PointF
 import android.util.Log
 import android.widget.FrameLayout
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavController
-import coil.compose.AsyncImage
 import com.nextapp.monasterio.R
 import com.nextapp.monasterio.models.PinData
-// Nota: Se asume la existencia de PinRepository y PlanoRepository
 import com.nextapp.monasterio.repository.PinRepository
 import com.nextapp.monasterio.repository.PlanoRepository
-// Nota: Se asume la existencia de DebugPhotoView
 import com.nextapp.monasterio.ui.virtualvisit.components.DebugPhotoView
 import kotlinx.coroutines.launch
-import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.foundation.gestures.detectDragGestures
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.layout.onGloballyPositioned // Necesario para obtener el tamaño de la caja
 import androidx.compose.ui.unit.IntSize // Necesario para obtener el tamaño de la caja
-import androidx.compose.ui.platform.LocalDensity
 import com.nextapp.monasterio.AppRoutes
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.zIndex
 import com.nextapp.monasterio.ui.screens.pinCreation.CreacionPinSharedViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.nextapp.monasterio.ui.screens.pinEdition.components.MovingPinOverlay
+import com.nextapp.monasterio.ui.screens.pinEdition.components.PinDetailsPanel
 import kotlinx.coroutines.delay
+import com.nextapp.monasterio.ui.screens.pinEdition.components.PinEditionToolbar
 
 @Composable
 fun EdicionPines(
@@ -94,7 +79,6 @@ fun EdicionPines(
     var pinDragOffset by remember { mutableStateOf(Offset.Zero) } // Posición en píxeles de pantalla durante el arrastre
     var pinTapScreenPosition by remember { mutableStateOf<Offset?>(null) } // Posición inicial en píxeles de pantalla al hacer tap/abrir panel
     var photoViewSize by remember { mutableStateOf(IntSize.Zero) } // Tamaño del Box principal
-    var isDeleteDialogOpen by remember { mutableStateOf(false) }
 
     val parentEntry = remember(navController) {
         try {
@@ -142,7 +126,7 @@ fun EdicionPines(
         if (!vm.formSubmitted) return@LaunchedEffect
 
         // Esperar 1 frame para que photoViewSize tenga valor real
-        kotlinx.coroutines.delay(50)
+        delay(50)
 
         if (photoViewSize.width == 0 || photoViewSize.height == 0) {
             Log.e("EdicionPines", "Tamaño aún no disponible, reintentando…")
@@ -221,7 +205,7 @@ fun EdicionPines(
                     setImageFromUrl(planoUrl)
 
                     post {
-                        attacher.scaleType = android.widget.ImageView.ScaleType.FIT_END
+                        attacher.scaleType = ImageView.ScaleType.FIT_END
                         Log.d("EdicionPines", "Plano alineado al final (abajo) usando FIT_END.")
                     }
                 }.also { photoViewRef = it }
@@ -443,204 +427,42 @@ fun EdicionPines(
         // -------------------------
         // ⭐ PANEL INFORMATIVO (Estructura fija/scroll de descripción) ⭐
         // -------------------------
-        if (selectedPin != null) {
-
-            val imagenesDetalladas =
-                selectedPin!!.imagenesDetalladas // Asumimos que esta lista contiene objetos ImagenData
-            Box(
+        selectedPin?.let { pin ->
+            PinDetailsPanel(
                 modifier = Modifier
                     .zIndex(50f)
-                    .align(Alignment.BottomCenter)
-                    .fillMaxWidth()
-                    .fillMaxHeight(PANEL_HEIGHT_FRACTION)
-                    .background(
-                        Color.White,
-                        shape = androidx.compose.foundation.shape.RoundedCornerShape(
-                            topStart = 20.dp,
-                            topEnd = 20.dp
-                        )
-                    )
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                    .align(Alignment.BottomCenter),
+                selectedPin = pin,
+                imagenesDetalladas = pin.imagenesDetalladas,
+                pinTapScreenPosition = pinTapScreenPosition,
+                panelHeightFraction = PANEL_HEIGHT_FRACTION,
 
-                    .clickable(
-                        interactionSource = remember { MutableInteractionSource() },
-                        indication = null,
-                        onClick = {
-                            Log.d("EdicionPines", "Toque en el panel consumido.")
-                        }
-                    )
-            ) {
+                onClosePanel = {
+                    // Lógica para cerrar el panel (Hoisting)
+                    photoViewRef?.translationY = 0f
+                    photoViewRef?.translationX = 0f
+                    selectedPin = null
+                },
 
-                Column(
-                    modifier = Modifier.fillMaxSize()
-                ) {
+                onStartMove = { movedPin, initialPos ->
+                    // Lógica para iniciar el modo mover (Hoisting)
+                    Log.d("EdicionPines", "Iniciando modo Mover Pin para ID: ${movedPin.id}")
+                    pinBeingMoved = movedPin
+                    pinDragOffset = initialPos
+                    selectedPin = null
+                    isPinMoving = true
+                    photoViewRef?.translationY = 0f
+                    photoViewRef?.translationX = 0f
+                    Toast.makeText(context, "Modo Mover Pin activado. Arrastre.", Toast.LENGTH_LONG)
+                        .show()
+                },
 
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween, // Alineación izquierda y derecha
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        // Grupo Izquierdo: Acciones de Edición (Mover, Editar, BORRAR)
-                        Row(
-                            // 💡 CAMBIO 2: Ampliar el espaciado
-                            horizontalArrangement = Arrangement.spacedBy(12.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            // 💡 CAMBIO 1: Botón 1: Mover Pin (Ahora es el primero)
-                            IconButton(onClick = {
-                                selectedPin?.let { pin ->
-                                    val initialScreenPos = pinTapScreenPosition
-                                    if (initialScreenPos == null) {
-                                        Toast.makeText(
-                                            context,
-                                            "Error: No se encontró la posición inicial del pin.",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                        return@IconButton
-                                    }
-
-                                    Log.d(
-                                        "EdicionPines",
-                                        "Iniciando modo Mover Pin para ID: ${pin.id}"
-                                    )
-                                    pinBeingMoved = pin
-                                    pinDragOffset = initialScreenPos
-                                    selectedPin = null
-                                    isPinMoving = true
-                                    photoViewRef?.translationY = 0f
-                                    photoViewRef?.translationX = 0f
-
-                                    Toast.makeText(
-                                        context,
-                                        "Modo Mover Pin activado. Arrastre.",
-                                        Toast.LENGTH_LONG
-                                    ).show()
-                                }
-                            }) {
-                                Icon(
-                                    painter = painterResource(R.drawable.ic_move), // Asume el icono de mover
-                                    contentDescription = "Mover Pin"
-                                )
-                            }
-
-                            // 💡 CAMBIO 1: Botón 2: Editar Pin (Ahora es el segundo)
-                            IconButton(onClick = {
-                                Toast.makeText(context, "Editar Pin", Toast.LENGTH_SHORT).show()
-                            }) {
-                                Icon(
-                                    painter = painterResource(R.drawable.lapiz), // Asume el icono de lápiz/editar
-                                    contentDescription = "Editar Pin"
-                                )
-                            }
-
-                            // 💡 CAMBIO 1: Botón 3: Borrar Pin (Ahora es el tercero)
-                            IconButton(onClick = {
-                                // 💡 CAMBIO 3: Mostrar el diálogo de confirmación
-                                selectedPin?.let { pin ->
-                                    isDeleteDialogOpen = true
-                                }
-                            }) {
-                                Icon(
-                                    painter = painterResource(R.drawable.ic_trash), // Asume el icono de borrar/papelera
-                                    contentDescription = "Borrar Pin",
-                                    tint = Color(0xFFFF5722) // Rojo para advertencia
-                                )
-                            }
-                        }
-
-                        // Grupo Derecho: Cerrar Panel (Acción de UI)
-                        IconButton(onClick = {
-                            photoViewRef?.translationY = 0f
-                            photoViewRef?.translationX = 0f
-                            selectedPin = null // Cierra el panel
-                        }) {
-                            Icon(
-                                painter = painterResource(R.drawable.ic_close_24), // Asume el icono de cerrar
-                                contentDescription = "Cerrar Panel"
-                            )
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.height(4.dp))
-
-                    // --- 2. Título del Pin ---
-                    Text(
-                        text = selectedPin?.titulo ?: "Detalle del Pin",
-                        style = androidx.compose.ui.text.TextStyle(
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold
-                        ),
-                        color = Color.Black
-                    )
-
-                    Spacer(modifier = Modifier.height(12.dp))
-                    val numImages = imagenesDetalladas.size
-                    Log.i(
-                        "DIAG_PANEL",
-                        "Pin seleccionado: ${selectedPin!!.titulo}. Imágenes detalladas: $numImages"
-                    )
-
-                    // --- 3. Carrusel de Imágenes (Scroll Horizontal) ---
-                    if (imagenesDetalladas.isNotEmpty()) {
-                        LazyRow(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(150.dp),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            contentPadding = PaddingValues(end = 16.dp)
-                        ) {
-                            items(imagenesDetalladas) { imagen -> // Iteramos sobre objetos ImagenData
-                                Box(
-                                    modifier = Modifier
-                                        .size(150.dp) // Tamaño de la celda de la imagen
-                                        .clip(RoundedCornerShape(8.dp))
-                                ) {
-                                    AsyncImage(
-                                        model = imagen.url, // ⭐ Usamos el campo URL del objeto ImagenData
-                                        contentDescription = imagen.etiqueta, // ⭐ Usamos la etiqueta
-                                        contentScale = ContentScale.Crop,
-                                        modifier = Modifier.fillMaxSize()
-                                    )
-
-                                    // Texto de Etiqueta (similar al de tu carrusel original)
-                                    Text(
-                                        text = imagen.etiqueta, // ⭐ Muestra la etiqueta
-                                        color = Color.White,
-                                        fontSize = 12.sp,
-                                        modifier = Modifier
-                                            .align(Alignment.BottomStart)
-                                            .background(Color.Black.copy(alpha = 0.6f))
-                                            .padding(horizontal = 8.dp, vertical = 4.dp)
-                                    )
-                                }
-                            }
-                        }
-                        Spacer(modifier = Modifier.height(12.dp))
-                    } else {
-                        // Si no hay imágenes detalladas, mostramos un placeholder o espaciador.
-                        Spacer(modifier = Modifier.height(12.dp))
-                        Text(
-                            text = "No hay imágenes detalladas disponibles.",
-                            color = Color.Gray,
-                            modifier = Modifier.padding(bottom = 8.dp)
-                        )
-                    }
-
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f)
-                            .verticalScroll(rememberScrollState())
-                    ) {
-                        Text(
-                            text = selectedPin?.descripcion ?: "Descripción no disponible.",
-                            style = androidx.compose.ui.text.TextStyle(fontSize = 12.sp),
-                            color = Color.DarkGray
-                        )
-                    }
-                    Spacer(modifier = Modifier.height(8.dp))
+                onEdit = {
+                    // Lógica de edición
+                    Toast.makeText(context, "Editar Pin", Toast.LENGTH_SHORT).show()
                 }
-            }
+
+            )
         }
 
         // -------------------------
@@ -785,279 +607,76 @@ fun EdicionPines(
         }
 
         // -------------------------
-        // ⭐ TOOLBAR SUPERIOR FIJA ⭐
+        // ⭐ 1. BOTÓN DE ATRÁS (Alineado a TopStart) ⭐
         // -------------------------
-        Box(modifier = Modifier.zIndex(100f)){
-
-            ToolbarEdicionPines(
-                onBackClick = {
+        Box(
+            modifier = Modifier
+                .align(Alignment.TopStart) // Alineado a la esquina superior izquierda
+                .zIndex(100f) // Aseguramos que esté por encima del mapa
+                .padding(12.dp)
+                .clip(RoundedCornerShape(8.dp))
+                .background(Color(0xBB000000)) // Fondo semi-transparente
+        ) {
+            IconButton(
+                onClick = {
                     if (rootNavController != null) rootNavController.popBackStack()
                     else navController.popBackStack()
                 },
-
-                onPinAddClick = {
-                    vm.reset()
-                    navController.navigate(AppRoutes.CREACION_PINES)
-                },
-                onCrosshairClick = {
-                    // LÓGICA DE REAJUSTE
-                    Log.d(
-                        "EdicionPines",
-                        "Botón Reajustar Plano pulsado. Restaurando posición inicial."
-                    )
-
-                    // 1. Ocultar el panel informativo
-                    selectedPin = null
-                    isPinMoving = false // ⭐ ADICIÓN: Cancelar modo mover al reajustar
-
-                    // 2. Restaurar la posición y zoom del PhotoView
-                    photoViewRef?.let { photoView ->
-
-                        photoView.attacher.setScale(
-                            1f,
-                            true
-                        ) // Zoom a 1.0 (tamaño original) con animación.
-
-                        photoView.attacher.setRotationTo(0f) // Resetea la rotación
-                        photoView.attacher.setScaleType(android.widget.ImageView.ScaleType.FIT_END)
-
-                        // Eliminar traslación manual residual (aplicada para centrar pines)
-                        photoView.translationY = 0f
-                        photoView.translationX = 0f
-
-                        Toast.makeText(
-                            context,
-                            "Plano reajustado a la posición inicial.",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                },
-                onCancelEditClick = {
-                    Toast.makeText(context, "Bloquear Edición", Toast.LENGTH_SHORT).show()
-                },
-                onHelpClick = {
-                    Toast.makeText(context, "Mostrar Ayuda", Toast.LENGTH_SHORT).show()
-                }
-            )
-
-        }
-    }
-
-    // Archivo: EdicionPines.kt (al final del composable, pero dentro de su función)
-
-    // ⭐ DIÁLOGO DE CONFIRMACIÓN DE BORRADO PERMANENTE
-    if (isDeleteDialogOpen) {
-        AlertDialog(
-            onDismissRequest = {
-                isDeleteDialogOpen = false // Cerrar el diálogo al pulsar fuera
-            },
-            title = {
-                Text(text = "Confirmar Eliminación")
-            },
-            text = {
-                Text("Estás a punto de eliminar permanentemente el pin '${selectedPin?.titulo ?: "seleccionado"}'. Esta acción no se puede deshacer. ¿Deseas continuar?")
-            },
-            confirmButton = {
-                Button(
-                    onClick = {
-
-                        Log.d("EdicionPines", "Acción de Eliminación Bloqueada temporalmente.")
-                        Toast.makeText(context, "Acción de Borrado BLOQUEADA (Temporalmente)", Toast.LENGTH_SHORT).show()
-
-                        // Cerrar el diálogo, dando la sensación de que el botón se pulsó
-                        isDeleteDialogOpen = false
-                    },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFF44336)) // Mantiene el color Rojo
-                ) {
-                    Text("Eliminar Pin")
-                }
-            },
-            dismissButton = {
-                Button(
-                    onClick = {
-                        isDeleteDialogOpen = false // Simplemente cerrar
-                    }
-                ) {
-                    Text("Cancelar")
-                }
+                modifier = Modifier.padding(4.dp)
+            ) {
+                Icon(
+                    // Asumo que tienes R.drawable.arrow_back o similar
+                    painter = painterResource(id = R.drawable.arrow_back),
+                    contentDescription = "Volver",
+                    tint = Color.White
+                )
             }
+        }
+
+        // -------------------------
+        // ⭐ 2. TOOLBAR DE EDICIÓN (Alineado a TopEnd - Componente Extraído) ⭐
+        // -------------------------
+        PinEditionToolbar(
+            onPinAddClick = {
+                // Lógica de Añadir Pin (Preservada)
+                vm.reset()
+                navController.navigate(AppRoutes.CREACION_PINES)
+            },
+            onCrosshairClick = {
+                // LÓGICA DE REAJUSTE (Preservada, utiliza photoViewRef)
+                Log.d(
+                    "EdicionPines",
+                    "Botón Reajustar Plano pulsado. Restaurando posición inicial."
+                )
+                selectedPin = null
+                isPinMoving = false
+
+                photoViewRef?.let { photoView ->
+                    photoView.attacher.setScale(1f, true)
+                    photoView.attacher.setRotationTo(0f)
+                    photoView.attacher.setScaleType(ImageView.ScaleType.FIT_END)
+                    photoView.translationY = 0f
+                    photoView.translationX = 0f
+
+                    Toast.makeText(
+                        context,
+                        "Plano reajustado a la posición inicial.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            },
+            onCancelEditClick = {
+                Toast.makeText(context, "Bloquear Edición", Toast.LENGTH_SHORT).show()
+            },
+            onHelpClick = {
+                Toast.makeText(context, "Mostrar Ayuda", Toast.LENGTH_SHORT).show()
+            },
+            modifier = Modifier.align(Alignment.TopEnd).zIndex(100f) // Alineado a la derecha
         )
     }
-
 }
 
-@Composable
-fun MovingPinOverlay(
-    pinData: PinData,
-    initialOffset: Offset,
-    isPressed: Boolean = false,
-    onPinDrag: (Offset) -> Unit,
-    onCancel: () -> Unit,
-    onConfirm: () -> Unit,
-    boxSize: IntSize
-) {
-    val context = LocalContext.current
-    // 1. OBTENER LA DENSIDAD LOCAL para habilitar .toDp()
-    val density = LocalDensity.current
 
-    // La posición actual se mantendrá en pinDragOffset del padre (EdicionPines)
-    var currentOffset by remember { mutableStateOf(initialOffset) }
 
-    // Sincronizar el offset con el valor del estado padre
-    LaunchedEffect(initialOffset) {
-        currentOffset = initialOffset
-    }
-
-    val pinIconSize = 48.dp
-    val buttonSize = 40.dp
-    // Corrección para que la punta del pin (no el centro) esté en currentOffset
-    val pinOffsetCorrection = pinIconSize / 2
-
-    // Usamos Box para dibujar el icono y los botones, y detectamos el arrastre sobre el área completa
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .pointerInput(Unit) {
-                detectDragGestures { change, dragAmount ->
-                    change.consume()
-                    val newOffset = currentOffset.plus(dragAmount)
-
-                    // Lógica para mantener el pin dentro de los límites visibles de la pantalla (usando px)
-                    val density = context.resources.displayMetrics.density
-                    val safeAreaDp = 60.dp.value
-                    val safeAreaPx = safeAreaDp * density
-
-                    val boundedX = newOffset.x.coerceIn(0f + safeAreaPx, boxSize.width.toFloat() - safeAreaPx)
-                    val boundedY = newOffset.y.coerceIn(0f + safeAreaPx, boxSize.height.toFloat() - safeAreaPx)
-
-                    currentOffset = Offset(boundedX, boundedY)
-                    onPinDrag(currentOffset)
-                }
-            }
-    ) {
-        // 2. USAR with(density) para habilitar las extensiones .toDp()
-        with(density) {
-            // --- Icono del Pin Flotante ---
-            Icon(
-                painter = painterResource(id = R.drawable.pin3), // Usamos el mismo icono de pin
-                contentDescription = "Pin en movimiento",
-                tint = Color.Red, // Destacamos el pin que se está moviendo
-                modifier = Modifier
-                    .offset(
-                        x = currentOffset.x.toDp() - pinOffsetCorrection,
-                        y = currentOffset.y.toDp() - pinIconSize
-                    )
-                    .size(pinIconSize)
-            )
-
-            // --- Botones de Control Flotantes (arriba del pin) ---
-            Row(
-                modifier = Modifier
-                    .offset(
-                        x = currentOffset.x.toDp() - pinIconSize,
-                        y = currentOffset.y.toDp() - pinIconSize - buttonSize - 4.dp
-                    )
-                    .padding(4.dp)
-                    .background(Color.Black.copy(alpha = 0.6f), RoundedCornerShape(20.dp)),
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                // Botón de Cancelación (❌)
-                IconButton(onClick = onCancel, modifier = Modifier.size(buttonSize)) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_close_24),
-                        contentDescription = "Cancelar Movimiento",
-                        tint = Color.White,
-                        modifier = Modifier.size(24.dp)
-                    )
-                }
-                // Botón de Confirmación (✔️)
-                IconButton(onClick = onConfirm, modifier = Modifier.size(buttonSize)) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.baseline_done_24),
-                        contentDescription = "Confirmar Posición",
-                        tint = Color(0xFF4CAF50), // Verde
-                        modifier = Modifier.size(24.dp)
-                    )
-                }
-            }
-        } // Cierre del bloque with(density)
-    }
-}
-
-@Composable
-fun ToolbarEdicionPines(
-    onBackClick: () -> Unit,
-    onPinAddClick: () -> Unit,
-    onCrosshairClick: () -> Unit,
-    onCancelEditClick: () -> Unit,
-    onHelpClick: () -> Unit
-) {
-    // Fila para contener todos los elementos de la Toolbar (Botón Atrás + Botones de Acción)
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp), // Aplicamos el padding aquí
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween // Para separar el botón de atrás de la toolbar de edición
-    ) {
-
-        // --- 1. Botón Atrás (Izquierda) ---
-        IconButton(
-            onClick = onBackClick,
-            modifier = Modifier
-                .background(Color.Black.copy(alpha = 0.5f), shape = RoundedCornerShape(12.dp))
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.arrow_back), // Asume que R.drawable.arrow_back existe
-                contentDescription = stringResource(R.string.go_back),
-                tint = Color.White
-            )
-        }
-
-        // --- 2. Barra de Botones de Edición (Derecha) ---
-        Row(
-            modifier = Modifier
-                .background(Color.Black.copy(alpha = 0.5f), shape = RoundedCornerShape(12.dp))
-                .padding(horizontal = 4.dp), // Padding interno para los botones
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(4.dp)
-        ) {
-
-            // Botón 2: Añadir Pin
-            IconButton(onClick = onPinAddClick) {
-                Icon(
-                    painter = painterResource(id = R.drawable.pin3),
-                    contentDescription = "Añadir Pin",
-                    tint = Color.White
-                )
-            }
-            // Botón 3: Modo Cruz (Crosshair)
-            IconButton(onClick = onCrosshairClick) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_reajuste),
-                    contentDescription = "Centrar/Posicionar",
-                    tint = Color.White
-                )
-            }
-            // Botón 4: Cancelar Edición / Prohibido
-            IconButton(onClick = onCancelEditClick) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_eye_on),
-                    contentDescription = "Bloquear Edición",
-                    tint = Color.White
-                )
-            }
-            // Botón 5: Ayuda/Información (El botón extra a la derecha)
-            IconButton(onClick = onHelpClick) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_help),
-                    contentDescription = "Ayuda",
-                    tint = Color.White
-                )
-            }
-        }
-    }
-}
 
 
