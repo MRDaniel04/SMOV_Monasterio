@@ -15,7 +15,10 @@ import androidx.compose.foundation.Image
 import androidx.compose.material3.Text
 
 @Composable
-fun AddImageButton(onClick: () -> Unit) {
+fun AddImageButton(
+    text: String = "Añadir",
+    onClick: () -> Unit
+) {
     Card(
         modifier = Modifier
             .size(120.dp)
@@ -31,11 +34,11 @@ fun AddImageButton(onClick: () -> Unit) {
         ) {
             Image(
                 painter = painterResource(id = R.drawable.ic_photo),
-                contentDescription = "Añadir imagen",
+                contentDescription = text,
                 modifier = Modifier.size(32.dp)
             )
             Spacer(Modifier.height(4.dp))
-            Text("Añadir")
+            Text(text)
         }
     }
 }

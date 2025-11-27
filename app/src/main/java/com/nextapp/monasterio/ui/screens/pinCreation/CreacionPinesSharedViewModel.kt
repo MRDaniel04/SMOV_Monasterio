@@ -1,35 +1,37 @@
 package com.nextapp.monasterio.ui.screens.pinCreation
 
+import android.net.Uri
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.nextapp.monasterio.ui.screens.pinCreation.state.*
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+
 
 class CreacionPinSharedViewModel : ViewModel() {
 
-    // Estados del formulario
-    val titulo = TituloState()
-    val descripcion = DescripcionState()
-    val imagenes = ImagenesState()
-    val imagenes360 = ImagenesState()
-    val ubicacion = UbicacionState()
+        val titulo = TituloState()
+        val descripcion = DescripcionState()
+        val imagenes = ImagenesState()
+        var imagen360 by mutableStateOf<Uri?>(null)
+        val ubicacion = UbicacionState()
 
-    // Indicador: ¿estamos moviendo un pin nuevo?
-    var modoMoverPin: Boolean = false
+        var modoMoverPin: Boolean = false
+        var formSubmitted: Boolean = false
+        var coordenadasFinales: Pair<Float, Float>? = null
 
-    // 🔥 Se usa para decirle a EdicionPines que volvemos del formulario
-    var formSubmitted: Boolean = false
+        fun reset() {
+            titulo.es = ""; titulo.en = ""; titulo.de = ""
+            descripcion.es = ""; descripcion.en = ""; descripcion.de = ""
 
-    // Resultado de la fase mover pin
-    var coordenadasFinales: Pair<Float, Float>? = null
+            imagenes.uris = emptyList()
+            imagen360 = null
 
-    // Reset completo (solo al terminar o cancelar definitivamente)
-    fun reset() {
-        titulo.es = ""; titulo.en = ""; titulo.de = ""
-        descripcion.es = ""; descripcion.en = ""; descripcion.de = ""
-        imagenes.uris = emptyList()
-        imagenes360.uris = emptyList()
-        ubicacion.displayName = ""
-        modoMoverPin = false
-        coordenadasFinales = null
-        formSubmitted = false   // <-- IMPORTANTE
+            ubicacion.displayName = ""
+            modoMoverPin = false
+            coordenadasFinales = null
+            formSubmitted = false
+        }
     }
-}
+
+

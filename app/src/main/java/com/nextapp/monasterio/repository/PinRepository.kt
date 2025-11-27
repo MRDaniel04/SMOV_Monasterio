@@ -1,6 +1,7 @@
 package com.nextapp.monasterio.repository
 
 import android.util.Log
+import androidx.compose.ui.graphics.toArgb
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
@@ -21,69 +22,92 @@ object PinRepository {
         return generatedId
     }
 
+
+
+
     suspend fun createPin(pin: PinData): String {
+
+        val imagenesRefs = pin.imagenes.map { url ->
+            createImagenDocument(url)
+        }
+
         val payload = mapOf(
             "titulo" to pin.titulo,
+            "tituloIngles" to pin.tituloIngles,
+            "tituloAleman" to pin.tituloAleman,
             "ubicacion" to pin.ubicacion?.name,
             "x" to pin.x.toDouble(),
             "y" to pin.y.toDouble(),
-            "tema" to pin.tema?.name,
-            "imagenes" to pin.imagenes,
+            "imagenes" to imagenesRefs,
             "descripcion" to pin.descripcion,
-            "tapRadius" to pin.tapRadius.toDouble(),
+            "descripcionIngles" to pin.descripcionIngles,
+            "descripcionAleman" to pin.descripcionAleman,
             "vista360Url" to pin.vista360Url,
             "audioUrl_es" to pin.audioUrl_es,
             "audioUrl_en" to pin.audioUrl_en,
-            "audioUrl_ge" to pin.audioUrl_ge
+            "audioUrl_ge" to pin.audioUrl_ge,
+            "tipoDestino" to "detalle",
+            "valorDestino" to "auto"
         )
+
         return createPinAutoId(payload)
     }
 
-    // -----------------------
-// CREATE desde formulario (EdicionPines)
-// -----------------------
+
+
     suspend fun createPinFromForm(
         titulo: String,
-        descripcion: String,
-        imagenes: List<String>,
-        imagenes360: List<String>,
-        ubicacion: String,
+        descripcion: String?,
+        tituloIngles: String? = null,
+        tituloAleman: String? = null,
+        descripcionIngles: String? = null,
+        descripcionAleman: String? = null,
+        ubicacion: String?,
+        imagenes: List<String>,   // URLs de Cloudinary
+        imagen360: String?,       // URL de la imagen 360 (opcional)
         x: Float,
         y: Float
     ): String {
 
+        // 1️⃣ Crear documentos en la colección /imagenes y obtener REFERENCIAS
+        val imagenesRefs: List<DocumentReference> = imagenes.map { url ->
+            createImagenDocument(url) // crea doc y retorna DocumentReference
+        }
+
         val payload = mapOf(
             "titulo" to titulo,
-            "tituloIngles" to "",
-            "tituloAleman" to "",
-
             "descripcion" to descripcion,
-            "descripcionIngles" to "",
-            "descripcionAleman" to "",
+
+            "tituloIngles" to tituloIngles.orEmpty(),
+            "tituloAleman" to tituloAleman.orEmpty(),
+            "descripcionIngles" to descripcionIngles,
+            "descripcionAleman" to descripcionAleman,
 
             "ubicacion" to ubicacion,
-            "ubicacionIngles" to ubicacion,
-            "ubicacionAleman" to ubicacion,
-
             "x" to x.toDouble(),
             "y" to y.toDouble(),
-
-            // Imágenes: convertimos a referencias de Firestore
-            "imagenes" to imagenes.map {
-                firestore.collection("imagenes").document().path
-            },
-
-            // Por ahora guardamos solo como URL (si Cloudinary ya devuelve URL)
-            "vista360Url" to imagenes360.firstOrNull(),
-
+            "imagenes" to imagenesRefs,
+            "vista360Url" to imagen360,
+            "audioUrl_es" to null,
+            "audioUrl_en" to null,
+            "audioUrl_ge" to null,
             "tipoDestino" to "detalle",
-            "valorDestino" to "pin_detalle"
+            "valorDestino" to "auto"
         )
 
+        // 3️⃣ Crear el documento del pin
         return createPinAutoId(payload)
     }
 
 
+
+    private fun safeUbicacionOf(name: String): Ubicacion? {
+        return try {
+            Ubicacion.valueOf(name)
+        } catch (_: Exception) {
+            null
+        }
+    }
     // -----------------------
     // READ: todos los pines
     // -----------------------
@@ -99,69 +123,29 @@ object PinRepository {
     // READ: pin individual
     // -----------------------
     suspend fun getPinById(id: String): PinData? {
-        Log.d("PinRepository", "🔍 getPinById($id)")
         val doc = collection.document(id).get().await()
+        if (!doc.exists()) return null
 
-        if (!doc.exists()) {
-            Log.e("PinRepository", "❌ Documento de pin no encontrado: $id")
-            return null
+        val basePin = mapDocToPinData(doc.id, doc.data) ?: return null
+
+        // 🔥 Cargar cada imagen desde /imagenes/
+        val imagenesDetalladas = basePin.imagenes.map { imagenId ->
+            val imgDoc = firestore.collection("imagenes").document(imagenId).get().await()
+
+            ImagenData(
+                url = imgDoc.getString("url") ?: "",
+                etiqueta = imgDoc.getString("etiqueta") ?: "",
+                titulo = imgDoc.getString("titulo") ?: "",
+                tituloIngles = imgDoc.getString("tituloIngles") ?: "",
+                tituloAleman = imgDoc.getString("tituloAleman") ?: ""
+            )
         }
 
-        val data = doc.data
-        Log.d("PinRepository", "📄 Datos del pin recuperados: ${data?.keys}")
-
-        val basePin = mapDocToPinData(doc.id, data)
-        if (basePin == null) {
-            Log.e("PinRepository", "❌ Fallo al mapear el pin $id")
-            return null
-        }
-
-        if (basePin.imagenes.isEmpty()) {
-            Log.w("PinRepository", "⚠️ El pin $id no tiene referencias de imágenes")
-        } else {
-            Log.d("PinRepository", "🔗 Referencias detectadas: ${basePin.imagenes}")
-        }
-
-        val imagenesDetalladas = mutableListOf<ImagenData>()
-
-        for (ref in basePin.imagenes) {
-            try {
-                val imageId = ref.substringAfterLast("/")
-                val imageDoc = firestore.collection("imagenes").document(imageId).get().await()
-                if (imageDoc.exists()) {
-                    val url = imageDoc.getString("url") ?: ""
-                    val etiqueta = imageDoc.getString("etiqueta") ?: ""
-                    val titulo = imageDoc.getString("titulo") ?: ""
-                    val tituloIngles = imageDoc.getString("tituloIngles") ?: ""
-                    val tituloAleman = imageDoc.getString("tituloAleman") ?: ""
-
-                    Log.d(
-                        "PinRepository",
-                        "✅ Imagen encontrada '$imageId' → etiqueta='$etiqueta', titulo='$titulo', url='$url'"
-                    )
-
-                    if (url.isNotBlank()) {
-                        imagenesDetalladas.add(
-                            ImagenData(
-                                id = imageId,
-                                url = url,
-                                etiqueta = etiqueta,
-                                titulo = titulo,
-                                tituloIngles = tituloIngles,
-                                tituloAleman = tituloAleman
-                            )
-                        )
-                    }
-                } else {
-                    Log.w("PinRepository", "⚠️ Documento no encontrado en /imagenes/: $imageId")
-                }
-            } catch (e: Exception) {
-                Log.e("PinRepository", "❌ Error al obtener imagen referenciada para $ref", e)
-            }
-        }
-
-        return basePin.copy(imagenesDetalladas = imagenesDetalladas)
+        return basePin.copy(
+            imagenesDetalladas = imagenesDetalladas
+        )
     }
+
 
     suspend fun deletePin(pinId: String): Boolean {
         return try {
@@ -199,6 +183,7 @@ object PinRepository {
         if (data == null) return null
 
         return try {
+
             val titulo = data["titulo"] as? String ?: ""
             val tituloIngles = data["tituloIngles"] as? String ?: ""
             val tituloAleman = data["tituloAleman"] as? String ?: ""
@@ -209,15 +194,12 @@ object PinRepository {
 
             val x = (data["x"] as? Number)?.toFloat() ?: 0f
             val y = (data["y"] as? Number)?.toFloat() ?: 0f
-            val temaStr = data["tema"] as? String
-            val tema = temaStr?.let { safeTemaOf(it) } ?: Tema.PINTURA_Y_ARTE_VISUAL
 
-            // 🧩 Referencias de imágenes
+            // 🟦 Cargamos SOLO los IDs de referencias a imágenes
             val imagenes: List<String> = when (val raw = data["imagenes"]) {
-                is List<*> -> raw.mapNotNull {
-                    when (it) {
-                        is String -> it
-                        is DocumentReference -> it.path
+                is List<*> -> raw.mapNotNull { ref ->
+                    when (ref) {
+                        is DocumentReference -> ref.id
                         else -> null
                     }
                 }
@@ -227,26 +209,22 @@ object PinRepository {
             val descripcion = data["descripcion"] as? String
             val descripcionIngles = data["descripcionIngles"] as? String
             val descripcionAleman = data["descripcionAleman"] as? String
-            val tapRadius = (data["tapRadius"] as? Number)?.toFloat() ?: 0.04f
             val vista360Url = data["vista360Url"] as? String
 
             val audioUrl_es = data["audioUrl_es"] as? String
             val audioUrl_en = data["audioUrl_en"] as? String
             val audioUrl_ge = data["audioUrl_ge"] as? String
 
-            // 🔹 NUEVO: leer los campos de destino
+            val tapRadius = (data["tapRadius"] as? Number)?.toFloat() ?: 0.04f
             val tipoDestino = data["tipoDestino"] as? String
             val valorDestino = data["valorDestino"] as? String
 
-            // 🔹 Crear el destino dinámicamente
             val destino = when (tipoDestino?.lowercase()) {
                 "ruta" -> DestinoPin.Ruta(valorDestino ?: "")
                 "detalle" -> DestinoPin.Detalle(valorDestino ?: docId)
                 "popup" -> DestinoPin.Popup(valorDestino ?: "Sin mensaje")
                 else -> DestinoPin.Detalle(docId)
             }
-
-            Log.d("PinRepository", "📍 Mapeando pin '$titulo' ($docId) → tipoDestino=$tipoDestino, valor=$valorDestino")
 
             PinData(
                 id = docId,
@@ -258,11 +236,10 @@ object PinRepository {
                 ubicacionAleman = ubicacionAleman,
                 x = x,
                 y = y,
-                tema = tema,
                 color = null,
                 iconRes = null,
                 imagenes = imagenes,
-                imagenesDetalladas = emptyList(),
+                imagenesDetalladas = emptyList(),   // ✔ CORRECTO
                 descripcion = descripcion,
                 descripcionIngles = descripcionIngles,
                 descripcionAleman = descripcionAleman,
@@ -275,6 +252,8 @@ object PinRepository {
                 audioUrl_en = audioUrl_en,
                 audioUrl_ge = audioUrl_ge
             )
+
+
         } catch (e: Exception) {
             Log.e("PinRepository", "❌ Error mapeando pin $docId", e)
             null
@@ -282,19 +261,54 @@ object PinRepository {
     }
 
 
-    private fun safeTemaOf(name: String): Tema {
+    private suspend fun createImagenDocument(url: String): DocumentReference {
+        val imagenesCollection = firestore.collection("imagenes")
+
+        val payload = mapOf(
+            "url" to url,
+            "etiqueta" to "",
+            "titulo" to "",
+            "tituloIngles" to "",
+            "tituloAleman" to "",
+            "tituloFrances" to "",
+            "foco" to "centro"
+        )
+
+        val docRef = imagenesCollection.add(payload).await()
+        return docRef
+    }
+
+    suspend fun deletePinAndImages(pinId: String): Boolean {
         return try {
-            Tema.valueOf(name)
-        } catch (_: Exception) {
-            Tema.PINTURA_Y_ARTE_VISUAL
+            val firestore = FirebaseFirestore.getInstance()
+
+            val pinDoc = firestore.collection("pines").document(pinId).get().await()
+            if (!pinDoc.exists()) return false
+
+            val imagenesRefs = pinDoc.get("imagenes") as? List<DocumentReference> ?: emptyList()
+
+            imagenesRefs.forEach { ref ->
+                try {
+                    ref.delete().await()
+                    Log.d("PinRepository", "🗑 Imagen eliminada: ${ref.id}")
+                } catch (e: Exception) {
+                    Log.e("PinRepository", "❌ Error eliminando imagen ${ref.id}", e)
+                }
+            }
+
+            firestore.collection("pines").document(pinId).delete().await()
+
+            Log.d("PinRepository", "🗑 Pin eliminado correctamente: $pinId")
+            true
+
+        } catch (e: Exception) {
+            Log.e("PinRepository", "❌ Error eliminando pin completo $pinId", e)
+            false
         }
     }
 
-    private fun safeUbicacionOf(name: String): Ubicacion? {
-        return try {
-            Ubicacion.valueOf(name)
-        } catch (_: Exception) {
-            null
-        }
-    }
+
+
+
+
 }
