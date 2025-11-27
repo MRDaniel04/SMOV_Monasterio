@@ -50,7 +50,7 @@ class GaleriaViewModel(
             } else {
                 currentState.images.filter { 
                     // Normalize strings for comparison (optional but good practice)
-                    it.type.equals(type.id, ignoreCase = true) 
+                    it.tipo.equals(type.id, ignoreCase = true)
                 }
             }
             currentState.copy(selectedType = type, filteredImages = filtered)
