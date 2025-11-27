@@ -31,6 +31,7 @@ import com.nextapp.monasterio.ui.theme.MonasteryRed
 import com.nextapp.monasterio.ui.theme.White
 import com.nextapp.monasterio.ui.virtualvisit.screens.EntradaMonasterioFirestoreScreen
 import com.nextapp.monasterio.viewModels.AjustesViewModel
+import com.nextapp.monasterio.viewModels.InfoViewModel
 import com.nextapp.monasterio.viewModels.HistoriaViewModel
 import com.nextapp.monasterio.viewModels.AuthViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -42,6 +43,7 @@ fun AppNavigationHost(
     authViewModel: AuthViewModel = viewModel(),
     historiaViewModel: HistoriaViewModel = viewModel(),
     ajustesViewModel: AjustesViewModel = viewModel(),
+    infoViewModel: InfoViewModel = viewModel(),
     navController: NavHostController,
     isEditing: Boolean = false,
 ) {
@@ -51,7 +53,7 @@ fun AppNavigationHost(
         modifier = modifier
     ) {
         composable(AppRoutes.INICIO)   { HomeScreenContent(navController = navController) }
-        composable(AppRoutes.INFO)     { InfoScreen() }
+        composable(AppRoutes.INFO)     { InfoScreen(isEditing = isEditing, viewModel = infoViewModel) }
         composable(AppRoutes.HISTORIA) { HistoriaScreen(isEditing = isEditing, viewModel = historiaViewModel) }
         composable(AppRoutes.GALERIA)  { GaleriaScreen(navController = navController) }
         composable(AppRoutes.MODO_NINYOS)   { OpcionesModoNiño(navController = navController) }

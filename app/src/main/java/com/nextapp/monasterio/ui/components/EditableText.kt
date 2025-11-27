@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.graphics.Color
 import com.nextapp.monasterio.R
 import androidx.compose.ui.unit.dp
 import java.util.Locale
@@ -26,19 +27,34 @@ fun EditableText(
     modifier: Modifier = Modifier,
     label: String? = null,
     singleLine: Boolean = true,
-    readOnlyStyle: androidx.compose.ui.text.TextStyle = MaterialTheme.typography.bodyLarge
+    readOnlyStyle: androidx.compose.ui.text.TextStyle = MaterialTheme.typography.bodyLarge,
+    editTextColor: Color = Color.Unspecified
 ) {
     if (isEditing) {
+        val colors = if (editTextColor != Color.Unspecified) {
+            OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                focusedTextColor = editTextColor,
+                unfocusedTextColor = editTextColor,
+                cursorColor = editTextColor,
+                focusedLabelColor = editTextColor,
+                unfocusedLabelColor = editTextColor
+            )
+        } else {
+            OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.outline
+            )
+        }
+
         OutlinedTextField(
             value = text,
             onValueChange = onTextChange,
             modifier = modifier.fillMaxWidth(),
             singleLine = singleLine,
             label = label?.let { { Text(it) } },
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = MaterialTheme.colorScheme.primary,
-                unfocusedBorderColor = MaterialTheme.colorScheme.outline
-            )
+            colors = colors
         )
     } else {
         // Mostrar texto normal con estilo cuando no está editando
@@ -64,7 +80,8 @@ fun EditableText(
     modifier: Modifier = Modifier,
     label: String? = null,
     singleLine: Boolean = false,
-    readOnlyStyle: androidx.compose.ui.text.TextStyle = MaterialTheme.typography.bodyLarge
+    readOnlyStyle: androidx.compose.ui.text.TextStyle = MaterialTheme.typography.bodyLarge,
+    editTextColor: Color = Color.Unspecified
 ) {
     val currentSystemLanguage = java.util.Locale.getDefault().language
     // Mostrar el idioma del sistema, o español por defecto
@@ -74,6 +91,23 @@ fun EditableText(
     if (isEditing) {
         var editingLanguage by remember { mutableStateOf("es") } // Por defecto editar en español
         val currentEditingText = textMap[editingLanguage] ?: ""
+
+        val colors = if (editTextColor != Color.Unspecified) {
+            OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                focusedTextColor = editTextColor,
+                unfocusedTextColor = editTextColor,
+                cursorColor = editTextColor,
+                focusedLabelColor = editTextColor,
+                unfocusedLabelColor = editTextColor
+            )
+        } else {
+            OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.outline
+            )
+        }
 
         Column(modifier = modifier.fillMaxWidth()) {
             OutlinedTextField(
@@ -86,10 +120,7 @@ fun EditableText(
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = singleLine,
                 label = label?.let { { Text("$it (${editingLanguage.uppercase()})") } },
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = MaterialTheme.colorScheme.primary,
-                    unfocusedBorderColor = MaterialTheme.colorScheme.outline
-                )
+                colors = colors
             )
             
             // Selector de idioma debajo del campo de texto
@@ -113,6 +144,8 @@ fun EditableText(
             fontWeight = if (displayText.isEmpty()) FontWeight.Light else FontWeight.Normal,
             color = if (displayText.isEmpty()) 
                 MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f) 
+            else if (readOnlyStyle.color != Color.Unspecified)
+                readOnlyStyle.color
             else 
                 MaterialTheme.colorScheme.onSurface
         )
