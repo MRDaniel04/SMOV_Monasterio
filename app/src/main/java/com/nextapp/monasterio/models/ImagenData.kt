@@ -6,5 +6,6 @@ data class ImagenData(
     val etiqueta: String = "",
     val titulo: String = "",
     val tituloIngles: String = "",
-    val tituloAleman: String = ""
+    val tituloAleman: String = "",
+    val type: String = ""
 )

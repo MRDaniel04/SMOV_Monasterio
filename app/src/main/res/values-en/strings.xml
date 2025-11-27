@@ -174,4 +174,10 @@
     <string name="back_piece">Back of the piece</string>
     <string name="left_pairs">Remaining couples: %1$s</string>
     <string name="left_pieces">Remaining pieces: %1$s</string>
+    <!-- Gallery Types -->
+    <string name="gallery_type_all">All</string>
+    <string name="gallery_type_painting">Paintings</string>
+    <string name="gallery_type_sculpture">Sculptures</string>
+    <string name="gallery_type_architecture">Architecture</string>
+    <string name="gallery_type_other">Others</string>
 </resources>
