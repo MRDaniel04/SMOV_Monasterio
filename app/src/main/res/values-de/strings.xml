@@ -176,4 +176,10 @@
     <string name="back_piece">Rückseite des Stückes</string>
     <string name="left_pairs">Verbleibende Paare: %1$s</string>
     <string name="left_pieces">Restliche Stücke: %1$s</string>
+    <!-- Gallery Types -->
+    <string name="gallery_type_all">Alle</string>
+    <string name="gallery_type_painting">Gemälde</string>
+    <string name="gallery_type_sculpture">Skulpturen</string>
+    <string name="gallery_type_architecture">Architektur</string>
+    <string name="gallery_type_other">Andere</string>
 </resources>

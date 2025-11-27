@@ -167,4 +167,10 @@
     <string name="left_pieces">Piezas restantes: %1$s</string>
 
     <string name="play_audio"></string>
+    <!-- Gallery Types -->
+    <string name="gallery_type_all">Todos</string>
+    <string name="gallery_type_painting">Cuadros</string>
+    <string name="gallery_type_sculpture">Esculturas</string>
+    <string name="gallery_type_architecture">Arquitectura</string>
+    <string name="gallery_type_other">Otros</string>
 </resources>
