@@ -103,7 +103,7 @@ fun ProfileScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp),
+                .padding(24.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -162,53 +162,98 @@ fun ProfileScreen(
                 }
             } else {
                 // Vista de solo lectura
-                Column(
+                // Avatar / Icono de perfil
+                Icon(
+                    painter = androidx.compose.ui.res.painterResource(id = R.drawable.escudo),
+                    contentDescription = null,
+                    modifier = Modifier.size(120.dp),
+                    tint = androidx.compose.ui.graphics.Color.Unspecified // Usar color original de la imagen
+                )
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                Text(
+                    text = "Bienvenido, ${user.name}",
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+
+                Spacer(modifier = Modifier.height(32.dp))
+
+                // Tarjeta de información del usuario
+                Card(
                     modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
                 ) {
-                    Text(
-                        text = "Bienvenido, ${user.name}",
-                        style = MaterialTheme.typography.titleLarge
+                    Column(
+                        modifier = Modifier.padding(20.dp),
+                        verticalArrangement = Arrangement.spacedBy(20.dp)
+                    ) {
+                        // Nombre
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(
+                                painter = androidx.compose.ui.res.painterResource(id = R.drawable.outline_account_child_invert_24),
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(24.dp)
+                            )
+                            Spacer(modifier = Modifier.width(16.dp))
+                            Column {
+                                Text(
+                                    text = stringResource(id = R.string.profile_name),
+                                    style = MaterialTheme.typography.labelMedium,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                                Text(
+                                    text = user.name ?: "",
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
+                            }
+                        }
+
+                        HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+
+                        // Email
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(
+                                painter = androidx.compose.ui.res.painterResource(id = R.drawable.mail),
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(24.dp)
+                            )
+                            Spacer(modifier = Modifier.width(16.dp))
+                            Column {
+                                Text(
+                                    text = stringResource(id = R.string.profile_email),
+                                    style = MaterialTheme.typography.labelMedium,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                                Text(
+                                    text = user.email ?: "",
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
+                            }
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(48.dp))
+
+                Button(
+                    onClick = { viewModel.logout() },
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error),
+                    modifier = Modifier.fillMaxWidth(0.6f)
+                ) {
+                    Icon(
+                        painter = androidx.compose.ui.res.painterResource(id = R.drawable.ic_close_24),
+                        contentDescription = null,
+                        modifier = Modifier.size(18.dp)
                     )
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    // Mostrar información del usuario
-                    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                        Column {
-                            Text(
-                                text = stringResource(id = R.string.profile_name),
-                                style = MaterialTheme.typography.labelMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                            EditableText(
-                                text = user.name ?: "",
-                                isEditing = false,
-                                onTextChange = {},
-                                modifier = Modifier.fillMaxWidth()
-                            )
-                        }
-
-                        Column {
-                            Text(
-                                text = stringResource(id = R.string.profile_email),
-                                style = MaterialTheme.typography.labelMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                            EditableText(
-                                text = user.email ?: "",
-                                isEditing = false,
-                                onTextChange = {},
-                                modifier = Modifier.fillMaxWidth()
-                            )
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    Button(onClick = { viewModel.logout() }) {
-                        Text(stringResource(id = R.string.profile_logout))
-                    }
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(stringResource(id = R.string.profile_logout))
                 }
             }
 
