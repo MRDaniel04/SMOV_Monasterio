@@ -1,5 +1,6 @@
 package com.nextapp.monasterio.ui.screens.pinCreation
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -21,11 +22,23 @@ fun CreacionPinesScreen(
     navController: NavController
 ) {
 
-    val parentEntry = remember {
-        navController.getBackStackEntry("pins_graph")
+    // 1. Buscamos la entrada padre de forma segura. Si falla, es null.
+    val parentEntry = remember(navController.currentBackStackEntry) {
+        try {
+            // Intentamos obtener la entrada del grafo padre ("pins_graph")
+            navController.getBackStackEntry("pins_graph")
+        } catch (e: Exception) {
+            // Logeamos el error esperado, pero el código continúa con null
+            null
+        }
     }
-    val vm = viewModel<CreacionPinSharedViewModel>(parentEntry)
 
+    // 2. Obtenemos el ViewModel. Si parentEntry es NO nulo, lo usamos como scope.
+    // Si es nulo (por la excepción), se usará el scope local del Composable actual.
+    val vm = if (parentEntry != null)
+        viewModel<CreacionPinSharedViewModel>(viewModelStoreOwner = parentEntry)
+    else
+        viewModel<CreacionPinSharedViewModel>()
     // -------------------------
     // ESTADOS
     // -------------------------

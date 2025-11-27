@@ -78,10 +78,11 @@ fun EdicionPines(
     var pinTapScreenPosition by remember { mutableStateOf<Offset?>(null) } // Posición inicial en píxeles de pantalla al hacer tap/abrir panel
     var photoViewSize by remember { mutableStateOf(IntSize.Zero) } // Tamaño del Box principal
 
-    val parentEntry = remember(navController) {
+    val parentEntry = remember(navController.currentBackStackEntry) {
         try {
             navController.getBackStackEntry("pins_graph")
         } catch (e: Exception) {
+            // La excepción es esperada y logeada.
             null
         }
     }
