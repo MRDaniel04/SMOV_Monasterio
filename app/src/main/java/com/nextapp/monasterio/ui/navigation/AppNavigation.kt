@@ -24,6 +24,9 @@ import com.nextapp.monasterio.models.ParejasSize
 import com.nextapp.monasterio.models.PuzzleSize
 import com.nextapp.monasterio.models.PuzzleData
 import com.nextapp.monasterio.ui.screens.* // Asegúrate de importar PanoramaScreen y GaleriaScreen
+import com.nextapp.monasterio.ui.screens.pinEdition.EdicionFondoInicio
+import com.nextapp.monasterio.ui.screens.pinEdition.EdicionPines
+import com.nextapp.monasterio.ui.screens.pinEdition.EdicionPinesHost
 import com.nextapp.monasterio.ui.theme.MonasteryRed
 import com.nextapp.monasterio.ui.theme.White
 import com.nextapp.monasterio.ui.virtualvisit.screens.EntradaMonasterioFirestoreScreen
@@ -59,7 +62,7 @@ fun AppNavigationHost(
         composable(AppRoutes.PUZZLENIVEL4){PuzzleScreen(navController=navController,tamaño= PuzzleSize(5,5),imagenes= PuzzleData.IMAGENES_NIVEL4,imagenCompleta = R.drawable.p4)}
         composable(AppRoutes.JUEGO_NINYOS){OpcionesJuegoNinyos(navController=navController)}
         composable(route=AppRoutes.MODO_EDICION) { OpcionesModoEdicion(navController = navController)}
-        composable(AppRoutes.EDICION_FONDO_INICIO) {EdicionFondoInicio(navController = navController)}
+        composable(AppRoutes.EDICION_FONDO_INICIO) { EdicionFondoInicio(navController = navController) }
         composable(AppRoutes.EDICION_PINES) { EdicionPines(navController) }
         composable(AppRoutes.PERFIL)   { ProfileScreen(isEditing = isEditing, viewModel = authViewModel ) }
         composable(AppRoutes.AJUSTES)  { AjustesScreen(viewModel = ajustesViewModel) }

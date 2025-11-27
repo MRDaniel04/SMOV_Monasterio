@@ -1,4 +1,4 @@
-package com.nextapp.monasterio.ui.screens
+package com.nextapp.monasterio.ui.screens.pinEdition
 
 import android.app.Activity
 import android.content.pm.ActivityInfo
