@@ -38,6 +38,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.zIndex
 import com.nextapp.monasterio.ui.screens.pinCreation.CreacionPinSharedViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.nextapp.monasterio.ui.screens.pinEdition.components.InteractivePlanoViewer
 import com.nextapp.monasterio.ui.screens.pinEdition.components.MovingPinOverlay
 import com.nextapp.monasterio.ui.screens.pinEdition.components.PinDetailsPanel
 import kotlinx.coroutines.delay
@@ -50,10 +51,7 @@ fun EdicionPines(
 ) {
     val context = LocalContext.current
     val activity = context as? Activity
-
-    // ⭐ VALOR CONSTANTE PARA LA ALTURA DEL PANEL
-    val PANEL_HEIGHT_FRACTION = 0.50f // 35% de la altura total de la pantalla
-    val CENTRALIZATION_THRESHOLD = 0.15f // 15% de los bordes de la pantalla
+    val PANEL_HEIGHT_FRACTION = 0.50f
 
     Log.d("EdicionPines", "Composición iniciada - Modo Interacción Pin (Panel 35%)")
 
@@ -93,7 +91,6 @@ fun EdicionPines(
     else
         viewModel<CreacionPinSharedViewModel>()
 
-
     var isNewPinMode by remember { mutableStateOf(false) }  // <- identifica modo mover NUEVO pin
 
 
@@ -117,11 +114,7 @@ fun EdicionPines(
         }
     }
 
-    /**
-     * 🚀 ESTE ES EL EFECTO CORRECTO:
-     * Se activa SOLO cuando photoViewSize cambia.
-     * Y SOLO cuando ya hay un tamaño válido.
-     */
+
     LaunchedEffect(vm.formSubmitted) {
         if (!vm.formSubmitted) return@LaunchedEffect
 
@@ -194,233 +187,55 @@ fun EdicionPines(
             return@Box
         }
 
-        AndroidView(
-            modifier = Modifier.fillMaxSize(),
-            factory = { ctx ->
-                DebugPhotoView(ctx).apply {
-                    layoutParams = FrameLayout.LayoutParams(
-                        FrameLayout.LayoutParams.MATCH_PARENT,
-                        FrameLayout.LayoutParams.MATCH_PARENT
-                    )
-                    setImageFromUrl(planoUrl)
+        InteractivePlanoViewer(
+            planoUrl = planoUrl,
+            pines = pines,
+            isPinMoving = isPinMoving,
+            selectedPin = selectedPin,
+            pinBeingMoved = pinBeingMoved,
+            ignoreNextMatrixChange = ignoreNextMatrixChange,
 
-                    post {
-                        attacher.scaleType = ImageView.ScaleType.FIT_END
-                        Log.d("EdicionPines", "Plano alineado al final (abajo) usando FIT_END.")
-                    }
-                }.also { photoViewRef = it }
+            // Callbacks (Eventos que se envían de vuelta al padre)
+            onRefReady = { photoView ->
+                photoViewRef = photoView // 1. Para guardar la referencia del PhotoView
             },
-            update = { photoView ->
+            onSizeChange = { size ->
+                photoViewSize = size // 2. Para guardar el tamaño (necesario para MovingPinOverlay)
+            },
+            onMatrixChange = {
+                // 3. LÓGICA: OCULTAR PANEL AL DESPLAZAR/HACER ZOOM (PAN/MATRIX CHANGE)
+                // (Mismo código que estaba en setOnMatrixChangeListener)
+                Log.e("MATRIX", "❌ MatrixChange REAL → cancelando modo mover/panel")
+                isPinMoving = false
+                selectedPin = null
+            },
+            onPinTap = { pin, screenX, screenY ->
+                // 4. LÓGICA DE TAP SOBRE PIN (Parte 1: Guardar posición y estado)
+                pinTapScreenPosition = Offset(screenX, screenY)
+                selectedPin = pin
 
-                photoView.pins =
-                    if (isPinMoving) emptyList() else pines.map { pin -> // Cambio 'it' a 'pin' para claridad
-                        // 1. Cálculo del color base
-                        // Usa pin.color del modelo (Compose Color) y lo convierte a Android Int.
-                        // Si pin.color es nulo, usa android.graphics.Color.RED como valor por defecto.
-                        val baseColorInt = pin.color?.toArgb() ?: android.graphics.Color.RED
-
-                        DebugPhotoView.PinData(
-                            x = pin.x,
-                            y = pin.y,
-                            // Utilizamos pin.iconRes si lo tiene, si no, mantenemos el pin3 por defecto
-                            iconId = pin.iconRes ?: R.drawable.pin3,
-                            isPressed = pin.id == selectedPin?.id,
-                            // ⭐ 2. Estado de movimiento (Gestionado localmente en Compose)
-                            isMoving = pin.id == pinBeingMoved?.id,
-                            // ⭐ 3. Color Base
-                            pinColor = baseColorInt
-                        )
-                    }
-
-                // ⭐ LÓGICA: OCULTAR PANEL AL DESPLAZAR/HACER ZOOM (PAN/MATRIX CHANGE) ⭐
-                photoView.attacher.setOnMatrixChangeListener {
-                    if (ignoreNextMatrixChange) {
-                        Log.e("MATRIX", "🟩 MatrixChange ignorado por TIEMPO (protección al activar modo mover)")
-                        return@setOnMatrixChangeListener
-                    }
-
-                    if (isPinMoving || selectedPin != null) {
-                        Log.e("MATRIX", "❌ MatrixChange REAL → cancelando modo mover/panel")
-                        isPinMoving = false
-                        selectedPin = null
-                        return@setOnMatrixChangeListener
+                // Parte 2: Cargar datos completos del Pin
+                scope.launch {
+                    val fullPin = PinRepository.getPinById(pin.id)
+                    selectedPin = fullPin ?: selectedPin
+                    if (fullPin == null) {
+                        Log.e("EdicionPines", "❌ No se pudo cargar el pin detallado: ${pin.id}")
+                        selectedPin = null // Ocultar el panel si falla
                     }
                 }
-
-
-
-                photoView.setOnPhotoTapListener { _, tapX, tapY ->
-
-                    // ⭐ ADICIÓN: Ignorar el tap si está en modo movimiento ⭐
-                    if (isPinMoving) {
-                        Log.d("EdicionPines", "Tap ignorado: Pin en movimiento.")
-                        return@setOnPhotoTapListener
-                    }
-                    val drawable = photoView.drawable ?: return@setOnPhotoTapListener
-
-                    val m = FloatArray(9)
-                    photoView.imageMatrix.getValues(m)
-                    val scaleX = m[Matrix.MSCALE_X]
-                    val transX = m[Matrix.MTRANS_X]
-                    val transY = m[Matrix.MTRANS_Y]
-
-                    val tapImageX = tapX * drawable.intrinsicWidth
-                    val tapImageY = tapY * drawable.intrinsicHeight
-                    val tapScreenX = tapImageX * scaleX + transX
-                    val tapScreenY = tapImageY * scaleX + transY
-
-                    var touchedPin: PinData? = null
-                    var pinScreenYCoord = 0f
-                    var pinScreenXCoord = 0f // ⭐ Guardamos la coordenada X del pin
-
-                    pines.forEach { pin ->
-                        val pinImageX = pin.x * drawable.intrinsicWidth
-                        val pinImageY = pin.y * drawable.intrinsicHeight
-
-                        val pinScreenX = pinImageX * scaleX + transX
-                        val pinScreenY = pinImageY * scaleX + transY
-
-                        val dx = tapScreenX - pinScreenX
-                        val dy = tapScreenY - pinScreenY
-
-                        val tapRadiusPx = pin.tapRadius * drawable.intrinsicWidth * scaleX
-
-                        if ((dx * dx + dy * dy) <= tapRadiusPx * tapRadiusPx) {
-                            touchedPin = pin
-                            pinScreenYCoord = pinScreenY
-                            pinScreenXCoord = pinScreenX // ⭐ Asignación de la coordenada X
-                            return@forEach
-                        }
-                    }
-
-                    if (touchedPin != null) {
-                        if (selectedPin != null || photoView.translationY != 0f || photoView.translationX != 0f) {
-                            photoViewRef?.translationY = 0f
-                            photoViewRef?.translationX = 0f // ⭐ Restaurar desplazamiento HORIZONTAL
-                            Log.d(
-                                "EdicionPines",
-                                "Restaurando translationY/X a 0f antes de aplicar nuevo shift."
-                            )
-                        }
-
-                        pinTapScreenPosition = Offset(pinScreenXCoord, pinScreenYCoord)
-                        selectedPin = touchedPin
-
-                        scope.launch {
-                            val fullPin = PinRepository.getPinById(touchedPin!!.id)
-                            if (fullPin != null) {
-                                // Reemplazamos el pin básico por el pin completo (con imágenes)
-                                selectedPin = fullPin
-                                Log.d(
-                                    "EdicionPines",
-                                    "✅ Pin completo cargado. Imágenes detalladas: ${fullPin.imagenesDetalladas.size}"
-                                )
-                            } else {
-                                Log.e(
-                                    "EdicionPines",
-                                    "❌ No se pudo cargar el pin detallado: ${touchedPin!!.id}"
-                                )
-                                selectedPin = null // Ocultar el panel si falla
-                            }
-                        }
-
-
-                        // --- GESTIÓN DEL DESPLAZAMIENTO HORIZONTAL (Centralización)
-
-                        val screenWidth = photoView.width.toFloat()
-                        val targetCenter = screenWidth / 2f
-                        val thresholdPx = screenWidth * CENTRALIZATION_THRESHOLD
-
-                        var neededShiftX = 0f
-
-                        // Borde Izquierdo (0% al 15%)
-                        if (pinScreenXCoord < thresholdPx) {
-                            // Mover la vista hacia la DERECHA (shift POSITIVO) para que el pin se mueva a la IZQUIERDA.
-                            neededShiftX = targetCenter - pinScreenXCoord
-
-                            // Borde Derecho (85% al 100%)
-                        } else if (pinScreenXCoord > (screenWidth - thresholdPx)) {
-                            // Mover la vista hacia la IZQUIERDA (shift NEGATIVO) para que el pin se mueva a la DERECHA.
-                            neededShiftX = targetCenter - pinScreenXCoord
-                        }
-
-                        if (neededShiftX != 0f) {
-                            // Aplicar el desplazamiento horizontal (moveHorizontalFree(deltaX))
-                            photoViewRef?.moveHorizontalFree(neededShiftX)
-
-                        }
-
-                        // --- GESTIÓN DEL DESPLAZAMIENTO VERTICAL (Se mantiene) ---
-
-                        val pinMarginDp = 80.dp
-                        val density = context.resources.displayMetrics.density
-                        val pinMarginPx = pinMarginDp.value * density
-
-                        val panelHeightPx = photoView.height * PANEL_HEIGHT_FRACTION
-                        val pinTargetY = photoView.height - panelHeightPx - pinMarginPx
-
-                        if (pinScreenYCoord > pinTargetY) {
-                            val neededShiftY = pinScreenYCoord - pinTargetY
-                            photoViewRef?.moveVerticalFree(-neededShiftY)
-
-                            val totalShift = if (neededShiftX != 0f) "X:${
-                                String.format(
-                                    "%.0f",
-                                    neededShiftX
-                                )
-                            } / Y:${
-                                String.format(
-                                    "%.0f",
-                                    neededShiftY
-                                )
-                            }" else "Y:${String.format("%.0f", neededShiftY)}"
-
-                            Log.w(
-                                "EdicionPines",
-                                "Pin oculto. Desplazando Y: -${
-                                    String.format(
-                                        "%.0f",
-                                        neededShiftY
-                                    )
-                                }px."
-                            )
-                        } else if (neededShiftX != 0f) {
-                            // Mostrar Toast solo si se movió en X
-                            Toast.makeText(
-                                context,
-                                "Desplazando plano: X:${String.format("%.0f", neededShiftX)} px",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-
-                    } else {
-                        // TOQUE FUERA DEL PIN: Oculta el panel y RESTAURA AMBOS DESPLAZAMIENTOS
-                        if (selectedPin != null) {
-                            Log.d(
-                                "EdicionPines",
-                                "❌ Toque estático fuera de Pin. Ocultando panel y RESTAURANDO POSICIONES."
-                            )
-
-                            // RESTAURAR AMBOS DESPLAZAMIENTOS (translationY = 0, translationX = 0)
-                            if (photoView.translationY != 0f || photoView.translationX != 0f) {
-                                photoViewRef?.translationY = 0f
-                                photoViewRef?.translationX =
-                                    0f // ⭐ Restaurar desplazamiento HORIZONTAL
-                                Log.d("EdicionPines", "Restaurando translationY/X a 0f.")
-                            }
-
-                            selectedPin = null
-                        } else {
-                            Log.d(
-                                "EdicionPines",
-                                "Toque fuera y no había Pin seleccionado. Ignorando."
-                            )
-                        }
-                    }
-
-                    photoView.invalidate() // Forzar redibujo
+                // NOTA: La lógica de desplazamiento (translationY/X) se ha movido al Viewer.
+            },
+            onBackgroundTap = {
+                // 5. LÓGICA DE TOQUE FUERA DEL PIN: Oculta el panel y RESTAURA AMBOS DESPLAZAMIENTOS
+                if (selectedPin != null) {
+                    Log.d("EdicionPines", "❌ Toque estático fuera de Pin. Ocultando panel y RESTAURANDO POSICIONES.")
+                    // ¡IMPORTANTE! Restaurar desplazamiento, si lo hay.
+                    photoViewRef?.translationY = 0f
+                    photoViewRef?.translationX = 0f
+                    selectedPin = null
+                } else {
+                    Log.d("EdicionPines", "Toque fuera y no había Pin seleccionado. Ignorando.")
                 }
-                photoView.invalidate()
             }
         )
 

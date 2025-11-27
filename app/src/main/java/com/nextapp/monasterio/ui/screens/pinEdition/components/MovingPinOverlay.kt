@@ -56,10 +56,8 @@ fun MovingPinOverlay(
 
     val pinIconSize = 48.dp
     val buttonSize = 40.dp
-    // Corrección para que la punta del pin (no el centro) esté en currentOffset
     val pinOffsetCorrection = pinIconSize / 2
 
-    // Usamos Box para dibujar el icono y los botones, y detectamos el arrastre sobre el área completa
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -108,7 +106,6 @@ fun MovingPinOverlay(
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Botón de Cancelación (❌)
                 IconButton(onClick = onCancel, modifier = Modifier.size(buttonSize)) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_close_24),
