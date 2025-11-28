@@ -5,10 +5,14 @@ import com.nextapp.monasterio.ui.screens.pinCreation.components.TranslatableText
 import com.nextapp.monasterio.ui.screens.pinCreation.state.DescripcionState
 
 @Composable
-fun PinDescriptionFields(state: DescripcionState) {
+fun PinDescriptionFields(
+    state: DescripcionState,
+    isEditing: Boolean = false
+) {
     TranslatableTextField(
         label = "Descripción del Pin",
         state = state,
-        singleLine = false
+        singleLine = false,
+        isEditing = isEditing
     )
 }

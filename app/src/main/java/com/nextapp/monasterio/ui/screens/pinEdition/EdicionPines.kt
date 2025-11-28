@@ -162,6 +162,58 @@ fun EdicionPines(
 
     }
 
+    // ⭐⭐⭐ NUEVO: manejar modo EDITAR ⭐⭐⭐
+    LaunchedEffect(vm.updateRequested) {
+        if (!vm.updateRequested) return@LaunchedEffect
+        vm.updateRequested = false
+
+        val pinId = vm.editingPinId
+        if (pinId == null) {
+            Log.e("EdicionPines", "❌ updateRequested pero editingPinId es null")
+            return@LaunchedEffect
+        }
+
+        scope.launch {
+            try {
+
+                PinRepository.updatePin(
+                    pinId = pinId,
+                    titulo = vm.titulo.es,
+                    descripcion = vm.descripcion.es,
+
+                    tituloIngles = vm.titulo.en,
+                    descripcionIngles = vm.descripcion.en,
+
+                    tituloAleman = vm.titulo.de,
+                    descripcionAleman = vm.descripcion.de,
+
+                    ubicacion = vm.ubicacion.displayName,
+
+                    imagenes = vm.imagenes.uris.map { it.toString() }, // Lista URLs Cloudinary o locales
+                    imagen360 = vm.imagen360?.toString()
+                )
+
+
+                // Recargar pines
+                val plano = PlanoRepository.getPlanoById("monasterio_interior")
+                val allPins = PinRepository.getAllPins()
+                val pinRefs = plano?.pines?.map { it.substringAfterLast("/") } ?: emptyList()
+                pines = allPins.filter { pinRefs.contains(it.id) }
+
+                Toast.makeText(context, "Pin actualizado correctamente", Toast.LENGTH_SHORT).show()
+
+            } catch (e: Exception) {
+                Log.e("EdicionPines", "❌ Error al actualizar el pin", e)
+                Toast.makeText(context, "Error al actualizar el pin", Toast.LENGTH_LONG).show()
+            }
+        }
+
+        // Reset final
+        vm.isEditing = false
+        vm.editingPinId = null
+    }
+
+
 
 
     Box(
@@ -264,7 +316,8 @@ fun EdicionPines(
                 },
 
                 onEdit = {
-                    Toast.makeText(context, "Editar Pin", Toast.LENGTH_SHORT).show()
+                    vm.loadPinForEditing(pin)
+                    navController.navigate(AppRoutes.CREACION_PINES)
                 },
 
                 onPinDeleted = { pinId ->

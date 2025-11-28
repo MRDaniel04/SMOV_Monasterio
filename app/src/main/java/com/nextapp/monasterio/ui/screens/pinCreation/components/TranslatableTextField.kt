@@ -17,7 +17,8 @@ import com.nextapp.monasterio.ui.screens.pinCreation.state.TranslationFieldState
 fun TranslatableTextField(
     label: String,
     state: TranslationFieldState,
-    singleLine: Boolean
+    singleLine: Boolean,
+    isEditing: Boolean = false    // ⭐ SE AÑADE AQUÍ
 ) {
     var expanded by remember { mutableStateOf(false) }
 
@@ -52,7 +53,7 @@ fun TranslatableTextField(
 
         Spacer(Modifier.height(12.dp))
 
-        // BOTÓN EXPANDIBLE
+        // ⭐ BOTÓN EXPANDIBLE modificado según edición/creación
         OutlinedButton(
             onClick = { expanded = !expanded },
             modifier = Modifier.fillMaxWidth(),
@@ -63,18 +64,24 @@ fun TranslatableTextField(
                 bottomEnd = if (expanded) 0.dp else 8.dp
             )
         ) {
+            val buttonText = when {
+                expanded -> "Ocultar traducciones"
+                isEditing -> "Modificar traducciones opcionales"
+                else -> "Añadir traducciones opcionales"
+            }
+
             Text(
-                text = if (expanded) "Ocultar traducciones" else "Añadir traducciones opcionales",
+                text = buttonText,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.SemiBold
             )
+
             Spacer(Modifier.width(8.dp))
 
             val icon = if (expanded) R.drawable.ic_arrow_up else R.drawable.ic_arrow_down
             Icon(painterResource(icon), contentDescription = null)
         }
 
-        // CAMPOS OPCIONALES
         if (expanded) {
             Surface(
                 shape = RoundedCornerShape(bottomStart = 8.dp, bottomEnd = 8.dp),

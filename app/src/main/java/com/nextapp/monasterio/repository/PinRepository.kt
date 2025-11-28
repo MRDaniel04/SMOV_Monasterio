@@ -307,8 +307,42 @@ object PinRepository {
         }
     }
 
+    suspend fun updatePin(
+        pinId: String,
+        titulo: String,
+        descripcion: String?,
+        tituloIngles: String?,
+        descripcionIngles: String?,
+        tituloAleman: String?,
+        descripcionAleman: String?,
+        ubicacion: String?,
+        imagenes: List<String>, // URLs de cloudinary
+        imagen360: String? // URL 360
+    ) {
+        // 1) Crear docs en /imagenes para cada URL (si procede)
+        val imagenesRefs: List<DocumentReference> = imagenes.map { url ->
+            createImagenDocument(url)
+        }
 
+        // 2) Preparar payload de actualización
+        val updates = mapOf<String, Any?>(
+            "titulo" to titulo,
+            "descripcion" to descripcion,
+            "tituloIngles" to tituloIngles,
+            "descripcionIngles" to descripcionIngles,
+            "tituloAleman" to tituloAleman,
+            "descripcionAleman" to descripcionAleman,
+            "ubicacion" to ubicacion,
+            "imagenes" to imagenesRefs,
+            "vista360Url" to imagen360,
+            "tipoDestino" to "detalle",
+            "valorDestino" to "auto"
+        )
 
-
+        // 3) Ejecutar update
+        collection.document(pinId)
+            .set(updates, SetOptions.merge())
+            .await()
+    }
 
 }

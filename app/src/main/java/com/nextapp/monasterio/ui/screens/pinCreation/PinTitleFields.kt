@@ -2,14 +2,18 @@ package com.nextapp.monasterio.ui.screens.pinCreation
 
 import androidx.compose.runtime.Composable
 import com.nextapp.monasterio.ui.screens.pinCreation.components.TranslatableTextField
+import com.nextapp.monasterio.ui.screens.pinCreation.state.DescripcionState
 import com.nextapp.monasterio.ui.screens.pinCreation.state.TituloState
 
 @Composable
-fun PinTitleFields(state: TituloState) {
+fun PinTitleFields(
+    state: TituloState,
+    isEditing: Boolean = false
+) {
     TranslatableTextField(
-        label = "Título del Pin",
+        label = "Descripción del Pin",
         state = state,
-        singleLine = true
+        singleLine = false,
+        isEditing = isEditing    // ← **CLAVE**
     )
 }
-

@@ -15,7 +15,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.nextapp.monasterio.ui.screens.pinCreation.components.Image360Selector
 import com.nextapp.monasterio.ui.screens.pinCreation.components.PinTopBar
-import com.nextapp.monasterio.ui.screens.pinCreation.state.*
 
 
 @Composable
@@ -54,12 +53,20 @@ fun CreacionPinesScreen(
         topBar = {
             PinTopBar(
                 enabled = isFormValid,
+                isEditing = vm.isEditing,   // ← Añadido
                 onSave = {
-                    vm.formSubmitted = true
-                    navController.popBackStack()
+                    if (vm.isEditing) {
+                        vm.updateRequested = true
+                        navController.popBackStack()
+                    } else {
+                        vm.formSubmitted = true
+                        navController.popBackStack()
+                    }
+
                 },
                 onBack = { navController.popBackStack() }
             )
+
         }
     ) { paddingValues ->
 
@@ -70,7 +77,10 @@ fun CreacionPinesScreen(
                 .verticalScroll(rememberScrollState())
         ) {
 
-            PinTitleFields(state = tituloState)
+            PinTitleFields(state = tituloState, isEditing = vm.isEditing)
+            PinDescriptionFields(state = descripcionState, isEditing = vm.isEditing)
+
+
 
             Spacer(Modifier.height(24.dp))
 
@@ -81,7 +91,9 @@ fun CreacionPinesScreen(
             )
 
             Spacer(Modifier.height(24.dp))
-            PinDescriptionFields(state = descripcionState)
+
+
+
             Spacer(Modifier.height(24.dp))
             PinLocationField(state = ubicacionState)
             Spacer(Modifier.height(24.dp))
