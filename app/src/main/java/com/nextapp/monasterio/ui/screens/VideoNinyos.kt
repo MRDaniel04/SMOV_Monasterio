@@ -37,6 +37,7 @@ fun VideoNinyosScreen(modifier: Modifier = Modifier) {
     val videoEspanyol = "https://res.cloudinary.com/drx7mujrv/video/upload/f_auto,q_auto:low,w_auto:1000/v1763317610/videoespa%C3%B1ol_agayqb.mp4"
     val videoIngles = "https://res.cloudinary.com/drx7mujrv/video/upload/f_auto,q_auto:low,w_auto:1000/v1763317613/videoingles_h8ejvc.mp4"
     val videoAleman = "https://res.cloudinary.com/drx7mujrv/video/upload/f_auto,q_auto:low,w_auto:1000/v1763317621/videoaleman_x5he9w.mp4"
+    val videoFrances = "https://res.cloudinary.com/drx7mujrv/video/upload/f_auto,q_auto:low,w_auto:1000/v1764283280/videofrances_rszxyk.mp4"
 
     var isLoading by remember { mutableStateOf(true) }
 
@@ -62,6 +63,11 @@ fun VideoNinyosScreen(modifier: Modifier = Modifier) {
                 }
                 "de" -> {
                     setMediaItem(MediaItem.fromUri(videoAleman))
+                    prepare()
+                    playWhenReady = true
+                }
+                "fr" -> {
+                    setMediaItem(MediaItem.fromUri(videoFrances))
                     prepare()
                     playWhenReady = true
                 }

@@ -50,9 +50,25 @@ fun OpcionesJuegoNinyos(navController:NavController,modifier: Modifier = Modifie
         }
     }
 
-    ConstraintLayout(modifier = modifier.fillMaxSize().background(Color.White).verticalScroll(rememberScrollState())) {
-        val (btnMemory,btnPuzle) = createRefs()
+    ConstraintLayout(modifier = modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
+        val (btnMemory,btnPuzle,background) = createRefs()
         val centerGuide = createGuidelineFromTop(0.5f)
+
+        Image(
+            painter = painterResource(R.drawable.fondo),
+            contentDescription = "Fondo",
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .constrainAs(background){
+                    top.linkTo(parent.top)
+                    bottom.linkTo(parent.bottom)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                    width = Dimension.fillToConstraints
+                    height = Dimension.fillToConstraints
+                }
+        )
+
         Button(
             onClick = {
                 navController.navigate(AppRoutes.JUEGO_PUZZLE)

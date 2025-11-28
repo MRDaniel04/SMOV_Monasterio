@@ -52,11 +52,25 @@ fun OpcionesModoEdicion(navController: NavController, modifier: Modifier = Modif
     ConstraintLayout(
         modifier = modifier
             .fillMaxSize()
-            .background(Color.White)
             .verticalScroll(rememberScrollState())
     ) {
-        val (btnInicio, btnPines) = createRefs()
+        val (btnInicio, btnPines,background) = createRefs()
         val centerGuide = createGuidelineFromTop(0.5f)
+
+        Image(
+            painter = painterResource(R.drawable.fondo),
+            contentDescription = "Fondo",
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .constrainAs(background){
+                    top.linkTo(parent.top)
+                    bottom.linkTo(parent.bottom)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                    width = Dimension.fillToConstraints
+                    height = Dimension.fillToConstraints
+                }
+        )
 
         // --- BOTÓN: Edición pantalla inicio (btnInicio) ---
         Button(

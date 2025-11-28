@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Museum360</string>
+    <string name="app_name">Santa María la Real de Huelgas</string>
     <string name="title_inicio">Startseite</string>
     <string name="virtual_visit">VIRTUELLER BESUCH</string>
     <string name="book_appointment">TERMIN BUCHEN</string>
@@ -166,6 +166,7 @@
     <string name="lang_es">Español</string>
     <string name="sample_text">Beispiel</string>
     <string name="lang_de">Deutsch</string>
+    <string name="lang_fr">Français</string>
     <string name="font_small">Klein</string>
     <string name="font_medium">Mittel</string>
     <string name="font_large">Groß</string>
@@ -176,6 +177,8 @@
     <string name="back_piece">Rückseite des Stückes</string>
     <string name="left_pairs">Verbleibende Paare: %1$s</string>
     <string name="left_pieces">Restliche Stücke: %1$s</string>
+    <string name="background_edit_screen">HINTERGRUND BEARBEITEN</string>
+    <string name="pin_edit_screen">PIN BEARBEITEN</string>
     <!-- Gallery Types -->
     <string name="gallery_type_all">Alle</string>
     <string name="gallery_type_painting">Gemälde</string>

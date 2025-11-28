@@ -2,6 +2,7 @@ package com.nextapp.monasterio.ui.screens
 
 import android.app.Activity
 import android.content.pm.ActivityInfo
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -15,7 +16,9 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -44,9 +47,25 @@ fun JuegoPuzzleScreen(navController:NavController,modifier: Modifier = Modifier)
         }
     }
 
-    ConstraintLayout(modifier = modifier.fillMaxSize().background(Color.White).verticalScroll(rememberScrollState())) {
-        val (btn4,btn9,btn16,btn25) = createRefs()
+    ConstraintLayout(modifier = modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
+        val (btn4,btn9,btn16,btn25,background) = createRefs()
         createVerticalChain(btn4,btn9,btn16,btn25, chainStyle = ChainStyle.Packed)
+
+        Image(
+            painter = painterResource(R.drawable.fondo),
+            contentDescription = "Fondo",
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .constrainAs(background){
+                    top.linkTo(parent.top)
+                    bottom.linkTo(parent.bottom)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                    width = Dimension.fillToConstraints
+                    height = Dimension.fillToConstraints
+                }
+        )
+
         Button(
             onClick = {
                 navController.navigate(AppRoutes.PUZZLENIVEL1)

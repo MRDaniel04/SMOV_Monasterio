@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Museum360</string>
+    <string name="app_name">Santa María la Real de Huelgas</string>
     <string name="title_inicio">Home</string>
     <string name="virtual_visit">VIRTUAL VISIT</string>
     <string name="book_appointment">BOOK APPOINTMENT</string>
@@ -166,6 +166,7 @@
     <string name="hidden">Hidden</string>
     <string name="lang_en">English</string>
     <string name="lang_es">Español</string>
+    <string name="lang_fr">Français</string>
     <string name="sample_text">Ejemplo</string>
     <string name="puzzle_screen">Puzzle</string>
     <string name="puzzle_option">PUZZLE</string>
@@ -174,6 +175,8 @@
     <string name="back_piece">Back of the piece</string>
     <string name="left_pairs">Remaining couples: %1$s</string>
     <string name="left_pieces">Remaining pieces: %1$s</string>
+    <string name="background_edit_screen">EDIT BACKGROUND</string>
+    <string name="pin_edit_screen">EDIT PIN</string>
     <!-- Gallery Types -->
     <string name="gallery_type_all">All</string>
     <string name="gallery_type_painting">Paintings</string>

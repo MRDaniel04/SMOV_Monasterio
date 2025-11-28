@@ -131,13 +131,14 @@ object PinRepository {
         // 🔥 Cargar cada imagen desde /imagenes/
         val imagenesDetalladas = basePin.imagenes.map { imagenId ->
             val imgDoc = firestore.collection("imagenes").document(imagenId).get().await()
-
+            val focoDouble = imgDoc.getDouble("foco") ?: 0.0
             ImagenData(
                 url = imgDoc.getString("url") ?: "",
                 etiqueta = imgDoc.getString("etiqueta") ?: "",
                 titulo = imgDoc.getString("titulo") ?: "",
                 tituloIngles = imgDoc.getString("tituloIngles") ?: "",
-                tituloAleman = imgDoc.getString("tituloAleman") ?: ""
+                tituloAleman = imgDoc.getString("tituloAleman") ?: "",
+                foco = focoDouble.toFloat()
             )
         }
 
@@ -271,7 +272,7 @@ object PinRepository {
             "tituloIngles" to "",
             "tituloAleman" to "",
             "tituloFrances" to "",
-            "foco" to "centro"
+            "foco" to 0
         )
 
         val docRef = imagenesCollection.add(payload).await()
@@ -306,9 +307,5 @@ object PinRepository {
             false
         }
     }
-
-
-
-
 
 }
