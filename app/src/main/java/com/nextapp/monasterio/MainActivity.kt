@@ -7,6 +7,9 @@ import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -34,6 +37,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.nextapp.monasterio.utils.FontSize
 import com.nextapp.monasterio.viewModels.AuthViewModel
+import com.nextapp.monasterio.ui.screens.pinEdition.components.AppStatus
 
 
 class MainActivity : AppCompatActivity() {
@@ -136,6 +140,8 @@ fun MonasteryAppScreen(activity: AppCompatActivity) { // 👈 Recibimos la activ
                 AppRoutes.PAREJASNIVEL2 -> context.getString(R.string.memory_screen)
                 AppRoutes.PAREJASNIVEL3 -> context.getString(R.string.memory_screen)
                 AppRoutes.PAREJASNIVEL4 -> context.getString(R.string.memory_screen)
+                AppRoutes.EDICION_FONDO_INICIO -> context.getString(R.string.background_edit_screen)
+                AppRoutes.EDICION_PINES -> context.getString(R.string.pin_edit_screen)
                 else -> context.getString(R.string.title_inicio)
             }
         }
@@ -154,48 +160,73 @@ fun MonasteryAppScreen(activity: AppCompatActivity) { // 👈 Recibimos la activ
     ) {
         Scaffold(
             topBar = {
-                if (!isImmersive) {
-                    CenterAlignedTopAppBar(
-                        title = { Text(currentTitle.value) },
-                        colors = TopAppBarDefaults.topAppBarColors(
-                            containerColor = MonasteryRed,
-                            titleContentColor = White,
-                            navigationIconContentColor = White,
-                            actionIconContentColor = White
-                        ),
-                        navigationIcon = {
-                            IconButton(onClick = {
-                                scope.launch {
-                                    if (drawerState.isClosed) drawerState.open() else drawerState.close()
+                Column {
+                        CenterAlignedTopAppBar(
+                            title = { Text(currentTitle.value) },
+                            colors = TopAppBarDefaults.topAppBarColors(
+                                containerColor = MonasteryRed,
+                                titleContentColor = White,
+                                navigationIconContentColor = White,
+                                actionIconContentColor = White
+                            ),
+                            navigationIcon = {
+                                if (!isImmersive) {
+                                    IconButton(onClick = {
+                                        scope.launch {
+                                            if (drawerState.isClosed) drawerState.open() else drawerState.close()
+                                        }
+                                    }) {
+                                        val iconRes =
+                                            if (drawerState.isOpen) R.drawable.menu_close else R.drawable.ic_menu_24
+                                        Icon(
+                                            painter = painterResource(id = iconRes),
+                                            contentDescription = stringResource(id = R.string.navigation_drawer_open)
+                                        )
+                                    }
                                 }
-                            }) {
-                                val iconRes = if (drawerState.isOpen) R.drawable.menu_close else R.drawable.ic_menu_24
-                                Icon(
-                                    painter = painterResource(id = iconRes),
-                                    contentDescription = stringResource(id = R.string.navigation_drawer_open)
-                                )
-                            }
-                        },
-                        actions = {
-                            // 👇 1. SELECTOR DE IDIOMA LIMPIO
-                            MainLanguageSelector(activity)
+                            },
+                            actions = {
+                                if (!isImmersive) {
+                                    // 👇 1. SELECTOR DE IDIOMA LIMPIO
+                                    MainLanguageSelector(activity)
 
-                            // Icono Editar
-                            if (currentUser != null) {
-                                IconButton(onClick = {
-                                    isEditing = !isEditing
-                                    val message = if (isEditing) context.getString(R.string.edit_mode_activate_message) else context.getString(R.string.edit_mode_deactivate_message)
-                                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-                                }) {
-                                    Icon(
-                                        painter = painterResource(id = R.drawable.lapiz),
-                                        contentDescription = if (isEditing) stringResource(id = R.string.edit_mode_deactivate_icon) else stringResource(id = R.string.edit_mode_activate_icon),
-                                        tint = White
-                                    )
+                                    // Icono Editar
+                                    if (currentUser != null) {
+                                        IconButton(onClick = {
+                                            isEditing = !isEditing
+                                            val message =
+                                                if (isEditing) context.getString(R.string.edit_mode_activate_message) else context.getString(
+                                                    R.string.edit_mode_deactivate_message
+                                                )
+                                            Toast.makeText(context, message, Toast.LENGTH_SHORT)
+                                                .show()
+                                        }) {
+                                            Icon(
+                                                painter = painterResource(id = R.drawable.lapiz),
+                                                contentDescription = if (isEditing) stringResource(
+                                                    id = R.string.edit_mode_deactivate_icon
+                                                ) else stringResource(
+                                                    id = R.string.edit_mode_activate_icon
+                                                ),
+                                                tint = White
+                                            )
+                                        }
+                                    }
                                 }
                             }
-                        }
-                    )
+                        )
+                    val isGlobalLoading by AppStatus.isUploading.collectAsState()
+                    AnimatedVisibility(
+                        visible = isGlobalLoading,
+                        enter = fadeIn(),
+                        exit = fadeOut()
+                    ) {
+                        // Se dibuja JUSTO debajo de la TopAppBar
+                        LinearProgressIndicator(
+                            modifier = Modifier.fillMaxWidth(),
+                            color = MonasteryBlue
+                        )
+                    }
                 }
             }
         ) { paddingValues ->
@@ -222,7 +253,9 @@ fun MainLanguageSelector(activity: AppCompatActivity) {
     val currentFlag = when (currentLanguageCode) {
         "de" -> R.drawable.alemania
         "en" -> R.drawable.reinounido
+        "fr" -> R.drawable.francia
         else -> R.drawable.espanya
+
     }
 
     Box {
@@ -248,6 +281,7 @@ fun MainLanguageSelector(activity: AppCompatActivity) {
             MainLanguageItem(activity, "es", stringResource(R.string.lang_es), R.drawable.espanya) { expanded = false }
             MainLanguageItem(activity, "en", stringResource(R.string.lang_en), R.drawable.reinounido) { expanded = false }
             MainLanguageItem(activity, "de", stringResource(R.string.lang_de), R.drawable.alemania) { expanded = false }
+            MainLanguageItem(activity, "fr", stringResource(R.string.lang_fr), R.drawable.francia) { expanded = false }
         }
     }
 }

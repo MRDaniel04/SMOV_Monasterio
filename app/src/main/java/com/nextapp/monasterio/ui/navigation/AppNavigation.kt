@@ -52,7 +52,7 @@ fun AppNavigationHost(
         startDestination = AppRoutes.INICIO,
         modifier = modifier
     ) {
-        composable(AppRoutes.INICIO)   { HomeScreenContent(navController = navController) }
+        composable(AppRoutes.INICIO)   { HomeScreenContent(isEditing = isEditing,navController = navController) }
         composable(AppRoutes.INFO)     { InfoScreen(isEditing = isEditing, viewModel = infoViewModel) }
         composable(AppRoutes.HISTORIA) { HistoriaScreen(isEditing = isEditing, viewModel = historiaViewModel) }
         composable(AppRoutes.GALERIA)  { GaleriaScreen(navController = navController) }

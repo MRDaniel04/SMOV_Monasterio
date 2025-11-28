@@ -133,12 +133,14 @@ fun LanguageSelector(activity: AppCompatActivity, currentLocale: Locale) {
     val currentFlag = when (languageCode) {
         "de" -> R.drawable.alemania
         "en" -> R.drawable.reinounido
+        "fr" -> R.drawable.francia
         else -> R.drawable.espanya
     }
 
     val currentName = when (languageCode) {
         "de" -> stringResource(R.string.lang_de)
         "en" -> stringResource(R.string.lang_en)
+        "fr" -> stringResource(R.string.lang_fr)
         else -> stringResource(R.string.lang_es)
     }
 
@@ -180,6 +182,7 @@ fun LanguageSelector(activity: AppCompatActivity, currentLocale: Locale) {
             LanguageItem(activity, "es", stringResource(R.string.lang_es), R.drawable.espanya) { expanded = false }
             LanguageItem(activity, "en", stringResource(R.string.lang_en), R.drawable.reinounido) { expanded = false }
             LanguageItem(activity, "de", stringResource(R.string.lang_de), R.drawable.alemania) { expanded = false }
+            LanguageItem(activity, "fr", stringResource(R.string.lang_fr), R.drawable.francia) { expanded = false }
         }
     }
 }

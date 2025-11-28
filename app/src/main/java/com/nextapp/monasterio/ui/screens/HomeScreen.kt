@@ -2,6 +2,7 @@ package com.nextapp.monasterio.ui.screens
 
 import android.app.Activity
 import android.content.pm.ActivityInfo
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Arrangement
@@ -45,9 +46,8 @@ import androidx.compose.runtime.setValue
 
 
 @Composable
-fun HomeScreenContent(navController:NavController, modifier: Modifier = Modifier) {
+fun HomeScreenContent(isEditing: Boolean,navController:NavController, modifier: Modifier = Modifier) {
     val context = LocalContext.current
-
     val activity = (context as? Activity)
     val repo = ImagenRepository()
     var imagenFondoInicio by remember { mutableStateOf<String?>(null) }
@@ -189,7 +189,11 @@ fun HomeScreenContent(navController:NavController, modifier: Modifier = Modifier
             shape = RoundedCornerShape(20.dp),
             modifier = Modifier
                 .constrainAs(btnBook) {
-                    bottom.linkTo(btnEdit.top, margin = 48.dp)
+                    if(isEditing) {
+                        bottom.linkTo(btnEdit.top, margin = 48.dp)
+                    }else{
+                        bottom.linkTo(parent.bottom,margin=240.dp)
+                    }
                     start.linkTo(parent.start, margin = 20.dp)
                     end.linkTo(parent.end, margin = 20.dp)
                     width = Dimension.fillToConstraints
@@ -217,41 +221,43 @@ fun HomeScreenContent(navController:NavController, modifier: Modifier = Modifier
                 Spacer(modifier = Modifier.width(64.dp).weight(1f))
             }
         }
+        if(!isEditing) {
+            Button(
+                onClick = {
+                    navController.navigate(AppRoutes.MODO_EDICION)
+                },
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF9C27B0)), // Púrpura de ejemplo
+                shape = RoundedCornerShape(20.dp),
+                modifier = Modifier
+                    .constrainAs(btnEdit) {
+                        bottom.linkTo(parent.bottom, margin = 120.dp)
+                        start.linkTo(parent.start, margin = 20.dp)
+                        end.linkTo(parent.end, margin = 20.dp)
+                        width = Dimension.fillToConstraints
+                    }
 
-        Button(
-            onClick = {
-                navController.navigate(AppRoutes.MODO_EDICION)
-            },
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF9C27B0)), // Púrpura de ejemplo
-            shape = RoundedCornerShape(20.dp),
-            modifier = Modifier
-                .constrainAs(btnEdit) {
-                    bottom.linkTo(parent.bottom, margin = 120.dp)
-                    start.linkTo(parent.start, margin = 20.dp)
-                    end.linkTo(parent.end, margin = 20.dp)
-                    width = Dimension.fillToConstraints
-                }
-
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Start
             ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.lapiz), // Ícono provisional
-                    contentDescription = null,
-                    modifier = Modifier
-                        .padding(end = 16.dp)
-                        .size(48.dp)
-                )
-                Spacer(modifier = Modifier.weight(1f))
-                Text(
-                    stringResource(id = R.string.edit_mode),
-                    fontSize = 22.sp,
-                    textAlign = TextAlign.Center
-                )
-                Spacer(modifier = Modifier.width(64.dp).weight(1f))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Start
+                ) {
+
+                    Icon(
+                        painter = painterResource(id = R.drawable.lapiz), // Ícono provisional
+                        contentDescription = null,
+                        modifier = Modifier
+                            .padding(end = 16.dp)
+                            .size(48.dp)
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text(
+                        stringResource(id = R.string.edit_mode),
+                        fontSize = 22.sp,
+                        textAlign = TextAlign.Center
+                    )
+                    Spacer(modifier = Modifier.width(64.dp).weight(1f))
+                }
             }
         }
     }

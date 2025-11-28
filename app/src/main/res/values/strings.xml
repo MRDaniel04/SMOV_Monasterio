@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Santa María la Real de Huelgas</string>
     <string name="title_inicio">Inicio</string>
@@ -151,10 +152,11 @@
     <string name="image_gallery_title">Imágenes</string>
     <string name="visible">Visibles</string>
     <string name="hidden">Ocultos</string>
-    <string name="lang_en">Engish</string>
+    <string name="lang_en">English</string>
     <string name="lang_es">Español</string>
     <string name="sample_text">Ejemplo</string>
     <string name="lang_de">Deutsch</string>
+    <string name="lang_fr">Français</string>
     <string name="font_small">Pequeña</string>
     <string name="font_medium">Mediana</string>
     <string name="font_large">Grande</string>
@@ -165,7 +167,8 @@
     <string name="back_piece">Parte de atrás de la pieza</string>
     <string name="left_pairs">Parejas restantes: %1$s</string>
     <string name="left_pieces">Piezas restantes: %1$s</string>
-
+    <string name="background_edit_screen">EDITAR FONDO</string>
+    <string name="pin_edit_screen">EDITAR PIN</string>
     <string name="play_audio"></string>
     <!-- Gallery Types -->
     <string name="gallery_type_all">Todos</string>

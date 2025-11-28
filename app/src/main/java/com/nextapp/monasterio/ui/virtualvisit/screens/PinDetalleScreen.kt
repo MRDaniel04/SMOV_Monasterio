@@ -12,6 +12,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
@@ -237,10 +238,17 @@ fun PinDetalleScreen(
                     HorizontalPager(state = pagerState) { page ->
                         val imagen = imagenes[page]
                         Box(modifier = Modifier.fillMaxSize()) {
+
+                            val alignment = remember{
+                                BiasAlignment(horizontalBias = 0f, verticalBias = imagen.foco)
+                            }
+
+
                             AsyncImage(
                                 model = imagen.url,
                                 contentDescription = imagen.etiqueta,
                                 contentScale = ContentScale.Crop,
+                                alignment = alignment,
                                 modifier = Modifier
                                     .fillMaxSize()
                                     .clickable {

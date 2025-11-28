@@ -108,11 +108,12 @@ fun ParejasScreen(
                 ),
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
+            userScrollEnabled = false
         ) {
             items(
                 state.piezas,
             ){pieza ->
-                GridCell(pieza = pieza, mostradoInicial = state.mostradoInicial,onClick = { id -> viewModel.onClickPieza(id) })
+                GridCell(pieza = pieza, mostradoInicial = state.mostradoInicial, verificandoPareja = state.verificandoPareja, onClick = { id -> viewModel.onClickPieza(id) })
             }
         }
     }
@@ -150,11 +151,11 @@ fun ParejaDialog(
 fun GridCell(
     pieza: ParejasPieza,
     mostradoInicial : Boolean,
+    verificandoPareja : Boolean,
     onClick : (Int) -> Unit,
 ) {
     val conPareja = pieza.conPareja
-    val isClickable = !conPareja
-
+    val isClickable = !conPareja && !verificandoPareja
     Card(
         elevation = CardDefaults.cardElevation(defaultElevation = if (conPareja || pieza.estaVolteada) 4.dp else 2.dp),
         modifier = Modifier

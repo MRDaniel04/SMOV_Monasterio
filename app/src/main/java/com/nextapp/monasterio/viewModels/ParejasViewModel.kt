@@ -20,6 +20,7 @@ data class parejasUiState(
     val size : ParejasSize,
     val solucionado : Boolean = false,
     val mostradoInicial : Boolean = true,
+    val verificandoPareja: Boolean = false,
     val parejas : Int = (size.columns* size.rows)/2
 )
 
@@ -56,8 +57,8 @@ class ParejasViewModel (
     private val piezasVolteadas = mutableListOf<ParejasPieza>()
 
     fun onClickPieza(id:Int){
+        if(_uiState.value.verificandoPareja) return
         if(piezasVolteadas.size == 2) return
-
         val piezaClickeada = _uiState.value.piezas.find { it.id == id } ?: return
 
         if(piezaClickeada.estaVolteada || piezaClickeada.conPareja) return
@@ -78,14 +79,13 @@ class ParejasViewModel (
 
     }
 
-    private fun chequearPareja(piezas : List<ParejasPieza>){
+    private fun chequearPareja(piezas : List<ParejasPieza>,){
         val pieza1 = piezas[0]
         val pieza2 = piezas[1]
 
         viewModelScope.launch {
-
+            _uiState.update { it.copy(verificandoPareja = true) }
             delay(1000)
-
             var piezasCompletas = _uiState.value.piezas
             var parejasRestantes = _uiState.value.parejas
 
@@ -113,10 +113,9 @@ class ParejasViewModel (
                 }
             }
             this@ParejasViewModel.piezasVolteadas.clear()
-            _uiState.update { it.copy(piezas = piezasCompletas, parejas=parejasRestantes) }
+            _uiState.update { it.copy(piezas = piezasCompletas, verificandoPareja = false, parejas=parejasRestantes) }
             val todasPiezasConPareja = estaTerminado()
             _uiState.update { it.copy(solucionado = estaTerminado()) }
-
         }
     }
 
