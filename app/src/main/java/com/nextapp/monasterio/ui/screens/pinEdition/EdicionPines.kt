@@ -71,7 +71,6 @@ fun EdicionPines(
     // ⭐ ESTADOS PARA EL MODO MOVIMIENTO ⭐
     var isPinMoving by remember { mutableStateOf(false) }
     var ignoreNextMatrixChange by remember { mutableStateOf(false) }
-    var ignoreMatrixChangesCount by remember { mutableStateOf(0) }
     var pinBeingMoved by remember { mutableStateOf<PinData?>(null) }
     var pinDragOffset by remember { mutableStateOf(Offset.Zero) } // Posición en píxeles de pantalla durante el arrastre
     var pinTapScreenPosition by remember { mutableStateOf<Offset?>(null) } // Posición inicial en píxeles de pantalla al hacer tap/abrir panel
@@ -126,14 +125,11 @@ fun EdicionPines(
             return@LaunchedEffect
         }
 
-        Log.w("EdicionPines", "CHECKPOINT → vm.formSubmitted = TRUE → Activando modo mover")
 
         vm.formSubmitted = false
-
         selectedPin = null
         photoViewRef?.translationX = 0f
         photoViewRef?.translationY = 0f
-
         isNewPinMode = true
 
         // Crear pin en movimiento
@@ -164,8 +160,6 @@ fun EdicionPines(
             ignoreNextMatrixChange = false
         }
 
-        Log.e("MOVER_PIN", "🚀 ACTIVADO modo mover pin. ignoreNextMatrixChange=TRUE")
-        Log.d("EdicionPines", "¡MODO MOVER PIN ACTIVADO!")
     }
 
 
@@ -253,14 +247,12 @@ fun EdicionPines(
                 panelHeightFraction = PANEL_HEIGHT_FRACTION,
 
                 onClosePanel = {
-                    // Lógica para cerrar el panel (Hoisting)
                     photoViewRef?.translationY = 0f
                     photoViewRef?.translationX = 0f
                     selectedPin = null
                 },
 
                 onStartMove = { movedPin, initialPos ->
-                    // Lógica para iniciar el modo mover (Hoisting)
                     Log.d("EdicionPines", "Iniciando modo Mover Pin para ID: ${movedPin.id}")
                     pinBeingMoved = movedPin
                     pinDragOffset = initialPos
@@ -268,17 +260,20 @@ fun EdicionPines(
                     isPinMoving = true
                     photoViewRef?.translationY = 0f
                     photoViewRef?.translationX = 0f
-                    Toast.makeText(context, "Modo Mover Pin activado. Arrastre.", Toast.LENGTH_LONG)
-                        .show()
+                    Toast.makeText(context, "Modo Mover Pin activado. Arrastre.", Toast.LENGTH_LONG).show()
                 },
 
                 onEdit = {
-                    // Lógica de edición
                     Toast.makeText(context, "Editar Pin", Toast.LENGTH_SHORT).show()
-                }
+                },
 
+                onPinDeleted = { pinId ->
+                    pines = pines.filter { it.id != pinId }
+                    selectedPin = null
+                }
             )
         }
+
 
         // -------------------------
         // ⭐ ADICIÓN: OVERLAY DE PIN EN MOVIMIENTO ⭐
@@ -357,11 +352,15 @@ fun EdicionPines(
 
                                 Log.d("EdicionPines", "Confirmando posición final. Iniciando subida de imágenes a Cloudinary...")
 
+                                Log.d("PIN", "⏳ Subiendo imágenes...")
+                                val start = System.currentTimeMillis()
                                 // 1. SUBIR IMÁGENES NORMALES
                                 val uploadedImageUrls = vm.imagenes.uris.mapNotNull { uri ->
                                     val result = CloudinaryService.uploadImage(uri, context)
                                     result.getOrNull()
                                 }
+
+                                Log.d("PIN", "✅ Imagenes subidas en: ${System.currentTimeMillis() - start}ms")
 
                                 val uploaded360Url: String? = vm.imagen360?.let { uri ->
                                     val result = CloudinaryService.uploadImage(uri, context)

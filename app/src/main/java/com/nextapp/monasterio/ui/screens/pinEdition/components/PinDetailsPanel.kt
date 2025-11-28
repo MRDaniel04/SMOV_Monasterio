@@ -32,9 +32,12 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewModelScope
 import coil.compose.AsyncImage
 import com.nextapp.monasterio.R
 import com.nextapp.monasterio.models.PinData
+import com.nextapp.monasterio.repository.PinRepository
+import kotlinx.coroutines.launch
 
 @Composable
 fun PinDetailsPanel(
@@ -45,10 +48,13 @@ fun PinDetailsPanel(
     onClosePanel: () -> Unit,
     onStartMove: (PinData, Offset) -> Unit, // Callback para iniciar el modo mover
     onEdit: (PinData) -> Unit,
-    panelHeightFraction: Float
+    panelHeightFraction: Float,
+    onPinDeleted: (String) -> Unit
 ) {
     var isDeleteDialogOpen by remember { mutableStateOf(false) }
     val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
+
 
     // Bloque principal: Box (que estaba debajo de if (selectedPin != null))
     Box(
@@ -145,11 +151,8 @@ fun PinDetailsPanel(
                 color = Color.Black
             )
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
-            // PinDetailsPanel.kt (dentro del Column principal, después del título)
-
-            Spacer(modifier = Modifier.height(12.dp))
             val numImages = selectedPin.imagenesDetalladas.size
             Log.i(
                 "DIAG_PANEL",
@@ -202,9 +205,6 @@ fun PinDetailsPanel(
                 )
             }
 
-// Continúa con la descripción (Box(modifier = Modifier.weight(1f))...)
-
-            // --- 4. Descripción del Pin (Scrollable) ---
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -230,13 +230,22 @@ fun PinDetailsPanel(
             confirmButton = {
                 Button(
                     onClick = {
-                        // LÓGICA DE BORRADO BLOQUEADA (manteniendo la funcionalidad actual)
-                        Log.d("EdicionPines", "Acción de Eliminación Bloqueada temporalmente.")
-                        Toast.makeText(context, "Acción de Borrado BLOQUEADA (Temporalmente)", Toast.LENGTH_SHORT).show()
                         isDeleteDialogOpen = false
-                        onClosePanel() // Cierra el panel
+                        val pinId = selectedPin.id
+                        val ctx = context
+
+                        coroutineScope.launch {
+                            val ok = PinRepository.deletePinAndImages(pinId)
+
+                            if (ok) {
+                                Toast.makeText(ctx, "Pin eliminado correctamente", Toast.LENGTH_SHORT).show()
+                                onPinDeleted(pinId)
+                                onClosePanel()
+                            } else {
+                                Toast.makeText(ctx, "Error eliminando el pin", Toast.LENGTH_SHORT).show()
+                            }
+                        }
                     },
-                    // ⭐ CÓDIGO DE COLORES FALTANTE
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFF44336))
                 ) {
                     Text("Eliminar Pin")
