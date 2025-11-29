@@ -431,9 +431,9 @@ fun PinDetalleScreen(
                         PinTutorialStep(
                             description = activity?.getString(R.string.pin_1) ?: "Volver",
                             // Calculamos el centro geométrico
-                            focusCenter = Offset(pos.x + size.width / 20, pos.y + size.height / 2),
+                            focusCenter = Offset(pos.x + size.width / 2, pos.y + size.height / 2),
                             // Radio un poco más grande que el botón
-                            focusRadius = (size.width / 15),
+                            focusRadius = (size.width),
                             alignment = Alignment.BottomCenter
                         )
                     )

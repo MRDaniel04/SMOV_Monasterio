@@ -120,7 +120,6 @@
     <string name="map_tutorial_body2">Este es el cuerpo del tutorial del mapa 2</string>
     <string name="map_tutorial_title2">Este es el titulo del tutorial del mapa 2</string>
     <string name="pin_tutorial_body">Este es el cuerpo del tutorial del pin</string>
-    <string name="pineºº_tutorial_title">Este es el titulo del tutorial del pin</string>
     <string name="next">Siguiente</string>
     <string name="map_tutorial_body1">En la parte superior izquierda, el símbolo (←) permite volver al inicio</string>
     <string name="map_tutorial_body1_2">Tocando en las zonas con color del mapa podemos entrar a las distintas partes visualizables</string>
@@ -176,4 +175,7 @@
     <string name="gallery_type_sculpture">Esculturas</string>
     <string name="gallery_type_architecture">Arquitectura</string>
     <string name="gallery_type_other">Otros</string>
+    <string name="error_connection_title">¡Vaya! Algo salió mal</string>
+    <string name="error_connection_desc">No hemos podido cargar el mapa. Por favor, revisa tu conexión a internet e inténtalo de nuevo.</string>
+    <string name="retry">Reintentar</string>
 </resources>

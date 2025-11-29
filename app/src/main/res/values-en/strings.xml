@@ -183,4 +183,8 @@
     <string name="gallery_type_sculpture">Sculptures</string>
     <string name="gallery_type_architecture">Architecture</string>
     <string name="gallery_type_other">Others</string>
+
+    <string name="error_connection_title">Oops! Something went wrong</string>
+    <string name="error_connection_desc">We couldn\'t load the map. Please check your internet connection and try again.</string>
+    <string name="retry">Retry</string>
 </resources>

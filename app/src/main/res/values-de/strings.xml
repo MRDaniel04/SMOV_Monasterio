@@ -185,4 +185,8 @@
     <string name="gallery_type_sculpture">Skulpturen</string>
     <string name="gallery_type_architecture">Architektur</string>
     <string name="gallery_type_other">Andere</string>
+
+    <string name="error_connection_title">Hoppla! Etwas ist schiefgelaufen</string>
+    <string name="error_connection_desc">Wir konnten die Karte nicht laden. Bitte überprüfen Sie Ihre Internetverbindung und versuchen Sie es erneut.</string>
+    <string name="retry">Erneut versuchen</string>
 </resources>

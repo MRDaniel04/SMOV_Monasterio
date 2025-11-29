@@ -33,6 +33,8 @@ import androidx.navigation.NavHostController
 import android.graphics.Matrix
 import android.graphics.Path
 import android.util.Log
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import com.nextapp.monasterio.R
 import com.nextapp.monasterio.AppRoutes
 import com.nextapp.monasterio.models.*
@@ -104,6 +106,10 @@ fun PlanoScreen(
     var pines by remember { mutableStateOf<List<PinData>>(emptyList()) }
     var isLoading by remember { mutableStateOf(true) }
 
+    // --- Estados para carga del tutorial ---
+    var isError by remember { mutableStateOf(false) }
+    var retryTrigger by remember { mutableIntStateOf(0) }
+
     // --- Estados Visuales ---
     var activePath by remember { mutableStateOf<Path?>(null) }
     var activeHighlight by remember { mutableStateOf<Color?>(null) }
@@ -129,8 +135,9 @@ fun PlanoScreen(
     )
 
     // --- Carga inicial ---
-    LaunchedEffect(planoId) {
+    LaunchedEffect(planoId, retryTrigger) {
         isLoading = true
+        isError = false
         showTutorialSession = true
         currentStepIndex = 0 // Reiniciamos los pasos al cambiar de plano
         try {
@@ -143,6 +150,7 @@ fun PlanoScreen(
                 pines = PinRepository.getAllPins().filter { pinRefs.contains(it.id) }
             } else {
                 Log.e("PlanoUniversal", "⚠️ Plano no encontrado con id=$planoId")
+                isError = true
             }
         } catch (e: Exception) {
             Log.e("PlanoUniversal", "❌ Error cargando plano", e)
@@ -151,6 +159,7 @@ fun PlanoScreen(
                 context.getString(R.string.error_loading_plane),
                 Toast.LENGTH_SHORT
             ).show()
+            isError = true
         } finally {
             isLoading = false
         }
@@ -166,6 +175,14 @@ fun PlanoScreen(
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 Text(stringResource(R.string.plane_loading))
             }
+            return@Box
+        }
+
+        if (isError) {
+            ConnectionErrorView(
+                onRetry = { retryTrigger++ },
+                onBack = { if (!navController.popBackStack()) rootNavController?.popBackStack() }
+            )
             return@Box
         }
 
@@ -386,7 +403,7 @@ fun PlanoScreen(
         val isMainMap = (planoId == "monasterio_exterior")
 
         // Solo mostrar si tenemos las coordenadas capturadas
-        val isLayoutReady = backButtonLayout != null
+        val isLayoutReady = backButtonLayout != null && !isLoading && !isError
 
         if (showTutorialSession && isLayoutReady) {
             if (isMainMap && !isMainDismissed) {
@@ -534,4 +551,91 @@ private fun createPathFromFirebase(figura: FiguraData): Path {
     }
     path.transform(matrix)
     return path
+}
+
+@Composable
+fun ConnectionErrorView(onRetry: () -> Unit, onBack: () -> Unit) {
+    // 1. Definimos la secuencia de imágenes para la animación
+    // (Asegúrate de que los nombres coinciden con tus archivos en res/drawable)
+    val wifiIcons = listOf(
+        R.drawable.wifi_1_bar,
+        R.drawable.wifi_2_bar,
+        R.drawable.wifi
+    )
+
+    // 2. Estado para controlar qué imagen se muestra
+    var currentIconIndex by remember { mutableIntStateOf(0) }
+
+    // 3. El bucle de animación
+    LaunchedEffect(Unit) {
+        while (true) {
+            kotlinx.coroutines.delay(500) // Cambia de imagen cada 0.5 segundos
+            currentIconIndex = (currentIconIndex + 1) % wifiIcons.size
+        }
+    }
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFFF5F5F5)),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+            modifier = Modifier.padding(32.dp)
+        ) {
+            // 4. Icono animado (Cambia según el índice)
+            Icon(
+                painter = painterResource(id = wifiIcons[currentIconIndex]),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.error, // Color rojo de error
+                modifier = Modifier.size(80.dp)
+            )
+
+            Spacer(Modifier.height(16.dp))
+
+            Text(
+                text = stringResource(R.string.error_connection_title),
+                style = MaterialTheme.typography.headlineSmall,
+                color = Color.Black,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center
+            )
+
+            Spacer(Modifier.height(8.dp))
+
+            Text(
+                text = stringResource(R.string.error_connection_desc),
+                style = MaterialTheme.typography.bodyMedium,
+                color = Color.Gray,
+                textAlign = TextAlign.Center
+            )
+
+            Spacer(Modifier.height(32.dp))
+
+            Button(
+                onClick = onRetry,
+                modifier = Modifier.fillMaxWidth(0.7f),
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                Text(stringResource(R.string.retry))
+            }
+        }
+
+        IconButton(
+            onClick = onBack,
+            modifier = Modifier
+                .align(Alignment.TopStart)
+                .statusBarsPadding()
+                .padding(16.dp)
+                .background(Color.White.copy(alpha = 0.8f), CircleShape)
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.arrow_back),
+                contentDescription = stringResource(R.string.go_back),
+                tint = Color.Black
+            )
+        }
+    }
 }
