@@ -8,8 +8,10 @@ open class TranslationFieldState(
     es: String = "",
     en: String = "",
     de: String = "",
+    fr: String = ""
 ) {
     var es by mutableStateOf(es)
     var en by mutableStateOf(en)
     var de by mutableStateOf(de)
+    var fr by mutableStateOf(fr)
 }

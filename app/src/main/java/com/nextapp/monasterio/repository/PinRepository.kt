@@ -35,6 +35,7 @@ object PinRepository {
             "titulo" to pin.titulo,
             "tituloIngles" to pin.tituloIngles,
             "tituloAleman" to pin.tituloAleman,
+            "tituloFrances" to pin.tituloFrances,
             "ubicacion" to pin.ubicacion?.name,
             "x" to pin.x.toDouble(),
             "y" to pin.y.toDouble(),
@@ -42,10 +43,12 @@ object PinRepository {
             "descripcion" to pin.descripcion,
             "descripcionIngles" to pin.descripcionIngles,
             "descripcionAleman" to pin.descripcionAleman,
+            "descripcionFrances" to pin.descripcionFrances,
             "vista360Url" to pin.vista360Url,
             "audioUrl_es" to pin.audioUrl_es,
             "audioUrl_en" to pin.audioUrl_en,
             "audioUrl_ge" to pin.audioUrl_ge,
+            "audioUrl_fr" to pin.audioUrl_fr,
             "tipoDestino" to "detalle",
             "valorDestino" to "auto"
         )
@@ -60,8 +63,10 @@ object PinRepository {
         descripcion: String?,
         tituloIngles: String? = null,
         tituloAleman: String? = null,
+        tituloFrances: String? = null,
         descripcionIngles: String? = null,
         descripcionAleman: String? = null,
+        descripcionFrances: String? = null,
         ubicacion: String?,
         imagenes: List<String>,   // URLs de Cloudinary
         imagen360: String?,       // URL de la imagen 360 (opcional)
@@ -76,13 +81,14 @@ object PinRepository {
 
         val payload = mapOf(
             "titulo" to titulo,
-            "descripcion" to descripcion,
-
             "tituloIngles" to tituloIngles.orEmpty(),
             "tituloAleman" to tituloAleman.orEmpty(),
+            "tituloFrances" to tituloFrances.orEmpty(),
+
+            "descripcion" to descripcion,
             "descripcionIngles" to descripcionIngles,
             "descripcionAleman" to descripcionAleman,
-
+            "descripcionFrances" to descripcionFrances,
             "ubicacion" to ubicacion,
             "x" to x.toDouble(),
             "y" to y.toDouble(),
@@ -91,6 +97,7 @@ object PinRepository {
             "audioUrl_es" to null,
             "audioUrl_en" to null,
             "audioUrl_ge" to null,
+            "audioUrl_fr" to null,
             "tipoDestino" to "detalle",
             "valorDestino" to "auto"
         )
@@ -138,6 +145,7 @@ object PinRepository {
                 titulo = imgDoc.getString("titulo") ?: "",
                 tituloIngles = imgDoc.getString("tituloIngles") ?: "",
                 tituloAleman = imgDoc.getString("tituloAleman") ?: "",
+                tituloFrances = imgDoc.getString("tituloFrances") ?: "",
                 foco = focoDouble.toFloat()
             )
         }
@@ -182,16 +190,32 @@ object PinRepository {
     // -----------------------
     private fun mapDocToPinData(docId: String, data: Map<String, Any>?): PinData? {
         if (data == null) return null
+        if (docId == "ID_DEL_PIN_QUE_FALLA" || true) { // El "|| true" es para que salga en todos por ahora
+            Log.d("GHOST_BUSTER", "========================================")
+            Log.d("GHOST_BUSTER", "👻 Analizando claves del documento: $docId")
 
+            // Recorremos TODAS las claves que vienen de Firebase
+            data.keys.forEach { key ->
+                // Filtramos solo las que tengan "audio" para no llenar el log
+                if (key.contains("audio", ignoreCase = true)) {
+                    // Imprimimos la clave entre corchetes [] para ver si hay espacios
+                    Log.d("GHOST_BUSTER", "🔑 Clave encontrada: ['$key'] -> Valor: '${data[key]}'")
+                }
+            }
+            Log.d("GHOST_BUSTER", "========================================")
+        }
         return try {
 
             val titulo = data["titulo"] as? String ?: ""
             val tituloIngles = data["tituloIngles"] as? String ?: ""
             val tituloAleman = data["tituloAleman"] as? String ?: ""
+            val tituloFrances = data["tituloFrances"] as? String ?: ""
 
             val ubicacion = (data["ubicacion"] as? String)?.let { safeUbicacionOf(it) }
             val ubicacionIngles = (data["ubicacionIngles"] as? String)?.let { safeUbicacionOf(it) }
             val ubicacionAleman = (data["ubicacionAleman"] as? String)?.let { safeUbicacionOf(it) }
+            val ubicacionFrances = (data["ubicacionFrances"] as? String)?.let { safeUbicacionOf(it) }
+
 
             val x = (data["x"] as? Number)?.toFloat() ?: 0f
             val y = (data["y"] as? Number)?.toFloat() ?: 0f
@@ -210,11 +234,14 @@ object PinRepository {
             val descripcion = data["descripcion"] as? String
             val descripcionIngles = data["descripcionIngles"] as? String
             val descripcionAleman = data["descripcionAleman"] as? String
+            val descripcionFrances = data["descripcionFrances"] as? String
             val vista360Url = data["vista360Url"] as? String
 
             val audioUrl_es = data["audioUrl_es"] as? String
             val audioUrl_en = data["audioUrl_en"] as? String
             val audioUrl_ge = data["audioUrl_ge"] as? String
+            val audioUrl_fr = data["audioUrl_fr"] as? String
+
 
             val tapRadius = (data["tapRadius"] as? Number)?.toFloat() ?: 0.04f
             val tipoDestino = data["tipoDestino"] as? String
@@ -232,9 +259,11 @@ object PinRepository {
                 titulo = titulo,
                 tituloIngles = tituloIngles,
                 tituloAleman = tituloAleman,
+                tituloFrances = tituloFrances,
                 ubicacion = ubicacion,
                 ubicacionIngles = ubicacionIngles,
                 ubicacionAleman = ubicacionAleman,
+                ubicacionFrances = ubicacionFrances,
                 x = x,
                 y = y,
                 color = null,
@@ -244,6 +273,7 @@ object PinRepository {
                 descripcion = descripcion,
                 descripcionIngles = descripcionIngles,
                 descripcionAleman = descripcionAleman,
+                descripcionFrances = descripcionFrances,
                 tipoDestino = tipoDestino,
                 valorDestino = valorDestino,
                 destino = destino,
@@ -251,7 +281,8 @@ object PinRepository {
                 vista360Url = vista360Url,
                 audioUrl_es = audioUrl_es,
                 audioUrl_en = audioUrl_en,
-                audioUrl_ge = audioUrl_ge
+                audioUrl_ge = audioUrl_ge,
+                audioUrl_fr = audioUrl_fr
             )
 
 

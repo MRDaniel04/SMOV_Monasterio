@@ -138,6 +138,7 @@ fun EdicionPines(
             titulo = vm.titulo.es,
             tituloIngles = vm.titulo.en,
             tituloAleman = vm.titulo.de,
+            tituloFrances = vm.titulo.fr,
             x = 0.5f,
             y = 0.5f,
             iconRes = R.drawable.pin3,

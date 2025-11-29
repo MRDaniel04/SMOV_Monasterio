@@ -7,9 +7,11 @@ data class PinData(
     val titulo: String,
     val tituloIngles: String,
     val tituloAleman: String,
+    val tituloFrances: String,
     val ubicacion: Ubicacion? = null,
     val ubicacionIngles: Ubicacion? = null,
     val ubicacionAleman: Ubicacion? = null,
+    val ubicacionFrances: Ubicacion? = null,
     val x: Float,
     val y: Float,
     val color: Color? = null,
@@ -19,6 +21,7 @@ data class PinData(
     val descripcion: String? = null,
     val descripcionIngles: String? = null,
     val descripcionAleman: String? = null,
+    val descripcionFrances: String?=null,
 
     // 🔹 Nuevo: destino dinámico leído de Firebase
     val tipoDestino: String? = null,
@@ -30,7 +33,8 @@ data class PinData(
 
     val audioUrl_es: String? = null,
     val audioUrl_en: String? = null,
-    val audioUrl_ge: String? = null
+    val audioUrl_ge: String? = null,
+    val audioUrl_fr: String? = null
 )
 
 sealed class DestinoPin {

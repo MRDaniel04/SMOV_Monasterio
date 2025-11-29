@@ -118,6 +118,11 @@ fun PinDetalleScreen(
             descripcion_pin = pin.descripcionAleman
             ubicacion_pin = pin.ubicacionAleman
         }
+        "fr" -> {
+            titulo_pin = pin.tituloFrances
+            descripcion_pin = pin.descripcionFrances
+            ubicacion_pin = pin.ubicacionFrances
+        }
         else -> {
             titulo_pin = pin.tituloIngles
             descripcion_pin = pin.descripcionIngles
@@ -128,9 +133,9 @@ fun PinDetalleScreen(
     // --- LÓGICA DE AUDIO ---
     val context = LocalContext.current
     val audioUrl = when (language) {
-        "es" -> pin.audioUrl_es
         "en" -> pin.audioUrl_en
         "de" -> pin.audioUrl_ge
+        "fr" -> pin.audioUrl_fr
         else -> pin.audioUrl_es
     }
 
@@ -181,45 +186,52 @@ fun PinDetalleScreen(
                 .padding(bottom = 40.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // 1. BOTÓN ATRÁS
+            // --- CABECERA UNIFICADA (Flecha + Título) ---
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 16.dp)
-                    // 👇 CAPTURAMOS POSICIÓN REAL
-                    .onGloballyPositioned { coordinates ->
-                        val position = coordinates.positionInRoot()
-                        val size = coordinates.size
-                        backButtonLayout = position to Size(size.width.toFloat(), size.height.toFloat())
-                    },
-                contentAlignment = Alignment.CenterStart
+                    .padding(top = 16.dp) // Margen superior general
             ) {
-                Image(
-                    painter = painterResource(id = R.drawable.arrow_back),
-                    contentDescription = stringResource(R.string.go_back),
+                // 1. BOTÓN ATRÁS (Alineado a la Izquierda)
+                Box(
                     modifier = Modifier
-                        .size(28.dp)
-                        .clickable { onBack() }
+                        .align(Alignment.CenterStart) // 👈 Lo pegamos a la izquierda
+                        // 👇 MANTENEMOS TU LÓGICA DE POSICIÓN PARA EL TUTORIAL
+                        .onGloballyPositioned { coordinates ->
+                            val position = coordinates.positionInRoot()
+                            val size = coordinates.size
+                            backButtonLayout = position to Size(size.width.toFloat(), size.height.toFloat())
+                        }
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.arrow_back),
+                        contentDescription = stringResource(R.string.go_back),
+                        modifier = Modifier
+                            .size(28.dp)
+                            .clickable { onBack() }
+                    )
+                }
+
+                // 2. TÍTULO (Alineado al Centro Absoluto)
+                Text(
+                    text = buildString {
+                        append(titulo_pin)
+                        ubicacion_pin?.let { append(" (${it.displayName})") }
+                    },
+                    // Bajamos un poco la fuente (de 26 a 22) para que quepa mejor junto a la flecha
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black,
+                    textAlign = TextAlign.Center,
+                    lineHeight = 26.sp,
+                    modifier = Modifier
+                        .align(Alignment.Center) // 👈 Lo centramos en la pantalla
+                        .padding(horizontal = 48.dp) // 👈 Importante: Margen para no escribir encima de la flecha si el texto es largo
                 )
             }
 
-            Spacer(modifier = Modifier.height(8.dp))
-
-            // Título
-            Text(
-                text = buildString {
-                    append(titulo_pin)
-                    ubicacion_pin?.let { append(" (${it.displayName})") }
-                },
-                fontSize = 26.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.Black,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
-            )
-
+            // Espacio antes de la imagen
             Spacer(modifier = Modifier.height(16.dp))
-
             // 2. CARRUSEL DE IMÁGENES
             if (imagenes.isNotEmpty()) {
                 Box(

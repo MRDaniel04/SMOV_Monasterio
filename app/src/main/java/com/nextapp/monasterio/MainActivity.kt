@@ -98,13 +98,25 @@ fun MonasteryAppScreen(activity: AppCompatActivity) { // 👈 Recibimos la activ
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = currentBackStackEntry?.destination?.route
 
+    // --- LÓGICA DE MODO INMERSIVO (CORREGIDA) ---
+
+    // 1. Pantallas de 360 y Edición
     val isPanorama = currentRoute?.startsWith(AppRoutes.PANORAMA) == true
-    val isVirtualVisit = currentRoute == AppRoutes.VIRTUAL_VISIT
     val isPin360 = currentRoute?.startsWith(AppRoutes.PIN_360) == true
     val isEdicion = currentRoute == AppRoutes.EDICION_PINES
     val isEdicionFondo = currentRoute == AppRoutes.EDICION_FONDO_INICIO
 
-    val isImmersive = isPanorama || isVirtualVisit || isPin360 || isEdicion || isEdicionFondo
+    // 2. Visita Virtual (Mapa General, Submapas y Pines)
+    // Usamos 'contains' en lugar de '==' para cubrir todas las variaciones
+    // y sub-rutas que puedan generarse al navegar.
+    val isMapSection = currentRoute?.let { route ->
+        route.startsWith(AppRoutes.VIRTUAL_VISIT) || // Cubre la entrada principal
+                route.contains("pin_detalle") ||             // Cubre los detalles de los pines
+                route.contains("plano")                      // Cubre los submapas (claustro, iglesia...)
+    } ?: false
+
+    // La vista es inmersiva si cumple CUALQUIERA de estas condiciones
+    val isImmersive = isPanorama || isPin360 || isEdicion || isEdicionFondo || isMapSection
 
     val gesturesEnabled = when(currentRoute){
         AppRoutes.VIRTUAL_VISIT -> false
@@ -160,7 +172,8 @@ fun MonasteryAppScreen(activity: AppCompatActivity) { // 👈 Recibimos la activ
     ) {
         Scaffold(
             topBar = {
-                Column {
+                if (!isImmersive) {
+                    Column {
                         CenterAlignedTopAppBar(
                             title = { Text(currentTitle.value) },
                             colors = TopAppBarDefaults.topAppBarColors(
@@ -170,62 +183,57 @@ fun MonasteryAppScreen(activity: AppCompatActivity) { // 👈 Recibimos la activ
                                 actionIconContentColor = White
                             ),
                             navigationIcon = {
-                                if (!isImmersive) {
-                                    IconButton(onClick = {
-                                        scope.launch {
-                                            if (drawerState.isClosed) drawerState.open() else drawerState.close()
-                                        }
-                                    }) {
-                                        val iconRes =
-                                            if (drawerState.isOpen) R.drawable.menu_close else R.drawable.ic_menu_24
-                                        Icon(
-                                            painter = painterResource(id = iconRes),
-                                            contentDescription = stringResource(id = R.string.navigation_drawer_open)
-                                        )
+                                IconButton(onClick = {
+                                    scope.launch {
+                                        if (drawerState.isClosed) drawerState.open() else drawerState.close()
                                     }
+                                }) {
+                                    val iconRes = if (drawerState.isOpen) R.drawable.menu_close else R.drawable.ic_menu_24
+                                    Icon(
+                                        painter = painterResource(id = iconRes),
+                                        contentDescription = stringResource(id = R.string.navigation_drawer_open)
+                                    )
                                 }
                             },
                             actions = {
-                                if (!isImmersive) {
-                                    // 👇 1. SELECTOR DE IDIOMA LIMPIO
-                                    MainLanguageSelector(activity)
+                                // SELECTOR DE IDIOMA
+                                MainLanguageSelector(activity)
 
-                                    // Icono Editar
-                                    if (currentUser != null) {
-                                        IconButton(onClick = {
-                                            isEditing = !isEditing
-                                            val message =
-                                                if (isEditing) context.getString(R.string.edit_mode_activate_message) else context.getString(
-                                                    R.string.edit_mode_deactivate_message
-                                                )
-                                            Toast.makeText(context, message, Toast.LENGTH_SHORT)
-                                                .show()
-                                        }) {
-                                            Icon(
-                                                painter = painterResource(id = R.drawable.lapiz),
-                                                contentDescription = if (isEditing) stringResource(
-                                                    id = R.string.edit_mode_deactivate_icon
-                                                ) else stringResource(
-                                                    id = R.string.edit_mode_activate_icon
-                                                ),
-                                                tint = White
-                                            )
-                                        }
+                                // Icono Editar (solo si hay usuario)
+                                if (currentUser != null) {
+                                    IconButton(onClick = {
+                                        isEditing = !isEditing
+                                        val message = if (isEditing)
+                                            context.getString(R.string.edit_mode_activate_message)
+                                        else
+                                            context.getString(R.string.edit_mode_deactivate_message)
+                                        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                                    }) {
+                                        Icon(
+                                            painter = painterResource(id = R.drawable.lapiz),
+                                            contentDescription = if (isEditing)
+                                                stringResource(id = R.string.edit_mode_deactivate_icon)
+                                            else
+                                                stringResource(id = R.string.edit_mode_activate_icon),
+                                            tint = White
+                                        )
                                     }
                                 }
                             }
                         )
-                    val isGlobalLoading by AppStatus.isUploading.collectAsState()
-                    AnimatedVisibility(
-                        visible = isGlobalLoading,
-                        enter = fadeIn(),
-                        exit = fadeOut()
-                    ) {
-                        // Se dibuja JUSTO debajo de la TopAppBar
-                        LinearProgressIndicator(
-                            modifier = Modifier.fillMaxWidth(),
-                            color = MonasteryBlue
-                        )
+
+                        // Barra de progreso global (Subida de imágenes, etc.)
+                        val isGlobalLoading by AppStatus.isUploading.collectAsState()
+                        AnimatedVisibility(
+                            visible = isGlobalLoading,
+                            enter = fadeIn(),
+                            exit = fadeOut()
+                        ) {
+                            LinearProgressIndicator(
+                                modifier = Modifier.fillMaxWidth(),
+                                color = MonasteryBlue
+                            )
+                        }
                     }
                 }
             }
