@@ -1,17 +1,18 @@
 package com.nextapp.monasterio.viewModels
 
-import android.util.Log
-import android.widget.ImageView
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.nextapp.monasterio.models.ParejasManager
 import com.nextapp.monasterio.models.ParejasPieza
 import com.nextapp.monasterio.models.ParejasSize
-import com.nextapp.monasterio.models.PuzzleSize
+import com.nextapp.monasterio.repository.UserPreferencesRepository
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -26,18 +27,34 @@ data class parejasUiState(
 
 class ParejasViewModel (
     val size: ParejasSize,
-    val imagenesIds: List<Int>
+    val imagenesIds: List<Int>,
+    private val prefsRepository: UserPreferencesRepository
 ): ViewModel(){
 
     private val _uiState = MutableStateFlow(parejasUiState(size=size))
 
     val uiState: StateFlow<parejasUiState> = _uiState
 
+    val showInstructionsDialog : StateFlow<Boolean> = prefsRepository.isInstructionsPairsDismissed
+        .map { isDismissed -> !isDismissed }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = false
+        )
+
     val piezasManager = ParejasManager(size)
 
     init{
         resetGame()
     }
+
+    fun markInstructionsAsShown() {
+        viewModelScope.launch {
+            prefsRepository.dismissInstructionsPairs()
+        }
+    }
+
     fun resetGame(){
         val piezasIniciales = piezasManager.inicializarParejaPiezas(imagenesIds)
         _uiState.value = parejasUiState(
@@ -47,7 +64,7 @@ class ParejasViewModel (
             mostradoInicial =  true
         )
         viewModelScope.launch {
-            delay(3000)
+            delay(2000)
             _uiState.update{
                 it.copy(mostradoInicial = false)
             }
@@ -132,12 +149,13 @@ class ParejasViewModel (
 
 class ParejasViewModelFactory(
     private val size: ParejasSize,
-    private val imagenesIds: List<Int>
+    private val imagenesIds: List<Int>,
+    private val prefsRepository: UserPreferencesRepository
 ) : ViewModelProvider.Factory{
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(ParejasViewModel::class.java)) {
-            return ParejasViewModel(size, imagenesIds) as T
+            return ParejasViewModel(size, imagenesIds,prefsRepository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

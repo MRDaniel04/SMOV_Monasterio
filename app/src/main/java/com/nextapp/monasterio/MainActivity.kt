@@ -154,6 +154,7 @@ fun MonasteryAppScreen(activity: AppCompatActivity) { // 👈 Recibimos la activ
                 AppRoutes.PAREJASNIVEL4 -> context.getString(R.string.memory_screen)
                 AppRoutes.EDICION_FONDO_INICIO -> context.getString(R.string.background_edit_screen)
                 AppRoutes.EDICION_PINES -> context.getString(R.string.pin_edit_screen)
+                AppRoutes.JUEGO_DIFERENCIAS -> context.getString(R.string.differences_screen)
                 else -> context.getString(R.string.title_inicio)
             }
         }

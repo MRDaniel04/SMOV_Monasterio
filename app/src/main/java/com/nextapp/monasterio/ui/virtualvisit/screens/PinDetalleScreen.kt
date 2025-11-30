@@ -232,6 +232,7 @@ fun PinDetalleScreen(
 
             // Espacio antes de la imagen
             Spacer(modifier = Modifier.height(16.dp))
+
             // 2. CARRUSEL DE IMÁGENES
             if (imagenes.isNotEmpty()) {
                 Box(

@@ -76,7 +76,6 @@ fun JuegoPuzzleScreen(navController:NavController,modifier: Modifier = Modifier)
                 .padding(bottom = 40.dp)
                 .constrainAs(btn4) {
                     top.linkTo(parent.top)
-                    bottom.linkTo(btn9.top, margin = 40.dp)
                     start.linkTo(parent.start, margin = 40.dp)
                     end.linkTo(parent.end, margin = 40.dp)
                     width = Dimension.fillToConstraints
@@ -103,8 +102,6 @@ fun JuegoPuzzleScreen(navController:NavController,modifier: Modifier = Modifier)
             modifier = Modifier
                 .padding(bottom = 40.dp)
                 .constrainAs(btn9) {
-                    top.linkTo(btn4.bottom, margin = 40.dp)
-                    bottom.linkTo(btn16.top,margin=40.dp)
                     start.linkTo(parent.start, margin = 40.dp)
                     end.linkTo(parent.end, margin = 40.dp)
                     width = Dimension.fillToConstraints
@@ -131,8 +128,6 @@ fun JuegoPuzzleScreen(navController:NavController,modifier: Modifier = Modifier)
             modifier = Modifier
                 .padding(bottom = 40.dp)
                 .constrainAs(btn16) {
-                    top.linkTo(btn9.bottom, margin = 40.dp)
-                    bottom.linkTo(btn25.top,margin=40.dp)
                     start.linkTo(parent.start, margin = 40.dp)
                     end.linkTo(parent.end, margin = 40.dp)
                     width = Dimension.fillToConstraints
@@ -159,7 +154,6 @@ fun JuegoPuzzleScreen(navController:NavController,modifier: Modifier = Modifier)
             modifier = Modifier
                 .padding(bottom = 40.dp)
                 .constrainAs(btn25) {
-                    top.linkTo(btn16.bottom, margin = 40.dp)
                     bottom.linkTo(parent.bottom)
                     start.linkTo(parent.start, margin = 40.dp)
                     end.linkTo(parent.end, margin = 40.dp)

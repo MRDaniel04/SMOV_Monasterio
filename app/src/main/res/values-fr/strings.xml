@@ -61,7 +61,7 @@
     <string name="confirm_button">CONFIRMER</string>
     <string name="contentimage_confirmation">Confirmé</string>
     <string name="confirmation_appointment">PRESQUE TERMINÉ !</string>
-    <string name="details_appointment">Votre demande de réservation est prête. Veuillez appuyer sur \'envoyer\' dans l\'application de messagerie qui vient de s\'ouvrir pour finaliser votre demande. Nous vous répondrons à cet e-mail pour confirmer la disponibilité.</string>
+    <string name="details_appointment">Votre demande de réservation est prête. Veuillez appuyer sur envoyer dans l\'application de messagerie qui vient de s\'ouvrir pour finaliser votre demande. Nous vous répondrons à cet e-mail pour confirmer la disponibilité.</string>
     <string name="email_subject">Demande de Réservation de Visite - %1$s</string>
     <string name="email_message">Bonjour,\n\nJe souhaite demander une réservation pour une visite au monastère avec les détails suivants :\n\n* Nom : %1$s\n* E-mail : %2$s\n* Date de la visite : %3$s\n* Heure de la visite : %4$s\n\nJ\'attends votre aimable confirmation.\n\nMerci beaucoup,\nCordialement,\n\n%1$s</string>
     <string name="email_error">Aucune application de messagerie n\'a été trouvée</string>
@@ -121,6 +121,7 @@
     <string name="map_tutorial_body2">Ceci est le corps du tutoriel de la carte 2</string>
     <string name="map_tutorial_title2">Ceci est le titre du tutoriel de la carte 2</string>
     <string name="pin_tutorial_body">Ceci est le corps du tutoriel de la punaise</string>
+    <string name="pine_tutorial_title">Ceci est le titre du tutoriel de la punaise</string>
     <string name="next">Suivant</string>
     <string name="map_tutorial_body1">En haut à gauche, le symbole (←) permet de revenir au début</string>
     <string name="map_tutorial_body1_2">En touchant les zones colorées de la carte, nous pouvons accéder aux différentes parties visualisables</string>
@@ -163,6 +164,12 @@
     <string name="puzzle_option">PUZZLE</string>
     <string name="memory_screen">Paires</string>
     <string name="memory_option">PAIRES</string>
+    <string name="differences_game">7 DIFFÉRENCES</string>
+    <string name="differences_screen">7 Différences</string>
+    <string name="title_instructions">Salut, super joueur !</string>
+    <string name="text_instructions_puzzle">Salut, super joueur !\nEs-tu prêt à assembler cet incroyable puzzle ?\n\nPour jouer, c\'est très facile :\n\u2022 Choisis une pièce en bas de l\'écran et maintiens la pression dessus pendant quelques secondes.\n\u2022 Magie ! Cette pièce va maintenant flotter et tu pourras la déplacer avec ton doigt.\n\u2022 Fais glisser la pièce à l\'endroit du plateau où tu penses qu\'elle va.\n\u2022 Si tu la mets au bon endroit, elle s\'emboîtera et restera fixée ! Si ce n\'est pas le bon endroit, elle retournera à la boîte.\nN\'abandonne pas tant que le puzzle n\'est pas terminé !\nBonne chance !</string>
+    <string name="text_instructions_pairs">Salut, super joueur!\nEs-tu prêt à trouver toutes les paires?\n\nInstructions:\nRegarde attentivement les images avant qu\'elles ne soient cachées y trouve toutes les paires. Touche les carrés pour révéler l\'image cachée jusqu\'à trouver deux paires identiques.\nContinue jusqu\'à trouver toutes les paires.\nAmuse-toi bien et teste ta mémoire!</string>
+    <string name="differences_counter">Différences trouvées: %1$d / %2$d</string>
     <string name="back_piece">Dos de la pièce</string>
     <string name="left_pairs">Paires restantes : %1$s</string>
     <string name="left_pieces">Pièces restantes : %1$s</string>
@@ -173,7 +180,7 @@
     <string name="gallery_type_sculpture">Sculptures</string>
     <string name="gallery_type_architecture">Architecture</string>
     <string name="gallery_type_other">Autres</string>
-
+    <string name="play_audio"></string>
     <string name="error_connection_title">Oups ! Une erreur est survenue</string>
     <string name="error_connection_desc">Nous n\'avons pas pu charger la carte. Veuillez vérifier votre connexion internet et réessayer.</string>
     <string name="retry">Réessayer</string>

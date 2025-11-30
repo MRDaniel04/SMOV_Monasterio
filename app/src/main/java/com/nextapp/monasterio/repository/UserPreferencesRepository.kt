@@ -17,6 +17,9 @@ class UserPreferencesRepository private constructor(private val context: Context
         val TUTORIAL_MAIN_MAP = booleanPreferencesKey("tut_main_map") // Mapa General
         val TUTORIAL_SUB_MAP = booleanPreferencesKey("tut_sub_map")   // Interiores (Claustro, Iglesia...)
         val TUTORIAL_PIN = booleanPreferencesKey("tut_pin_detail")    // Detalle del Pin
+
+        val INSTRUCTIONS_PUZZLE = booleanPreferencesKey("ins_puzzle") // Instrucciones del Puzle
+        val INSTRUCTIONS_PAIRS = booleanPreferencesKey("ins_pairs") // Instrucciones de las parejas
     }
 
     // --- FLUJOS DE LECTURA ---
@@ -29,6 +32,12 @@ class UserPreferencesRepository private constructor(private val context: Context
     val isPinTutorialDismissed: Flow<Boolean> = context.dataStore.data
         .map { it[PreferencesKeys.TUTORIAL_PIN] ?: false }
 
+    val isInstructionsPuzzleDismissed: Flow<Boolean> = context.dataStore.data
+        .map { it[PreferencesKeys.INSTRUCTIONS_PUZZLE] ?: false }
+
+    val isInstructionsPairsDismissed: Flow<Boolean> = context.dataStore.data
+        .map { it[PreferencesKeys.INSTRUCTIONS_PAIRS] ?: false }
+
     // --- FUNCIONES DE ESCRITURA ---
     suspend fun dismissMainMapTutorial() {
         context.dataStore.edit { it[PreferencesKeys.TUTORIAL_MAIN_MAP] = true }
@@ -40,6 +49,14 @@ class UserPreferencesRepository private constructor(private val context: Context
 
     suspend fun dismissPinTutorial() {
         context.dataStore.edit { it[PreferencesKeys.TUTORIAL_PIN] = true }
+    }
+
+    suspend fun dismissInstructionsPuzzle() {
+        context.dataStore.edit { it[PreferencesKeys.INSTRUCTIONS_PUZZLE] = true }
+    }
+
+    suspend fun dismissInstructionsPairs() {
+        context.dataStore.edit { it[PreferencesKeys.INSTRUCTIONS_PAIRS] = true }
     }
 
     companion object {
