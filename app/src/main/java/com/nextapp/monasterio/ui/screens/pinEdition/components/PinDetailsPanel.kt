@@ -1,6 +1,4 @@
-// Archivo: PinDetailsPanel.kt (¡Reemplazar el contenido!)
-
-package com.nextapp.monasterio.ui.screens.pinEdition.components // Asegúrate de que el paquete sea correcto
+package com.nextapp.monasterio.ui.screens.pinEdition.components
 
 import android.util.Log
 import android.widget.Toast
@@ -15,7 +13,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults // ⭐ Importante para los colores
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -32,21 +30,22 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewModelScope
 import coil.compose.AsyncImage
 import com.nextapp.monasterio.R
+import com.nextapp.monasterio.models.ImagenData
 import com.nextapp.monasterio.models.PinData
 import com.nextapp.monasterio.repository.PinRepository
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
 fun PinDetailsPanel(
-    modifier: Modifier = Modifier, // 1. AÑADIR el modificador como primer parámetro (práctica estándar)
+    modifier: Modifier = Modifier,
     selectedPin: PinData,
-    imagenesDetalladas: List<*>,
+    imagenesDetalladas: List<ImagenData>,
     pinTapScreenPosition: Offset?,
     onClosePanel: () -> Unit,
-    onStartMove: (PinData, Offset) -> Unit, // Callback para iniciar el modo mover
+    onStartMove: (PinData, Offset) -> Unit,
     onEdit: (PinData) -> Unit,
     panelHeightFraction: Float,
     onPinDeleted: (String) -> Unit
@@ -55,10 +54,26 @@ fun PinDetailsPanel(
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
 
+    // 🌟 ESTADO DE CARGA FORZADO: Siempre inicia en true.
+    var isLoading by remember(selectedPin.id) { mutableStateOf(true) }
 
-    // Bloque principal: Box (que estaba debajo de if (selectedPin != null))
+    // Simula la carga de las imágenes, garantizando que isLoading sea 'true' inicialmente.
+    LaunchedEffect(selectedPin.id) {
+        // ⭐ IMPORTANTE: Aquí deberías poner la lógica real que carga `imagenesDetalladas`
+        // o, si ya se cargó en el ViewModel padre, poner un pequeño delay para forzar
+        // la visualización del spinner de carga.
+
+        // Simulación de una carga de 500ms
+        delay(500)
+
+        // Una vez que el proceso de "carga" haya terminado, se establece a false
+        isLoading = false
+    }
+
+    val hasImages = imagenesDetalladas.isNotEmpty()
+
+    // Bloque principal: Box
     Box(
-        // NOTA: El alignment y zIndex DEBEN ser aplicados por el componente padre (EdicionPines)
         modifier = modifier
             .fillMaxWidth()
             .fillMaxHeight(panelHeightFraction)
@@ -77,6 +92,7 @@ fun PinDetailsPanel(
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
+            // ... (Controles de Edición, Mover, Borrar) ... (Sin cambios)
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -98,7 +114,6 @@ fun PinDetailsPanel(
                             ).show()
                             return@IconButton
                         }
-                        // ⭐ HOISTING: Llamamos al callback. El padre maneja la mutación de estados.
                         onStartMove(selectedPin, initialScreenPos)
                     }) {
                         Icon(
@@ -109,7 +124,7 @@ fun PinDetailsPanel(
 
                     // Botón 2: Editar Pin
                     IconButton(onClick = {
-                        onEdit(selectedPin) // Llamamos al callback de editar
+                        onEdit(selectedPin)
                         Toast.makeText(context, "Editar Pin", Toast.LENGTH_SHORT).show()
                     }) {
                         Icon(
@@ -131,7 +146,7 @@ fun PinDetailsPanel(
                 }
 
                 // Grupo Derecho: Cerrar Panel
-                IconButton(onClick = onClosePanel) { // ⭐ HOISTING: Llamamos al callback de cerrar.
+                IconButton(onClick = onClosePanel) {
                     Icon(
                         painter = painterResource(R.drawable.ic_close_24),
                         contentDescription = "Cerrar Panel"
@@ -141,7 +156,7 @@ fun PinDetailsPanel(
 
             Spacer(modifier = Modifier.height(4.dp))
 
-            // --- 2. Título del Pin ---
+            // --- 2. Título del Pin --- (Sin cambios)
             Text(
                 text = selectedPin.titulo ?: "Detalle del Pin",
                 style = TextStyle(
@@ -153,57 +168,70 @@ fun PinDetailsPanel(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            val numImages = selectedPin.imagenesDetalladas.size
-            Log.i(
-                "DIAG_PANEL",
-                "Pin seleccionado: ${selectedPin.titulo}. Imágenes detalladas: $numImages"
-            )
-
-            if (selectedPin.imagenesDetalladas.isNotEmpty()) {
-                LazyRow(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(150.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    contentPadding = PaddingValues(end = 16.dp)
-                ) {
-                    items(selectedPin.imagenesDetalladas) { imagen -> // Iteramos sobre objetos ImagenData
-                        Box(
-                            modifier = Modifier
-                                .size(150.dp) // Tamaño de la celda de la imagen
-                                .clip(RoundedCornerShape(8.dp))
-                        ) {
-                            // ⭐ ESTA ES LA CLAVE: AsyncImage de Coil ⭐
-                            AsyncImage(
-                                model = imagen.url,
-                                contentDescription = imagen.etiqueta,
-                                contentScale = ContentScale.Crop, // Usar ContentScale
-                                modifier = Modifier.fillMaxSize()
-                            )
-
-                            // Texto de Etiqueta (similar al de tu carrusel original)
-                            Text(
-                                text = imagen.etiqueta,
-                                color = Color.White,
-                                fontSize = 12.sp,
-                                modifier = Modifier
-                                    .align(Alignment.BottomStart)
-                                    .background(Color.Black.copy(alpha = 0.6f))
-                                    .padding(horizontal = 8.dp, vertical = 4.dp)
-                            )
-                        }
+            // --- SECCIÓN DE CARGA DE IMÁGENES REVISADA CON FLUJO FORZADO ---
+            when {
+                // 1. ESTADO INICIAL: CARGANDO... (Siempre se muestra primero)
+                isLoading -> {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(150.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Text("Cargando imágenes...", color = Color.Gray)
                     }
                 }
-                Spacer(modifier = Modifier.height(12.dp))
-            } else {
-                // Si no hay imágenes detalladas, mostramos un placeholder o espaciador.
-                Spacer(modifier = Modifier.height(12.dp))
-                Text(
-                    text = "No hay imágenes detalladas disponibles.",
-                    color = Color.Gray,
-                    modifier = Modifier.padding(bottom = 8.dp)
-                )
+                // 2. NO HAY IMÁGENES (Solo si isLoading es false Y la lista está vacía)
+                !hasImages -> {
+                    Text(
+                        text = "No hay imágenes detalladas disponibles.",
+                        color = Color.Gray,
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+                }
+                // 3. IMÁGENES DISPONIBLES (isLoading es false y la lista NO está vacía)
+                else -> {
+                    LazyRow(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(150.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        contentPadding = PaddingValues(end = 16.dp)
+                    ) {
+
+                        items(imagenesDetalladas) { imagen ->
+
+                            Box(
+                                modifier = Modifier
+                                    .size(150.dp)
+                                    .clip(RoundedCornerShape(8.dp))
+                            ) {
+
+                                AsyncImage(
+                                    model = imagen.url,
+                                    contentDescription = imagen.etiqueta,
+                                    contentScale = ContentScale.Crop,
+                                    modifier = Modifier.fillMaxSize(),
+                                )
+
+                                Text(
+                                    text = imagen.etiqueta,
+                                    color = Color.White,
+                                    fontSize = 12.sp,
+                                    modifier = Modifier
+                                        .align(Alignment.BottomStart)
+                                        .background(Color.Black.copy(alpha = 0.6f))
+                                        .padding(horizontal = 8.dp, vertical = 4.dp)
+                                )
+                            }
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(12.dp))
+                }
             }
+
 
             Box(
                 modifier = Modifier
@@ -221,7 +249,7 @@ fun PinDetailsPanel(
         }
     }
 
-    // --- DIÁLOGO DE CONFIRMACIÓN DE BORRADO PERMANENTE ---
+    // --- DIÁLOGO DE CONFIRMACIÓN DE BORRADO PERMANENTE --- (Sin cambios)
     if (isDeleteDialogOpen) {
         AlertDialog(
             onDismissRequest = { isDeleteDialogOpen = false },

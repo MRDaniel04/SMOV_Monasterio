@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.IntSize
@@ -71,20 +72,34 @@ fun InteractivePlanoViewer(
             }
 
             // 2. Lógica de Pins (incluyendo estados)
-            photoView.pins =
-                if (isPinMoving) emptyList() else pines.map { pin ->
-                    val baseColorInt = pin.color?.toArgb() ?: android.graphics.Color.RED
+            photoView.pins = pines.map { pin ->
 
-                    DebugPhotoView.PinData(
-                        x = pin.x,
-                        y = pin.y,
-                        iconId = pin.iconRes ?: R.drawable.pin3,
-                        isPressed = pin.id == selectedPin?.id,
-                        isMoving = pin.id == pinBeingMoved?.id,
-                        pinColor = baseColorInt
-                    )
+                // --- LÓGICA DE COLOR SIMPLIFICADA PARA MODO MOVIMIENTO ---
+                val color: Color = when {
+
+                    // 1. Si este es el pin que está siendo movido (creado o reubicado):
+                    // Lo hacemos transparente para que solo se vea el pin amarillo flotante.
+                    pin.id == pinBeingMoved?.id -> Color.Transparent
+
+                    // 2. Todos los demás pines estáticos: ROJO
+                    else -> Color.Red
                 }
 
+                val baseColorInt = color.toArgb()
+
+                DebugPhotoView.PinData(
+                    x = pin.x,
+                    y = pin.y,
+                    iconId = pin.iconRes ?: R.drawable.pin3,
+
+                    // Mantenemos 'isPressed' en false si el pin está siendo movido,
+                    // y usamos la propiedad pinColor para el color.
+                    isPressed = false,
+                    isMoving = false,
+
+                    pinColor = baseColorInt // Aplicamos el color (Rojo o Transparente)
+                )
+            }
             // 3. Lógica: OCULTAR PANEL AL DESPLAZAR/HACER ZOOM (MATRIX CHANGE)
             photoView.attacher.setOnMatrixChangeListener {
                 if (ignoreNextMatrixChange) {

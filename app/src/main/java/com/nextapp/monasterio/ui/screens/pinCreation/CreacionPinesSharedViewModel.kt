@@ -20,6 +20,8 @@ class CreacionPinSharedViewModel : ViewModel() {
     var isEditing by mutableStateOf(false)
     var updateRequested by mutableStateOf(false)
     var editingPinId: String? = null
+    var isUploading by mutableStateOf(false)
+    var uploadMessage by mutableStateOf("")
 
 
     var modoMoverPin: Boolean = false

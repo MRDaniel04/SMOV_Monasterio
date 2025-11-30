@@ -53,14 +53,7 @@ fun PinEditionToolbar(
                     tint = Color.White
                 )
             }
-            // Botón 4: Cancelar Edición / Prohibido
-            IconButton(onClick = onCancelEditClick) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_eye_on),
-                    contentDescription = "Bloquear Edición",
-                    tint = Color.White
-                )
-            }
+
             // Botón 5: Ayuda/Información (El botón extra a la derecha)
             IconButton(onClick = onHelpClick) {
                 Icon(

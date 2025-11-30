@@ -85,7 +85,7 @@ fun MovingPinOverlay(
             Icon(
                 painter = painterResource(id = R.drawable.pin3), // Usamos el mismo icono de pin
                 contentDescription = "Pin en movimiento",
-                tint = Color.Red, // Destacamos el pin que se está moviendo
+                tint = Color.Blue, // Destacamos el pin que se está moviendo
                 modifier = Modifier
                     .offset(
                         x = currentOffset.x.toDp() - pinOffsetCorrection,

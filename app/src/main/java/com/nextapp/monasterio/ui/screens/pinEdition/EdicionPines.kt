@@ -3,7 +3,6 @@ package com.nextapp.monasterio.ui.screens.pinEdition
 import android.app.Activity
 import android.content.pm.ActivityInfo
 import android.graphics.PointF
-import android.net.Uri
 import android.util.Log
 import android.widget.ImageView
 import android.widget.Toast
@@ -32,11 +31,11 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.layout.onGloballyPositioned // Necesario para obtener el tamaño de la caja
 import androidx.compose.ui.unit.IntSize // Necesario para obtener el tamaño de la caja
 import com.nextapp.monasterio.AppRoutes
-
 import androidx.compose.ui.zIndex
 import com.nextapp.monasterio.ui.screens.pinCreation.CreacionPinSharedViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.nextapp.monasterio.services.CloudinaryService
+import com.nextapp.monasterio.ui.screens.pinCreation.components.LoadingOverlay
 import com.nextapp.monasterio.ui.screens.pinEdition.components.InteractivePlanoViewer
 import com.nextapp.monasterio.ui.screens.pinEdition.components.MovingPinOverlay
 import com.nextapp.monasterio.ui.screens.pinEdition.components.PinDetailsPanel
@@ -368,6 +367,10 @@ fun EdicionPines(
                         ).show()
                     },
                     onConfirm = {
+
+                        vm.isUploading = true
+                        vm.uploadMessage = "Subiendo imágenes… Esto puede tardar unos segundos"
+
                         val currentScreenPos = pinDragOffset
                         var normalizedCoords: PointF? = null
 
@@ -399,6 +402,8 @@ fun EdicionPines(
 
                             if (!isPinValid) {
                                 Toast.makeText(context, "Error: Faltan datos obligatorios (Título/Descripción/Imágenes).", Toast.LENGTH_LONG).show()
+                                vm.isUploading = false
+                                vm.uploadMessage = ""
                                 return@MovingPinOverlay
                             }
 
@@ -425,6 +430,9 @@ fun EdicionPines(
                                 if (uploadedImageUrls.isEmpty()) {
                                     Toast.makeText(context, "Error: No se pudo subir ninguna imagen. Pin NO creado.", Toast.LENGTH_LONG).show()
                                     Log.e("EdicionPines", "ERROR: Subida de imágenes falló o se descartaron las URIs.")
+                                    vm.isUploading = false
+                                    vm.uploadMessage = ""
+
                                     return@launch
                                 }
 
@@ -453,6 +461,10 @@ fun EdicionPines(
                                         pinId = newPinId
                                     )
 
+                                    vm.isUploading = false
+                                    vm.uploadMessage = ""
+
+
                                     // F. ÉXITO
                                     Toast.makeText(context, "Pin Creado. ID: $newPinId", Toast.LENGTH_LONG).show()
                                     Log.d("EdicionPines", "Pin con ID:$newPinId creado correctamente en (x=$finalX, y=$finalY)")
@@ -466,6 +478,9 @@ fun EdicionPines(
                                 } catch (e: Exception) {
                                     Log.e("EdicionPines", "Error en PinRepository.createPinFromForm", e)
                                     Toast.makeText(context, "Error al guardar el Pin en Firebase.", Toast.LENGTH_LONG).show()
+                                } finally {
+                                    vm.isUploading = false
+                                    vm.uploadMessage = ""
                                 }
                             }
 
@@ -496,6 +511,9 @@ fun EdicionPines(
                                 } catch (e: Exception) {
                                     Log.e("EdicionPines", "Error al guardar posición en Firebase", e)
                                     Toast.makeText(context, "Error al mover el pin existente.", Toast.LENGTH_SHORT).show()
+                                } finally {
+                                    vm.isUploading = false
+                                    vm.uploadMessage = ""
                                 }
                             }
                         }
@@ -580,6 +598,11 @@ fun EdicionPines(
             },
             modifier = Modifier.align(Alignment.TopEnd).zIndex(100f) // Alineado a la derecha
         )
+
+        if (vm.isUploading) {
+            LoadingOverlay(vm.uploadMessage)
+        }
+
     }
 }
 

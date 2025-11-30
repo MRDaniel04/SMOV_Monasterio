@@ -104,5 +104,19 @@ object PlanoRepository {
             .await()
     }
 
+    suspend fun removePinFromPlano(planoId: String, pinId: String) {
+        try {
+            val firestore = FirebaseFirestore.getInstance()
+            val pinRef = firestore.collection("pines").document(pinId)
+            firestore.collection("planos")
+                .document(planoId)
+                .update("pines", FieldValue.arrayRemove(pinRef))
+                .await()
+
+        } catch (e: Exception) {
+            Log.e("PlanoRepository", "❌ Error eliminando referencia del pin $pinId en plano $planoId", e)
+        }
+    }
+
 
 }

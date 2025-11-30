@@ -3,6 +3,7 @@ package com.nextapp.monasterio.repository
 import android.util.Log
 import androidx.compose.ui.graphics.toArgb
 import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import com.nextapp.monasterio.models.*
@@ -156,19 +157,6 @@ object PinRepository {
     }
 
 
-    suspend fun deletePin(pinId: String): Boolean {
-        return try {
-            collection.document(pinId)
-                .delete()
-                .await()
-            Log.d("PinRepository", "✅ Pin '$pinId' eliminado correctamente.")
-            true
-        } catch (e: Exception) {
-            Log.e("PinRepository", "❌ Error al eliminar el pin '$pinId'", e)
-            false
-        }
-    }
-
     suspend fun updatePinPosition(pinId: String, newX: Float, newY: Float) {
         val payload = mapOf(
             "x" to newX.toDouble(), // Firebase usa Double para números
@@ -314,30 +302,48 @@ object PinRepository {
         return try {
             val firestore = FirebaseFirestore.getInstance()
 
+            // 1) Obtener documento del pin
             val pinDoc = firestore.collection("pines").document(pinId).get().await()
-            if (!pinDoc.exists()) return false
+            if (!pinDoc.exists()) {
+                Log.w("PinRepository", "⚠️ deletePinAndImages: pin $pinId no existe")
+                return false
+            }
 
+            // 2) Eliminar documentos de la colección "imagenes" referenciados en el pin
             val imagenesRefs = pinDoc.get("imagenes") as? List<DocumentReference> ?: emptyList()
-
             imagenesRefs.forEach { ref ->
                 try {
                     ref.delete().await()
-                    Log.d("PinRepository", "🗑 Imagen eliminada: ${ref.id}")
+                    Log.d("PinRepository", "🗑 Imagen eliminada: ${ref.path}")
                 } catch (e: Exception) {
-                    Log.e("PinRepository", "❌ Error eliminando imagen ${ref.id}", e)
+                    Log.e("PinRepository", "❌ Error eliminando imagen ${ref.path}", e)
                 }
             }
 
+
+            try {
+                val pinRef = firestore.collection("pines").document(pinId)
+                firestore.collection("planos")
+                    .document("monasterio_interior")
+                    .update("pines", FieldValue.arrayRemove(pinRef))
+                    .await()
+                Log.d("PinRepository", "🗑 Referencia del pin $pinId eliminada en plano monastery_interior")
+            } catch (e: Exception) {
+                Log.e("PinRepository", "❌ Error eliminando referencia en plano para pin $pinId", e)
+                // no abortamos: seguimos intentando borrar el documento del pin
+            }
+
+            // 4) Eliminar el propio documento del pin
             firestore.collection("pines").document(pinId).delete().await()
-
             Log.d("PinRepository", "🗑 Pin eliminado correctamente: $pinId")
-            true
 
+            true
         } catch (e: Exception) {
             Log.e("PinRepository", "❌ Error eliminando pin completo $pinId", e)
             false
         }
     }
+
 
     suspend fun updatePin(
         pinId: String,
