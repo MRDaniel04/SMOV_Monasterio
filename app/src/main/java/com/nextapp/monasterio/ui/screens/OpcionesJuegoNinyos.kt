@@ -26,6 +26,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.NavController
@@ -33,6 +34,7 @@ import androidx.navigation.compose.rememberNavController
 import com.nextapp.monasterio.AppRoutes
 import com.nextapp.monasterio.R
 import com.nextapp.monasterio.ui.theme.MonasteryBlue
+import com.nextapp.monasterio.ui.theme.MonasteryOrange
 import com.nextapp.monasterio.ui.theme.MonasteryRed
 
 
@@ -51,8 +53,8 @@ fun OpcionesJuegoNinyos(navController:NavController,modifier: Modifier = Modifie
     }
 
     ConstraintLayout(modifier = modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
-        val (btnMemory,btnPuzle,background) = createRefs()
-        val centerGuide = createGuidelineFromTop(0.5f)
+        val (btnMemory,btnPuzle,btnDiferencias,background) = createRefs()
+        createVerticalChain(btnPuzle,btnMemory,btnDiferencias, chainStyle = ChainStyle.Packed)
 
         Image(
             painter = painterResource(R.drawable.fondo),
@@ -76,8 +78,9 @@ fun OpcionesJuegoNinyos(navController:NavController,modifier: Modifier = Modifie
             colors = ButtonDefaults.buttonColors(containerColor = MonasteryBlue),
             shape = RoundedCornerShape(20.dp),
             modifier = Modifier
+                .padding(bottom=40.dp)
                 .constrainAs(btnPuzle) {
-                    bottom.linkTo(centerGuide, margin = 24.dp)
+                    top.linkTo(parent.top)
                     start.linkTo(parent.start, margin = 40.dp)
                     end.linkTo(parent.end, margin = 40.dp)
                     width = Dimension.fillToConstraints
@@ -109,8 +112,8 @@ fun OpcionesJuegoNinyos(navController:NavController,modifier: Modifier = Modifie
             colors = ButtonDefaults.buttonColors(containerColor = MonasteryRed),
             shape = RoundedCornerShape(20.dp),
             modifier = Modifier
+                .padding(bottom=40.dp)
                 .constrainAs(btnMemory) {
-                    top.linkTo(centerGuide, margin = 24.dp)
                     start.linkTo(parent.start, margin = 40.dp)
                     end.linkTo(parent.end, margin = 40.dp)
                     width = Dimension.fillToConstraints
@@ -131,6 +134,40 @@ fun OpcionesJuegoNinyos(navController:NavController,modifier: Modifier = Modifie
                 )
                 Text(
                     stringResource(id = R.string.memory_option),
+                    fontSize = 22.sp,
+                    textAlign = TextAlign.Center
+                )
+            }
+        }
+        Button(
+            onClick = {
+                navController.navigate(AppRoutes.JUEGO_DIFERENCIAS)
+            },
+            colors = ButtonDefaults.buttonColors(containerColor = MonasteryOrange),
+            shape = RoundedCornerShape(20.dp),
+            modifier = Modifier
+                .padding(bottom=40.dp)
+                .constrainAs(btnDiferencias) {
+                    bottom.linkTo(parent.bottom)
+                    start.linkTo(parent.start, margin = 40.dp)
+                    end.linkTo(parent.end, margin = 40.dp)
+                    width = Dimension.fillToConstraints
+                }
+        ) {
+            Row(
+                modifier=Modifier
+                    .padding(horizontal = 20.dp),
+                verticalAlignment = Alignment.CenterVertically
+            )  {
+                Icon(
+                    painter = painterResource(id = R.drawable.lupa),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .padding(end = 18.dp)
+                        .size(48.dp)
+                )
+                Text(
+                    stringResource(id = R.string.differences_game),
                     fontSize = 22.sp,
                     textAlign = TextAlign.Center
                 )

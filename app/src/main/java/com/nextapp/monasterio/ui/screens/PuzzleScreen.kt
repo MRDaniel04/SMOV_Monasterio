@@ -7,6 +7,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -43,15 +44,38 @@ import com.nextapp.monasterio.models.PuzzleSize
 import com.nextapp.monasterio.viewModels.PuzzleViewModel
 import com.nextapp.monasterio.viewModels.PuzzleViewModelFactory
 import com.nextapp.monasterio.R
+import com.nextapp.monasterio.models.PuzzleData
+import com.nextapp.monasterio.models.PuzzleRotador
+import com.nextapp.monasterio.repository.UserPreferencesRepository
 
 @Composable
 fun PuzzleScreen(
     navController: NavController,
     tamaño: PuzzleSize,
-    imagenes: List<Int>,
-    imagenCompleta: Int
 ) {
-    val factory = remember { PuzzleViewModelFactory(tamaño, imagenes) }
+
+    val conjuntosDelNivel = remember(tamaño){
+        when(tamaño.rows * tamaño.columns){
+            4 -> PuzzleData.PUZZLES_NIVEL1
+            9 -> PuzzleData.PUZZLES_NIVEL2
+            16 -> PuzzleData.PUZZLES_NIVEL3
+            else -> PuzzleData.PUZZLES_NIVEL4
+        }
+    }
+
+    val tamañoTotal = tamaño.rows * tamaño.columns
+
+    val puzzleSetSeleccionado = remember {
+        val siguienteIndice = PuzzleRotador.getSiguienteIndice(conjuntosDelNivel.size)
+        conjuntosDelNivel.get(siguienteIndice)
+    }
+
+    val listaPiezas = puzzleSetSeleccionado.piezas
+    val imagenCompleta = puzzleSetSeleccionado.imagenCompleta
+
+    val prefsRepository = remember { UserPreferencesRepository.instance }
+
+    val factory = remember { PuzzleViewModelFactory(tamaño, listaPiezas,prefsRepository,imagenCompleta) }
     val viewModel: PuzzleViewModel = viewModel(factory = factory)
     val state by viewModel.uiState.collectAsState()
     val density = LocalDensity.current
@@ -70,6 +94,7 @@ fun PuzzleScreen(
     // Mapa de posiciones iniciales de las piezas SUELTAS en la bandeja (llenado por LazyRow)
     val trayPositionsMap = remember { mutableStateMapOf<Int, Offset>() }
     var showImagePreviewDialog by remember { mutableStateOf(false) }
+    val showInstructionsPreviewDialog by viewModel.showInstructionsDialog.collectAsState()
 
     val screenWidth = LocalConfiguration.current.screenWidthDp
     val isTablet = screenWidth > 600
@@ -81,6 +106,15 @@ fun PuzzleScreen(
         }
     }
 
+    if(showInstructionsPreviewDialog){
+        PuzzleDialog(
+            onDismiss = {viewModel.markInstructionsAsShown()},
+            onConfirm = {
+                viewModel.markInstructionsAsShown()},
+            titulo = stringResource(R.string.title_instructions),
+            texto = stringResource(R.string.text_instructions_puzzle)
+        )
+    }
     // El Box principal actúa como la capa de superposición (Overlay) para la pieza arrastrada.
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -130,6 +164,7 @@ fun PuzzleScreen(
                 PuzzleTray(
                     piezas = shuffledLoosePieces,
                     tamañoPieza = tamañoCelda,
+                    idPiezaArrastrada =  piezaArrastradaId,
                     isDragInProgress = piezaArrastradaId != null,
                     onPiecePositioned = { id, offset ->
                         // Llenar el mapa de posiciones iniciales para el Drag & Drop
@@ -145,7 +180,12 @@ fun PuzzleScreen(
 
             // --- 3. DIÁLOGO DE SOLUCIONADO ---
             if (state.solucionado) {
-                PuzzleDialog(onDismiss = {}, onConfirm = { navController.popBackStack() })
+                PuzzleDialog(
+                    onDismiss = {},
+                    onConfirm = { navController.popBackStack() },
+                    stringResource(R.string.congratulations),
+                    stringResource(R.string.message_game_completed)
+                )
             }
             if (showImagePreviewDialog) {
                 ImagePreviewDialog(
@@ -153,10 +193,8 @@ fun PuzzleScreen(
                     onDismiss = { showImagePreviewDialog = false }
                 )
             }
-        } // Fin Column
+        }
 
-        // --- 4. PIEZA ARRASTRADA (OVERLAY) ---
-        // Este Box solo dibuja la pieza que se está arrastrando (piezaArrastradaId != null)
         piezaArrastradaId?.let { id ->
             val piezaFlotante = state.piezas.find { it.id == id }!!
             val startOffset = trayPositionsMap[id] ?: Offset.Zero
@@ -238,6 +276,7 @@ fun GridCell(pieza: PiezaPuzzle?) {
 fun PuzzleTray(
     piezas: List<PiezaPuzzle>,
     tamañoPieza: Dp,
+    idPiezaArrastrada : Int?,
     isDragInProgress: Boolean,
     onPiecePositioned: (Int, Offset) -> Unit,
     onDragStart: (PiezaPuzzle, Offset) -> Unit
@@ -260,6 +299,7 @@ fun PuzzleTray(
         ) {
             items(piezas, key = { it.id }) { pieza ->
                 // Este Box representa la pieza en la bandeja, que inicia el arrastre.
+                val isBeingDragged = pieza.id == idPiezaArrastrada
                 Box(
                     modifier = Modifier
                         .size(tamañoPieza)
@@ -268,21 +308,24 @@ fun PuzzleTray(
                             onPiecePositioned(pieza.id, coordinates.positionInWindow())
                         }
                         .pointerInput(isDragInProgress) {
-                            detectDragGestures(
-                                onDragStart = { offset ->
+                            detectTapGestures(
+                                onLongPress = { offset ->
                                     // 2. INICIAR EL DRAG: Avisar a PuzzleScreen para activar la pieza flotante
                                     onDragStart(pieza, offset)
-                                },
-                                onDrag = { _, _ -> /* El movimiento lo gestiona la pieza flotante */ },
-                                onDragEnd = { /* El fin lo gestiona la pieza flotante */ }
+                                }
                             )
                         }
                 ) {
-                    Image(
-                        painter = painterResource(id = pieza.imagen),
-                        contentDescription = "Pieza ${pieza.id}",
-                        modifier = Modifier.fillMaxSize()
-                    )
+                    if(!isBeingDragged) {
+                        Image(
+                            painter = painterResource(id = pieza.imagen),
+                            contentDescription = "Pieza ${pieza.id}",
+                            modifier = Modifier.fillMaxSize()
+                        )
+                    }
+                    else{
+                        Spacer(modifier = Modifier.fillMaxSize())
+                    }
                 }
             }
         }
@@ -327,7 +370,6 @@ fun DraggableFloatingPiece(
                     onDragEnd = onDragEnd // Llamar al fin para la lógica de soltar
                 )
             }
-            .border(2.dp, Color.Red) // Indicador visual de que se está arrastrando
     ) {
         Image(
             painter = painterResource(id = pieza.imagen),
@@ -342,15 +384,17 @@ fun DraggableFloatingPiece(
 @Composable
 fun PuzzleDialog(
     onDismiss: () -> Unit,
-    onConfirm : () -> Unit
+    onConfirm : () -> Unit,
+    titulo: String,
+    texto:String
 ){
     AlertDialog(
         onDismissRequest=onDismiss,
         title = {
-            Text(stringResource(R.string.congratulations))
+            Text(titulo)
         },
         text = {
-            Text(stringResource(R.string.message_game_completed))
+            Text(texto)
         },
         confirmButton = {
             Button(

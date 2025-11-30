@@ -31,7 +31,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -45,6 +47,7 @@ import androidx.navigation.NavController
 import com.nextapp.monasterio.R
 import com.nextapp.monasterio.models.ParejasPieza
 import com.nextapp.monasterio.models.ParejasSize
+import com.nextapp.monasterio.repository.UserPreferencesRepository
 import com.nextapp.monasterio.viewModels.ParejasViewModel
 import com.nextapp.monasterio.viewModels.ParejasViewModelFactory
 
@@ -55,18 +58,31 @@ fun ParejasScreen(
     size : ParejasSize,
     imagenes : List<Int>
 ){
-    val factory = remember { ParejasViewModelFactory(size, imagenes) }
+    val prefsRepository = remember { UserPreferencesRepository.instance }
+
+    val factory = remember { ParejasViewModelFactory(size, imagenes,prefsRepository) }
     val viewModel: ParejasViewModel = viewModel(factory = factory)
     val state by viewModel.uiState.collectAsState()
 
     val context = LocalContext.current
     val activity = context as? Activity
 
+    val showInstructionsPreviewDialog by viewModel.showInstructionsDialog.collectAsState()
+
     DisposableEffect(Unit) {
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         onDispose {
 
         }
+    }
+
+    if(showInstructionsPreviewDialog){
+        ParejaDialog(
+            onDismiss = {},
+            onConfirm = { viewModel.markInstructionsAsShown()},
+            titulo = stringResource(R.string.title_instructions),
+            texto = stringResource(R.string.text_instructions_puzzle)
+        )
     }
 
     Column(
@@ -119,7 +135,7 @@ fun ParejasScreen(
     }
 
     if (state.solucionado) {
-        ParejaDialog(onDismiss = {}, onConfirm = { navController.popBackStack() })
+        ParejaDialog(onDismiss = {}, onConfirm = { navController.popBackStack() },stringResource(R.string.congratulations),stringResource(R.string.message_game_completed))
     }
 }
 
@@ -128,15 +144,17 @@ fun ParejasScreen(
 @Composable
 fun ParejaDialog(
     onDismiss: () -> Unit,
-    onConfirm : () -> Unit
+    onConfirm : () -> Unit,
+    titulo:String,
+    texto:String
 ){
     AlertDialog(
         onDismissRequest=onDismiss,
         title = {
-            Text(stringResource(R.string.congratulations))
+            Text(titulo)
         },
         text = {
-            Text(stringResource(R.string.message_game_completed))
+            Text(texto)
         },confirmButton = {
             Button(
                 onClick = onConfirm

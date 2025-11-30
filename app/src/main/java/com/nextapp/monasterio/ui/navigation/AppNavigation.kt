@@ -58,10 +58,10 @@ fun AppNavigationHost(
         composable(AppRoutes.GALERIA)  { GaleriaScreen(navController = navController) }
         composable(AppRoutes.MODO_NINYOS)   { OpcionesModoNiño(navController = navController) }
         composable(AppRoutes.VIDEO_NINYOS)   { VideoNinyosScreen()}
-        composable(AppRoutes.PUZZLENIVEL1){PuzzleScreen(navController=navController,tamaño = PuzzleSize(2,2),imagenes= PuzzleData.IMAGENES_NIVEL1,imagenCompleta=R.drawable.p1)}
-        composable(AppRoutes.PUZZLENIVEL2){PuzzleScreen(navController=navController,tamaño = PuzzleSize(3,3),imagenes= PuzzleData.IMAGENES_NIVEL2, imagenCompleta = R.drawable.p2)}
-        composable(AppRoutes.PUZZLENIVEL3){PuzzleScreen(navController=navController,tamaño = PuzzleSize(4,4),imagenes= PuzzleData.IMAGENES_NIVEL3,imagenCompleta = R.drawable.p3)}
-        composable(AppRoutes.PUZZLENIVEL4){PuzzleScreen(navController=navController,tamaño= PuzzleSize(5,5),imagenes= PuzzleData.IMAGENES_NIVEL4,imagenCompleta = R.drawable.p4)}
+        composable(AppRoutes.PUZZLENIVEL1){PuzzleScreen(navController=navController,tamaño = PuzzleSize(2,2))}
+        composable(AppRoutes.PUZZLENIVEL2){PuzzleScreen(navController=navController,tamaño = PuzzleSize(3,3))}
+        composable(AppRoutes.PUZZLENIVEL3){PuzzleScreen(navController=navController,tamaño = PuzzleSize(4,4))}
+        composable(AppRoutes.PUZZLENIVEL4){PuzzleScreen(navController=navController,tamaño= PuzzleSize(5,5))}
         composable(AppRoutes.JUEGO_NINYOS){OpcionesJuegoNinyos(navController=navController)}
         composable(route=AppRoutes.MODO_EDICION) { OpcionesModoEdicion(navController = navController)}
         composable(AppRoutes.EDICION_FONDO_INICIO) { EdicionFondoInicio(navController = navController) }
@@ -74,6 +74,7 @@ fun AppNavigationHost(
         composable(AppRoutes.PAREJASNIVEL2){ParejasScreen(navController=navController,size = ParejasSize(4,2),imagenes= ParejasData.IMAGENES_NIVEL2)}
         composable(AppRoutes.PAREJASNIVEL3){ParejasScreen(navController=navController,size = ParejasSize(5,2),imagenes= ParejasData.IMAGENES_NIVEL3)}
         composable(AppRoutes.PAREJASNIVEL4){ParejasScreen(navController=navController,size= ParejasSize(4,3),imagenes= ParejasData.IMAGENES_NIVEL4)}
+        composable(AppRoutes.JUEGO_DIFERENCIAS){DiferenciasScreen()}
 
         // Ruta de Panorama 360 (Inmersiva, desde Galería / res/raw)
         composable(

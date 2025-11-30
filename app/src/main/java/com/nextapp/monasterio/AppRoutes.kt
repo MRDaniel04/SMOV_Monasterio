@@ -41,7 +41,7 @@ object AppRoutes {
 
     const val CREACION_PINES = "creacion_pines"
 
-
+    const val JUEGO_DIFERENCIAS ="juego_diferencias"
 
     const val PIN_360 = "pin_360"
     const val PIN_ENTRADA_MONASTERIO = "entrada_monasterio"
