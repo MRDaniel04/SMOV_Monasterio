@@ -20,6 +20,7 @@ class UserPreferencesRepository private constructor(private val context: Context
 
         val INSTRUCTIONS_PUZZLE = booleanPreferencesKey("ins_puzzle") // Instrucciones del Puzle
         val INSTRUCTIONS_PAIRS = booleanPreferencesKey("ins_pairs") // Instrucciones de las parejas
+        val INSTRUCTIONS_DIFFERENCES = booleanPreferencesKey("ins_differences") // Instrucciones de las parejas
     }
 
     // --- FLUJOS DE LECTURA ---
@@ -37,6 +38,9 @@ class UserPreferencesRepository private constructor(private val context: Context
 
     val isInstructionsPairsDismissed: Flow<Boolean> = context.dataStore.data
         .map { it[PreferencesKeys.INSTRUCTIONS_PAIRS] ?: false }
+
+    val isInstructionsDifferencesDismissed: Flow<Boolean> = context.dataStore.data
+        .map { it[PreferencesKeys.INSTRUCTIONS_DIFFERENCES] ?: false }
 
     // --- FUNCIONES DE ESCRITURA ---
     suspend fun dismissMainMapTutorial() {
@@ -57,6 +61,10 @@ class UserPreferencesRepository private constructor(private val context: Context
 
     suspend fun dismissInstructionsPairs() {
         context.dataStore.edit { it[PreferencesKeys.INSTRUCTIONS_PAIRS] = true }
+    }
+
+    suspend fun dismissInstructionsDifferences() {
+        context.dataStore.edit { it[PreferencesKeys.INSTRUCTIONS_DIFFERENCES] = true }
     }
 
     companion object {

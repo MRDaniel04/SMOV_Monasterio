@@ -6,6 +6,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -13,16 +14,35 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.nextapp.monasterio.viewModels.ImagenConToque
 import com.nextapp.monasterio.viewModels.DiferenciasViewModel
 import com.nextapp.monasterio.R
+import com.nextapp.monasterio.repository.UserPreferencesRepository
+import com.nextapp.monasterio.viewModels.PuzzleViewModel
+import com.nextapp.monasterio.viewModels.PuzzleViewModelFactory
 
 @Composable
 fun DiferenciasScreen(
-    viewModel: DiferenciasViewModel = viewModel()
 ) {
+
+    val prefsRepository = remember { UserPreferencesRepository.instance }
+
+    val viewModel: DiferenciasViewModel = viewModel(factory = DiferenciasViewModel.Companion.Factory(prefsRepository))
+
     val juegoActual by viewModel.juegoActual.collectAsState()
     val contador by viewModel.diferenciasEncontradas.collectAsState()
 
     val diferenciasList = juegoActual.diferencias
     val juegoTerminado = contador == diferenciasList.size
+
+    val showInstructionsPreviewDialog by viewModel.showInstructionsDialog.collectAsState()
+
+    if(showInstructionsPreviewDialog){
+        PuzzleDialog(
+            onDismiss = {viewModel.markInstructionsAsShown()},
+            onConfirm = {
+                viewModel.markInstructionsAsShown()},
+            titulo = stringResource(R.string.title_instructions),
+            texto = stringResource(R.string.text_instructions_spot_the_difference)
+        )
+    }
 
     Column(
         modifier = Modifier
@@ -65,7 +85,7 @@ fun DiferenciasScreen(
             text = { Text(stringResource(R.string.message_game_completed)) },
             confirmButton = {
                 Button(onClick = viewModel::reiniciarJuego) {
-                    Text("Jugar de Nuevo")
+                    Text(stringResource(R.string.ready))
                 }
             },
             onDismissRequest = { /* No se puede cerrar sin reiniciar */ }

@@ -17,7 +17,6 @@ data class Diferencia(
     private var _encontrada: Boolean = false
 ){
     var encontrada: Boolean by mutableStateOf(_encontrada)
-        private set
 
     fun marcarEncontrada() {
         if (!encontrada) {
@@ -36,12 +35,12 @@ data class NivelJuego(
     val id: Int,
     @DrawableRes val imagenOriginal : Int,
     @DrawableRes val imagenModificada : Int,
-    val diferencias : SnapshotStateList<Diferencia>
+    val diferencias : List<Diferencia>
 )
 
 fun obtenerPares() : List<NivelJuego>{
     return listOf(
-        NivelJuego(
+        /*NivelJuego(
             id=1,
             imagenOriginal = R.drawable.d1,
             imagenModificada = R.drawable.d1m,
@@ -96,7 +95,7 @@ fun obtenerPares() : List<NivelJuego>{
                 Diferencia(406, 850, 500, 50, 80),   // Cruz/Símbolo
                 Diferencia(407, 480, 400, 80, 100)
             )
-        ),
+        ),*/
         NivelJuego(
             id=5,
             imagenOriginal = R.drawable.d5,
@@ -111,7 +110,7 @@ fun obtenerPares() : List<NivelJuego>{
                 Diferencia(507, 87, 673, 222, 100)  // Color de la empuñadura de la espada
             )
         ),
-        NivelJuego(
+        /*NivelJuego(
             id=6,
             imagenOriginal = R.drawable.d6,
             imagenModificada = R.drawable.d6m,
@@ -124,6 +123,6 @@ fun obtenerPares() : List<NivelJuego>{
                 Diferencia(806, 400, 450, 180, 100), // Símbolo sobre el pecho (Estrellas/Corazones)
                 Diferencia(807, 480, 520, 60, 60)
             )
-        )
+        )*/
     )
 }

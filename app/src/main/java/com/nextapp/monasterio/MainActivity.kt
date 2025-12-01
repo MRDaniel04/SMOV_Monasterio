@@ -117,7 +117,7 @@ fun MonasteryAppScreen(activity: AppCompatActivity) { // 👈 Recibimos la activ
     } ?: false
 
     // La vista es inmersiva si cumple CUALQUIERA de estas condiciones
-    val isImmersive = isPanorama || isPin360 || isEdicion || isEdicionFondo || isMapSection
+    val isImmersive = isPanorama || isPin360 || isEdicion || isMapSection
 
     val gesturesEnabled = when(currentRoute){
         AppRoutes.VIRTUAL_VISIT -> false
@@ -184,41 +184,48 @@ fun MonasteryAppScreen(activity: AppCompatActivity) { // 👈 Recibimos la activ
                                 navigationIconContentColor = White,
                                 actionIconContentColor = White
                             ),
+
                             navigationIcon = {
-                                IconButton(onClick = {
-                                    scope.launch {
-                                        if (drawerState.isClosed) drawerState.open() else drawerState.close()
+                                if(!isEdicionFondo) {
+                                    IconButton(onClick = {
+                                        scope.launch {
+                                            if (drawerState.isClosed) drawerState.open() else drawerState.close()
+                                        }
+                                    }) {
+                                        val iconRes =
+                                            if (drawerState.isOpen) R.drawable.menu_close else R.drawable.ic_menu_24
+                                        Icon(
+                                            painter = painterResource(id = iconRes),
+                                            contentDescription = stringResource(id = R.string.navigation_drawer_open)
+                                        )
                                     }
-                                }) {
-                                    val iconRes = if (drawerState.isOpen) R.drawable.menu_close else R.drawable.ic_menu_24
-                                    Icon(
-                                        painter = painterResource(id = iconRes),
-                                        contentDescription = stringResource(id = R.string.navigation_drawer_open)
-                                    )
                                 }
                             },
                             actions = {
-                                // SELECTOR DE IDIOMA
-                                MainLanguageSelector(activity)
+                                if(!isEdicionFondo) {
+                                    // SELECTOR DE IDIOMA
+                                    MainLanguageSelector(activity)
 
-                                // Icono Editar (solo si hay usuario)
-                                if (currentUser != null) {
-                                    IconButton(onClick = {
-                                        isEditing = !isEditing
-                                        val message = if (isEditing)
-                                            context.getString(R.string.edit_mode_activate_message)
-                                        else
-                                            context.getString(R.string.edit_mode_deactivate_message)
-                                        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-                                    }) {
-                                        Icon(
-                                            painter = painterResource(id = R.drawable.lapiz),
-                                            contentDescription = if (isEditing)
-                                                stringResource(id = R.string.edit_mode_deactivate_icon)
+                                    // Icono Editar (solo si hay usuario)
+                                    if (currentUser != null) {
+                                        IconButton(onClick = {
+                                            isEditing = !isEditing
+                                            val message = if (isEditing)
+                                                context.getString(R.string.edit_mode_activate_message)
                                             else
-                                                stringResource(id = R.string.edit_mode_activate_icon),
-                                            tint = White
-                                        )
+                                                context.getString(R.string.edit_mode_deactivate_message)
+                                            Toast.makeText(context, message, Toast.LENGTH_SHORT)
+                                                .show()
+                                        }) {
+                                            Icon(
+                                                painter = painterResource(id = R.drawable.lapiz),
+                                                contentDescription = if (isEditing)
+                                                    stringResource(id = R.string.edit_mode_deactivate_icon)
+                                                else
+                                                    stringResource(id = R.string.edit_mode_activate_icon),
+                                                tint = White
+                                            )
+                                        }
                                     }
                                 }
                             }
