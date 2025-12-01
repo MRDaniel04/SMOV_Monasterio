@@ -24,7 +24,6 @@ import com.nextapp.monasterio.models.ParejasData
 import com.nextapp.monasterio.models.ParejasSize
 /*import com.nextapp.monasterio.models.ParejasData*/
 import com.nextapp.monasterio.models.PuzzleSize
-import com.nextapp.monasterio.models.PuzzleData
 import com.nextapp.monasterio.ui.screens.* // Asegúrate de importar PanoramaScreen y GaleriaScreen
 import com.nextapp.monasterio.ui.screens.pinEdition.EdicionFondoInicio
 import com.nextapp.monasterio.ui.screens.pinEdition.EdicionPines
@@ -59,8 +58,8 @@ fun AppNavigationHost(
         composable(AppRoutes.INFO)     { InfoScreen(isEditing = isEditing, viewModel = infoViewModel) }
         composable(AppRoutes.HISTORIA) { HistoriaScreen(isEditing = isEditing, viewModel = historiaViewModel) }
         composable(AppRoutes.GALERIA)  { GaleriaScreen(navController = navController) }
-        composable(AppRoutes.MODO_NINYOS)   { OpcionesModoNiño(navController = navController) }
-        composable(AppRoutes.VIDEO_NINYOS)   { VideoNinyosScreen()}
+        composable(AppRoutes.MODO_NINYOS)   { OpcionesModoNiño(navController = navController, topPadding = scaffoldPadding) }
+        composable(AppRoutes.VIDEO_NINYOS)   { VideoNinyosScreen(topPadding = scaffoldPadding) }
         composable(AppRoutes.PUZZLENIVEL1){PuzzleScreen(navController=navController,tamaño = PuzzleSize(2,2))}
         composable(AppRoutes.PUZZLENIVEL2){PuzzleScreen(navController=navController,tamaño = PuzzleSize(3,3))}
         composable(AppRoutes.PUZZLENIVEL3){PuzzleScreen(navController=navController,tamaño = PuzzleSize(4,4))}

@@ -2,7 +2,7 @@ package com.nextapp.monasterio.viewModels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.nextapp.monasterio.data.ImagenRepository
+import com.nextapp.monasterio.repository.ImagenRepository
 import com.nextapp.monasterio.models.ImagenData
 import com.nextapp.monasterio.ui.GalleryType
 import kotlinx.coroutines.flow.MutableStateFlow

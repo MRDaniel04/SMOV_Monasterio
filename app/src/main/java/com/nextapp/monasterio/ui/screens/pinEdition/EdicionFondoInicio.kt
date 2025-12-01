@@ -27,13 +27,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.zIndex
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.nextapp.monasterio.R
-import com.nextapp.monasterio.data.ImagenRepository
+import com.nextapp.monasterio.repository.ImagenRepository
 import com.nextapp.monasterio.services.CloudinaryService
 import com.nextapp.monasterio.ui.theme.MonasteryBlue
 import com.nextapp.monasterio.ui.theme.MonasteryOrange

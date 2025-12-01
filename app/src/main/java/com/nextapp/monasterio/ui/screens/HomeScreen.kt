@@ -15,7 +15,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
@@ -32,7 +31,7 @@ import coil.compose.AsyncImage
 import com.google.firebase.auth.FirebaseUser
 import com.nextapp.monasterio.AppRoutes
 import com.nextapp.monasterio.R
-import com.nextapp.monasterio.data.ImagenRepository
+import com.nextapp.monasterio.repository.ImagenRepository
 import com.nextapp.monasterio.ui.theme.MonasteryBlue
 import com.nextapp.monasterio.ui.theme.MonasteryOrange
 

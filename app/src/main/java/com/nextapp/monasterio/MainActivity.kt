@@ -241,6 +241,10 @@ fun MonasteryAppScreen(activity: AppCompatActivity) { // 👈 Recibimos la activ
             }
         ) { paddingValues ->
             val isHome = currentRoute == AppRoutes.INICIO
+            val isModoNinyos = currentRoute == AppRoutes.MODO_NINYOS
+            val isVideo = currentRoute == AppRoutes.VIDEO_NINYOS
+
+
 
             AppNavigationHost(
                 authViewModel = authViewModel,
@@ -248,7 +252,7 @@ fun MonasteryAppScreen(activity: AppCompatActivity) { // 👈 Recibimos la activ
                 isEditing = isEditing,
                 // TRUCO: Si es Home, NO ponemos padding al contenedor (para que el fondo se estire).
                 // Si es otra pantalla, SÍ ponemos padding.
-                modifier = if (isHome) Modifier else Modifier.padding(paddingValues),
+                modifier = if (isHome||isModoNinyos||isVideo) Modifier else Modifier.padding(paddingValues),
                 // Pasamos el padding adentro para usarlo solo en los botones del Home
                 scaffoldPadding = paddingValues
             )

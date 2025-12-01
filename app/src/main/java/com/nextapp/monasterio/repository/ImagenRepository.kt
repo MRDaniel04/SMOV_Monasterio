@@ -1,4 +1,4 @@
-package com.nextapp.monasterio.data
+package com.nextapp.monasterio.repository
 
 import com.google.firebase.firestore.FirebaseFirestore
 import com.nextapp.monasterio.models.ImagenData
