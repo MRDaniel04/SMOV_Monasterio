@@ -2,6 +2,8 @@ package com.nextapp.monasterio.ui.navigation
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -46,13 +48,14 @@ fun AppNavigationHost(
     infoViewModel: InfoViewModel = viewModel(),
     navController: NavHostController,
     isEditing: Boolean = false,
+    scaffoldPadding: PaddingValues = PaddingValues(0.dp)
 ) {
     NavHost(
         navController = navController,
         startDestination = AppRoutes.INICIO,
         modifier = modifier
     ) {
-        composable(AppRoutes.INICIO)   { HomeScreenContent(isEditing = isEditing,navController = navController) }
+        composable(AppRoutes.INICIO)   { HomeScreenContent(isEditing = isEditing, navController = navController, topPadding = scaffoldPadding) }
         composable(AppRoutes.INFO)     { InfoScreen(isEditing = isEditing, viewModel = infoViewModel) }
         composable(AppRoutes.HISTORIA) { HistoriaScreen(isEditing = isEditing, viewModel = historiaViewModel) }
         composable(AppRoutes.GALERIA)  { GaleriaScreen(navController = navController) }
@@ -188,6 +191,7 @@ fun AppDrawerContent(
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .verticalScroll(rememberScrollState())
                 .padding(16.dp)
         ) {
             IconButton(onClick = { scope.launch { drawerState.close() } }) {

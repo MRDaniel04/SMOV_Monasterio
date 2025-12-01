@@ -1,266 +1,439 @@
 package com.nextapp.monasterio.ui.screens
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.nextapp.monasterio.R
-import com.nextapp.monasterio.viewModels.AuthViewModel
-import com.nextapp.monasterio.ui.components.EditableText
 import com.nextapp.monasterio.ui.components.EditableContent
+import com.nextapp.monasterio.ui.components.EditableText
+import com.nextapp.monasterio.viewModels.AuthViewModel
 
 @Composable
 fun ProfileScreen(
     isEditing: Boolean,
     viewModel: AuthViewModel = viewModel(),
 ) {
-
     val userState by viewModel.currentUser.collectAsState()
     val user = userState
     val isLoading by viewModel.isLoading.collectAsState()
     val error by viewModel.error.collectAsState()
 
-    // campos para iniciar sesion
+    // Detectar orientación
+    val configuration = LocalConfiguration.current
+    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+
+    if (isLoading) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            CircularProgressIndicator()
+        }
+    } else if (user == null) {
+        // --- PANTALLA DE LOGIN ---
+        if (isLandscape) {
+            LoginScreenLandscape(viewModel, error)
+        } else {
+            LoginScreenPortrait(viewModel, error)
+        }
+    } else {
+        // --- PANTALLA DE PERFIL (AUTENTICADO) ---
+        // Lógica de edición (común para ambas orientaciones)
+        var editableName by remember(user) { mutableStateOf(user.name ?: "") }
+        var editableEmail by remember(user) { mutableStateOf(user.email ?: "") }
+
+        val hasChanges = remember(editableName, editableEmail, user) {
+            editableName != (user.name ?: "") || editableEmail != (user.email ?: "")
+        }
+
+        val saveChanges = { viewModel.updateUser(name = editableName, email = editableEmail) }
+        val cancelChanges = {
+            editableName = user.name ?: ""
+            editableEmail = user.email ?: ""
+        }
+
+        if (isEditing) {
+            // MODO EDICIÓN (Lo mantenemos simple en vertical con scroll para no complicar)
+            EditableProfileView(
+                isEditing = true,
+                hasChanges = hasChanges,
+                onSave = saveChanges,
+                onCancel = cancelChanges,
+                name = editableName,
+                email = editableEmail,
+                onNameChange = { editableName = it },
+                onEmailChange = { editableEmail = it }
+            )
+        } else {
+            // MODO LECTURA (Aquí aplicamos el cambio de diseño radical)
+            if (isLandscape) {
+                ProfileViewLandscape(user, viewModel)
+            } else {
+                ProfileViewPortrait(user, viewModel)
+            }
+        }
+    }
+}
+
+// =============================================================================
+// COMPONENTES DE LOGIN
+// =============================================================================
+
+@Composable
+fun LoginScreenPortrait(viewModel: AuthViewModel, error: String?) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
-    // campos editables de usuario - inicializar con los valores actuales
-    var editableName by remember(user) { mutableStateOf(user?.name ?: "") }
-    var editableEmail by remember(user) { mutableStateOf(user?.email ?: "") }
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(text = stringResource(id = R.string.profile_login), style = MaterialTheme.typography.headlineMedium)
+        Spacer(modifier = Modifier.height(32.dp))
 
-    // Detectar si hay cambios no guardados
-    val hasChanges = remember(editableName, editableEmail, user) {
-        editableName != (user?.name ?: "") || editableEmail != (user?.email ?: "")
+        LoginForm(email, { email = it }, password, { password = it })
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Button(
+            onClick = { viewModel.login(email, password) },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(stringResource(id = R.string.profile_login))
+        }
+
+        if (error != null) {
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(text = error, color = MaterialTheme.colorScheme.error)
+        }
     }
+}
 
-    // Función para cancelar cambios
-    val cancelChanges = {
-        editableName = user?.name ?: ""
-        editableEmail = user?.email ?: ""
+@Composable
+fun LoginScreenLandscape(viewModel: AuthViewModel, error: String?) {
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+
+    Row(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp), // Un poco más de margen para que respire
+        verticalAlignment = Alignment.CenterVertically, // Centrado vertical general
+        horizontalArrangement = Arrangement.spacedBy(32.dp) // Separación entre la zona de escribir y la de pulsar
+    ) {
+        // --- IZQUIERDA: FORMULARIO (Campos de texto) ---
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxHeight(), // Para centrar verticalmente el contenido
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = stringResource(id = R.string.profile_login),
+                style = MaterialTheme.typography.headlineSmall,
+                color = MaterialTheme.colorScheme.primary
+            )
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            // Campos de Email y Contraseña
+            LoginForm(email, { email = it }, password, { password = it })
+        }
+
+        // --- DERECHA: BOTÓN DE ACCIÓN Y ERRORES ---
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxHeight(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            // Botón grande y llamativo
+            Button(
+                onClick = { viewModel.login(email, password) },
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(12.dp) // Bordes redondeados
+            ) {
+                Text(
+                    text = stringResource(id = R.string.profile_login),
+                    modifier = Modifier.padding(vertical = 8.dp) // Más alto para facilitar el toque
+                )
+            }
+
+            // Mensaje de error debajo del botón
+            if (error != null) {
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = error,
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodyMedium,
+                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                )
+            }
+        }
     }
+}
 
-    // Función para guardar cambios
-    val saveChanges = {
-        viewModel.updateUser(name = editableName, email = editableEmail)
+@Composable
+fun LoginForm(email: String, onEmailChange: (String) -> Unit, pass: String, onPassChange: (String) -> Unit) {
+    OutlinedTextField(
+        value = email,
+        onValueChange = onEmailChange,
+        label = { Text(stringResource(id = R.string.profile_email)) },
+        singleLine = true,
+        modifier = Modifier.fillMaxWidth()
+    )
+    Spacer(modifier = Modifier.height(8.dp))
+    OutlinedTextField(
+        value = pass,
+        onValueChange = onPassChange,
+        label = { Text(stringResource(id = R.string.profile_password)) },
+        visualTransformation = PasswordVisualTransformation(),
+        singleLine = true,
+        modifier = Modifier.fillMaxWidth()
+    )
+}
+
+// =============================================================================
+// COMPONENTES DE PERFIL (LECTURA)
+// =============================================================================
+
+@Composable
+fun ProfileViewPortrait(user: com.nextapp.monasterio.models.User, viewModel: AuthViewModel) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(24.dp)
+            .verticalScroll(rememberScrollState()), // Scroll por si acaso
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Icon(
+            painter = painterResource(id = R.drawable.escudo),
+            contentDescription = null,
+            modifier = Modifier.size(120.dp),
+            tint = androidx.compose.ui.graphics.Color.Unspecified
+        )
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Text(
+            text = "Bienvenido, ${user.name}",
+            style = MaterialTheme.typography.headlineSmall,
+            color = MaterialTheme.colorScheme.onBackground
+        )
+        Spacer(modifier = Modifier.height(32.dp))
+
+        UserInfoCard(user)
+
+        Spacer(modifier = Modifier.height(48.dp))
+
+        LogoutButton(viewModel)
     }
+}
 
-    if (isLoading) { // Vista de carga del estado
-        // TODO mover a un componente para usar en otras paginas?
+@Composable
+fun ProfileViewLandscape(user: com.nextapp.monasterio.models.User, viewModel: AuthViewModel) {
+    Row(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        // 1. ESCUDO (30%)
         Box(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.weight(0.3f),
             contentAlignment = Alignment.Center
         ) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                CircularProgressIndicator()
-                Spacer(modifier = Modifier.height(8.dp))
-                Text("Cargando...", style = MaterialTheme.typography.bodyMedium)
-            }
-        }
-    } else if (user == null) { // Si el usuario no esta autenticado
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(text = stringResource(id = R.string.profile_login), style = MaterialTheme.typography.titleLarge)
-            Spacer(modifier = Modifier.height(16.dp))
-
-            OutlinedTextField(
-                value = email,
-                onValueChange = { email = it },
-                label = { Text(stringResource(id = R.string.profile_email)) },
-                singleLine = true
+            Icon(
+                painter = painterResource(id = R.drawable.escudo),
+                contentDescription = null,
+                modifier = Modifier.size(140.dp), // Un poco más grande en tablet
+                tint = androidx.compose.ui.graphics.Color.Unspecified
             )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            OutlinedTextField(
-                value = password,
-                onValueChange = { password = it },
-                label = { Text(stringResource(id = R.string.profile_password)) },
-                visualTransformation = PasswordVisualTransformation(),
-                singleLine = true
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Button(onClick = { viewModel.login(email, password) }) {
-                Text(stringResource(id = R.string.profile_login))
-            }
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            error?.let { Text(text = it, color = MaterialTheme.colorScheme.error) }
         }
-    } else { // Si el usuario esta autenticado
-        Column(
+
+        // 2. DATOS USUARIO (40%)
+        Box(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(24.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+                .weight(0.4f)
+                .padding(horizontal = 16.dp),
+            contentAlignment = Alignment.Center
         ) {
-            if (isEditing) {
-                // Usar EditableContent para gestionar el estado de edición
-                EditableContent(
-                    isEditing = isEditing,
-                    hasChanges = hasChanges,
-                    onSave = saveChanges,
-                    onCancel = cancelChanges,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Column(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalArrangement = Arrangement.spacedBy(16.dp)
-                    ) {
-                        Text(
-                            text = stringResource(id = R.string.title_profile),
-                            style = MaterialTheme.typography.titleLarge
-                        )
+            UserInfoCard(user)
+        }
 
-                        // Campo de nombre editable
-                        Column {
-                            Text(
-                                text = stringResource(id = R.string.profile_name),
-                                style = MaterialTheme.typography.labelMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                            Spacer(modifier = Modifier.height(4.dp))
-                            EditableText(
-                                text = editableName,
-                                isEditing = isEditing,
-                                onTextChange = { editableName = it },
-                                label = stringResource(id = R.string.profile_name),
-                                modifier = Modifier.fillMaxWidth()
-                            )
-                        }
+        // 3. BOTÓN LOGOUT (30%)
+        Box(
+            modifier = Modifier.weight(0.3f),
+            contentAlignment = Alignment.Center
+        ) {
+            LogoutButton(viewModel)
+        }
+    }
+}
 
-                        // Campo de email editable
-                        Column {
-                            Text(
-                                text = stringResource(id = R.string.profile_email),
-                                style = MaterialTheme.typography.labelMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                            Spacer(modifier = Modifier.height(4.dp))
-                            EditableText(
-                                text = editableEmail,
-                                isEditing = isEditing,
-                                onTextChange = { editableEmail = it },
-                                label = stringResource(id = R.string.profile_email),
-                                modifier = Modifier.fillMaxWidth()
-                            )
-                        }
-                    }
-                }
-            } else {
-                // Vista de solo lectura
-                // Avatar / Icono de perfil
+@Composable
+fun UserInfoCard(user: com.nextapp.monasterio.models.User) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+    ) {
+        Column(
+            modifier = Modifier.padding(20.dp),
+            verticalArrangement = Arrangement.spacedBy(20.dp)
+        ) {
+            // Nombre
+            Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
-                    painter = androidx.compose.ui.res.painterResource(id = R.drawable.escudo),
+                    painter = painterResource(id = R.drawable.outline_account_child_invert_24),
                     contentDescription = null,
-                    modifier = Modifier.size(120.dp),
-                    tint = androidx.compose.ui.graphics.Color.Unspecified // Usar color original de la imagen
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(24.dp)
                 )
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                Text(
-                    text = "Bienvenido, ${user.name}",
-                    style = MaterialTheme.typography.headlineMedium,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-
-                Spacer(modifier = Modifier.height(32.dp))
-
-                // Tarjeta de información del usuario
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
-                ) {
-                    Column(
-                        modifier = Modifier.padding(20.dp),
-                        verticalArrangement = Arrangement.spacedBy(20.dp)
-                    ) {
-                        // Nombre
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(
-                                painter = androidx.compose.ui.res.painterResource(id = R.drawable.outline_account_child_invert_24),
-                                contentDescription = null,
-                                tint = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.size(24.dp)
-                            )
-                            Spacer(modifier = Modifier.width(16.dp))
-                            Column {
-                                Text(
-                                    text = stringResource(id = R.string.profile_name),
-                                    style = MaterialTheme.typography.labelMedium,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                                Text(
-                                    text = user.name ?: "",
-                                    style = MaterialTheme.typography.bodyLarge,
-                                    color = MaterialTheme.colorScheme.onSurface
-                                )
-                            }
-                        }
-
-                        HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
-
-                        // Email
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(
-                                painter = androidx.compose.ui.res.painterResource(id = R.drawable.mail),
-                                contentDescription = null,
-                                tint = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.size(24.dp)
-                            )
-                            Spacer(modifier = Modifier.width(16.dp))
-                            Column {
-                                Text(
-                                    text = stringResource(id = R.string.profile_email),
-                                    style = MaterialTheme.typography.labelMedium,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                                Text(
-                                    text = user.email ?: "",
-                                    style = MaterialTheme.typography.bodyLarge,
-                                    color = MaterialTheme.colorScheme.onSurface
-                                )
-                            }
-                        }
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(48.dp))
-
-                Button(
-                    onClick = { viewModel.logout() },
-                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error),
-                    modifier = Modifier.fillMaxWidth(0.6f)
-                ) {
-                    Icon(
-                        painter = androidx.compose.ui.res.painterResource(id = R.drawable.ic_close_24),
-                        contentDescription = null,
-                        modifier = Modifier.size(18.dp)
+                Spacer(modifier = Modifier.width(16.dp))
+                Column {
+                    Text(
+                        text = stringResource(id = R.string.profile_name),
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(stringResource(id = R.string.profile_logout))
+                    Text(
+                        text = user.name ?: "",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
                 }
             }
+            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+            // Email
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(
+                    painter = painterResource(id = R.drawable.mail),
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(24.dp)
+                )
+                Spacer(modifier = Modifier.width(16.dp))
+                Column {
+                    Text(
+                        text = stringResource(id = R.string.profile_email),
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Text(
+                        text = user.email ?: "",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                }
+            }
+        }
+    }
+}
 
-            // Mostrar errores si los hay
-            error?.let {
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(text = it, color = MaterialTheme.colorScheme.error)
+@Composable
+fun LogoutButton(viewModel: AuthViewModel) {
+    Button(
+        onClick = { viewModel.logout() },
+        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error),
+        modifier = Modifier.widthIn(min = 200.dp) // Ancho mínimo para que se vea bien
+    ) {
+        Icon(
+            painter = painterResource(id = R.drawable.ic_close_24),
+            contentDescription = null,
+            modifier = Modifier.size(18.dp)
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        Text(stringResource(id = R.string.profile_logout))
+    }
+}
+
+// =============================================================================
+// MODO EDICIÓN (COMPONENTE EXISTENTE REUTILIZADO)
+// =============================================================================
+
+@Composable
+fun EditableProfileView(
+    isEditing: Boolean,
+    hasChanges: Boolean,
+    onSave: () -> Unit,
+    onCancel: () -> Unit,
+    name: String,
+    email: String,
+    onNameChange: (String) -> Unit,
+    onEmailChange: (String) -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(24.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        EditableContent(
+            isEditing = isEditing,
+            hasChanges = hasChanges,
+            onSave = onSave,
+            onCancel = onCancel,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                Text(
+                    text = stringResource(id = R.string.title_profile),
+                    style = MaterialTheme.typography.titleLarge
+                )
+
+                // Campo Nombre
+                Column {
+                    Text(
+                        text = stringResource(id = R.string.profile_name),
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    EditableText(
+                        text = name,
+                        isEditing = isEditing,
+                        onTextChange = onNameChange,
+                        label = stringResource(id = R.string.profile_name),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+
+                // Campo Email
+                Column {
+                    Text(
+                        text = stringResource(id = R.string.profile_email),
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    EditableText(
+                        text = email,
+                        isEditing = isEditing,
+                        onTextChange = onEmailChange,
+                        label = stringResource(id = R.string.profile_email),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
             }
         }
     }

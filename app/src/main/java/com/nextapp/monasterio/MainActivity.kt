@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -239,11 +240,17 @@ fun MonasteryAppScreen(activity: AppCompatActivity) { // 👈 Recibimos la activ
                 }
             }
         ) { paddingValues ->
+            val isHome = currentRoute == AppRoutes.INICIO
+
             AppNavigationHost(
                 authViewModel = authViewModel,
                 navController = navController,
                 isEditing = isEditing,
-                modifier = Modifier.padding(paddingValues)
+                // TRUCO: Si es Home, NO ponemos padding al contenedor (para que el fondo se estire).
+                // Si es otra pantalla, SÍ ponemos padding.
+                modifier = if (isHome) Modifier else Modifier.padding(paddingValues),
+                // Pasamos el padding adentro para usarlo solo en los botones del Home
+                scaffoldPadding = paddingValues
             )
         }
     }
@@ -253,11 +260,11 @@ fun MonasteryAppScreen(activity: AppCompatActivity) { // 👈 Recibimos la activ
 
 @Composable
 fun MainLanguageSelector(activity: AppCompatActivity) {
-    var expanded by remember { mutableStateOf(false) }
+    var expanded by rememberSaveable { mutableStateOf(false) }
 
+    val configuration = LocalConfiguration.current
     // Obtenemos idioma actual
-    val currentLanguageCode = activity.resources.configuration.locales[0].language
-
+    val currentLanguageCode = configuration.locales[0].language
     // Determinamos bandera actual
     val currentFlag = when (currentLanguageCode) {
         "de" -> R.drawable.alemania
