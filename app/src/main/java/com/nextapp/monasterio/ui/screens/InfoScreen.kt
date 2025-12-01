@@ -11,6 +11,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -35,7 +36,7 @@ fun InfoScreen(
 
     // Obtenemos el estado (que es de tipo InfoModel según tu ViewModel)
     val infoData by viewModel.infoState.collectAsState()
-
+    val backgroundColor = Color(0xFFC8A284)
     // Detectar orientación
     val configuration = LocalConfiguration.current
     val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE

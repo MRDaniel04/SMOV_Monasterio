@@ -7,6 +7,8 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -17,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -57,37 +60,51 @@ fun HistoriaScreen(
         onDispose { }
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(16.dp)
-    ) {
-        // Iteramos sobre los períodos de Firebase ordenados por 'order'
-        historyPeriods.forEach { period ->
-            ExpandableHistoryCard(
-                title = period.title,
-                contentMap = period.content,
-                imageUrls = period.imageUrls,
-                isEditing = isEditing,
-                isUploading = uploadingPeriodId == period.id,
-                onAddImage = {
-                    selectedPeriodId = period.id
-                    imagePickerLauncher.launch("image/*")
-                },
-                onDeleteImage = { imageUrl ->
-                    viewModel.deleteImage(period.id, imageUrl)
-                },
-                onUpdateContent = { newContentMap ->
-                    viewModel.updatePeriodContent(period.id, newContentMap)
-                },
-                onUpdateTitle = { newTitleMap ->
-                    viewModel.updatePeriodTitle(period.id, newTitleMap)
-                }
-            )
+    Box(modifier = Modifier.fillMaxSize()) {
+
+        // 2. Imagen de fondo que ocupa todo el espacio
+        Image(
+            painter = painterResource(id = R.drawable.fondo_desplegable), // **<-- REEMPLAZA 'tu_imagen_de_fondo' por el ID de tu drawable (ej: R.drawable.background_monasterio)**
+            contentDescription = "Fondo de pantalla",
+            contentScale = ContentScale.Crop, // Esto asegura que la imagen cubra todo, recortando si es necesario
+            modifier = Modifier.matchParentSize()
+        )
+
+        // 3. El contenido (la columna desplazable)
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                // Eliminamos .background(backgroundColor) y dejamos que la imagen del Box se muestre
+                .verticalScroll(rememberScrollState())
+                .padding(16.dp)
+        ) {
+            // Iteramos sobre los períodos de Firebase ordenados por 'order'
+            historyPeriods.forEach { period ->
+                ExpandableHistoryCard(
+                    title = period.title,
+                    contentMap = period.content,
+                    imageUrls = period.imageUrls,
+                    isEditing = isEditing,
+                    isUploading = uploadingPeriodId == period.id,
+                    onAddImage = {
+                        selectedPeriodId = period.id
+                        imagePickerLauncher.launch("image/*")
+                    },
+                    onDeleteImage = { imageUrl ->
+                        viewModel.deleteImage(period.id, imageUrl)
+                    },
+                    onUpdateContent = { newContentMap ->
+                        viewModel.updatePeriodContent(period.id, newContentMap)
+                    },
+                    onUpdateTitle = { newTitleMap ->
+                        viewModel.updatePeriodTitle(period.id, newTitleMap)
+                    }
+                )
+            }
         }
     }
 }
+
 
 @Composable
 fun ExpandableHistoryCard(

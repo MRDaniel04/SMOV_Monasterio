@@ -144,8 +144,18 @@ fun PlanoScreen(
             plano = PlanoRepository.getPlanoById(planoId)
             if (plano != null) {
                 Log.d("PlanoUniversal", "✅ Plano cargado: ${plano!!.nombre}")
+                Log.d("DEBUG_PLANO", "plano.figuras RAW: ${plano!!.figuras}")
+
                 val figuraRefs = plano!!.figuras.map { it.substringAfterLast("/") }
+
+                Log.d("DEBUG_PLANO", "IDs de figuras a buscar: $figuraRefs")
                 figuras = FiguraRepository.getAllFiguras().filter { figuraRefs.contains(it.id) }
+
+                Log.d("DEBUG_PLANO", "Figuras finales dibujadas: ${figuras.size}")
+                if (figuras.isEmpty()) {
+                    Log.e("DEBUG_PLANO", "🚨 ¡La lista de figuras es CERO! Revisar mapeo de ID en FiguraRepository o referencias en PlanoData.")
+                }
+
                 val pinRefs = plano!!.pines.map { it.substringAfterLast("/") }
                 pines = PinRepository.getAllPins().filter { pinRefs.contains(it.id) }
             } else {
@@ -239,7 +249,7 @@ fun PlanoScreen(
                             Handler(Looper.getMainLooper()).postDelayed({
                                 activeHighlight = null
                                 when (figura.tipoDestino) {
-                                    "detalle" -> navController.navigate("${VirtualVisitRoutes.DETALLE_GENERICO}/${figura.valorDestino}")
+                                    "detalle" -> navController.navigate("${VirtualVisitRoutes.DETALLE_GENERICO}/${figura.id}")
                                     "plano" -> {
                                         val destinoId = figura.valorDestino
                                         if (destinoId.isNotBlank()) navController.navigate("${VirtualVisitRoutes.PLANO}/$destinoId")
