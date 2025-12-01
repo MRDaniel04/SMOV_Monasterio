@@ -64,7 +64,7 @@ fun AppNavigationHost(
         composable(AppRoutes.PUZZLENIVEL2){PuzzleScreen(navController=navController,tamaño = PuzzleSize(3,3))}
         composable(AppRoutes.PUZZLENIVEL3){PuzzleScreen(navController=navController,tamaño = PuzzleSize(4,4))}
         composable(AppRoutes.PUZZLENIVEL4){PuzzleScreen(navController=navController,tamaño= PuzzleSize(5,5))}
-        composable(AppRoutes.JUEGO_NINYOS){OpcionesJuegoNinyos(navController=navController)}
+        composable(AppRoutes.JUEGO_NINYOS){OpcionesJuegoNinyos(navController=navController, topPadding = scaffoldPadding)}
         composable(route=AppRoutes.MODO_EDICION) { OpcionesModoEdicion(navController = navController)}
         composable(AppRoutes.EDICION_FONDO_INICIO) { EdicionFondoInicio(navController = navController) }
         composable(AppRoutes.EDICION_PINES) { EdicionPines(navController) }
@@ -137,8 +137,8 @@ fun AppNavigationHost(
         // (La ruta PIN_DETALLE se queda eliminada de aquí, ¡está bien!)
 
         // --- RESTO DE TUS RUTAS ---
-        composable(AppRoutes.OPCIONES_RESERVA) { OpcionesReservaScreen(navController = navController) }
-        composable(AppRoutes.RESERVA) { ReservaScreen(navController = navController) }
+        composable(AppRoutes.OPCIONES_RESERVA) { OpcionesReservaScreen(navController = navController, topPadding = scaffoldPadding) }
+        composable(AppRoutes.RESERVA) { ReservaScreen(navController = navController, topPadding = scaffoldPadding) }
         composable(
             route = AppRoutes.CONFIRMACION_RESERVA + "/{nombre}/{email}/{fecha}/{hora}",
             arguments = listOf(
