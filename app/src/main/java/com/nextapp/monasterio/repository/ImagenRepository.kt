@@ -3,6 +3,7 @@ package com.nextapp.monasterio.repository
 import com.google.firebase.firestore.FirebaseFirestore
 import com.nextapp.monasterio.models.ImagenData
 import kotlinx.coroutines.tasks.await
+import android.util.Log
 
 class ImagenRepository(
     private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
@@ -17,9 +18,26 @@ class ImagenRepository(
         return try {
             val snapshot = collection.get().await()
             snapshot.documents.mapNotNull { doc ->
-                doc.toObject(ImagenData::class.java)?.copy(id = doc.id)
+                try {
+                    val data = doc.data ?: return@mapNotNull null
+                    ImagenData(
+                        id = doc.id,
+                        url = data["url"] as? String ?: "",
+                        etiqueta = data["etiqueta"] as? String ?: "",
+                        titulo = data["titulo"] as? String ?: "",
+                        tituloIngles = data["tituloIngles"] as? String ?: "",
+                        tituloAleman = data["tituloAleman"] as? String ?: "",
+                        tituloFrances = data["tituloFrances"] as? String ?: "",
+                        foco = (data["foco"] as? Number)?.toFloat() ?: 0f,
+                        tipo = (data["tipo"] as? String) ?: (data["type"] as? String) ?: ""
+                    )
+                } catch (e: Exception) {
+                    Log.e("ImagenRepository", "Error mapping image ${doc.id}", e)
+                    null
+                }
             }
         } catch (e: Exception) {
+            Log.e("ImagenRepository", "Error getting all images", e)
             emptyList()
         }
     }

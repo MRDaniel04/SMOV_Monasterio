@@ -32,7 +32,7 @@ class GaleriaViewModel(
     private fun loadImages() {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
-            val allImages = imagenRepository.getAllImages()
+            val allImages = imagenRepository.getAllImages().filter { it.tipo.isNotBlank() }
             _uiState.update { 
                 it.copy(
                     images = allImages,
