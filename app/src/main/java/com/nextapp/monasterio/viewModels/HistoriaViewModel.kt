@@ -101,6 +101,11 @@ class HistoriaViewModel : ViewModel() {
      * Actualiza el contenido (textos) de un período histórico
      */
     fun updatePeriodContent(periodId: String, newContent: Map<String, String>) {
+        // Actualizar estado local optimísticamente INMEDIATAMENTE
+        _historyPeriods.value = _historyPeriods.value.map { 
+            if (it.id == periodId) it.copy(content = newContent) else it 
+        }
+
         viewModelScope.launch {
             try {
                 Log.d(TAG, "Actualizando contenido para período: $periodId")
@@ -108,16 +113,13 @@ class HistoriaViewModel : ViewModel() {
                 historyCollection.document(periodId)
                     .update("content", newContent)
                     .await()
-
-                // Actualizar estado local optimísticamente o recargar
-                _historyPeriods.value = _historyPeriods.value.map { 
-                    if (it.id == periodId) it.copy(content = newContent) else it 
-                }
                 
-                Log.d(TAG, "Contenido actualizado exitosamente")
+                Log.d(TAG, "Contenido actualizado exitosamente en Firebase")
             } catch (e: Exception) {
                 Log.e(TAG, "Error al actualizar contenido", e)
                 _error.value = e.message
+                // Opcional: Revertir el cambio local si falla
+                loadHistoryPeriods() 
             }
         }
     }
@@ -126,6 +128,11 @@ class HistoriaViewModel : ViewModel() {
      * Actualiza el título de un período histórico
      */
     fun updatePeriodTitle(periodId: String, newTitle: Map<String, String>) {
+        // Actualizar estado local optimísticamente INMEDIATAMENTE
+        _historyPeriods.value = _historyPeriods.value.map {
+            if (it.id == periodId) it.copy(title = newTitle) else it
+        }
+
         viewModelScope.launch {
             try {
                 Log.d(TAG, "Actualizando título para período: $periodId")
@@ -134,15 +141,12 @@ class HistoriaViewModel : ViewModel() {
                     .update("title", newTitle)
                     .await()
 
-                // Actualizar estado local optimísticamente
-                _historyPeriods.value = _historyPeriods.value.map {
-                    if (it.id == periodId) it.copy(title = newTitle) else it
-                }
-
-                Log.d(TAG, "Título actualizado exitosamente")
+                Log.d(TAG, "Título actualizado exitosamente en Firebase")
             } catch (e: Exception) {
                 Log.e(TAG, "Error al actualizar título", e)
                 _error.value = e.message
+                // Opcional: Revertir el cambio local si falla
+                loadHistoryPeriods()
             }
         }
     }
