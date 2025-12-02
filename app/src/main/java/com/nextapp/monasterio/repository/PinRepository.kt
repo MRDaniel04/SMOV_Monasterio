@@ -136,18 +136,30 @@ object PinRepository {
 
         val basePin = mapDocToPinData(doc.id, doc.data) ?: return null
 
-        // 🔥 Cargar cada imagen desde /imagenes/
         val imagenesDetalladas = basePin.imagenes.map { imagenId ->
             val imgDoc = firestore.collection("imagenes").document(imagenId).get().await()
             val focoDouble = imgDoc.getDouble("foco") ?: 0.0
+
+            // ⭐ LOG DE DEBUG CORRECTO: Verificamos qué clave contiene la etiqueta
+            Log.d("PinRepo-IMG", "Mapeando imagen $imagenId. Claves disponibles: ${imgDoc.data?.keys}")
+
+            // 1. Intentamos obtener el valor de la etiqueta usando 'tipo' o 'type'
+            val tipoValue = imgDoc.getString("tipo")
+                ?: imgDoc.getString("type")
+                ?: ""
+
             ImagenData(
+                id = imagenId, // Le asignamos el ID del documento
                 url = imgDoc.getString("url") ?: "",
                 etiqueta = imgDoc.getString("etiqueta") ?: "",
                 titulo = imgDoc.getString("titulo") ?: "",
                 tituloIngles = imgDoc.getString("tituloIngles") ?: "",
                 tituloAleman = imgDoc.getString("tituloAleman") ?: "",
                 tituloFrances = imgDoc.getString("tituloFrances") ?: "",
-                foco = focoDouble.toFloat()
+                foco = focoDouble.toFloat(),
+                // ⭐ AÑADIDO: Ahora se asigna el valor al campo 'tipo' de ImagenData
+                tipo = tipoValue,
+                type = tipoValue // Opcional, pero consistente
             )
         }
 

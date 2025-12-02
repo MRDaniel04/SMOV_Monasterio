@@ -20,6 +20,10 @@ class ImagenRepository(
             snapshot.documents.mapNotNull { doc ->
                 try {
                     val data = doc.data ?: return@mapNotNull null
+
+                    // ⭐ LOG DE DEPURACIÓN CRÍTICO: Muestra los valores de las posibles claves de etiqueta
+                    Log.d("ImgRepo-TAGS", "Doc ID: ${doc.id} | tipo: ${data["tipo"]} | type: ${data["type"]} | Etiqueta: ${data["etiqueta"]}")
+
                     ImagenData(
                         id = doc.id,
                         url = data["url"] as? String ?: "",

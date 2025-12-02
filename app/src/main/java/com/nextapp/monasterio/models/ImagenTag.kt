@@ -10,15 +10,20 @@ enum class ImageTag(val firestoreValue: String, val displayName: String) {
 
     fun toFirestoreString(): String = firestoreValue
 
+
     companion object {
         fun fromFirestoreString(value: String?): ImageTag? {
 
-            // 1. MANEJA NULO/VACÍO: Si no hay valor en DB, asigna "Otro" para que la imagen se cargue.
+
             if (value.isNullOrBlank()) {
                 return OTRO
             }
 
-            return entries.find { it.firestoreValue.equals(value, ignoreCase = true) }
+            val foundTag = entries.find {
+                it.firestoreValue.lowercase() == value.lowercase()
+            }
+             return foundTag ?: OTRO
         }
     }
+
 }

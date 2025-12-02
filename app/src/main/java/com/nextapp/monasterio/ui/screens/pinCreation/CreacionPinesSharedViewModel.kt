@@ -74,12 +74,15 @@ class CreacionPinSharedViewModel : ViewModel() {
             pin.imagenesDetalladas.isNotEmpty() -> {
                 pin.imagenesDetalladas.mapNotNull { img ->
 
+                    // ⭐ NUEVO LOG: Muestra el objeto ImagenData COMPLETO ⭐
+                    Log.d("PinEdit-IMG", "ImagenData COMPLETO: $img")
                     Log.d("PinEdit-TAG", "Procesando imagen, Tipo desde DB: '${img.tipo}'")
                     try {
                         // 1. Convertir el String de Firebase (img.tipo) a Enum (ImageTag)
                         val tagEnum = ImageTag.fromFirestoreString(img.tipo)
 
                         // 2. Crear el objeto de estado PinImage
+                        Log.d("PinEdit-TAG", "Procesando imagen, Tipo usado: '${img.tipo}'")
                         PinImage(
                             uri = Uri.parse(img.url),
                             tag = tagEnum
