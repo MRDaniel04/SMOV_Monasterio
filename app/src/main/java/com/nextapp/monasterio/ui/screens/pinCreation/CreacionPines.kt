@@ -7,13 +7,16 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.nextapp.monasterio.ui.screens.pinCreation.components.Image360Selector
+import com.nextapp.monasterio.ui.screens.pinCreation.components.PinLocationDropdown
 import com.nextapp.monasterio.ui.screens.pinCreation.components.PinTopBar
 
 
@@ -77,10 +80,10 @@ fun CreacionPinesScreen(
                 .verticalScroll(rememberScrollState())
         ) {
 
+            Spacer(Modifier.height(12.dp))
             PinTitleFields(state = tituloState, isEditing = vm.isEditing)
+            Spacer(Modifier.height(24.dp))
             PinDescriptionFields(state = descripcionState, isEditing = vm.isEditing)
-
-
 
             Spacer(Modifier.height(24.dp))
 
@@ -92,11 +95,15 @@ fun CreacionPinesScreen(
 
             Spacer(Modifier.height(24.dp))
 
-
+            Text(
+                text = "Ubicación del Pin", // Título unificado
+                style = MaterialTheme.typography.titleMedium
+            )
+            Spacer(Modifier.height(8.dp))
+            PinLocationDropdown(state = ubicacionState) // Ya incluye la lógica condicional
 
             Spacer(Modifier.height(24.dp))
-            PinLocationField(state = ubicacionState)
-            Spacer(Modifier.height(24.dp))
+
 
             Image360Selector(
                 label = "Imagen 360 (opcional)",

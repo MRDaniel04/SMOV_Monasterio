@@ -65,15 +65,10 @@ fun EntradaMonasterioScreen(
 
     // ⭐ TEXTOS MULTIDIOMA
     val tDatosContacto = stringResource(R.string.contact_data)
-
     val tUbicacion = stringResource(R.string.location_data)
-
     val tCorreo = stringResource(R.string.email_data)
-
     val tTelefono = stringResource(R.string.phone_data)
-
     val tHorarios = stringResource(R.string.visit_schedule)
-
     val tLunesViernes = stringResource(R.string.monday_to_friday)
 
     // 🔄 Cambio automático de imagen (cada 4 s)
@@ -182,7 +177,7 @@ fun EntradaMonasterioScreen(
                         .padding(vertical = 12.dp)
                 )
                 val context = LocalContext.current
-                val ubicacion = "Av. Ramón y Cajal, 4A, 47005 Valladolid"
+                val ubicacion = "C/ Estudios, 20, 47005 Valladolid"
                 val correo="smrhv@huelgasreales.es"
                 val telefono ="+34 983 29 13 95"
                 InfoItem(label = tUbicacion, value = ubicacion,onClick={
@@ -210,7 +205,7 @@ fun EntradaMonasterioScreen(
                 )
 
                 Text(tLunesViernes, fontWeight = FontWeight.SemiBold)
-                Text("17:00 - 19:30")
+                Text("17:00 - 19:00")
             }
         }
     }

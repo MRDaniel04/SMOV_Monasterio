@@ -35,7 +35,9 @@ class CreacionPinSharedViewModel : ViewModel() {
         imagenes.uris = emptyList()
         imagen360 = null
 
-        ubicacion.displayName = ""
+        ubicacion.ubicacionDetallada = ""
+        ubicacion.areaPrincipal = ""
+
         modoMoverPin = false
         coordenadasFinales = null
         formSubmitted = false
@@ -64,7 +66,9 @@ class CreacionPinSharedViewModel : ViewModel() {
         descripcion.de = pin.descripcionAleman ?: ""
 
         // Ubicación
-        ubicacion.displayName = pin.ubicacion?.name ?: ""
+        ubicacion.ubicacionDetallada = pin.ubicacion?.name ?: ""
+
+        ubicacion.areaPrincipal = "" // <--- AJUSTAR si tienes un campo de "Área Principal" en PinData
 
 
         imagenes.uris = when {

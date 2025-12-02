@@ -187,7 +187,7 @@ fun EdicionPines(
                     tituloAleman = vm.titulo.de,
                     descripcionAleman = vm.descripcion.de,
 
-                    ubicacion = vm.ubicacion.displayName,
+                    ubicacion = vm.ubicacion.ubicacionDetallada,
 
                     imagenes = vm.imagenes.uris.map { it.toString() }, // Lista URLs Cloudinary o locales
                     imagen360 = vm.imagen360?.toString()
@@ -448,7 +448,7 @@ fun EdicionPines(
                                         descripcionIngles = vm.descripcion.en.ifBlank { null },
                                         descripcionAleman = vm.descripcion.de.ifBlank { null },
 
-                                        ubicacion = vm.ubicacion.displayName,
+                                        ubicacion = vm.ubicacion.ubicacionDetallada,
                                         imagenes = uploadedImageUrls,
                                         imagen360 = uploaded360Url,
                                         x = finalX, // ✅ Coordenadas Normalizadas

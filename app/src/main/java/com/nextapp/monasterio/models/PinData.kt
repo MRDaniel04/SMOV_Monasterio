@@ -14,7 +14,6 @@ data class PinData(
     val ubicacionFrances: Ubicacion? = null,
     val x: Float,
     val y: Float,
-    val color: Color? = null,
     val iconRes: Int? = null,
     val imagenes: List<String> = emptyList(),
     val imagenesDetalladas: List<ImagenData> = emptyList(),

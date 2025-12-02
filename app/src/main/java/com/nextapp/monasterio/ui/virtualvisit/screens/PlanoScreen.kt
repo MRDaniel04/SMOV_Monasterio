@@ -222,7 +222,6 @@ fun PlanoScreen(
 
                 photoView.pins = pines.map { pin ->
                     // Calcular el color base, usando el color del modelo (si existe) o Rojo por defecto (Android Color)
-                    val baseColorInt = pin.color?.toArgb() ?: android.graphics.Color.RED
 
                     DebugPhotoView.PinData(
                         x = pin.x,
@@ -230,7 +229,7 @@ fun PlanoScreen(
                         iconId = R.drawable.pin3,
                         isPressed = pin.id == selectedPinId, // ⭐ CAMBIO: Compara el ID
                         isMoving = false,
-                        pinColor = baseColorInt
+                        pinColor = android.graphics.Color.RED
                     )
                 }
 

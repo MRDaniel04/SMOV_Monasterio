@@ -254,7 +254,6 @@ object PinRepository {
                 ubicacionFrances = ubicacionFrances,
                 x = x,
                 y = y,
-                color = null,
                 iconRes = null,
                 imagenes = imagenes,
                 imagenesDetalladas = emptyList(),   // ✔ CORRECTO

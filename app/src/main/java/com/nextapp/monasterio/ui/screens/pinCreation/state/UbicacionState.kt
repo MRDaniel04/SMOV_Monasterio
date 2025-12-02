@@ -5,7 +5,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 
 class UbicacionState(
-    displayName: String = ""
+    ubicacionDetallada: String = "", // Nombre de tu campo anterior
+    areaPrincipal: String = ""       // Nuevo campo
 ) {
-    var displayName by mutableStateOf(displayName)
+    // Ubicación Específica/Detallada (Ej: "Crucero", "Sacristía")
+    var ubicacionDetallada by mutableStateOf(ubicacionDetallada)
+
+    // Área Principal (Ej: "Iglesia", "Monasterio")
+    var areaPrincipal by mutableStateOf(areaPrincipal)
 }
