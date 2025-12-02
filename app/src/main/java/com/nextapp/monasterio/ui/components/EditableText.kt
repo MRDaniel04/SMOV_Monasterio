@@ -162,6 +162,7 @@ private fun LanguageFlagSelector(
     val flagRes = when (currentLanguage) {
         "de" -> com.nextapp.monasterio.R.drawable.alemania
         "en" -> com.nextapp.monasterio.R.drawable.reinounido
+        "fr" -> com.nextapp.monasterio.R.drawable.francia
         else -> com.nextapp.monasterio.R.drawable.espanya
     }
 
@@ -219,6 +220,20 @@ private fun LanguageFlagSelector(
                 },
                 onClick = {
                     onLanguageSelected("de")
+                    expanded = false
+                }
+            )
+            DropdownMenuItem(
+                text = { Text("Français") },
+                leadingIcon = {
+                    androidx.compose.foundation.Image(
+                        painter = androidx.compose.ui.res.painterResource(id = com.nextapp.monasterio.R.drawable.francia),
+                        contentDescription = null,
+                        modifier = Modifier.size(24.dp).clip(androidx.compose.foundation.shape.RoundedCornerShape(4.dp))
+                    )
+                },
+                onClick = {
+                    onLanguageSelected("fr")
                     expanded = false
                 }
             )
