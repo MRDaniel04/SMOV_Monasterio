@@ -99,6 +99,8 @@ fun PuzzleScreen(
     val screenWidth = LocalConfiguration.current.screenWidthDp
     val isTablet = screenWidth > 600
 
+    var dragStartRelativeOffset by remember { mutableStateOf<Offset>(Offset.Zero) }
+
     DisposableEffect(Unit) {
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         onDispose {
@@ -170,10 +172,11 @@ fun PuzzleScreen(
                         // Llenar el mapa de posiciones iniciales para el Drag & Drop
                         trayPositionsMap[id] = offset
                     },
-                    onDragStart = { p, _ ->
+                    onDragStart = { p, absolutePressOffset ->
                         // INICIO DEL DRAG: Activar la pieza flotante
                         piezaArrastradaId = p.id
                         desplazamientoPiezaArrastrada = Offset.Zero
+                        dragStartRelativeOffset = absolutePressOffset
                     }
                 )
             }
@@ -199,12 +202,14 @@ fun PuzzleScreen(
             val piezaFlotante = state.piezas.find { it.id == id }!!
             val startOffset = trayPositionsMap[id] ?: Offset.Zero
 
+            Log.d("PUZZLE_DRAG", "TrayPosition (Esquina): ${startOffset.x}, ${startOffset.y}")
+
             DraggableFloatingPiece(
                 pieza = piezaFlotante,
                 tamañoCelda = tamañoCelda,
                 startOffset = startOffset,
-                gridOriginOffset = gridOriginOffset,
                 desplazamientoActual = desplazamientoPiezaArrastrada,
+                dragStartRelativeOffset = dragStartRelativeOffset,
                 onDrag = { dragAmount ->
                     // MOVIMIENTO: Actualizar el desplazamiento
                     desplazamientoPiezaArrastrada += dragAmount
@@ -216,11 +221,11 @@ fun PuzzleScreen(
                         val piezaActual = state.piezas.find { it.id == piezaArrastradaId }!!
 
                         // Calcular la posición final de la pieza respecto al origen del Grid
-                        val finalX = startOffset.x + desplazamientoPiezaArrastrada.x
-                        val finalY = startOffset.y + desplazamientoPiezaArrastrada.y
+                        val finalTLX = startOffset.x + desplazamientoPiezaArrastrada.x - dragStartRelativeOffset.x
+                        val finalTLY = startOffset.y + desplazamientoPiezaArrastrada.y - dragStartRelativeOffset.y
 
-                        val relativeX = finalX - gridOriginOffset.x
-                        val relativeY = finalY - gridOriginOffset.y
+                        val relativeX = finalTLX - gridOriginOffset.x
+                        val relativeY = finalTLY - gridOriginOffset.y
 
                         val centroRelativeX = relativeX + (piezaSize / 2f)
                         val centroRelativeY = relativeY + (piezaSize / 2f)
@@ -304,13 +309,11 @@ fun PuzzleTray(
                     modifier = Modifier
                         .size(tamañoPieza)
                         .onGloballyPositioned { coordinates ->
-                            // 1. CAPTURAR LA POSICIÓN DE INICIO EN LA BANDEJA
                             onPiecePositioned(pieza.id, coordinates.positionInWindow())
                         }
                         .pointerInput(isDragInProgress) {
                             detectTapGestures(
                                 onLongPress = { offset ->
-                                    // 2. INICIAR EL DRAG: Avisar a PuzzleScreen para activar la pieza flotante
                                     onDragStart(pieza, offset)
                                 }
                             )
@@ -339,14 +342,14 @@ fun DraggableFloatingPiece(
     pieza: PiezaPuzzle,
     tamañoCelda: Dp,
     startOffset: Offset,
-    gridOriginOffset: Offset,
     desplazamientoActual: Offset,
+    dragStartRelativeOffset : Offset,
     onDrag: (Offset) -> Unit,
     onDragEnd: () -> Unit
 ) {
     // Calcular la posición absoluta en la pantalla (Base de la Bandeja + Movimiento del dedo)
     val totalOffsetX = startOffset.x + desplazamientoActual.x
-    val totalOffsetY = startOffset.y + desplazamientoActual.y
+    val totalOffsetY = startOffset.y + desplazamientoActual.y - dragStartRelativeOffset.y
 
     Box(
         modifier = Modifier
@@ -362,7 +365,7 @@ fun DraggableFloatingPiece(
             .pointerInput(Unit) {
                 // DETECCIÓN DE MOVIMIENTO Y FIN DE ARRASTRE
                 detectDragGestures(
-                    onDragStart = { /* Ya se inició en la bandeja */ },
+                    onDragStart = {  },
                     onDrag = { change, dragAmount ->
                         onDrag(dragAmount)
                         change.consume()

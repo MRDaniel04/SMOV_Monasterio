@@ -3,6 +3,7 @@ package com.nextapp.monasterio.ui.screens
 import android.app.Activity
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
+import androidx.compose.foundation.Image // IMPORTANTE: Añadido import de Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -12,6 +13,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale // IMPORTANTE: Añadido
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -20,7 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.nextapp.monasterio.R
-import com.nextapp.monasterio.models.InfoModel // 👈 IMPORTANTE: Usamos tu modelo real
+import com.nextapp.monasterio.models.InfoModel
 import com.nextapp.monasterio.ui.components.EditableText
 import com.nextapp.monasterio.ui.theme.MonasteryRed
 import com.nextapp.monasterio.ui.theme.White
@@ -29,7 +31,8 @@ import com.nextapp.monasterio.viewModels.InfoViewModel
 @Composable
 fun InfoScreen(
     isEditing: Boolean = false,
-    viewModel: InfoViewModel = viewModel()
+    viewModel: InfoViewModel = viewModel(),
+    topPadding: PaddingValues = PaddingValues(0.dp)
 ) {
     val context = LocalContext.current
     val activity = (context as? Activity)
@@ -47,40 +50,79 @@ fun InfoScreen(
         onDispose { }
     }
 
-    // --- CONTENEDOR PRINCIPAL ---
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        if (isLandscape) {
-            // --- DISEÑO HORIZONTAL ---
-            Row(
-                modifier = Modifier.fillMaxSize(),
-                horizontalArrangement = Arrangement.spacedBy(24.dp)
-            ) {
-                // IZQUIERDA: Texto Principal
-                Box(
-                    modifier = Modifier
-                        .weight(0.6f)
-                        .fillMaxHeight()
-                ) {
-                    InfoMainContent(
-                        infoData = infoData,
-                        isEditing = isEditing,
-                        viewModel = viewModel
-                    )
-                }
+    // --- CONTENEDOR RAÍZ CON FONDO ---
+    Box(modifier = Modifier.fillMaxSize()) {
+        // 1. IMAGEN DE FONDO (Ocupa todo, SIN padding)
+        Image(
+            painter = painterResource(id = R.drawable.fondo_desplegable), // 👈 TU IMAGEN
+            contentDescription = "Fondo",
+            contentScale = ContentScale.Crop,
+            modifier = Modifier.fillMaxSize()
+        )
 
-                // DERECHA: Tarjeta Roja
-                Box(
-                    modifier = Modifier
-                        .weight(0.4f)
-                        .fillMaxHeight(),
-                    contentAlignment = Alignment.Center
+        // 2. CONTENIDO (Con Padding)
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(topPadding) // 👈 AJUSTE AL TOP PADDING
+                .padding(16.dp)      // Padding interno original
+        ) {
+            if (isLandscape) {
+                // --- DISEÑO HORIZONTAL ---
+                Row(
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalArrangement = Arrangement.spacedBy(24.dp)
                 ) {
-                    // Scroll vertical por si la pantalla es bajita
-                    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                    // IZQUIERDA: Texto Principal
+                    Box(
+                        modifier = Modifier
+                            .weight(0.6f)
+                            .fillMaxHeight()
+                    ) {
+                        InfoMainContent(
+                            infoData = infoData,
+                            isEditing = isEditing,
+                            viewModel = viewModel
+                        )
+                    }
+
+                    // DERECHA: Tarjeta Roja
+                    Box(
+                        modifier = Modifier
+                            .weight(0.4f)
+                            .fillMaxHeight(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        // Scroll vertical por si la pantalla es bajita
+                        Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                            InfoDetailsCard(
+                                infoData = infoData,
+                                isEditing = isEditing,
+                                viewModel = viewModel
+                            )
+                        }
+                    }
+                }
+            } else {
+                // --- DISEÑO VERTICAL (Tu original) ---
+                Column(
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    // ARRIBA: Texto Principal
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxWidth()
+                    ) {
+                        InfoMainContent(
+                            infoData = infoData,
+                            isEditing = isEditing,
+                            viewModel = viewModel
+                        )
+                    }
+
+                    // ABAJO: Tarjeta Roja
+                    Box(modifier = Modifier.padding(top = 16.dp)) {
                         InfoDetailsCard(
                             infoData = infoData,
                             isEditing = isEditing,
@@ -89,44 +131,17 @@ fun InfoScreen(
                     }
                 }
             }
-        } else {
-            // --- DISEÑO VERTICAL (Tu original) ---
-            Column(
-                modifier = Modifier.fillMaxSize()
-            ) {
-                // ARRIBA: Texto Principal
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxWidth()
-                ) {
-                    InfoMainContent(
-                        infoData = infoData,
-                        isEditing = isEditing,
-                        viewModel = viewModel
-                    )
-                }
-
-                // ABAJO: Tarjeta Roja
-                Box(modifier = Modifier.padding(top = 16.dp)) {
-                    InfoDetailsCard(
-                        infoData = infoData,
-                        isEditing = isEditing,
-                        viewModel = viewModel
-                    )
-                }
-            }
         }
     }
 }
 
 // -----------------------------------------------------------
-// COMPONENTES REUTILIZABLES
+// COMPONENTES REUTILIZABLES (SIN CAMBIOS)
 // -----------------------------------------------------------
 
 @Composable
 fun InfoMainContent(
-    infoData: InfoModel, // 👈 Usamos InfoModel
+    infoData: InfoModel,
     isEditing: Boolean,
     viewModel: InfoViewModel
 ) {
@@ -152,7 +167,7 @@ fun InfoMainContent(
 
 @Composable
 fun InfoDetailsCard(
-    infoData: InfoModel, // 👈 Usamos InfoModel
+    infoData: InfoModel,
     isEditing: Boolean,
     viewModel: InfoViewModel
 ) {

@@ -2,8 +2,8 @@ package com.nextapp.monasterio.ui.screens
 
 import android.app.Activity
 import android.content.pm.ActivityInfo
+import android.content.res.Configuration
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -15,162 +15,170 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.constraintlayout.compose.ChainStyle
-import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.NavController
 import com.nextapp.monasterio.AppRoutes
 import com.nextapp.monasterio.R
 import com.nextapp.monasterio.ui.theme.MonasteryBlue
 
-
-
 @Composable
-fun JuegoPuzzleScreen(navController:NavController,modifier: Modifier = Modifier) {
+fun JuegoPuzzleScreen(
+    navController: NavController,
+    modifier: Modifier = Modifier,
+    topPadding: PaddingValues = PaddingValues(0.dp) // Recibimos el padding
+) {
     val context = LocalContext.current
-
     val activity = (context as? Activity)
 
+    // Detectar orientación
+    val configuration = LocalConfiguration.current
+    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+
+    // Permitir rotación
     DisposableEffect(Unit) {
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
-
-        onDispose {
-
-        }
+        onDispose { }
     }
 
-    ConstraintLayout(modifier = modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
-        val (btn4,btn9,btn16,btn25,background) = createRefs()
-        createVerticalChain(btn4,btn9,btn16,btn25, chainStyle = ChainStyle.Packed)
+    // --- ESTRUCTURA PRINCIPAL ---
+    Box(modifier = modifier.fillMaxSize()) {
 
+        // 1. FONDO (Ocupa TODO, sin padding)
         Image(
             painter = painterResource(R.drawable.fondo),
             contentDescription = "Fondo",
             contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .constrainAs(background){
-                    top.linkTo(parent.top)
-                    bottom.linkTo(parent.bottom)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                    width = Dimension.fillToConstraints
-                    height = Dimension.fillToConstraints
-                }
+            modifier = Modifier.fillMaxSize()
         )
 
-        Button(
-            onClick = {
-                navController.navigate(AppRoutes.PUZZLENIVEL1)
-            },
-            colors = ButtonDefaults.buttonColors(containerColor = MonasteryBlue),
-            shape = RoundedCornerShape(20.dp),
+        // 2. CONTENIDO (Respeta la barra superior)
+        Box(
             modifier = Modifier
-                .padding(bottom = 40.dp)
-                .constrainAs(btn4) {
-                    top.linkTo(parent.top)
-                    start.linkTo(parent.start, margin = 40.dp)
-                    end.linkTo(parent.end, margin = 40.dp)
-                    width = Dimension.fillToConstraints
-                }
+                .fillMaxSize()
+                .padding(topPadding)
         ) {
-            Row(
-                modifier=Modifier
-                    .padding(horizontal = 20.dp),
-                verticalAlignment = Alignment.CenterVertically
-            )  {
-                Text(
-                    stringResource(id = R.string.four_pieces),
-                    fontSize = 22.sp,
-                    textAlign = TextAlign.Center
-                )
+            // Contenedor interno con margen
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(24.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                if (isLandscape) {
+                    // --- DISEÑO HORIZONTAL (Cuadrícula 2x2) ---
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        // Fila 1 (Nivel 1 y 2)
+                        Row(
+                            modifier = Modifier.weight(1f),
+                            horizontalArrangement = Arrangement.spacedBy(16.dp)
+                        ) {
+                            PuzzleGameButton(
+                                text = stringResource(id = R.string.four_pieces),
+                                modifier = Modifier.weight(1f).fillMaxHeight(0.8f),
+                                onClick = { navController.navigate(AppRoutes.PUZZLENIVEL1) }
+                            )
+                            PuzzleGameButton(
+                                text = stringResource(id = R.string.nine_pieces),
+                                modifier = Modifier.weight(1f).fillMaxHeight(0.8f),
+                                onClick = { navController.navigate(AppRoutes.PUZZLENIVEL2) }
+                            )
+                        }
+
+                        // Fila 2 (Nivel 3 y 4)
+                        Row(
+                            modifier = Modifier.weight(1f),
+                            horizontalArrangement = Arrangement.spacedBy(16.dp)
+                        ) {
+                            PuzzleGameButton(
+                                text = stringResource(id = R.string.sixteen_pieces),
+                                modifier = Modifier.weight(1f).fillMaxHeight(0.8f),
+                                onClick = { navController.navigate(AppRoutes.PUZZLENIVEL3) }
+                            )
+                            PuzzleGameButton(
+                                text = stringResource(id = R.string.twentyfive_pieces),
+                                modifier = Modifier.weight(1f).fillMaxHeight(0.8f),
+                                onClick = { navController.navigate(AppRoutes.PUZZLENIVEL4) }
+                            )
+                        }
+                    }
+                } else {
+                    // --- DISEÑO VERTICAL (Lista) ---
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .verticalScroll(rememberScrollState()),
+                        verticalArrangement = Arrangement.spacedBy(24.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        PuzzleGameButton(
+                            text = stringResource(id = R.string.four_pieces),
+                            modifier = Modifier.fillMaxWidth().height(100.dp),
+                            onClick = { navController.navigate(AppRoutes.PUZZLENIVEL1) }
+                        )
+
+                        PuzzleGameButton(
+                            text = stringResource(id = R.string.nine_pieces),
+                            modifier = Modifier.fillMaxWidth().height(100.dp),
+                            onClick = { navController.navigate(AppRoutes.PUZZLENIVEL2) }
+                        )
+
+                        PuzzleGameButton(
+                            text = stringResource(id = R.string.sixteen_pieces),
+                            modifier = Modifier.fillMaxWidth().height(100.dp),
+                            onClick = { navController.navigate(AppRoutes.PUZZLENIVEL3) }
+                        )
+
+                        PuzzleGameButton(
+                            text = stringResource(id = R.string.twentyfive_pieces),
+                            modifier = Modifier.fillMaxWidth().height(100.dp),
+                            onClick = { navController.navigate(AppRoutes.PUZZLENIVEL4) }
+                        )
+                    }
+                }
             }
         }
-        Button(
-            onClick = {
-                navController.navigate(AppRoutes.PUZZLENIVEL2)
-            },
-            colors = ButtonDefaults.buttonColors(containerColor = MonasteryBlue),
-            shape = RoundedCornerShape(20.dp),
-            modifier = Modifier
-                .padding(bottom = 40.dp)
-                .constrainAs(btn9) {
-                    start.linkTo(parent.start, margin = 40.dp)
-                    end.linkTo(parent.end, margin = 40.dp)
-                    width = Dimension.fillToConstraints
-                }
+    }
+}
+
+// --- COMPONENTE REUTILIZABLE PARA BOTONES ---
+@Composable
+fun PuzzleGameButton(
+    text: String,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
+    Button(
+        onClick = onClick,
+        colors = ButtonDefaults.buttonColors(containerColor = MonasteryBlue),
+        shape = RoundedCornerShape(20.dp),
+        modifier = modifier.shadow(8.dp, RoundedCornerShape(20.dp)),
+        contentPadding = PaddingValues(16.dp)
+    ) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
         ) {
-            Row(
-                modifier=Modifier
-                    .padding(horizontal = 20.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    stringResource(id = R.string.nine_pieces),
-                    fontSize = 22.sp,
-                    textAlign = TextAlign.Center
-                )
-            }
-        }
-        Button(
-            onClick = {
-                navController.navigate(AppRoutes.PUZZLENIVEL3)
-            },
-            colors = ButtonDefaults.buttonColors(containerColor = MonasteryBlue),
-            shape = RoundedCornerShape(20.dp),
-            modifier = Modifier
-                .padding(bottom = 40.dp)
-                .constrainAs(btn16) {
-                    start.linkTo(parent.start, margin = 40.dp)
-                    end.linkTo(parent.end, margin = 40.dp)
-                    width = Dimension.fillToConstraints
-                }
-        ) {
-            Row(
-                modifier=Modifier
-                    .padding(horizontal = 20.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    stringResource(id = R.string.sixteen_pieces),
-                    fontSize = 22.sp,
-                    textAlign = TextAlign.Center
-                )
-            }
-        }
-        Button(
-            onClick = {
-                navController.navigate(AppRoutes.PUZZLENIVEL4)
-            },
-            colors = ButtonDefaults.buttonColors(containerColor = MonasteryBlue),
-            shape = RoundedCornerShape(20.dp),
-            modifier = Modifier
-                .padding(bottom = 40.dp)
-                .constrainAs(btn25) {
-                    bottom.linkTo(parent.bottom)
-                    start.linkTo(parent.start, margin = 40.dp)
-                    end.linkTo(parent.end, margin = 40.dp)
-                    width = Dimension.fillToConstraints
-                }
-        ) {
-            Row(
-                modifier=Modifier
-                    .padding(horizontal = 20.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    stringResource(id = R.string.twentyfive_pieces),
-                    fontSize = 22.sp,
-                    textAlign = TextAlign.Center
-                )
-            }
+            Text(
+                text = text,
+                fontSize = 22.sp,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
+                color = Color.White
+            )
         }
     }
 }

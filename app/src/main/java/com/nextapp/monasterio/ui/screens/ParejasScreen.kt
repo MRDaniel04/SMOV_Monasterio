@@ -81,7 +81,7 @@ fun ParejasScreen(
             onDismiss = {},
             onConfirm = { viewModel.markInstructionsAsShown()},
             titulo = stringResource(R.string.title_instructions),
-            texto = stringResource(R.string.text_instructions_puzzle)
+            texto = stringResource(R.string.text_instructions_pairs)
         )
     }
 
