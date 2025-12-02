@@ -3,6 +3,7 @@ package com.nextapp.monasterio.ui.virtualvisit.screens
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -35,6 +36,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import coil.compose.AsyncImage
 import com.nextapp.monasterio.repository.ImagenRepository
@@ -99,7 +101,7 @@ fun DetalleFiguraScreen(
             }
         } else if (figura == null) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text("Error: No se encontró la figura con ID $figuraId", color = Color.Red)
+                Text(stringResource(R.string.error_figure,figuraId), color = Color.Red)
             }
         } else {
             Column(
@@ -113,7 +115,7 @@ fun DetalleFiguraScreen(
                     text = figura!!.nombre.uppercase(),
                     fontSize = 28.sp,
                     fontWeight = FontWeight.Black,
-                    color = Color(0xFFFF8F00),
+                    color = Color(figura!!.colorResaltado.toUInt().toInt()),
                     textAlign = TextAlign.Center, // 👈 Se centra el texto
                     modifier = Modifier
                         .fillMaxWidth() // 👈 Se asegura que ocupe todo el ancho
@@ -131,7 +133,7 @@ fun DetalleFiguraScreen(
                                 .fillMaxWidth(0.9f)
                                 .height(260.dp)
                                 .clip(RoundedCornerShape(12.dp))
-                                .border(2.dp, Color(0xFFFF8F00), RoundedCornerShape(12.dp)),
+                                .border(2.dp, Color(figura!!.colorResaltado.toUInt().toInt()), RoundedCornerShape(12.dp)),
                             contentAlignment = Alignment.Center
                         ) {
                             Crossfade(
@@ -183,10 +185,10 @@ fun DetalleFiguraScreen(
                 }
 
                 Text(
-                    text = "Información General:",
+                    text = stringResource(R.string.general_information_figure),
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color(0xFF996600),
+                    color = Color(figura!!.colorResaltado.toUInt().toInt()),
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
                 Text(
@@ -211,7 +213,7 @@ fun DetalleFiguraScreen(
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.arrow_back),
-                contentDescription = "Volver",
+                contentDescription = stringResource(R.string.go_back),
                 tint = Color.White
             )
         }

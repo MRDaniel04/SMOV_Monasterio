@@ -76,7 +76,7 @@ fun AppNavigationHost(
         composable(AppRoutes.PAREJASNIVEL2){ParejasScreen(navController=navController,size = ParejasSize(4,2),imagenes= ParejasData.IMAGENES_NIVEL2)}
         composable(AppRoutes.PAREJASNIVEL3){ParejasScreen(navController=navController,size = ParejasSize(5,2),imagenes= ParejasData.IMAGENES_NIVEL3)}
         composable(AppRoutes.PAREJASNIVEL4){ParejasScreen(navController=navController,size= ParejasSize(4,3),imagenes= ParejasData.IMAGENES_NIVEL4)}
-        composable(AppRoutes.JUEGO_DIFERENCIAS){DiferenciasScreen()}
+        composable(AppRoutes.JUEGO_DIFERENCIAS){DiferenciasScreen(navController=navController)}
 
         // Ruta de Panorama 360 (Inmersiva, desde Galería / res/raw)
         composable(
