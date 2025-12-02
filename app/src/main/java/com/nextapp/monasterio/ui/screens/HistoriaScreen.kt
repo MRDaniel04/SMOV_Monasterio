@@ -64,7 +64,7 @@ fun HistoriaScreen(
 
         // 2. Imagen de fondo que ocupa todo el espacio
         Image(
-            painter = painterResource(id = R.drawable.fondo_desplegable),
+            painter = painterResource(id = R.drawable.fondo_desplegable3),
             contentDescription = "Fondo de pantalla",
             contentScale = ContentScale.Crop,
             modifier = Modifier.matchParentSize()

@@ -5,6 +5,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import com.nextapp.monasterio.models.ImageTag
+import com.nextapp.monasterio.models.ImagenData
 import com.nextapp.monasterio.models.PinData
 import com.nextapp.monasterio.ui.screens.pinCreation.state.*
 
@@ -32,7 +34,7 @@ class CreacionPinSharedViewModel : ViewModel() {
         titulo.es = ""; titulo.en = ""; titulo.de = ""
         descripcion.es = ""; descripcion.en = ""; descripcion.de = ""
 
-        imagenes.uris = emptyList()
+        imagenes.images = emptyList()
         imagen360 = null
 
         ubicacion.ubicacionDetallada = ""
@@ -71,19 +73,21 @@ class CreacionPinSharedViewModel : ViewModel() {
         ubicacion.areaPrincipal = "" // <--- AJUSTAR si tienes un campo de "Área Principal" en PinData
 
 
-        imagenes.uris = when {
+        imagenes.images = when {
             pin.imagenesDetalladas.isNotEmpty() -> {
                 pin.imagenesDetalladas.mapNotNull { img ->
-                    try { Uri.parse(img.url) } catch (_: Exception) { null }
-                }
-            }
-
-            pin.imagenes.any { it.startsWith("http://") || it.startsWith("https://") } -> {
-                pin.imagenes.mapNotNull { urlStr ->
                     try {
-                        if (urlStr.startsWith("http://") || urlStr.startsWith("https://"))
-                            Uri.parse(urlStr) else null
-                    } catch (_: Exception) { null }
+                        // 1. Convertir el String de Firebase (img.tipo) a Enum (ImageTag)
+                        val tagEnum = ImageTag.fromFirestoreString(img.tipo)
+
+                        // 2. Crear el objeto de estado PinImage
+                        PinImage(
+                            uri = Uri.parse(img.url),
+                            tag = tagEnum
+                        )
+                    } catch (_: Exception) {
+                        null
+                    }
                 }
             }
             else -> {
@@ -94,5 +98,28 @@ class CreacionPinSharedViewModel : ViewModel() {
 
         // Imagen 360
         imagen360 = pin.vista360Url?.let { Uri.parse(it) }
+    }
+
+    fun buildImagesForUpload(): List<ImagenData> {
+
+        return imagenes.images.map { pinImage ->
+            // Si el tag es nulo (no debería pasar si la validación está activa), usamos OTRO
+            val tagString = pinImage.tag?.toFirestoreString() ?: ImageTag.OTRO.toFirestoreString()
+
+            // Creamos el modelo de Firebase (ImagenData)
+            ImagenData(
+
+                id = "",
+                url = pinImage.uri.toString(),
+                tipo = tagString,
+                etiqueta = "",
+                titulo = titulo.es,
+                tituloIngles = titulo.en,
+                tituloAleman = titulo.de,
+                tituloFrances = "",
+                foco = 0f,
+                type = ""
+            )
+        }
     }
 }

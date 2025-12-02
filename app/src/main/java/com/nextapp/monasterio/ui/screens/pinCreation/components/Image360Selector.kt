@@ -13,6 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.nextapp.monasterio.models.ImageTag
+import com.nextapp.monasterio.ui.screens.pinCreation.state.PinImage // NECESARIO
 
 @Composable
 fun Image360Selector(
@@ -38,15 +40,18 @@ fun Image360Selector(
     Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
         AddImageButton(
             text = if (uri == null) "Añadir" else "Cambiar"
-        ) {
-            launcher.launch("image/*")
-        }
+        ) { launcher.launch("image/*") }
 
-
+        // CORRECCIÓN DEL ERROR DE COMPATIBILIDAD
         uri?.let {
+            // Creamos un PinImage temporal: tag es nulo porque es una 360
+            val pinImage360 = PinImage(uri = it, tag = null)
+
             ImagePreviewCard(
-                uri = it,
-                onRemove = { onRemove() }
+                pinImage = pinImage360, // Pasamos el PinImage
+                onRemove = { onRemove() },
+                // La imagen 360 no tiene etiqueta, la reedición no hace nada
+                onTagSelected = { /* No hacer nada */ }
             )
         }
     }

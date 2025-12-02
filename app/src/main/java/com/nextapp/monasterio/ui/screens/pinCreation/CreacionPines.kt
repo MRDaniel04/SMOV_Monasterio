@@ -45,11 +45,14 @@ fun CreacionPinesScreen(
     val isFormValid = remember(
         tituloState.es,
         descripcionState.es,
-        imagenesState.uris
+        imagenesState.images,
+        imagenesState.allImagesTagged
+
     ) {
         tituloState.es.isNotBlank() &&
                 descripcionState.es.isNotBlank() &&
-                imagenesState.uris.isNotEmpty()
+                imagenesState.images.isNotEmpty() &&
+                imagenesState.allImagesTagged
     }
 
     Scaffold(
