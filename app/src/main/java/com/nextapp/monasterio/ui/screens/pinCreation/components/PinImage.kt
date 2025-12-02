@@ -16,20 +16,12 @@ data class PinImage(
 class ImagenesState(
     images: List<PinImage> = emptyList()
 ) {
-    // La lista ahora almacena PinImage
+
     var images by mutableStateOf(images)
 
-    // Funciones actualizadas para usar PinImage
     val uris: List<Uri>
         get() = images.map { it.uri }
 
-    // Función original (mantenemos por si el código antiguo la usaba, pero el nuevo flujo no la usa)
-    fun addImages(newUris: List<Uri>) {
-        images = images + newUris.map { PinImage(uri = it) }
-    }
-
-
-    // NUEVO: Función para añadir una imagen que YA HA SIDO ETIQUETADA
     fun addTaggedImage(pinImage: PinImage) {
         images = images + pinImage
     }
@@ -38,8 +30,6 @@ class ImagenesState(
         images = images.filter { it.uri.toString() != uriString }
     }
 
-
-    // Nueva función para actualizar la etiqueta de una imagen específica
     fun updateTag(uri: Uri, newTag: ImageTag) {
         images = images.map { pinImage ->
             if (pinImage.uri == uri) {
@@ -51,7 +41,7 @@ class ImagenesState(
         }
     }
 
-    // Propiedad calculada para la validación final
+
     val allImagesTagged: Boolean
         get() = images.all { it.tag != null }
 }

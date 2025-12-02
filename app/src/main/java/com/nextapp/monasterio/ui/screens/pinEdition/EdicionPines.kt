@@ -134,10 +134,10 @@ fun EdicionPines(
         // Crear pin en movimiento
         pinBeingMoved = PinData(
             id = "temp",
-            titulo = vm.titulo.es,
-            tituloIngles = vm.titulo.en,
-            tituloAleman = vm.titulo.de,
-            tituloFrances = vm.titulo.fr,
+            titulo = vm.pinTitle,
+            tituloIngles = vm.pinTitle,
+            tituloAleman = vm.pinTitle,
+            tituloFrances = vm.pinTitle,
             x = 0.5f,
             y = 0.5f,
             iconRes = R.drawable.pin3,
@@ -178,16 +178,16 @@ fun EdicionPines(
 
                 PinRepository.updatePin(
                     pinId = pinId,
-                    titulo = vm.titulo.es,
+                    titulo = vm.pinTitle,
                     descripcion = vm.descripcion.es,
 
-                    tituloIngles = vm.titulo.en,
+                    tituloIngles = vm.pinTitle,
                     descripcionIngles = vm.descripcion.en,
 
-                    tituloAleman = vm.titulo.de,
+                    tituloAleman = vm.pinTitle,
                     descripcionAleman = vm.descripcion.de,
 
-                    ubicacion = vm.ubicacion.ubicacionDetallada,
+                    ubicacion = vm.pinUbicacion,
 
                     imagenes = vm.imagenes.uris.map { it.toString() }, // Lista URLs Cloudinary o locales
                     imagen360 = vm.imagen360?.toString()
@@ -212,8 +212,6 @@ fun EdicionPines(
         vm.isEditing = false
         vm.editingPinId = null
     }
-
-
 
 
     Box(
@@ -389,19 +387,19 @@ fun EdicionPines(
                             return@MovingPinOverlay
                         }
 
-                        val finalX = normalizedCoords.x // Ya no es necesario '!!' si se ha comprobado antes
-                        val finalY = normalizedCoords.y // Ya no es necesario '!!'
+                        val finalX = normalizedCoords.x
+                        val finalY = normalizedCoords.y
                         val pinToUpdate = pinBeingMoved!!
 
                         if (isNewPinMode) {
 
-                            // A. VALIDACIÓN DE CAMPOS OBLIGATORIOS (Aunque se valida en CreacionPines.kt, se re-valida por seguridad)
-                            val isPinValid = vm.titulo.es.isNotBlank() &&
+
+                            val isPinValid =
                                     vm.descripcion.es.isNotBlank() &&
                                     vm.imagenes.uris.isNotEmpty()
 
                             if (!isPinValid) {
-                                Toast.makeText(context, "Error: Faltan datos obligatorios (Título/Descripción/Imágenes).", Toast.LENGTH_LONG).show()
+                                Toast.makeText(context, "Error: Faltan datos obligatorios (Descripción/Imágenes).", Toast.LENGTH_LONG).show()
                                 vm.isUploading = false
                                 vm.uploadMessage = ""
                                 return@MovingPinOverlay
@@ -439,23 +437,25 @@ fun EdicionPines(
                                 // D. CREAR PIN CON LAS URLs Y COORDENADAS FINALES
                                 try {
                                     val newPinId = PinRepository.createPinFromForm(
-                                        titulo = vm.titulo.es,
-                                        descripcion = vm.descripcion.es,
 
-                                        // Campos de Traducción Opcionales
-                                        tituloIngles = vm.titulo.en.ifBlank { null },
-                                        tituloAleman = vm.titulo.de.ifBlank { null },
+                                        titulo = vm.pinTitle,
+                                        tituloIngles = vm.pinTitle.ifBlank { null },
+                                        tituloAleman = vm.pinTitle.ifBlank { null },
+
+
+                                        descripcion = vm.descripcion.es,
                                         descripcionIngles = vm.descripcion.en.ifBlank { null },
                                         descripcionAleman = vm.descripcion.de.ifBlank { null },
 
-                                        ubicacion = vm.ubicacion.ubicacionDetallada,
+                                        ubicacion = vm.pinUbicacion, // Usamos la nueva variable pinUbicacion
+
                                         imagenes = uploadedImageUrls,
                                         imagen360 = uploaded360Url,
-                                        x = finalX, // ✅ Coordenadas Normalizadas
-                                        y = finalY // ✅ Coordenadas Normalizadas
+                                        x = finalX,
+                                        y = finalY
                                     )
 
-                                    // E. AÑADIR A PLANO
+
                                     PlanoRepository.addPinToPlano(
                                         planoId = "monasterio_interior",
                                         pinId = newPinId
@@ -466,7 +466,7 @@ fun EdicionPines(
 
 
                                     // F. ÉXITO
-                                    Toast.makeText(context, "Pin Creado. ID: $newPinId", Toast.LENGTH_LONG).show()
+                                    Toast.makeText(context, "Pin Creado.", Toast.LENGTH_LONG).show()
                                     Log.d("EdicionPines", "Pin con ID:$newPinId creado correctamente en (x=$finalX, y=$finalY)")
 
                                     // Recargar la lista de pines para mostrar el nuevo pin

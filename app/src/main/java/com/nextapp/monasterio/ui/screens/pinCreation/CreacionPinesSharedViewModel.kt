@@ -1,22 +1,24 @@
 package com.nextapp.monasterio.ui.screens.pinCreation
 
 import android.net.Uri
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.nextapp.monasterio.models.ImageTag
-import com.nextapp.monasterio.models.ImagenData
 import com.nextapp.monasterio.models.PinData
 import com.nextapp.monasterio.ui.screens.pinCreation.state.*
 
+
 class CreacionPinSharedViewModel : ViewModel() {
 
-    val titulo = TituloState()
     val descripcion = DescripcionState()
     val imagenes = ImagenesState()
     var imagen360 by mutableStateOf<Uri?>(null)
-    val ubicacion = UbicacionState()
+    var pinTitle by mutableStateOf("")     // ✅ Sustituye a ubicacionDetallada/Manual
+    var pinUbicacion by mutableStateOf("")  // ✅ Sustituye a areaPrincipal
+
 
     // --- EDICIÓN ---
     var isEditing by mutableStateOf(false)
@@ -30,15 +32,16 @@ class CreacionPinSharedViewModel : ViewModel() {
     var formSubmitted: Boolean = false
     var coordenadasFinales: Pair<Float, Float>? = null
 
+
     fun reset() {
-        titulo.es = ""; titulo.en = ""; titulo.de = ""
+
         descripcion.es = ""; descripcion.en = ""; descripcion.de = ""
 
         imagenes.images = emptyList()
         imagen360 = null
 
-        ubicacion.ubicacionDetallada = ""
-        ubicacion.areaPrincipal = ""
+        pinTitle = ""
+        pinUbicacion = ""
 
         modoMoverPin = false
         coordenadasFinales = null
@@ -57,25 +60,21 @@ class CreacionPinSharedViewModel : ViewModel() {
         isEditing = true
         editingPinId = pin.id
 
-        // Títulos
-        titulo.es = pin.titulo ?: ""
-        titulo.en = pin.tituloIngles ?: ""
-        titulo.de = pin.tituloAleman ?: ""
+        pinTitle = pin.titulo ?: ""
 
         // Descripciones
         descripcion.es = pin.descripcion ?: ""
         descripcion.en = pin.descripcionIngles ?: ""
         descripcion.de = pin.descripcionAleman ?: ""
 
-        // Ubicación
-        ubicacion.ubicacionDetallada = pin.ubicacion?.name ?: ""
-
-        ubicacion.areaPrincipal = "" // <--- AJUSTAR si tienes un campo de "Área Principal" en PinData
+        pinUbicacion = pin.ubicacion?.name ?: ""
 
 
         imagenes.images = when {
             pin.imagenesDetalladas.isNotEmpty() -> {
                 pin.imagenesDetalladas.mapNotNull { img ->
+
+                    Log.d("PinEdit-TAG", "Procesando imagen, Tipo desde DB: '${img.tipo}'")
                     try {
                         // 1. Convertir el String de Firebase (img.tipo) a Enum (ImageTag)
                         val tagEnum = ImageTag.fromFirestoreString(img.tipo)
@@ -85,7 +84,8 @@ class CreacionPinSharedViewModel : ViewModel() {
                             uri = Uri.parse(img.url),
                             tag = tagEnum
                         )
-                    } catch (_: Exception) {
+                    } catch (e: Exception) {
+                        Log.e("PinEdit", "Error al cargar tag ${img.tipo}: ${e.message}")
                         null
                     }
                 }
@@ -100,26 +100,7 @@ class CreacionPinSharedViewModel : ViewModel() {
         imagen360 = pin.vista360Url?.let { Uri.parse(it) }
     }
 
-    fun buildImagesForUpload(): List<ImagenData> {
 
-        return imagenes.images.map { pinImage ->
-            // Si el tag es nulo (no debería pasar si la validación está activa), usamos OTRO
-            val tagString = pinImage.tag?.toFirestoreString() ?: ImageTag.OTRO.toFirestoreString()
 
-            // Creamos el modelo de Firebase (ImagenData)
-            ImagenData(
 
-                id = "",
-                url = pinImage.uri.toString(),
-                tipo = tagString,
-                etiqueta = "",
-                titulo = titulo.es,
-                tituloIngles = titulo.en,
-                tituloAleman = titulo.de,
-                tituloFrances = "",
-                foco = 0f,
-                type = ""
-            )
-        }
-    }
 }

@@ -1,31 +1,24 @@
+
 package com.nextapp.monasterio.ui.screens.pinCreation.components
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.nextapp.monasterio.ui.screens.pinCreation.state.UbicacionState
+import com.nextapp.monasterio.models.UbicacionDetalladaTag
 
-// Lista de opciones (la misma)
-val locations = listOf(
-    "Crucero",
-    "Lado de la epistola",
-    "Trascoro",
-    "Coro",
-    "Capilla del nacimiento",
-    "(Otra)"
-)
+// Lista de opciones se mantiene
 
-// Define la lógica de mapeo (la movemos aquí para que esté disponible)
+const val OTRA_UBICACION_DETALLADA = "Otra" // ✅ AÑADIDO: Definimos "Otra" aquí
+
+val ubicacionDetalladaOptions = UbicacionDetalladaTag.entries.map { it.displayName }
+
 fun getAreaPrincipalForLocation(location: String): String? {
     return when (location) {
-        "Crucero", "Lado de la epistola" -> "Iglesia"
-        "Trascoro", "Coro", "Capilla del nacimiento" -> "Monasterio"
+        UbicacionDetalladaTag.CRUCERO.displayName, UbicacionDetalladaTag.LADO_EPISTOLA.displayName -> "Iglesia"
+        UbicacionDetalladaTag.TRASCORO.displayName, UbicacionDetalladaTag.CORO.displayName, UbicacionDetalladaTag.CAPILLA_NACIMIENTO.displayName -> "Monasterio"
         else -> null
     }
 }
@@ -33,120 +26,146 @@ fun getAreaPrincipalForLocation(location: String): String? {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PinLocationDropdown(
-    state: UbicacionState,
-    label: String = "Ubicación Detallada" // Nombre actualizado
+
+    currentTitle: String, // Valor actual del Título (para mostrar)
+    currentUbicacion: String, // Valor actual de la Ubicación (para mostrar)
+    onTitleChange: (String) -> Unit, // Callback para actualizar TÍTULO en el ViewModel
+    onUbicacionChange: (String) -> Unit, // Callback para actualizar UBICACIÓN en el ViewModel
+    label: String = "Ubicación Detallada (Título del Pin)" // Nombre actualizado
+
 ) {
     var expanded by remember { mutableStateOf(false) }
 
-
-    val initialText = state.ubicacionDetallada.ifBlank { "" }
-
-    val isInitialOther = initialText.isNotBlank() && !locations.contains(initialText) && getAreaPrincipalForLocation(initialText) == null
-
-    var selectedLocationText by remember {
+    var selectedDropdownLocation by remember {
         mutableStateOf(
-            when {
-                isInitialOther -> "(Otra)"
-                locations.contains(initialText) -> initialText
-                else -> "" // Si está vacío o es un valor no reconocido al inicio
-            }
+            if (currentTitle.isNotBlank() && ubicacionDetalladaOptions.contains(currentTitle))
+                currentTitle
+            else
+                ubicacionDetalladaOptions.firstOrNull() ?: ""
         )
     }
 
-    // Bandera para mostrar el campo de texto y el selector de Área Principal
-    val showManualInput = selectedLocationText == "(Otra)" || isInitialOther
+    var manualTitleText by remember { mutableStateOf(if (selectedDropdownLocation == OTRA_UBICACION_DETALLADA) currentTitle else "") }
+
+    val isManualEntry = selectedDropdownLocation == OTRA_UBICACION_DETALLADA
+
+    LaunchedEffect(currentTitle, currentUbicacion) {
+
+        if (currentTitle.isBlank() && currentUbicacion.isBlank() && selectedDropdownLocation.isNotBlank()) {
+
+            onTitleChange(selectedDropdownLocation)
+            val areaPrincipal = getAreaPrincipalForLocation(selectedDropdownLocation)
+            onUbicacionChange(areaPrincipal ?: "")
+        }
+    }
 
     Column(modifier = Modifier.fillMaxWidth()) {
-
-        // --- 1. Dropdown para la selección ---
         ExposedDropdownMenuBox(
             expanded = expanded,
-            onExpandedChange = { expanded = !expanded },
-            modifier = Modifier.fillMaxWidth()
+            onExpandedChange = { expanded = !expanded }
         ) {
             OutlinedTextField(
-                value = if (showManualInput && state.ubicacionDetallada.isNotBlank()) {
-                    // Mostrar el valor manual si existe
-                    state.ubicacionDetallada
-                } else {
-                    // Mostrar la opción seleccionada (fija o "(Otra)")
-                    selectedLocationText
-                },
-                onValueChange = { /* Solo selección */ },
+
+                value = selectedDropdownLocation,
+                onValueChange = { /* Solo cambia a través del DropdownMenuItem */ },
                 readOnly = true,
                 label = { Text(label) },
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                 modifier = Modifier
-                    .menuAnchor()
                     .fillMaxWidth()
+                    .menuAnchor()
             )
 
             ExposedDropdownMenu(
                 expanded = expanded,
                 onDismissRequest = { expanded = false }
             ) {
-                locations.forEach { selectionOption ->
+                ubicacionDetalladaOptions.forEach { location ->
                     DropdownMenuItem(
-                        text = { Text(selectionOption) },
+                        text = { Text(location) },
                         onClick = {
-                            selectedLocationText = selectionOption
-
-                            if (selectionOption != "(Otra)") {
-                                // 1. ASIGNAR UBICACIÓN DETALLADA
-                                state.ubicacionDetallada = selectionOption
-
-                                // 2. ASIGNACIÓN AUTOMÁTICA DEL ÁREA PRINCIPAL
-                                val area = getAreaPrincipalForLocation(selectionOption)
-                                if (area != null) {
-                                    state.areaPrincipal = area // Asignación automática
-                                }
-                            } else {
-                                // Si es "(Otra)", limpiamos la detallada y dejamos la principal vacía para que la elija
-                                state.ubicacionDetallada = ""
-                                state.areaPrincipal = ""
-                            }
-
+                            selectedDropdownLocation = location // ✅ MODIFICADO: Actualizamos el estado local del Dropdown
                             expanded = false
-                        },
-                        contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
+
+                            if (location != OTRA_UBICACION_DETALLADA) {
+                                onTitleChange(location)
+                                manualTitleText = ""
+
+                                // ✅ AÑADIR ESTAS DOS LÍNEAS PARA ASIGNAR EL ÁREA PRINCIPAL AUTOMÁTICAMENTE
+                                val areaPrincipal = getAreaPrincipalForLocation(location)
+                                onUbicacionChange(areaPrincipal ?: "") // <-- Llama al callback para actualizar vm.pinUbicacio
+                            } else {
+
+                                onTitleChange(manualTitleText)
+
+                            }
+                        }
                     )
                 }
             }
         }
 
-        // --- 2. Campo de texto CONDICIONAL para "(Otra)" ---
-        AnimatedVisibility(visible = showManualInput) {
+
+        AnimatedVisibility(visible = isManualEntry) {
             Column {
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // --- Campo de texto manual ---
                 Text(
-                    text = "Escriba aquí la Ubicación Detallada:",
+                    text = "Escriba aquí la Ubicación Detallada (Título del Pin):",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.primary
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 OutlinedTextField(
-                    value = state.ubicacionDetallada,
-                    onValueChange = { newValue -> state.ubicacionDetallada = newValue },
+                    value = manualTitleText, // ✅ MODIFICADO: Usa el campo Manual LOCAL
+                    onValueChange = { newValue ->
+                        manualTitleText = newValue // Actualiza el campo Manual LOCAL
+                        onTitleChange(newValue) // ✅ CLAVE: El valor escrito se guarda en la variable 'titulo' del ViewModel
+                    },
                     label = { Text("Ubicación Detallada (Manual)") },
                     modifier = Modifier.fillMaxWidth()
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // --- Selector de Área Principal (Botones) ---
                 Text(
-                    text = "Seleccione el Área Principal:",
+                    text = "Seleccione el Área Principal (Ubicación del Pin):",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.primary
                 )
                 Spacer(modifier = Modifier.height(4.dp))
+                // ✅ MODIFICADO: Pasamos el valor de ubicación directamente al selector
                 AreaPrincipalSelector(
-                    selectedArea = state.areaPrincipal,
-                    onAreaSelected = { newArea -> state.areaPrincipal = newArea }
+                    selectedArea = currentUbicacion,
+                    onAreaSelected = onUbicacionChange // ✅ CLAVE: El valor seleccionado se guarda en la variable 'ubicacion' del ViewModel
                 )
             }
+        }
+    }
+}
+
+
+@Composable
+fun AreaPrincipalSelector(
+    selectedArea: String,
+    onAreaSelected: (String) -> Unit
+) {
+    // ✅ MODIFICADO: Solo las dos opciones solicitadas
+    val areas = listOf("Iglesia", "Monasterio")
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        areas.forEach { area ->
+            val isSelected = selectedArea == area
+            AssistChip(
+                onClick = { onAreaSelected(area) },
+                label = { Text(area) },
+                colors = if (isSelected) AssistChipDefaults.assistChipColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    labelColor = MaterialTheme.colorScheme.onPrimary
+                ) else AssistChipDefaults.assistChipColors()
+            )
         }
     }
 }
