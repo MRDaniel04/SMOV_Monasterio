@@ -8,7 +8,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -31,7 +30,8 @@ import com.nextapp.monasterio.viewModels.HistoriaViewModel
 @Composable
 fun HistoriaScreen(
     isEditing: Boolean = false,
-    viewModel: HistoriaViewModel = viewModel()
+    viewModel: HistoriaViewModel = viewModel(),
+    topPadding: PaddingValues = PaddingValues(0.dp) // Recibimos el padding
 ) {
     val context = LocalContext.current
     val activity = (context as? Activity)
@@ -42,7 +42,7 @@ fun HistoriaScreen(
 
     // Estado para controlar qué período está seleccionando imagen
     var selectedPeriodId by remember { mutableStateOf<String?>(null) }
-    
+
     // Launcher para seleccionar imagen
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
@@ -60,46 +60,53 @@ fun HistoriaScreen(
         onDispose { }
     }
 
+    // --- ESTRUCTURA PRINCIPAL ---
     Box(modifier = Modifier.fillMaxSize()) {
 
-        // 2. Imagen de fondo que ocupa todo el espacio
+        // 1. IMAGEN DE FONDO (Ocupa todo, sin padding)
         Image(
             painter = painterResource(id = R.drawable.fondo_desplegable),
             contentDescription = "Fondo de pantalla",
             contentScale = ContentScale.Crop,
-            modifier = Modifier.matchParentSize()
+            modifier = Modifier.fillMaxSize()
         )
 
-        // 3. El contenido (la columna desplazable)
-        Column(
+        // 2. CONTENIDO (Aplica el padding AQUÍ para respetar la barra roja)
+        Box(
             modifier = Modifier
                 .fillMaxSize()
-                // Eliminamos .background(backgroundColor) y dejamos que la imagen del Box se muestre
-                .verticalScroll(rememberScrollState())
-                .padding(16.dp)
+                .padding(topPadding) // 👈 El contenido baja
         ) {
-            // Iteramos sobre los períodos de Firebase ordenados por 'order'
-            historyPeriods.forEach { period ->
-                ExpandableHistoryCard(
-                    title = period.title,
-                    contentMap = period.content,
-                    imageUrls = period.imageUrls,
-                    isEditing = isEditing,
-                    isUploading = uploadingPeriodId == period.id,
-                    onAddImage = {
-                        selectedPeriodId = period.id
-                        imagePickerLauncher.launch("image/*")
-                    },
-                    onDeleteImage = { imageUrl ->
-                        viewModel.deleteImage(period.id, imageUrl)
-                    },
-                    onUpdateContent = { newContentMap ->
-                        viewModel.updatePeriodContent(period.id, newContentMap)
-                    },
-                    onUpdateTitle = { newTitleMap ->
-                        viewModel.updatePeriodTitle(period.id, newTitleMap)
-                    }
-                )
+            // 3. Columna con Scroll y márgenes internos
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(16.dp) // Margen interno visual
+            ) {
+                // Iteramos sobre los períodos de Firebase ordenados por 'order'
+                historyPeriods.forEach { period ->
+                    ExpandableHistoryCard(
+                        title = period.title,
+                        contentMap = period.content,
+                        imageUrls = period.imageUrls,
+                        isEditing = isEditing,
+                        isUploading = uploadingPeriodId == period.id,
+                        onAddImage = {
+                            selectedPeriodId = period.id
+                            imagePickerLauncher.launch("image/*")
+                        },
+                        onDeleteImage = { imageUrl ->
+                            viewModel.deleteImage(period.id, imageUrl)
+                        },
+                        onUpdateContent = { newContentMap ->
+                            viewModel.updatePeriodContent(period.id, newContentMap)
+                        },
+                        onUpdateTitle = { newTitleMap ->
+                            viewModel.updatePeriodTitle(period.id, newTitleMap)
+                        }
+                    )
+                }
             }
         }
     }
@@ -144,7 +151,7 @@ fun ExpandableHistoryCard(
                 modifier = Modifier.weight(1f),
                 readOnlyStyle = MaterialTheme.typography.titleLarge
             )
-            
+
             Icon(
                 painter = painterResource(id = R.drawable.arrow_down),
                 contentDescription = "Expandir/Colapsar",
@@ -156,7 +163,7 @@ fun ExpandableHistoryCard(
 
         AnimatedVisibility(visible = expanded) {
             Column(modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)) {
-                
+
                 // Usamos el nuevo EditableText con soporte para mapa de idiomas
                 com.nextapp.monasterio.ui.components.EditableText(
                     textMap = contentMap,

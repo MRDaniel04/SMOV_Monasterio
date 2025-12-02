@@ -55,8 +55,8 @@ fun AppNavigationHost(
         modifier = modifier
     ) {
         composable(AppRoutes.INICIO)   { HomeScreenContent(isEditing = isEditing, navController = navController, topPadding = scaffoldPadding) }
-        composable(AppRoutes.INFO)     { InfoScreen(isEditing = isEditing, viewModel = infoViewModel) }
-        composable(AppRoutes.HISTORIA) { HistoriaScreen(isEditing = isEditing, viewModel = historiaViewModel) }
+        composable(AppRoutes.INFO)     { InfoScreen(isEditing = isEditing, viewModel = infoViewModel, topPadding = scaffoldPadding) }
+        composable(AppRoutes.HISTORIA) { HistoriaScreen(isEditing = isEditing, viewModel = historiaViewModel,topPadding = scaffoldPadding) }
         composable(AppRoutes.GALERIA)  { GaleriaScreen(navController = navController) }
         composable(AppRoutes.MODO_NINYOS)   { OpcionesModoNiño(navController = navController, topPadding = scaffoldPadding) }
         composable(AppRoutes.VIDEO_NINYOS)   { VideoNinyosScreen(topPadding = scaffoldPadding) }
@@ -70,8 +70,8 @@ fun AppNavigationHost(
         composable(AppRoutes.EDICION_PINES) { EdicionPines(navController) }
         composable(AppRoutes.PERFIL)   { ProfileScreen(isEditing = isEditing, viewModel = authViewModel ) }
         composable(AppRoutes.AJUSTES)  { AjustesScreen(viewModel = ajustesViewModel) }
-        composable (AppRoutes.JUEGO_PUZZLE) {JuegoPuzzleScreen(navController = navController)}
-        composable(AppRoutes.JUEGO_PAREJAS) {JuegoParejasScreen(navController = navController)}
+        composable (AppRoutes.JUEGO_PUZZLE) {JuegoPuzzleScreen(navController = navController, topPadding = scaffoldPadding)}
+        composable(AppRoutes.JUEGO_PAREJAS) {JuegoParejasScreen(navController = navController, topPadding = scaffoldPadding)}
         composable(AppRoutes.PAREJASNIVEL1){ParejasScreen(navController=navController, size = ParejasSize(3,2),imagenes= ParejasData.IMAGENES_NIVEL1)}
         composable(AppRoutes.PAREJASNIVEL2){ParejasScreen(navController=navController,size = ParejasSize(4,2),imagenes= ParejasData.IMAGENES_NIVEL2)}
         composable(AppRoutes.PAREJASNIVEL3){ParejasScreen(navController=navController,size = ParejasSize(5,2),imagenes= ParejasData.IMAGENES_NIVEL3)}

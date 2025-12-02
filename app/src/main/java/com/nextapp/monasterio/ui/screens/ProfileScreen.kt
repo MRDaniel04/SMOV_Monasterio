@@ -224,7 +224,7 @@ fun ProfileViewPortrait(user: com.nextapp.monasterio.models.User, viewModel: Aut
         Icon(
             painter = painterResource(id = R.drawable.escudo),
             contentDescription = null,
-            modifier = Modifier.size(120.dp),
+            modifier = Modifier.fillMaxWidth(0.5f),
             tint = androidx.compose.ui.graphics.Color.Unspecified
         )
         Spacer(modifier = Modifier.height(24.dp))
@@ -261,7 +261,7 @@ fun ProfileViewLandscape(user: com.nextapp.monasterio.models.User, viewModel: Au
             Icon(
                 painter = painterResource(id = R.drawable.escudo),
                 contentDescription = null,
-                modifier = Modifier.size(140.dp), // Un poco más grande en tablet
+                modifier = Modifier.fillMaxHeight(0.8f), // Un poco más grande en tablet
                 tint = androidx.compose.ui.graphics.Color.Unspecified
             )
         }
