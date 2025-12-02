@@ -181,6 +181,8 @@
     <string name="gallery_type_sculpture">Esculturas</string>
     <string name="gallery_type_architecture">Arquitectura</string>
     <string name="gallery_type_other">Otros</string>
+    <string name="general_information_figure">Información General:</string>
+    <string name="error_figure">Error: No se encontró la figura con ID %1$d</string>
     <string name="play_audio"></string>
     <string name="error_connection_title">¡Vaya! Ha ocurrido un error</string>
     <string name="error_connection_desc">No hemos podido cargar el mapa. Por favor, comprueba tu conexión a internet y vuelve a intentarlo.</string>

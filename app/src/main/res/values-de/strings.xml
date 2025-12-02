@@ -181,6 +181,8 @@
     <string name="gallery_type_sculpture">Skulpturen</string>
     <string name="gallery_type_architecture">Architektur</string>
     <string name="gallery_type_other">Andere</string>
+    <string name="general_information_figure">Allgemeine Informationen:</string>
+    <string name="error_figure">Fehler: Figur mit der ID %1$d kann nicht gesteuert werden</string>
     <string name="play_audio"></string>
     <string name="error_connection_title">Hoppla! Ein Fehler ist aufgetreten</string>
     <string name="error_connection_desc">Wir konnten die Karte nicht laden. Bitte überprüfen Sie Ihre Internetverbindung und versuchen Sie es erneut.</string>

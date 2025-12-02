@@ -181,6 +181,8 @@
     <string name="gallery_type_sculpture">Sculptures</string>
     <string name="gallery_type_architecture">Architecture</string>
     <string name="gallery_type_other">Others</string>
+    <string name="general_information_figure">General information:</string>
+    <string name="error_figure">Error: Figure with ID %1$d cannot be checked</string>
     <string name="play_audio"></string>
     <string name="error_connection_title">Oops! An error occurred</string>
     <string name="error_connection_desc">We couldn\'t load the map. Please check your internet connection and try again.</string>

@@ -181,6 +181,8 @@
     <string name="gallery_type_sculpture">Sculptures</string>
     <string name="gallery_type_architecture">Architecture</string>
     <string name="gallery_type_other">Autres</string>
+    <string name="general_information_figure">Informations générales:</string>
+    <string name="error_figure">Erreur: Impossible de contrôler la figure avec l\’identifiant %1$d</string>
     <string name="play_audio"></string>
     <string name="error_connection_title">Oups ! Une erreur est survenue</string>
     <string name="error_connection_desc">Nous n\'avons pas pu charger la carte. Veuillez vérifier votre connexion internet et réessayer.</string>
