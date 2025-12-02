@@ -54,7 +54,7 @@ fun AppNavigationHost(
         startDestination = AppRoutes.INICIO,
         modifier = modifier
     ) {
-        composable(AppRoutes.INICIO)   { HomeScreenContent(isEditing = isEditing, navController = navController, topPadding = scaffoldPadding) }
+        composable(AppRoutes.INICIO)   { HomeScreenContent(navController = navController, topPadding = scaffoldPadding, authViewModel = authViewModel) }
         composable(AppRoutes.INFO)     { InfoScreen(isEditing = isEditing, viewModel = infoViewModel, topPadding = scaffoldPadding) }
         composable(AppRoutes.HISTORIA) { HistoriaScreen(isEditing = isEditing, viewModel = historiaViewModel,topPadding = scaffoldPadding) }
         composable(AppRoutes.GALERIA)  { GaleriaScreen(navController = navController) }

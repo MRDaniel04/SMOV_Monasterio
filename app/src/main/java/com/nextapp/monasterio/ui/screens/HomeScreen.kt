@@ -26,21 +26,23 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import com.google.firebase.auth.FirebaseUser
+import com.nextapp.monasterio.models.User
 import com.nextapp.monasterio.AppRoutes
 import com.nextapp.monasterio.R
 import com.nextapp.monasterio.repository.ImagenRepository
 import com.nextapp.monasterio.ui.theme.MonasteryBlue
 import com.nextapp.monasterio.ui.theme.MonasteryOrange
+import com.nextapp.monasterio.viewModels.AuthViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
 fun HomeScreenContent(
-    isEditing: Boolean,
     navController: NavController,
-    currentUser: FirebaseUser? = null,
-    topPadding: PaddingValues = PaddingValues(0.dp)
+    topPadding: PaddingValues = PaddingValues(0.dp),
+    authViewModel: AuthViewModel = viewModel()
 ) {
     val context = LocalContext.current
     val activity = (context as? Activity)
@@ -49,6 +51,9 @@ fun HomeScreenContent(
 
     val configuration = LocalConfiguration.current
     val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+
+    val userState by authViewModel.currentUser.collectAsState()
+    val currentUser = userState
 
     LaunchedEffect(Unit) {
         val data = repo.getImagenFondoInicio()
@@ -85,9 +90,9 @@ fun HomeScreenContent(
                 .padding(topPadding)
         ) {
             if (isLandscape) {
-                LandscapeLayout(isEditing, navController, currentUser)
+                LandscapeLayout(navController, currentUser)
             } else {
-                PortraitLayout(isEditing, navController, currentUser)
+                PortraitLayout(navController, currentUser)
             }
         }
     }
@@ -98,9 +103,8 @@ fun HomeScreenContent(
 // =============================================================================
 @Composable
 fun PortraitLayout(
-    isEditing: Boolean,
     navController: NavController,
-    currentUser: FirebaseUser?
+    currentUser: User?
 ) {
     Column(
         modifier = Modifier
@@ -120,15 +124,6 @@ fun PortraitLayout(
                 .scale(1.1f) // Un poco más grande visualmente
                 .padding(bottom = 48.dp)
         )
-
-        if (currentUser != null) {
-            Text(
-                text = "Hola, ${currentUser.displayName ?: "Usuario"}",
-                style = MaterialTheme.typography.titleMedium,
-                color = Color.White,
-                modifier = Modifier.padding(bottom = 16.dp)
-            )
-        }
 
         val buttonModifier = Modifier
             .fillMaxWidth()
@@ -166,7 +161,7 @@ fun PortraitLayout(
         )
 
         // 4. Edición
-        if (!isEditing) {
+        if (currentUser != null) {
             Spacer(modifier = Modifier.height(24.dp))
             HomeListButton(
                 text = stringResource(R.string.edit_mode),
@@ -185,9 +180,8 @@ fun PortraitLayout(
 // =============================================================================
 @Composable
 fun LandscapeLayout(
-    isEditing: Boolean,
     navController: NavController,
-    currentUser: FirebaseUser?
+    currentUser: User?
 ) {
     Row(
         modifier = Modifier
@@ -256,7 +250,7 @@ fun LandscapeLayout(
                     onClick = { navController.navigate(AppRoutes.OPCIONES_RESERVA) }
                 )
 
-                if (!isEditing) {
+                if (currentUser != null) {
                     HomeGridButton(
                         text = stringResource(R.string.edit_mode),
                         iconRes = R.drawable.lapiz,
