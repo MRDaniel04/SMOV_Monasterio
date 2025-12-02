@@ -21,6 +21,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -79,134 +80,154 @@ fun EntradaMonasterioScreen(
         }
     }
 
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        contentPadding = PaddingValues(bottom = 40.dp)
-    ) {
-        item {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Color.White)
-                    .padding(vertical = 12.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = titulo_pin,
-                    color = Color.Black,
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center
-                )
-            }
+    Box(modifier = Modifier.fillMaxSize()) { // <-- 1. ENVOLVEMOS EL CONTENIDO EN UN BOX
 
-
-            Spacer(modifier = Modifier.height(16.dp))
-        }
-
-        // 🖼️ Carrusel tipo fade
-        if (imagenes.isNotEmpty()) {
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.White),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            contentPadding = PaddingValues(top = 30.dp, bottom = 40.dp)
+        ) {
             item {
                 Box(
                     modifier = Modifier
-                        .fillMaxWidth(0.9f)
-                        .height(260.dp)
-                        .clip(RoundedCornerShape(12.dp))
-                        .border(2.dp, Color(0xFF2196F3), RoundedCornerShape(12.dp)),
+                        .fillMaxWidth()
+                        .background(Color.White)
+                        .padding(horizontal = 24.dp, vertical = 12.dp),
                     contentAlignment = Alignment.Center
                 ) {
-                    androidx.compose.animation.Crossfade(
-                        targetState = currentIndex,
-                        label = "imageFade"
-                    ) { page ->
-                        val imagen = imagenes[page]
-                        Box(modifier = Modifier.fillMaxSize()) {
-                            AsyncImage(
-                                model = imagen.url,
-                                contentDescription = imagen.etiqueta,
-                                contentScale = ContentScale.Crop,
-                                modifier = Modifier.fillMaxSize()
-                            )
-                        }
-                    }
-
-                    Row(
-                        Modifier
-                            .align(Alignment.BottomCenter)
-                            .padding(bottom = 6.dp)
-                    ) {
-                        repeat(imagenes.size) { index ->
-                            val selected = currentIndex == index
-                            Box(
-                                Modifier
-                                    .padding(3.dp)
-                                    .size(if (selected) 9.dp else 7.dp)
-                                    .background(
-                                        if (selected) Color.White
-                                        else Color.White.copy(alpha = 0.4f),
-                                        shape = CircleShape
-                                    )
-                            )
-                        }
-                    }
+                    Text(
+                        text = titulo_pin,
+                        color = Color.Black,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center
+                    )
                 }
 
-                Spacer(modifier = Modifier.height(18.dp))
+
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+
+            // 🖼️ Carrusel tipo fade
+            if (imagenes.isNotEmpty()) {
+                item {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth(0.9f)
+                            .height(260.dp)
+                            .clip(RoundedCornerShape(12.dp))
+                            .border(2.dp, Color(0xFF2196F3), RoundedCornerShape(12.dp)),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        androidx.compose.animation.Crossfade(
+                            targetState = currentIndex,
+                            label = "imageFade"
+                        ) { page ->
+                            val imagen = imagenes[page]
+                            Box(modifier = Modifier.fillMaxSize()) {
+                                AsyncImage(
+                                    model = imagen.url,
+                                    contentDescription = imagen.etiqueta,
+                                    contentScale = ContentScale.Crop,
+                                    modifier = Modifier.fillMaxSize()
+                                )
+                            }
+                        }
+
+                        Row(
+                            Modifier
+                                .align(Alignment.BottomCenter)
+                                .padding(bottom = 6.dp)
+                        ) {
+                            repeat(imagenes.size) { index ->
+                                val selected = currentIndex == index
+                                Box(
+                                    Modifier
+                                        .padding(3.dp)
+                                        .size(if (selected) 9.dp else 7.dp)
+                                        .background(
+                                            if (selected) Color.White
+                                            else Color.White.copy(alpha = 0.4f),
+                                            shape = CircleShape
+                                        )
+                                )
+                            }
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(18.dp))
+                }
+            }
+
+            // 🧾 Contenido inferior
+            item {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 24.dp, vertical = 16.dp)
+                ) {
+
+                    // ⭐ TÍTULO CENTRADO (Multidioma)
+                    Text(
+                        text = tDatosContacto,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 12.dp)
+                    )
+                    val context = LocalContext.current
+                    val ubicacion = "C/ Estudios, 20, 47005 Valladolid"
+                    val correo="smrhv@huelgasreales.es"
+                    val telefono ="+34 983 29 13 95"
+                    InfoItem(label = tUbicacion, value = ubicacion,onClick={
+                        context.abrirUbicacion(ubicacion)
+                    })
+                    InfoItem(label = tCorreo, value = correo,onClick={
+                        context.crearCorreo("","","","",false)
+                    })
+                    InfoItem(label = tTelefono, value = telefono,onClick={
+                        context.llamarTelefono(telefono)
+                    })
+
+
+                    Spacer(modifier = Modifier.height(30.dp))
+
+                    // ⭐ TÍTULO CENTRADO (Multidioma)
+                    Text(
+                        text = tHorarios,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 12.dp)
+                    )
+
+                    Text(tLunesViernes, fontWeight = FontWeight.SemiBold)
+                    Text("17:00 - 19:00")
+                }
             }
         }
 
-        // 🧾 Contenido inferior
-        item {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 24.dp, vertical = 16.dp)
-            ) {
+        // 3. Botón Atrás
+        IconButton(
+            onClick = onBack,
+            modifier = Modifier
+                .align(Alignment.TopStart)
+                .statusBarsPadding()
+                .padding(8.dp)
+                .background(Color.Black.copy(alpha = 0.5f), shape = RoundedCornerShape(12.dp))
 
-                // ⭐ TÍTULO CENTRADO (Multidioma)
-                Text(
-                    text = tDatosContacto,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 12.dp)
-                )
-                val context = LocalContext.current
-                val ubicacion = "C/ Estudios, 20, 47005 Valladolid"
-                val correo="smrhv@huelgasreales.es"
-                val telefono ="+34 983 29 13 95"
-                InfoItem(label = tUbicacion, value = ubicacion,onClick={
-                    context.abrirUbicacion(ubicacion)
-                })
-                InfoItem(label = tCorreo, value = correo,onClick={
-                    context.crearCorreo("","","","",false)
-                })
-                InfoItem(label = tTelefono, value = telefono,onClick={
-                    context.llamarTelefono(telefono)
-                })
-
-
-                Spacer(modifier = Modifier.height(30.dp))
-
-                // ⭐ TÍTULO CENTRADO (Multidioma)
-                Text(
-                    text = tHorarios,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 12.dp)
-                )
-
-                Text(tLunesViernes, fontWeight = FontWeight.SemiBold)
-                Text("17:00 - 19:00")
-            }
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.arrow_back),
+                contentDescription = stringResource(R.string.go_back),
+                tint = Color.White
+            )
         }
     }
 }
