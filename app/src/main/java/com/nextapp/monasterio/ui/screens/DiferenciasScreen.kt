@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.nextapp.monasterio.viewModels.ImagenConToque
 import com.nextapp.monasterio.viewModels.DiferenciasViewModel
 import com.nextapp.monasterio.R
@@ -19,7 +20,7 @@ import com.nextapp.monasterio.viewModels.PuzzleViewModel
 import com.nextapp.monasterio.viewModels.PuzzleViewModelFactory
 
 @Composable
-fun DiferenciasScreen(
+fun DiferenciasScreen(navController : NavController
 ) {
 
     val prefsRepository = remember { UserPreferencesRepository.instance }
@@ -84,7 +85,9 @@ fun DiferenciasScreen(
             title = { Text(stringResource(R.string.congratulations)) },
             text = { Text(stringResource(R.string.message_game_completed)) },
             confirmButton = {
-                Button(onClick = viewModel::reiniciarJuego) {
+                Button(onClick = {
+                    navController.popBackStack()
+                }) {
                     Text(stringResource(R.string.ready))
                 }
             },

@@ -91,13 +91,12 @@ fun ImagenConToque(
                 val mappedH = diff.height * scaleFactor
 
                 val circleCenterY = displacementY + mappedY + (mappedH / 2)
-                val factorReduction = 0.4f
                 val radioBase = mappedW.coerceAtLeast(mappedH) / 2
 
                 drawCircle(
                     color = Color.Red,
                     center = Offset(mappedX + mappedW / 2, circleCenterY),
-                    radius = (radioBase*factorReduction) + strokeWidth * 2,
+                    radius = (radioBase) + strokeWidth * 2,
                     style = paintStyle
                 )
             }

@@ -5,8 +5,10 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
@@ -21,6 +23,8 @@ class UserPreferencesRepository private constructor(private val context: Context
         val INSTRUCTIONS_PUZZLE = booleanPreferencesKey("ins_puzzle") // Instrucciones del Puzle
         val INSTRUCTIONS_PAIRS = booleanPreferencesKey("ins_pairs") // Instrucciones de las parejas
         val INSTRUCTIONS_DIFFERENCES = booleanPreferencesKey("ins_differences") // Instrucciones de las parejas
+
+        val ULTIMO_PAR_ID = intPreferencesKey("ultimo_par_id_diferencias")
     }
 
     // --- FLUJOS DE LECTURA ---
@@ -41,6 +45,7 @@ class UserPreferencesRepository private constructor(private val context: Context
 
     val isInstructionsDifferencesDismissed: Flow<Boolean> = context.dataStore.data
         .map { it[PreferencesKeys.INSTRUCTIONS_DIFFERENCES] ?: false }
+
 
     // --- FUNCIONES DE ESCRITURA ---
     suspend fun dismissMainMapTutorial() {
@@ -65,6 +70,17 @@ class UserPreferencesRepository private constructor(private val context: Context
 
     suspend fun dismissInstructionsDifferences() {
         context.dataStore.edit { it[PreferencesKeys.INSTRUCTIONS_DIFFERENCES] = true }
+    }
+
+    suspend fun getUltimoParID(): Int {
+        // Obtenemos el valor actual del DataStore y cancelamos la lectura del Flow
+        return context.dataStore.data.first()[PreferencesKeys.ULTIMO_PAR_ID] ?: 0
+    }
+
+    suspend fun setUltimoParID(id: Int) {
+        context.dataStore.edit { preferences ->
+            preferences[PreferencesKeys.ULTIMO_PAR_ID] = id
+        }
     }
 
     companion object {

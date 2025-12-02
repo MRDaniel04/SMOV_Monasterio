@@ -12,27 +12,50 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import androidx.compose.runtime.mutableStateListOf
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.nextapp.monasterio.models.Diferencia
 import com.nextapp.monasterio.repository.UserPreferencesRepository
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 class DiferenciasViewModel(
-    private val prefsRepository: UserPreferencesRepository
+    private val prefsRepository: UserPreferencesRepository,
 ) : ViewModel() {
     private val todosLosPares = obtenerPares()
 
-    val showInstructionsDialog : StateFlow<Boolean> = prefsRepository.isInstructionsDifferencesDismissed
-        .map { isDismissed -> !isDismissed }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = false
-        )
+    private var ultimoParID: Int = runBlocking {
+        prefsRepository.getUltimoParID()
+    }
 
-    private fun seleccionarParAlAzar(): NivelJuego{
-        val parSeleccionado = todosLosPares.random()
+    val showInstructionsDialog: StateFlow<Boolean> =
+        prefsRepository.isInstructionsDifferencesDismissed
+            .map { isDismissed -> !isDismissed }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = false
+            )
+
+    private fun seleccionarParAlAzar(): NivelJuego {
+        var parSeleccionado = todosLosPares.random()
+
+        Log.d("RANDOM_DEBUG", "Id del par seleccionado: ${parSeleccionado.id}")
+        Log.d("RANDOM_DEBUG", "Ultimo par seleccionado: ${ultimoParID}")
+
+        while (parSeleccionado.id == ultimoParID) {
+            parSeleccionado = todosLosPares.random()
+        }
+
+        Log.d("RANDOM_DEBUG", "Id del par seleccionado: ${parSeleccionado.id}")
+
+        ultimoParID = parSeleccionado.id
+
+        viewModelScope.launch {
+            prefsRepository.setUltimoParID(ultimoParID)
+        }
 
         val diferencias = parSeleccionado.diferencias.map { diff ->
             Diferencia(
@@ -95,6 +118,7 @@ class DiferenciasViewModel(
             object : ViewModelProvider.Factory {
                 @Suppress("UNCHECKED_CAST")
                 override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
+                    val savedStateHandle = extras.createSavedStateHandle()
                     return DiferenciasViewModel(prefsRepository) as T
                 }
             }

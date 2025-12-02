@@ -91,6 +91,8 @@ fun PuzzleScreen(
     var piezaArrastradaId by remember { mutableStateOf<Int?>(null) }
     var desplazamientoPiezaArrastrada by remember { mutableStateOf<Offset>(Offset.Zero) }
 
+    val normalizedTrayY = remember { mutableStateOf(0f) }
+
     // Mapa de posiciones iniciales de las piezas SUELTAS en la bandeja (llenado por LazyRow)
     val trayPositionsMap = remember { mutableStateMapOf<Int, Offset>() }
     var showImagePreviewDialog by remember { mutableStateOf(false) }
@@ -100,6 +102,8 @@ fun PuzzleScreen(
     val isTablet = screenWidth > 600
 
     var dragStartRelativeOffset by remember { mutableStateOf<Offset>(Offset.Zero) }
+
+    var trayOriginY by remember { mutableStateOf(0f) }
 
     DisposableEffect(Unit) {
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
@@ -169,8 +173,16 @@ fun PuzzleScreen(
                     idPiezaArrastrada =  piezaArrastradaId,
                     isDragInProgress = piezaArrastradaId != null,
                     onPiecePositioned = { id, offset ->
+                        if (normalizedTrayY.value == 0f) {
+                            // 📌 Capturar el Y de la primera pieza que se posiciona
+                            normalizedTrayY.value = offset.y
+                            Log.d("PUZZLE_DRAG", "Normalizando Y: ${normalizedTrayY.value}")
+                        }
                         // Llenar el mapa de posiciones iniciales para el Drag & Drop
                         trayPositionsMap[id] = offset
+                    },
+                    onTrayPositioned = { y->
+                        trayOriginY = y
                     },
                     onDragStart = { p, absolutePressOffset ->
                         // INICIO DEL DRAG: Activar la pieza flotante
@@ -230,17 +242,23 @@ fun PuzzleScreen(
                         val centroRelativeX = relativeX + (piezaSize / 2f)
                         val centroRelativeY = relativeY + (piezaSize / 2f)
 
-
                         if((tamaño.columns==2 || tamaño.columns == 3) && isTablet) {
                             val newColumn = (centroRelativeX / piezaSize).toInt().coerceIn(0, tamaño.columns - 1)
                             val newRow = (centroRelativeY / piezaSize).toInt().coerceIn(0, tamaño.rows - 1)
                             viewModel.soltarPieza(piezaArrastradaId!!, GridPosicion(newRow, newColumn))
                         }
                         else{
-                            val Y_Compensado = centroRelativeY + piezaSize * 1.0f
 
                             val newColumn = (centroRelativeX / piezaSize).toInt().coerceIn(0, tamaño.columns - 1)
-                            val newRow = (Y_Compensado / piezaSize).toInt().coerceIn(0, tamaño.rows - 1)
+                            val newRow = (centroRelativeY / piezaSize).toInt().coerceIn(0, tamaño.rows - 1)
+
+                            Log.d("PUZZLE_DRAG", "--- DRAG END ---")
+                            Log.d("PUZZLE_DRAG", "Tamaño Pieza (Px): $piezaSize")
+                            Log.d("PUZZLE_DRAG", "Origin Grid Y: ${gridOriginOffset.y}")
+                            Log.d("PUZZLE_DRAG", "Final Center Y Relative: $centroRelativeY")
+                            Log.d("PUZZLE_DRAG", "Calculated Row: $newRow")
+                            Log.d("PUZZLE_DRAG", "--- /DRAG END ---")
+
                             viewModel.soltarPieza(piezaArrastradaId!!, GridPosicion(newRow, newColumn))
                         }
                     }
@@ -283,6 +301,7 @@ fun PuzzleTray(
     tamañoPieza: Dp,
     idPiezaArrastrada : Int?,
     isDragInProgress: Boolean,
+    onTrayPositioned : (Float) -> Unit,
     onPiecePositioned: (Int, Offset) -> Unit,
     onDragStart: (PiezaPuzzle, Offset) -> Unit
 ) {
@@ -298,7 +317,10 @@ fun PuzzleTray(
         LazyRow(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(tamañoPieza + 16.dp), // Altura fija para el LazyRow
+                .height(tamañoPieza + 16.dp) // Altura fija para el LazyRow
+                .onGloballyPositioned{ coordinates ->
+                    onTrayPositioned(coordinates.positionInWindow().y)
+                },
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             contentPadding = PaddingValues(horizontal = 8.dp)
         ) {
@@ -348,7 +370,7 @@ fun DraggableFloatingPiece(
     onDragEnd: () -> Unit
 ) {
     // Calcular la posición absoluta en la pantalla (Base de la Bandeja + Movimiento del dedo)
-    val totalOffsetX = startOffset.x + desplazamientoActual.x
+    val totalOffsetX = startOffset.x + desplazamientoActual.x - dragStartRelativeOffset.x
     val totalOffsetY = startOffset.y + desplazamientoActual.y - dragStartRelativeOffset.y
 
     Box(
