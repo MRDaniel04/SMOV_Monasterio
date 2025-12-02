@@ -156,9 +156,10 @@ fun PinDetailsPanel(
 
             Spacer(modifier = Modifier.height(4.dp))
 
-            // --- 2. Título del Pin --- (Sin cambios)
+
+            val ubicacionText = selectedPin.ubicacion?.name?.let { " ($it)" } ?: ""
             Text(
-                text = selectedPin.titulo ?: "Detalle del Pin",
+                text = (selectedPin.titulo ?: "Detalle del Pin") + ubicacionText,
                 style = TextStyle(
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold

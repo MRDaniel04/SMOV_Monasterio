@@ -12,6 +12,16 @@ enum class Ubicacion(val displayName: String) {
     CLAUSTRO("Claustro"),
     COLEGIO("Colegio"),
     MUSEO("Museo"),
-    EXTERIOR("Exterior"),
-    OTRO("Otro")
+    EXTERIOR("Curecero"),
+    OTRO("Otro");
+
+    companion object { // 👈 INICIO DEL BLOQUE A AÑADIR
+        /**
+         * Busca un valor de Ubicacion a partir de su nombre de visualización.
+         * Devuelve el objeto Enum o null si no se encuentra.
+         */
+        fun fromDisplayName(name: String): Ubicacion? =
+            // 'entries' es una forma concisa de obtener todos los valores del enum en Kotlin 1.9+
+            entries.find { it.displayName == name }
+    }
 }

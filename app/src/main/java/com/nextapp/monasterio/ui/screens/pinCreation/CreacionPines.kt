@@ -36,23 +36,24 @@ fun CreacionPinesScreen(
     else
         viewModel<CreacionPinSharedViewModel>()
 
-    val tituloState = vm.titulo
+
     val descripcionState = vm.descripcion
     val imagenesState = vm.imagenes
-    val ubicacionState = vm.ubicacion
     val imagen360 = vm.imagen360
 
     val isFormValid = remember(
-        tituloState.es,
+
         descripcionState.es,
         imagenesState.images,
-        imagenesState.allImagesTagged
-
+        imagenesState.allImagesTagged,
+        vm.pinTitle,
+        vm.pinUbicacion
     ) {
-        tituloState.es.isNotBlank() &&
-                descripcionState.es.isNotBlank() &&
-                imagenesState.images.isNotEmpty() &&
-                imagenesState.allImagesTagged
+        descripcionState.es.isNotBlank() &&
+        imagenesState.images.isNotEmpty() &&
+        imagenesState.allImagesTagged &&
+        vm.pinTitle.isNotBlank() &&
+        vm.pinUbicacion.isNotBlank()
     }
 
     Scaffold(
@@ -84,12 +85,25 @@ fun CreacionPinesScreen(
         ) {
 
             Spacer(Modifier.height(12.dp))
-            PinTitleFields(state = tituloState, isEditing = vm.isEditing)
+            Text(
+                text = "Ubicación del Pin", // Título unificado
+                style = MaterialTheme.typography.titleMedium
+            )
+
+            Spacer(Modifier.height(8.dp))
+
+            PinLocationDropdown(
+                currentTitle = vm.pinTitle, // Pasamos el valor actual para mostrar
+                currentUbicacion = vm.pinUbicacion, // Pasamos el valor actual para mostrar
+                onTitleChange = { newTitle -> vm.pinTitle = newTitle }, // Callback: actualiza el TÍTULO
+                onUbicacionChange = { newUbicacion -> vm.pinUbicacion = newUbicacion } // Callback: actualiza la UBICACIÓN
+            )
+
             Spacer(Modifier.height(24.dp))
             PinDescriptionFields(state = descripcionState, isEditing = vm.isEditing)
 
-            Spacer(Modifier.height(24.dp))
 
+            Spacer(Modifier.height(24.dp))
             PinImageSelector(
                 label = "Imágenes del Pin",
                 state = imagenesState,
@@ -98,22 +112,14 @@ fun CreacionPinesScreen(
 
             Spacer(Modifier.height(24.dp))
 
-            Text(
-                text = "Ubicación del Pin", // Título unificado
-                style = MaterialTheme.typography.titleMedium
-            )
-            Spacer(Modifier.height(8.dp))
-            PinLocationDropdown(state = ubicacionState) // Ya incluye la lógica condicional
-
-            Spacer(Modifier.height(24.dp))
-
-
             Image360Selector(
                 label = "Imagen 360 (opcional)",
                 uri = imagen360,
                 onPick = { uri -> vm.imagen360 = uri },
                 onRemove = { vm.imagen360 = null }
             )
+
+            Spacer(Modifier.height(32.dp))
         }
     }
 }

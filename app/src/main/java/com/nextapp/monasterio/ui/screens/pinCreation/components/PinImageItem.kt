@@ -1,12 +1,8 @@
 package com.nextapp.monasterio.ui.screens.pinCreation.components
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Card
-import androidx.compose.material3.Text
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import com.nextapp.monasterio.models.ImageTag
 import com.nextapp.monasterio.ui.screens.pinCreation.state.PinImage
 
