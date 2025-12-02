@@ -348,7 +348,7 @@ fun DraggableFloatingPiece(
     onDragEnd: () -> Unit
 ) {
     // Calcular la posición absoluta en la pantalla (Base de la Bandeja + Movimiento del dedo)
-    val totalOffsetX = startOffset.x + desplazamientoActual.x - dragStartRelativeOffset.x
+    val totalOffsetX = startOffset.x + desplazamientoActual.x
     val totalOffsetY = startOffset.y + desplazamientoActual.y - dragStartRelativeOffset.y
 
     Box(
