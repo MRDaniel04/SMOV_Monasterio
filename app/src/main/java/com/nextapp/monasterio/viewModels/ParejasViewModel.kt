@@ -21,6 +21,7 @@ data class parejasUiState(
     val size : ParejasSize,
     val solucionado : Boolean = false,
     val mostradoInicial : Boolean = true,
+    val esperandoBoton : Boolean = true,
     val verificandoPareja: Boolean = false,
     val parejas : Int = (size.columns* size.rows)/2
 )
@@ -63,10 +64,20 @@ class ParejasViewModel (
             solucionado = false,
             mostradoInicial =  true
         )
+    }
+
+    fun iniciarJuego(){
+        _uiState.update{
+            it.copy(
+                esperandoBoton = false,
+            )
+        }
+
+        // 3. Iniciar el delay de 2 segundos
         viewModelScope.launch {
             delay(2000)
             _uiState.update{
-                it.copy(mostradoInicial = false)
+                it.copy(mostradoInicial = false) // 4. Las cartas se giran (FIN de la pausa)
             }
         }
     }

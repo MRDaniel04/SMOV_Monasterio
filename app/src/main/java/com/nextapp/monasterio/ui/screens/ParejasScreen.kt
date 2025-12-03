@@ -79,7 +79,9 @@ fun ParejasScreen(
     if(showInstructionsPreviewDialog){
         ParejaDialog(
             onDismiss = {},
-            onConfirm = { viewModel.markInstructionsAsShown()},
+            onConfirm = {
+                viewModel.markInstructionsAsShown()
+                viewModel.iniciarJuego() },
             titulo = stringResource(R.string.title_instructions),
             texto = stringResource(R.string.text_instructions_pairs)
         )

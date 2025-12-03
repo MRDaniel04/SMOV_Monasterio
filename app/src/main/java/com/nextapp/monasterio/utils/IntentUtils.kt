@@ -26,8 +26,7 @@ fun Context.abrirUbicacion(ubicacion: String){
 }
 
 fun Context.crearCorreo(nombre:String, email:String, fecha: String, hora:String,necesitaTexto: Boolean){
-    /*val correoMonasterio = "smrhv@huelgasreales.es"*/
-    val correoMonasterio = "fransanse18@gmail.com"
+    val correoMonasterio = "smrhv@huelgasreales.es"
     val asunto = getString(R.string.email_subject,nombre)
     val mensaje =getString(R.string.email_message,nombre,email,fecha,hora).trimIndent()
     val emailIntent = Intent(Intent.ACTION_SEND).apply {

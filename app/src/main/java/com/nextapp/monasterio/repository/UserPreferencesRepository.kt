@@ -16,6 +16,7 @@ private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(na
 class UserPreferencesRepository private constructor(private val context: Context) {
 
     private object PreferencesKeys {
+        val IS_MAP_TUTORIAL_DISMISSED = booleanPreferencesKey("is_map_tutorial_dismissed") // Mantengo tu clave original si la usaste
         val TUTORIAL_MAIN_MAP = booleanPreferencesKey("tut_main_map") // Mapa General
         val TUTORIAL_SUB_MAP = booleanPreferencesKey("tut_sub_map")   // Interiores (Claustro, Iglesia...)
         val TUTORIAL_PIN = booleanPreferencesKey("tut_pin_detail")    // Detalle del Pin
@@ -37,6 +38,17 @@ class UserPreferencesRepository private constructor(private val context: Context
     val isPinTutorialDismissed: Flow<Boolean> = context.dataStore.data
         .map { it[PreferencesKeys.TUTORIAL_PIN] ?: false }
 
+    suspend fun dismissAllTutorials() {
+        context.dataStore.edit { prefs ->
+            // Los marcamos TODOS como vistos
+            prefs[PreferencesKeys.TUTORIAL_MAIN_MAP] = true
+            prefs[PreferencesKeys.TUTORIAL_SUB_MAP] = true
+            prefs[PreferencesKeys.TUTORIAL_PIN] = true
+            // También la clave antigua por seguridad
+            prefs[PreferencesKeys.IS_MAP_TUTORIAL_DISMISSED] = true
+        }
+    }
+
     val isInstructionsPuzzleDismissed: Flow<Boolean> = context.dataStore.data
         .map { it[PreferencesKeys.INSTRUCTIONS_PUZZLE] ?: false }
 
@@ -48,17 +60,11 @@ class UserPreferencesRepository private constructor(private val context: Context
 
 
     // --- FUNCIONES DE ESCRITURA ---
-    suspend fun dismissMainMapTutorial() {
-        context.dataStore.edit { it[PreferencesKeys.TUTORIAL_MAIN_MAP] = true }
-    }
+    suspend fun dismissMainMapTutorial() { dismissAllTutorials()    }
 
-    suspend fun dismissSubMapTutorial() {
-        context.dataStore.edit { it[PreferencesKeys.TUTORIAL_SUB_MAP] = true }
-    }
+    suspend fun dismissSubMapTutorial() { dismissAllTutorials()    }
 
-    suspend fun dismissPinTutorial() {
-        context.dataStore.edit { it[PreferencesKeys.TUTORIAL_PIN] = true }
-    }
+    suspend fun dismissPinTutorial() { dismissAllTutorials()    }
 
     suspend fun dismissInstructionsPuzzle() {
         context.dataStore.edit { it[PreferencesKeys.INSTRUCTIONS_PUZZLE] = true }
