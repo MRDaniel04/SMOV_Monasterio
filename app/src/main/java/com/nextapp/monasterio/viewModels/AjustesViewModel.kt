@@ -32,7 +32,6 @@ class AjustesViewModel : ViewModel() {
 
     // --- FUNCIONES PARA OCULTAR ---
 
-    fun dismissMainMap() = viewModelScope.launch { prefsRepository.dismissMainMapTutorial() }
-    fun dismissSubMap() = viewModelScope.launch { prefsRepository.dismissSubMapTutorial() }
-    fun dismissPin() = viewModelScope.launch { prefsRepository.dismissPinTutorial() }
-}
+    fun dismissMainMap() = viewModelScope.launch { prefsRepository.dismissAllTutorials() }
+    fun dismissSubMap() = viewModelScope.launch { prefsRepository.dismissAllTutorials() }
+    fun dismissPin() = viewModelScope.launch { prefsRepository.dismissAllTutorials() }}

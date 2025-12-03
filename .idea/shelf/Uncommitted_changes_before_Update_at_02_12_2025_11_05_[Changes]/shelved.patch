@@ -1,0 +1,1065 @@
+Index: app/src/main/java/com/nextapp/monasterio/ui/screens/JuegoParejasScreen.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.nextapp.monasterio.ui.screens\r\n\r\nimport android.app.Activity\r\nimport android.content.pm.ActivityInfo\r\nimport androidx.compose.foundation.Image\r\nimport androidx.compose.foundation.background\r\nimport androidx.compose.foundation.layout.*\r\nimport androidx.compose.foundation.rememberScrollState\r\nimport androidx.compose.foundation.shape.RoundedCornerShape\r\nimport androidx.compose.foundation.verticalScroll\r\nimport androidx.compose.material3.Button\r\nimport androidx.compose.material3.ButtonDefaults\r\nimport androidx.compose.material3.Text\r\nimport androidx.compose.runtime.Composable\r\nimport androidx.compose.runtime.DisposableEffect\r\nimport androidx.compose.ui.Alignment\r\nimport androidx.compose.ui.Modifier\r\nimport androidx.compose.ui.graphics.Color\r\nimport androidx.compose.ui.layout.ContentScale\r\nimport androidx.compose.ui.platform.LocalContext\r\nimport androidx.compose.ui.res.painterResource\r\nimport androidx.compose.ui.res.stringResource\r\nimport androidx.compose.ui.text.style.TextAlign\r\nimport androidx.compose.ui.unit.dp\r\nimport androidx.compose.ui.unit.sp\r\nimport androidx.constraintlayout.compose.ChainStyle\r\nimport androidx.constraintlayout.compose.ConstraintLayout\r\nimport androidx.constraintlayout.compose.Dimension\r\nimport androidx.navigation.NavController\r\nimport com.nextapp.monasterio.AppRoutes\r\nimport com.nextapp.monasterio.R\r\nimport com.nextapp.monasterio.ui.theme.MonasteryBlue\r\n\r\n\r\n\r\n@Composable\r\nfun JuegoParejasScreen(navController:NavController,modifier: Modifier = Modifier) {\r\n    val context = LocalContext.current\r\n\r\n    val activity = (context as? Activity)\r\n\r\n    DisposableEffect(Unit) {\r\n        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED\r\n\r\n        onDispose {\r\n\r\n        }\r\n    }\r\n\r\n    ConstraintLayout(modifier = modifier.fillMaxSize().verticalScroll(rememberScrollState())) {\r\n        val (btn4,btn9,btn16,btn25,background) = createRefs()\r\n        createVerticalChain(btn4,btn9,btn16,btn25, chainStyle = ChainStyle.Packed)\r\n\r\n        Image(\r\n            painter = painterResource(R.drawable.fondo),\r\n            contentDescription = \"Fondo\",\r\n            contentScale = ContentScale.Crop,\r\n            modifier = Modifier\r\n                .constrainAs(background){\r\n                    top.linkTo(parent.top)\r\n                    bottom.linkTo(parent.bottom)\r\n                    start.linkTo(parent.start)\r\n                    end.linkTo(parent.end)\r\n                    width = Dimension.fillToConstraints\r\n                    height = Dimension.fillToConstraints\r\n                }\r\n        )\r\n\r\n        Button(\r\n            onClick = {\r\n                navController.navigate(AppRoutes.PAREJASNIVEL1)\r\n            },\r\n            colors = ButtonDefaults.buttonColors(containerColor = MonasteryBlue),\r\n            shape = RoundedCornerShape(20.dp),\r\n            modifier = Modifier\r\n                .padding(bottom = 40.dp)\r\n                .constrainAs(btn4) {\r\n                    top.linkTo(parent.top)\r\n                    bottom.linkTo(btn9.top, margin = 40.dp)\r\n                    start.linkTo(parent.start, margin = 40.dp)\r\n                    end.linkTo(parent.end, margin = 40.dp)\r\n                    width = Dimension.fillToConstraints\r\n                }\r\n        ) {\r\n            Row(\r\n                modifier=Modifier\r\n                    .padding(horizontal = 20.dp),\r\n                verticalAlignment = Alignment.CenterVertically\r\n            )  {\r\n                Text(\r\n                    stringResource(id = R.string.three_pairs),\r\n                    fontSize = 22.sp,\r\n                    textAlign = TextAlign.Center\r\n                )\r\n            }\r\n        }\r\n        Button(\r\n            onClick = {\r\n                navController.navigate(AppRoutes.PAREJASNIVEL2)\r\n            },\r\n            colors = ButtonDefaults.buttonColors(containerColor = MonasteryBlue),\r\n            shape = RoundedCornerShape(20.dp),\r\n            modifier = Modifier\r\n                .padding(bottom = 40.dp)\r\n                .constrainAs(btn9) {\r\n                    top.linkTo(btn4.bottom, margin = 40.dp)\r\n                    bottom.linkTo(btn16.top,margin=40.dp)\r\n                    start.linkTo(parent.start, margin = 40.dp)\r\n                    end.linkTo(parent.end, margin = 40.dp)\r\n                    width = Dimension.fillToConstraints\r\n                }\r\n        ) {\r\n            Row(\r\n                modifier=Modifier\r\n                    .padding(horizontal = 20.dp),\r\n                verticalAlignment = Alignment.CenterVertically\r\n            ) {\r\n                Text(\r\n                    stringResource(id = R.string.four_pairs),\r\n                    fontSize = 22.sp,\r\n                    textAlign = TextAlign.Center\r\n                )\r\n            }\r\n        }\r\n        Button(\r\n            onClick = {\r\n                navController.navigate(AppRoutes.PAREJASNIVEL3)\r\n            },\r\n            colors = ButtonDefaults.buttonColors(containerColor = MonasteryBlue),\r\n            shape = RoundedCornerShape(20.dp),\r\n            modifier = Modifier\r\n                .padding(bottom = 40.dp)\r\n                .constrainAs(btn16) {\r\n                    top.linkTo(btn9.bottom, margin = 40.dp)\r\n                    bottom.linkTo(btn25.top,margin=40.dp)\r\n                    start.linkTo(parent.start, margin = 40.dp)\r\n                    end.linkTo(parent.end, margin = 40.dp)\r\n                    width = Dimension.fillToConstraints\r\n                }\r\n        ) {\r\n            Row(\r\n                modifier=Modifier\r\n                    .padding(horizontal = 20.dp),\r\n                verticalAlignment = Alignment.CenterVertically\r\n            ) {\r\n                Text(\r\n                    stringResource(id = R.string.five_pairs),\r\n                    fontSize = 22.sp,\r\n                    textAlign = TextAlign.Center\r\n                )\r\n            }\r\n        }\r\n        Button(\r\n            onClick = {\r\n                navController.navigate(AppRoutes.PAREJASNIVEL4)\r\n            },\r\n            colors = ButtonDefaults.buttonColors(containerColor = MonasteryBlue),\r\n            shape = RoundedCornerShape(20.dp),\r\n            modifier = Modifier\r\n                .padding(bottom = 40.dp)\r\n                .constrainAs(btn25) {\r\n                    top.linkTo(btn16.bottom, margin = 40.dp)\r\n                    bottom.linkTo(parent.bottom)\r\n                    start.linkTo(parent.start, margin = 40.dp)\r\n                    end.linkTo(parent.end, margin = 40.dp)\r\n                    width = Dimension.fillToConstraints\r\n                }\r\n        ) {\r\n            Row(\r\n                modifier=Modifier\r\n                    .padding(horizontal = 20.dp),\r\n                verticalAlignment = Alignment.CenterVertically\r\n            ) {\r\n                Text(\r\n                    stringResource(id = R.string.six_pairs),\r\n                    fontSize = 22.sp,\r\n                    textAlign = TextAlign.Center\r\n                )\r\n            }\r\n        }\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/nextapp/monasterio/ui/screens/JuegoParejasScreen.kt b/app/src/main/java/com/nextapp/monasterio/ui/screens/JuegoParejasScreen.kt
+--- a/app/src/main/java/com/nextapp/monasterio/ui/screens/JuegoParejasScreen.kt	(revision f2cd9feb8c2ffcad197d5c13bbe57ce97a6cc7a1)
++++ b/app/src/main/java/com/nextapp/monasterio/ui/screens/JuegoParejasScreen.kt	(date 1764667311789)
+@@ -2,8 +2,8 @@
+ 
+ import android.app.Activity
+ import android.content.pm.ActivityInfo
++import android.content.res.Configuration
+ import androidx.compose.foundation.Image
+-import androidx.compose.foundation.background
+ import androidx.compose.foundation.layout.*
+ import androidx.compose.foundation.rememberScrollState
+ import androidx.compose.foundation.shape.RoundedCornerShape
+@@ -15,168 +15,170 @@
+ import androidx.compose.runtime.DisposableEffect
+ import androidx.compose.ui.Alignment
+ import androidx.compose.ui.Modifier
++import androidx.compose.ui.draw.shadow
+ import androidx.compose.ui.graphics.Color
+ import androidx.compose.ui.layout.ContentScale
++import androidx.compose.ui.platform.LocalConfiguration
+ import androidx.compose.ui.platform.LocalContext
+ import androidx.compose.ui.res.painterResource
+ import androidx.compose.ui.res.stringResource
++import androidx.compose.ui.text.font.FontWeight
+ import androidx.compose.ui.text.style.TextAlign
+ import androidx.compose.ui.unit.dp
+ import androidx.compose.ui.unit.sp
+-import androidx.constraintlayout.compose.ChainStyle
+-import androidx.constraintlayout.compose.ConstraintLayout
+-import androidx.constraintlayout.compose.Dimension
+ import androidx.navigation.NavController
+ import com.nextapp.monasterio.AppRoutes
+ import com.nextapp.monasterio.R
+ import com.nextapp.monasterio.ui.theme.MonasteryBlue
+ 
+-
+-
+ @Composable
+-fun JuegoParejasScreen(navController:NavController,modifier: Modifier = Modifier) {
++fun JuegoParejasScreen(
++    navController: NavController,
++    modifier: Modifier = Modifier,
++    topPadding: PaddingValues = PaddingValues(0.dp) // Recibimos el padding
++) {
+     val context = LocalContext.current
+-
+     val activity = (context as? Activity)
+ 
++    // Detectar orientación
++    val configuration = LocalConfiguration.current
++    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
++
++    // Permitir rotación
+     DisposableEffect(Unit) {
+         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+-
+-        onDispose {
+-
+-        }
++        onDispose { }
+     }
+ 
+-    ConstraintLayout(modifier = modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
+-        val (btn4,btn9,btn16,btn25,background) = createRefs()
+-        createVerticalChain(btn4,btn9,btn16,btn25, chainStyle = ChainStyle.Packed)
++    // --- ESTRUCTURA PRINCIPAL ---
++    Box(modifier = modifier.fillMaxSize()) {
+ 
++        // 1. FONDO (Ocupa TODO, sin padding)
+         Image(
+             painter = painterResource(R.drawable.fondo),
+             contentDescription = "Fondo",
+             contentScale = ContentScale.Crop,
+-            modifier = Modifier
+-                .constrainAs(background){
+-                    top.linkTo(parent.top)
+-                    bottom.linkTo(parent.bottom)
+-                    start.linkTo(parent.start)
+-                    end.linkTo(parent.end)
+-                    width = Dimension.fillToConstraints
+-                    height = Dimension.fillToConstraints
+-                }
++            modifier = Modifier.fillMaxSize()
+         )
+ 
+-        Button(
+-            onClick = {
+-                navController.navigate(AppRoutes.PAREJASNIVEL1)
+-            },
+-            colors = ButtonDefaults.buttonColors(containerColor = MonasteryBlue),
+-            shape = RoundedCornerShape(20.dp),
++        // 2. CONTENIDO (Respeta la barra superior)
++        Box(
+             modifier = Modifier
+-                .padding(bottom = 40.dp)
+-                .constrainAs(btn4) {
+-                    top.linkTo(parent.top)
+-                    bottom.linkTo(btn9.top, margin = 40.dp)
+-                    start.linkTo(parent.start, margin = 40.dp)
+-                    end.linkTo(parent.end, margin = 40.dp)
+-                    width = Dimension.fillToConstraints
+-                }
+-        ) {
+-            Row(
+-                modifier=Modifier
+-                    .padding(horizontal = 20.dp),
+-                verticalAlignment = Alignment.CenterVertically
+-            )  {
+-                Text(
+-                    stringResource(id = R.string.three_pairs),
+-                    fontSize = 22.sp,
+-                    textAlign = TextAlign.Center
+-                )
+-            }
+-        }
+-        Button(
+-            onClick = {
+-                navController.navigate(AppRoutes.PAREJASNIVEL2)
+-            },
+-            colors = ButtonDefaults.buttonColors(containerColor = MonasteryBlue),
+-            shape = RoundedCornerShape(20.dp),
+-            modifier = Modifier
+-                .padding(bottom = 40.dp)
+-                .constrainAs(btn9) {
+-                    top.linkTo(btn4.bottom, margin = 40.dp)
+-                    bottom.linkTo(btn16.top,margin=40.dp)
+-                    start.linkTo(parent.start, margin = 40.dp)
+-                    end.linkTo(parent.end, margin = 40.dp)
+-                    width = Dimension.fillToConstraints
+-                }
+-        ) {
+-            Row(
+-                modifier=Modifier
+-                    .padding(horizontal = 20.dp),
+-                verticalAlignment = Alignment.CenterVertically
+-            ) {
+-                Text(
+-                    stringResource(id = R.string.four_pairs),
+-                    fontSize = 22.sp,
+-                    textAlign = TextAlign.Center
+-                )
+-            }
+-        }
+-        Button(
+-            onClick = {
+-                navController.navigate(AppRoutes.PAREJASNIVEL3)
+-            },
+-            colors = ButtonDefaults.buttonColors(containerColor = MonasteryBlue),
+-            shape = RoundedCornerShape(20.dp),
+-            modifier = Modifier
+-                .padding(bottom = 40.dp)
+-                .constrainAs(btn16) {
+-                    top.linkTo(btn9.bottom, margin = 40.dp)
+-                    bottom.linkTo(btn25.top,margin=40.dp)
+-                    start.linkTo(parent.start, margin = 40.dp)
+-                    end.linkTo(parent.end, margin = 40.dp)
+-                    width = Dimension.fillToConstraints
+-                }
+-        ) {
+-            Row(
+-                modifier=Modifier
+-                    .padding(horizontal = 20.dp),
+-                verticalAlignment = Alignment.CenterVertically
+-            ) {
+-                Text(
+-                    stringResource(id = R.string.five_pairs),
+-                    fontSize = 22.sp,
+-                    textAlign = TextAlign.Center
+-                )
++                .fillMaxSize()
++                .padding(topPadding)
++        ) {
++            // Contenedor interno con margen
++            Box(
++                modifier = Modifier
++                    .fillMaxSize()
++                    .padding(24.dp),
++                contentAlignment = Alignment.Center
++            ) {
++                if (isLandscape) {
++                    // --- DISEÑO HORIZONTAL (Cuadrícula 2x2) ---
++                    Column(
++                        modifier = Modifier.fillMaxSize(),
++                        verticalArrangement = Arrangement.spacedBy(16.dp),
++                        horizontalAlignment = Alignment.CenterHorizontally
++                    ) {
++                        // Fila 1 (Nivel 1 y 2)
++                        Row(
++                            modifier = Modifier.weight(1f),
++                            horizontalArrangement = Arrangement.spacedBy(16.dp)
++                        ) {
++                            GameButton(
++                                text = stringResource(id = R.string.three_pairs),
++                                modifier = Modifier.weight(1f).fillMaxHeight(0.8f),
++                                onClick = { navController.navigate(AppRoutes.PAREJASNIVEL1) }
++                            )
++                            GameButton(
++                                text = stringResource(id = R.string.four_pairs),
++                                modifier = Modifier.weight(1f).fillMaxHeight(0.8f),
++                                onClick = { navController.navigate(AppRoutes.PAREJASNIVEL2) }
++                            )
++                        }
++
++                        // Fila 2 (Nivel 3 y 4)
++                        Row(
++                            modifier = Modifier.weight(1f),
++                            horizontalArrangement = Arrangement.spacedBy(16.dp)
++                        ) {
++                            GameButton(
++                                text = stringResource(id = R.string.five_pairs),
++                                modifier = Modifier.weight(1f).fillMaxHeight(0.8f),
++                                onClick = { navController.navigate(AppRoutes.PAREJASNIVEL3) }
++                            )
++                            GameButton(
++                                text = stringResource(id = R.string.six_pairs),
++                                modifier = Modifier.weight(1f).fillMaxHeight(0.8f),
++                                onClick = { navController.navigate(AppRoutes.PAREJASNIVEL4) }
++                            )
++                        }
++                    }
++                } else {
++                    // --- DISEÑO VERTICAL (Lista) ---
++                    Column(
++                        modifier = Modifier
++                            .fillMaxWidth()
++                            .verticalScroll(rememberScrollState()),
++                        verticalArrangement = Arrangement.spacedBy(24.dp), // Espacio entre botones
++                        horizontalAlignment = Alignment.CenterHorizontally
++                    ) {
++                        GameButton(
++                            text = stringResource(id = R.string.three_pairs),
++                            modifier = Modifier.fillMaxWidth().height(100.dp),
++                            onClick = { navController.navigate(AppRoutes.PAREJASNIVEL1) }
++                        )
++
++                        GameButton(
++                            text = stringResource(id = R.string.four_pairs),
++                            modifier = Modifier.fillMaxWidth().height(100.dp),
++                            onClick = { navController.navigate(AppRoutes.PAREJASNIVEL2) }
++                        )
++
++                        GameButton(
++                            text = stringResource(id = R.string.five_pairs),
++                            modifier = Modifier.fillMaxWidth().height(100.dp),
++                            onClick = { navController.navigate(AppRoutes.PAREJASNIVEL3) }
++                        )
++
++                        GameButton(
++                            text = stringResource(id = R.string.six_pairs),
++                            modifier = Modifier.fillMaxWidth().height(100.dp),
++                            onClick = { navController.navigate(AppRoutes.PAREJASNIVEL4) }
++                        )
++                    }
++                }
+             }
+         }
+-        Button(
+-            onClick = {
+-                navController.navigate(AppRoutes.PAREJASNIVEL4)
+-            },
+-            colors = ButtonDefaults.buttonColors(containerColor = MonasteryBlue),
+-            shape = RoundedCornerShape(20.dp),
+-            modifier = Modifier
+-                .padding(bottom = 40.dp)
+-                .constrainAs(btn25) {
+-                    top.linkTo(btn16.bottom, margin = 40.dp)
+-                    bottom.linkTo(parent.bottom)
+-                    start.linkTo(parent.start, margin = 40.dp)
+-                    end.linkTo(parent.end, margin = 40.dp)
+-                    width = Dimension.fillToConstraints
+-                }
+-        ) {
+-            Row(
+-                modifier=Modifier
+-                    .padding(horizontal = 20.dp),
+-                verticalAlignment = Alignment.CenterVertically
+-            ) {
+-                Text(
+-                    stringResource(id = R.string.six_pairs),
+-                    fontSize = 22.sp,
+-                    textAlign = TextAlign.Center
+-                )
+-            }
++    }
++}
++
++// --- COMPONENTE REUTILIZABLE PARA BOTONES ---
++@Composable
++fun GameButton(
++    text: String,
++    modifier: Modifier = Modifier,
++    onClick: () -> Unit
++) {
++    Button(
++        onClick = onClick,
++        colors = ButtonDefaults.buttonColors(containerColor = MonasteryBlue),
++        shape = RoundedCornerShape(20.dp),
++        modifier = modifier.shadow(8.dp, RoundedCornerShape(20.dp)),
++        contentPadding = PaddingValues(16.dp)
++    ) {
++        Box(
++            modifier = Modifier.fillMaxSize(),
++            contentAlignment = Alignment.Center
++        ) {
++            Text(
++                text = text,
++                fontSize = 22.sp,
++                fontWeight = FontWeight.Bold,
++                textAlign = TextAlign.Center,
++                color = Color.White
++            )
+         }
+     }
+ }
+\ No newline at end of file
+Index: app/src/main/java/com/nextapp/monasterio/ui/navigation/AppNavigation.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.nextapp.monasterio.ui.navigation\r\n\r\nimport androidx.compose.foundation.clickable\r\nimport androidx.compose.foundation.layout.*\r\nimport androidx.compose.foundation.rememberScrollState\r\nimport androidx.compose.foundation.verticalScroll\r\nimport androidx.compose.material3.*\r\nimport androidx.compose.runtime.Composable\r\nimport androidx.compose.ui.Alignment\r\nimport androidx.compose.ui.Modifier\r\nimport androidx.compose.ui.res.painterResource\r\nimport androidx.compose.ui.res.stringResource\r\nimport androidx.compose.ui.unit.dp\r\nimport androidx.lifecycle.viewmodel.compose.viewModel\r\nimport androidx.navigation.NavGraph.Companion.findStartDestination\r\nimport androidx.navigation.NavHostController\r\nimport androidx.navigation.NavType\r\nimport androidx.navigation.navArgument\r\nimport androidx.navigation.compose.NavHost\r\nimport androidx.navigation.compose.composable\r\nimport com.nextapp.monasterio.AppRoutes\r\nimport com.nextapp.monasterio.R\r\nimport com.nextapp.monasterio.models.ParejasData\r\nimport com.nextapp.monasterio.models.ParejasSize\r\n/*import com.nextapp.monasterio.models.ParejasData*/\r\nimport com.nextapp.monasterio.models.PuzzleSize\r\nimport com.nextapp.monasterio.ui.screens.* // Asegúrate de importar PanoramaScreen y GaleriaScreen\r\nimport com.nextapp.monasterio.ui.screens.pinEdition.EdicionFondoInicio\r\nimport com.nextapp.monasterio.ui.screens.pinEdition.EdicionPines\r\nimport com.nextapp.monasterio.ui.screens.pinEdition.EdicionPinesHost\r\nimport com.nextapp.monasterio.ui.theme.MonasteryRed\r\nimport com.nextapp.monasterio.ui.theme.White\r\nimport com.nextapp.monasterio.ui.virtualvisit.screens.EntradaMonasterioFirestoreScreen\r\nimport com.nextapp.monasterio.viewModels.AjustesViewModel\r\nimport com.nextapp.monasterio.viewModels.InfoViewModel\r\nimport com.nextapp.monasterio.viewModels.HistoriaViewModel\r\nimport com.nextapp.monasterio.viewModels.AuthViewModel\r\nimport kotlinx.coroutines.CoroutineScope\r\nimport kotlinx.coroutines.launch\r\n\r\n@Composable\r\nfun AppNavigationHost(\r\n    modifier: Modifier = Modifier,\r\n    authViewModel: AuthViewModel = viewModel(),\r\n    historiaViewModel: HistoriaViewModel = viewModel(),\r\n    ajustesViewModel: AjustesViewModel = viewModel(),\r\n    infoViewModel: InfoViewModel = viewModel(),\r\n    navController: NavHostController,\r\n    isEditing: Boolean = false,\r\n    scaffoldPadding: PaddingValues = PaddingValues(0.dp)\r\n) {\r\n    NavHost(\r\n        navController = navController,\r\n        startDestination = AppRoutes.INICIO,\r\n        modifier = modifier\r\n    ) {\r\n        composable(AppRoutes.INICIO)   { HomeScreenContent(isEditing = isEditing, navController = navController, topPadding = scaffoldPadding) }\r\n        composable(AppRoutes.INFO)     { InfoScreen(isEditing = isEditing, viewModel = infoViewModel) }\r\n        composable(AppRoutes.HISTORIA) { HistoriaScreen(isEditing = isEditing, viewModel = historiaViewModel) }\r\n        composable(AppRoutes.GALERIA)  { GaleriaScreen(navController = navController) }\r\n        composable(AppRoutes.MODO_NINYOS)   { OpcionesModoNiño(navController = navController, topPadding = scaffoldPadding) }\r\n        composable(AppRoutes.VIDEO_NINYOS)   { VideoNinyosScreen(topPadding = scaffoldPadding) }\r\n        composable(AppRoutes.PUZZLENIVEL1){PuzzleScreen(navController=navController,tamaño = PuzzleSize(2,2))}\r\n        composable(AppRoutes.PUZZLENIVEL2){PuzzleScreen(navController=navController,tamaño = PuzzleSize(3,3))}\r\n        composable(AppRoutes.PUZZLENIVEL3){PuzzleScreen(navController=navController,tamaño = PuzzleSize(4,4))}\r\n        composable(AppRoutes.PUZZLENIVEL4){PuzzleScreen(navController=navController,tamaño= PuzzleSize(5,5))}\r\n        composable(AppRoutes.JUEGO_NINYOS){OpcionesJuegoNinyos(navController=navController, topPadding = scaffoldPadding)}\r\n        composable(route=AppRoutes.MODO_EDICION) { OpcionesModoEdicion(navController = navController)}\r\n        composable(AppRoutes.EDICION_FONDO_INICIO) { EdicionFondoInicio(navController = navController) }\r\n        composable(AppRoutes.EDICION_PINES) { EdicionPines(navController) }\r\n        composable(AppRoutes.PERFIL)   { ProfileScreen(isEditing = isEditing, viewModel = authViewModel ) }\r\n        composable(AppRoutes.AJUSTES)  { AjustesScreen(viewModel = ajustesViewModel) }\r\n        composable (AppRoutes.JUEGO_PUZZLE) {JuegoPuzzleScreen(navController = navController)}\r\n        composable(AppRoutes.JUEGO_PAREJAS) {JuegoParejasScreen(navController = navController)}\r\n        composable(AppRoutes.PAREJASNIVEL1){ParejasScreen(navController=navController, size = ParejasSize(3,2),imagenes= ParejasData.IMAGENES_NIVEL1)}\r\n        composable(AppRoutes.PAREJASNIVEL2){ParejasScreen(navController=navController,size = ParejasSize(4,2),imagenes= ParejasData.IMAGENES_NIVEL2)}\r\n        composable(AppRoutes.PAREJASNIVEL3){ParejasScreen(navController=navController,size = ParejasSize(5,2),imagenes= ParejasData.IMAGENES_NIVEL3)}\r\n        composable(AppRoutes.PAREJASNIVEL4){ParejasScreen(navController=navController,size= ParejasSize(4,3),imagenes= ParejasData.IMAGENES_NIVEL4)}\r\n        composable(AppRoutes.JUEGO_DIFERENCIAS){DiferenciasScreen()}\r\n\r\n        // Ruta de Panorama 360 (Inmersiva, desde Galería / res/raw)\r\n        composable(\r\n            route = AppRoutes.PANORAMA + \"/{vistaId}\",\r\n            arguments = listOf(navArgument(\"vistaId\") { type = NavType.StringType })\r\n        ) { backStackEntry ->\r\n            val vistaId = backStackEntry.arguments?.getString(\"vistaId\")\r\n            if (vistaId != null) {\r\n                PanoramaScreen(\r\n                    vistaId = vistaId,\r\n                    navController = navController\r\n                )\r\n            }\r\n        }\r\n\r\n        // Ruta de Visita Virtual (Mapa)\r\n        composable(AppRoutes.VIRTUAL_VISIT) {\r\n            VirtualVisitScreen(navController = navController,viewModel = ajustesViewModel)\r\n        }\r\n\r\n        // Ruta al Edición Pines Host\r\n        composable(AppRoutes.EDICION_PINES) {\r\n            EdicionPinesHost(navController)\r\n        }\r\n\r\n\r\n        // --- ¡¡AQUÍ ESTÁ LA NUEVA RUTA!! ---\r\n        // Ruta inmersiva para el 360 de un Pin (desde Firebase URL)\r\n        composable(\r\n            route = AppRoutes.PIN_360 + \"/{pinId}\", // Recibe el ID del Pin\r\n            arguments = listOf(navArgument(\"pinId\") { type = NavType.StringType })\r\n        ) { backStackEntry ->\r\n            val pinId = backStackEntry.arguments?.getString(\"pinId\")\r\n            if (pinId != null) {\r\n                // Llama a la NUEVA pantalla 360\r\n                Pin360Screen(\r\n                    pinId = pinId,\r\n                    navController = navController\r\n                )\r\n            }\r\n        }\r\n\r\n        // --- Pantalla de Entrada del Monasterio (desde Firebase Pin)\r\n        composable(\r\n            route = AppRoutes.PIN_ENTRADA_MONASTERIO + \"/{pinId}\",\r\n            arguments = listOf(navArgument(\"pinId\") { type = NavType.StringType })\r\n        ) { backStackEntry ->\r\n            val pinId = backStackEntry.arguments?.getString(\"pinId\") ?: \"\"\r\n            EntradaMonasterioFirestoreScreen(\r\n                pinId = pinId,\r\n                navController = navController,\r\n                rootNavController = navController\r\n            )\r\n        }\r\n\r\n        // --- FIN DE LA MODIFICACIÓN ---\r\n\r\n        // (La ruta PIN_DETALLE se queda eliminada de aquí, ¡está bien!)\r\n\r\n        // --- RESTO DE TUS RUTAS ---\r\n        composable(AppRoutes.OPCIONES_RESERVA) { OpcionesReservaScreen(navController = navController, topPadding = scaffoldPadding) }\r\n        composable(AppRoutes.RESERVA) { ReservaScreen(navController = navController, topPadding = scaffoldPadding) }\r\n        composable(\r\n            route = AppRoutes.CONFIRMACION_RESERVA + \"/{nombre}/{email}/{fecha}/{hora}\",\r\n            arguments = listOf(\r\n                navArgument(\"nombre\") { type = NavType.StringType },\r\n                navArgument(\"email\") { type = NavType.StringType },\r\n                navArgument(\"fecha\") { type = NavType.StringType },\r\n                navArgument(\"hora\") { type = NavType.StringType }\r\n            )\r\n        ) { backStackEntry ->\r\n            val nombre = backStackEntry.arguments?.getString(\"nombre\") ?: \"\"\r\n            val email = backStackEntry.arguments?.getString(\"email\") ?: \"\"\r\n            val fecha = backStackEntry.arguments?.getString(\"fecha\") ?: \"\"\r\n            val hora = backStackEntry.arguments?.getString(\"hora\") ?: \"\"\r\n            ConfirmacionReservaScreen(\r\n                navController = navController,\r\n                nombre = nombre,\r\n                email = email,\r\n                fecha = fecha,\r\n                hora = hora\r\n            )\r\n        }\r\n    }\r\n}\r\n\r\n//\r\n// --- EL RESTO DEL ARCHIVO (AppDrawerContent y DrawerMenuItem) SE QUEDA IGUAL ---\r\n//\r\n\r\n@OptIn(ExperimentalMaterial3Api::class)\r\n@Composable\r\nfun AppDrawerContent(\r\n    navController: NavHostController,\r\n    scope: CoroutineScope,\r\n    drawerState: DrawerState\r\n) {\r\n    val navigateTo: (String) -> Unit = { route ->\r\n        navController.navigate(route) {\r\n            popUpTo(navController.graph.findStartDestination().id)\r\n            launchSingleTop = true\r\n        }\r\n        scope.launch { drawerState.close() }\r\n    }\r\n\r\n    ModalDrawerSheet(\r\n        modifier = Modifier.fillMaxHeight(),\r\n        drawerContainerColor = MonasteryRed,\r\n        drawerContentColor = White\r\n    ) {\r\n        Column(\r\n            modifier = Modifier\r\n                .fillMaxSize()\r\n                .verticalScroll(rememberScrollState())\r\n                .padding(16.dp)\r\n        ) {\r\n            IconButton(onClick = { scope.launch { drawerState.close() } }) {\r\n                Icon(\r\n                    painter = painterResource(id = R.drawable.ic_menu_24),\r\n                    contentDescription = stringResource(id = R.string.navigation_drawer_close)\r\n                )\r\n            }\r\n            Spacer(modifier = Modifier.height(32.dp))\r\n\r\n            DrawerMenuItem(text = stringResource(id = R.string.title_inicio)) { navigateTo(AppRoutes.INICIO) }\r\n            DrawerMenuItem(text = stringResource(id = R.string.menu_info)) { navigateTo(AppRoutes.INFO) }\r\n            DrawerMenuItem(text = stringResource(id = R.string.menu_history)) { navigateTo(AppRoutes.HISTORIA) }\r\n            DrawerMenuItem(text = stringResource(id = R.string.menu_gallery)) { navigateTo(AppRoutes.GALERIA) }\r\n            DrawerMenuItem(text = stringResource(id = R.string.menu_profile)) { navigateTo(AppRoutes.PERFIL) }\r\n            DrawerMenuItem(text = stringResource(id = R.string.menu_settings)) { navigateTo(AppRoutes.AJUSTES) }\r\n        }\r\n    }\r\n}\r\n\r\n@Composable\r\nfun DrawerMenuItem(text: String, onClick: () -> Unit) {\r\n    Row(\r\n        modifier = Modifier\r\n            .fillMaxWidth()\r\n            .clickable(onClick = onClick)\r\n            .padding(vertical = 12.dp),\r\n        verticalAlignment = Alignment.CenterVertically\r\n    ) {\r\n        Icon(\r\n            painter = painterResource(id = R.drawable.arrow_right),\r\n            contentDescription = null,\r\n            modifier = Modifier.size(20.dp)\r\n        )\r\n        Spacer(modifier = Modifier.width(16.dp))\r\n        Text(text = text, color = White, style = MaterialTheme.typography.bodyMedium)\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/nextapp/monasterio/ui/navigation/AppNavigation.kt b/app/src/main/java/com/nextapp/monasterio/ui/navigation/AppNavigation.kt
+--- a/app/src/main/java/com/nextapp/monasterio/ui/navigation/AppNavigation.kt	(revision f2cd9feb8c2ffcad197d5c13bbe57ce97a6cc7a1)
++++ b/app/src/main/java/com/nextapp/monasterio/ui/navigation/AppNavigation.kt	(date 1764668128614)
+@@ -55,8 +55,8 @@
+         modifier = modifier
+     ) {
+         composable(AppRoutes.INICIO)   { HomeScreenContent(isEditing = isEditing, navController = navController, topPadding = scaffoldPadding) }
+-        composable(AppRoutes.INFO)     { InfoScreen(isEditing = isEditing, viewModel = infoViewModel) }
+-        composable(AppRoutes.HISTORIA) { HistoriaScreen(isEditing = isEditing, viewModel = historiaViewModel) }
++        composable(AppRoutes.INFO)     { InfoScreen(isEditing = isEditing, viewModel = infoViewModel, topPadding = scaffoldPadding) }
++        composable(AppRoutes.HISTORIA) { HistoriaScreen(isEditing = isEditing, viewModel = historiaViewModel,topPadding = scaffoldPadding) }
+         composable(AppRoutes.GALERIA)  { GaleriaScreen(navController = navController) }
+         composable(AppRoutes.MODO_NINYOS)   { OpcionesModoNiño(navController = navController, topPadding = scaffoldPadding) }
+         composable(AppRoutes.VIDEO_NINYOS)   { VideoNinyosScreen(topPadding = scaffoldPadding) }
+@@ -70,8 +70,8 @@
+         composable(AppRoutes.EDICION_PINES) { EdicionPines(navController) }
+         composable(AppRoutes.PERFIL)   { ProfileScreen(isEditing = isEditing, viewModel = authViewModel ) }
+         composable(AppRoutes.AJUSTES)  { AjustesScreen(viewModel = ajustesViewModel) }
+-        composable (AppRoutes.JUEGO_PUZZLE) {JuegoPuzzleScreen(navController = navController)}
+-        composable(AppRoutes.JUEGO_PAREJAS) {JuegoParejasScreen(navController = navController)}
++        composable (AppRoutes.JUEGO_PUZZLE) {JuegoPuzzleScreen(navController = navController, topPadding = scaffoldPadding)}
++        composable(AppRoutes.JUEGO_PAREJAS) {JuegoParejasScreen(navController = navController, topPadding = scaffoldPadding)}
+         composable(AppRoutes.PAREJASNIVEL1){ParejasScreen(navController=navController, size = ParejasSize(3,2),imagenes= ParejasData.IMAGENES_NIVEL1)}
+         composable(AppRoutes.PAREJASNIVEL2){ParejasScreen(navController=navController,size = ParejasSize(4,2),imagenes= ParejasData.IMAGENES_NIVEL2)}
+         composable(AppRoutes.PAREJASNIVEL3){ParejasScreen(navController=navController,size = ParejasSize(5,2),imagenes= ParejasData.IMAGENES_NIVEL3)}
+Index: app/src/main/java/com/nextapp/monasterio/ui/screens/JuegoPuzzleScreen.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.nextapp.monasterio.ui.screens\r\n\r\nimport android.app.Activity\r\nimport android.content.pm.ActivityInfo\r\nimport androidx.compose.foundation.Image\r\nimport androidx.compose.foundation.background\r\nimport androidx.compose.foundation.layout.*\r\nimport androidx.compose.foundation.rememberScrollState\r\nimport androidx.compose.foundation.shape.RoundedCornerShape\r\nimport androidx.compose.foundation.verticalScroll\r\nimport androidx.compose.material3.Button\r\nimport androidx.compose.material3.ButtonDefaults\r\nimport androidx.compose.material3.Text\r\nimport androidx.compose.runtime.Composable\r\nimport androidx.compose.runtime.DisposableEffect\r\nimport androidx.compose.ui.Alignment\r\nimport androidx.compose.ui.Modifier\r\nimport androidx.compose.ui.graphics.Color\r\nimport androidx.compose.ui.layout.ContentScale\r\nimport androidx.compose.ui.platform.LocalContext\r\nimport androidx.compose.ui.res.painterResource\r\nimport androidx.compose.ui.res.stringResource\r\nimport androidx.compose.ui.text.style.TextAlign\r\nimport androidx.compose.ui.unit.dp\r\nimport androidx.compose.ui.unit.sp\r\nimport androidx.constraintlayout.compose.ChainStyle\r\nimport androidx.constraintlayout.compose.ConstraintLayout\r\nimport androidx.constraintlayout.compose.Dimension\r\nimport androidx.navigation.NavController\r\nimport com.nextapp.monasterio.AppRoutes\r\nimport com.nextapp.monasterio.R\r\nimport com.nextapp.monasterio.ui.theme.MonasteryBlue\r\n\r\n\r\n\r\n@Composable\r\nfun JuegoPuzzleScreen(navController:NavController,modifier: Modifier = Modifier) {\r\n    val context = LocalContext.current\r\n\r\n    val activity = (context as? Activity)\r\n\r\n    DisposableEffect(Unit) {\r\n        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED\r\n\r\n        onDispose {\r\n\r\n        }\r\n    }\r\n\r\n    ConstraintLayout(modifier = modifier.fillMaxSize().verticalScroll(rememberScrollState())) {\r\n        val (btn4,btn9,btn16,btn25,background) = createRefs()\r\n        createVerticalChain(btn4,btn9,btn16,btn25, chainStyle = ChainStyle.Packed)\r\n\r\n        Image(\r\n            painter = painterResource(R.drawable.fondo),\r\n            contentDescription = \"Fondo\",\r\n            contentScale = ContentScale.Crop,\r\n            modifier = Modifier\r\n                .constrainAs(background){\r\n                    top.linkTo(parent.top)\r\n                    bottom.linkTo(parent.bottom)\r\n                    start.linkTo(parent.start)\r\n                    end.linkTo(parent.end)\r\n                    width = Dimension.fillToConstraints\r\n                    height = Dimension.fillToConstraints\r\n                }\r\n        )\r\n\r\n        Button(\r\n            onClick = {\r\n                navController.navigate(AppRoutes.PUZZLENIVEL1)\r\n            },\r\n            colors = ButtonDefaults.buttonColors(containerColor = MonasteryBlue),\r\n            shape = RoundedCornerShape(20.dp),\r\n            modifier = Modifier\r\n                .padding(bottom = 40.dp)\r\n                .constrainAs(btn4) {\r\n                    top.linkTo(parent.top)\r\n                    start.linkTo(parent.start, margin = 40.dp)\r\n                    end.linkTo(parent.end, margin = 40.dp)\r\n                    width = Dimension.fillToConstraints\r\n                }\r\n        ) {\r\n            Row(\r\n                modifier=Modifier\r\n                    .padding(horizontal = 20.dp),\r\n                verticalAlignment = Alignment.CenterVertically\r\n            )  {\r\n                Text(\r\n                    stringResource(id = R.string.four_pieces),\r\n                    fontSize = 22.sp,\r\n                    textAlign = TextAlign.Center\r\n                )\r\n            }\r\n        }\r\n        Button(\r\n            onClick = {\r\n                navController.navigate(AppRoutes.PUZZLENIVEL2)\r\n            },\r\n            colors = ButtonDefaults.buttonColors(containerColor = MonasteryBlue),\r\n            shape = RoundedCornerShape(20.dp),\r\n            modifier = Modifier\r\n                .padding(bottom = 40.dp)\r\n                .constrainAs(btn9) {\r\n                    start.linkTo(parent.start, margin = 40.dp)\r\n                    end.linkTo(parent.end, margin = 40.dp)\r\n                    width = Dimension.fillToConstraints\r\n                }\r\n        ) {\r\n            Row(\r\n                modifier=Modifier\r\n                    .padding(horizontal = 20.dp),\r\n                verticalAlignment = Alignment.CenterVertically\r\n            ) {\r\n                Text(\r\n                    stringResource(id = R.string.nine_pieces),\r\n                    fontSize = 22.sp,\r\n                    textAlign = TextAlign.Center\r\n                )\r\n            }\r\n        }\r\n        Button(\r\n            onClick = {\r\n                navController.navigate(AppRoutes.PUZZLENIVEL3)\r\n            },\r\n            colors = ButtonDefaults.buttonColors(containerColor = MonasteryBlue),\r\n            shape = RoundedCornerShape(20.dp),\r\n            modifier = Modifier\r\n                .padding(bottom = 40.dp)\r\n                .constrainAs(btn16) {\r\n                    start.linkTo(parent.start, margin = 40.dp)\r\n                    end.linkTo(parent.end, margin = 40.dp)\r\n                    width = Dimension.fillToConstraints\r\n                }\r\n        ) {\r\n            Row(\r\n                modifier=Modifier\r\n                    .padding(horizontal = 20.dp),\r\n                verticalAlignment = Alignment.CenterVertically\r\n            ) {\r\n                Text(\r\n                    stringResource(id = R.string.sixteen_pieces),\r\n                    fontSize = 22.sp,\r\n                    textAlign = TextAlign.Center\r\n                )\r\n            }\r\n        }\r\n        Button(\r\n            onClick = {\r\n                navController.navigate(AppRoutes.PUZZLENIVEL4)\r\n            },\r\n            colors = ButtonDefaults.buttonColors(containerColor = MonasteryBlue),\r\n            shape = RoundedCornerShape(20.dp),\r\n            modifier = Modifier\r\n                .padding(bottom = 40.dp)\r\n                .constrainAs(btn25) {\r\n                    bottom.linkTo(parent.bottom)\r\n                    start.linkTo(parent.start, margin = 40.dp)\r\n                    end.linkTo(parent.end, margin = 40.dp)\r\n                    width = Dimension.fillToConstraints\r\n                }\r\n        ) {\r\n            Row(\r\n                modifier=Modifier\r\n                    .padding(horizontal = 20.dp),\r\n                verticalAlignment = Alignment.CenterVertically\r\n            ) {\r\n                Text(\r\n                    stringResource(id = R.string.twentyfive_pieces),\r\n                    fontSize = 22.sp,\r\n                    textAlign = TextAlign.Center\r\n                )\r\n            }\r\n        }\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/nextapp/monasterio/ui/screens/JuegoPuzzleScreen.kt b/app/src/main/java/com/nextapp/monasterio/ui/screens/JuegoPuzzleScreen.kt
+--- a/app/src/main/java/com/nextapp/monasterio/ui/screens/JuegoPuzzleScreen.kt	(revision f2cd9feb8c2ffcad197d5c13bbe57ce97a6cc7a1)
++++ b/app/src/main/java/com/nextapp/monasterio/ui/screens/JuegoPuzzleScreen.kt	(date 1764667617402)
+@@ -2,8 +2,8 @@
+ 
+ import android.app.Activity
+ import android.content.pm.ActivityInfo
++import android.content.res.Configuration
+ import androidx.compose.foundation.Image
+-import androidx.compose.foundation.background
+ import androidx.compose.foundation.layout.*
+ import androidx.compose.foundation.rememberScrollState
+ import androidx.compose.foundation.shape.RoundedCornerShape
+@@ -15,162 +15,170 @@
+ import androidx.compose.runtime.DisposableEffect
+ import androidx.compose.ui.Alignment
+ import androidx.compose.ui.Modifier
++import androidx.compose.ui.draw.shadow
+ import androidx.compose.ui.graphics.Color
+ import androidx.compose.ui.layout.ContentScale
++import androidx.compose.ui.platform.LocalConfiguration
+ import androidx.compose.ui.platform.LocalContext
+ import androidx.compose.ui.res.painterResource
+ import androidx.compose.ui.res.stringResource
++import androidx.compose.ui.text.font.FontWeight
+ import androidx.compose.ui.text.style.TextAlign
+ import androidx.compose.ui.unit.dp
+ import androidx.compose.ui.unit.sp
+-import androidx.constraintlayout.compose.ChainStyle
+-import androidx.constraintlayout.compose.ConstraintLayout
+-import androidx.constraintlayout.compose.Dimension
+ import androidx.navigation.NavController
+ import com.nextapp.monasterio.AppRoutes
+ import com.nextapp.monasterio.R
+ import com.nextapp.monasterio.ui.theme.MonasteryBlue
+ 
+-
+-
+ @Composable
+-fun JuegoPuzzleScreen(navController:NavController,modifier: Modifier = Modifier) {
++fun JuegoPuzzleScreen(
++    navController: NavController,
++    modifier: Modifier = Modifier,
++    topPadding: PaddingValues = PaddingValues(0.dp) // Recibimos el padding
++) {
+     val context = LocalContext.current
+-
+     val activity = (context as? Activity)
+ 
++    // Detectar orientación
++    val configuration = LocalConfiguration.current
++    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
++
++    // Permitir rotación
+     DisposableEffect(Unit) {
+         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+-
+-        onDispose {
+-
+-        }
++        onDispose { }
+     }
+ 
+-    ConstraintLayout(modifier = modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
+-        val (btn4,btn9,btn16,btn25,background) = createRefs()
+-        createVerticalChain(btn4,btn9,btn16,btn25, chainStyle = ChainStyle.Packed)
++    // --- ESTRUCTURA PRINCIPAL ---
++    Box(modifier = modifier.fillMaxSize()) {
+ 
++        // 1. FONDO (Ocupa TODO, sin padding)
+         Image(
+             painter = painterResource(R.drawable.fondo),
+             contentDescription = "Fondo",
+             contentScale = ContentScale.Crop,
+-            modifier = Modifier
+-                .constrainAs(background){
+-                    top.linkTo(parent.top)
+-                    bottom.linkTo(parent.bottom)
+-                    start.linkTo(parent.start)
+-                    end.linkTo(parent.end)
+-                    width = Dimension.fillToConstraints
+-                    height = Dimension.fillToConstraints
+-                }
++            modifier = Modifier.fillMaxSize()
+         )
+ 
+-        Button(
+-            onClick = {
+-                navController.navigate(AppRoutes.PUZZLENIVEL1)
+-            },
+-            colors = ButtonDefaults.buttonColors(containerColor = MonasteryBlue),
+-            shape = RoundedCornerShape(20.dp),
++        // 2. CONTENIDO (Respeta la barra superior)
++        Box(
+             modifier = Modifier
+-                .padding(bottom = 40.dp)
+-                .constrainAs(btn4) {
+-                    top.linkTo(parent.top)
+-                    start.linkTo(parent.start, margin = 40.dp)
+-                    end.linkTo(parent.end, margin = 40.dp)
+-                    width = Dimension.fillToConstraints
+-                }
+-        ) {
+-            Row(
+-                modifier=Modifier
+-                    .padding(horizontal = 20.dp),
+-                verticalAlignment = Alignment.CenterVertically
+-            )  {
+-                Text(
+-                    stringResource(id = R.string.four_pieces),
+-                    fontSize = 22.sp,
+-                    textAlign = TextAlign.Center
+-                )
+-            }
+-        }
+-        Button(
+-            onClick = {
+-                navController.navigate(AppRoutes.PUZZLENIVEL2)
+-            },
+-            colors = ButtonDefaults.buttonColors(containerColor = MonasteryBlue),
+-            shape = RoundedCornerShape(20.dp),
+-            modifier = Modifier
+-                .padding(bottom = 40.dp)
+-                .constrainAs(btn9) {
+-                    start.linkTo(parent.start, margin = 40.dp)
+-                    end.linkTo(parent.end, margin = 40.dp)
+-                    width = Dimension.fillToConstraints
+-                }
+-        ) {
+-            Row(
+-                modifier=Modifier
+-                    .padding(horizontal = 20.dp),
+-                verticalAlignment = Alignment.CenterVertically
+-            ) {
+-                Text(
+-                    stringResource(id = R.string.nine_pieces),
+-                    fontSize = 22.sp,
+-                    textAlign = TextAlign.Center
+-                )
+-            }
+-        }
+-        Button(
+-            onClick = {
+-                navController.navigate(AppRoutes.PUZZLENIVEL3)
+-            },
+-            colors = ButtonDefaults.buttonColors(containerColor = MonasteryBlue),
+-            shape = RoundedCornerShape(20.dp),
+-            modifier = Modifier
+-                .padding(bottom = 40.dp)
+-                .constrainAs(btn16) {
+-                    start.linkTo(parent.start, margin = 40.dp)
+-                    end.linkTo(parent.end, margin = 40.dp)
+-                    width = Dimension.fillToConstraints
+-                }
+-        ) {
+-            Row(
+-                modifier=Modifier
+-                    .padding(horizontal = 20.dp),
+-                verticalAlignment = Alignment.CenterVertically
+-            ) {
+-                Text(
+-                    stringResource(id = R.string.sixteen_pieces),
+-                    fontSize = 22.sp,
+-                    textAlign = TextAlign.Center
+-                )
++                .fillMaxSize()
++                .padding(topPadding)
++        ) {
++            // Contenedor interno con margen
++            Box(
++                modifier = Modifier
++                    .fillMaxSize()
++                    .padding(24.dp),
++                contentAlignment = Alignment.Center
++            ) {
++                if (isLandscape) {
++                    // --- DISEÑO HORIZONTAL (Cuadrícula 2x2) ---
++                    Column(
++                        modifier = Modifier.fillMaxSize(),
++                        verticalArrangement = Arrangement.spacedBy(16.dp),
++                        horizontalAlignment = Alignment.CenterHorizontally
++                    ) {
++                        // Fila 1 (Nivel 1 y 2)
++                        Row(
++                            modifier = Modifier.weight(1f),
++                            horizontalArrangement = Arrangement.spacedBy(16.dp)
++                        ) {
++                            PuzzleGameButton(
++                                text = stringResource(id = R.string.four_pieces),
++                                modifier = Modifier.weight(1f).fillMaxHeight(0.8f),
++                                onClick = { navController.navigate(AppRoutes.PUZZLENIVEL1) }
++                            )
++                            PuzzleGameButton(
++                                text = stringResource(id = R.string.nine_pieces),
++                                modifier = Modifier.weight(1f).fillMaxHeight(0.8f),
++                                onClick = { navController.navigate(AppRoutes.PUZZLENIVEL2) }
++                            )
++                        }
++
++                        // Fila 2 (Nivel 3 y 4)
++                        Row(
++                            modifier = Modifier.weight(1f),
++                            horizontalArrangement = Arrangement.spacedBy(16.dp)
++                        ) {
++                            PuzzleGameButton(
++                                text = stringResource(id = R.string.sixteen_pieces),
++                                modifier = Modifier.weight(1f).fillMaxHeight(0.8f),
++                                onClick = { navController.navigate(AppRoutes.PUZZLENIVEL3) }
++                            )
++                            PuzzleGameButton(
++                                text = stringResource(id = R.string.twentyfive_pieces),
++                                modifier = Modifier.weight(1f).fillMaxHeight(0.8f),
++                                onClick = { navController.navigate(AppRoutes.PUZZLENIVEL4) }
++                            )
++                        }
++                    }
++                } else {
++                    // --- DISEÑO VERTICAL (Lista) ---
++                    Column(
++                        modifier = Modifier
++                            .fillMaxWidth()
++                            .verticalScroll(rememberScrollState()),
++                        verticalArrangement = Arrangement.spacedBy(24.dp),
++                        horizontalAlignment = Alignment.CenterHorizontally
++                    ) {
++                        PuzzleGameButton(
++                            text = stringResource(id = R.string.four_pieces),
++                            modifier = Modifier.fillMaxWidth().height(100.dp),
++                            onClick = { navController.navigate(AppRoutes.PUZZLENIVEL1) }
++                        )
++
++                        PuzzleGameButton(
++                            text = stringResource(id = R.string.nine_pieces),
++                            modifier = Modifier.fillMaxWidth().height(100.dp),
++                            onClick = { navController.navigate(AppRoutes.PUZZLENIVEL2) }
++                        )
++
++                        PuzzleGameButton(
++                            text = stringResource(id = R.string.sixteen_pieces),
++                            modifier = Modifier.fillMaxWidth().height(100.dp),
++                            onClick = { navController.navigate(AppRoutes.PUZZLENIVEL3) }
++                        )
++
++                        PuzzleGameButton(
++                            text = stringResource(id = R.string.twentyfive_pieces),
++                            modifier = Modifier.fillMaxWidth().height(100.dp),
++                            onClick = { navController.navigate(AppRoutes.PUZZLENIVEL4) }
++                        )
++                    }
++                }
+             }
+         }
+-        Button(
+-            onClick = {
+-                navController.navigate(AppRoutes.PUZZLENIVEL4)
+-            },
+-            colors = ButtonDefaults.buttonColors(containerColor = MonasteryBlue),
+-            shape = RoundedCornerShape(20.dp),
+-            modifier = Modifier
+-                .padding(bottom = 40.dp)
+-                .constrainAs(btn25) {
+-                    bottom.linkTo(parent.bottom)
+-                    start.linkTo(parent.start, margin = 40.dp)
+-                    end.linkTo(parent.end, margin = 40.dp)
+-                    width = Dimension.fillToConstraints
+-                }
+-        ) {
+-            Row(
+-                modifier=Modifier
+-                    .padding(horizontal = 20.dp),
+-                verticalAlignment = Alignment.CenterVertically
+-            ) {
+-                Text(
+-                    stringResource(id = R.string.twentyfive_pieces),
+-                    fontSize = 22.sp,
+-                    textAlign = TextAlign.Center
+-                )
+-            }
++    }
++}
++
++// --- COMPONENTE REUTILIZABLE PARA BOTONES ---
++@Composable
++fun PuzzleGameButton(
++    text: String,
++    modifier: Modifier = Modifier,
++    onClick: () -> Unit
++) {
++    Button(
++        onClick = onClick,
++        colors = ButtonDefaults.buttonColors(containerColor = MonasteryBlue),
++        shape = RoundedCornerShape(20.dp),
++        modifier = modifier.shadow(8.dp, RoundedCornerShape(20.dp)),
++        contentPadding = PaddingValues(16.dp)
++    ) {
++        Box(
++            modifier = Modifier.fillMaxSize(),
++            contentAlignment = Alignment.Center
++        ) {
++            Text(
++                text = text,
++                fontSize = 22.sp,
++                fontWeight = FontWeight.Bold,
++                textAlign = TextAlign.Center,
++                color = Color.White
++            )
+         }
+     }
+ }
+\ No newline at end of file
+Index: app/src/main/java/com/nextapp/monasterio/ui/screens/HistoriaScreen.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.nextapp.monasterio.ui.screens\r\n\r\nimport android.app.Activity\r\nimport android.content.pm.ActivityInfo\r\nimport android.net.Uri\r\nimport androidx.activity.compose.rememberLauncherForActivityResult\r\nimport androidx.activity.result.contract.ActivityResultContracts\r\nimport androidx.compose.animation.AnimatedVisibility\r\nimport androidx.compose.animation.core.animateFloatAsState\r\nimport androidx.compose.foundation.Image\r\nimport androidx.compose.foundation.background\r\nimport androidx.compose.foundation.clickable\r\nimport androidx.compose.foundation.layout.*\r\nimport androidx.compose.foundation.rememberScrollState\r\nimport androidx.compose.foundation.verticalScroll\r\nimport androidx.compose.material3.*\r\nimport androidx.compose.runtime.*\r\nimport androidx.compose.ui.Alignment\r\nimport androidx.compose.ui.Modifier\r\nimport androidx.compose.ui.draw.rotate\r\nimport androidx.compose.ui.graphics.Color\r\nimport androidx.compose.ui.layout.ContentScale\r\nimport androidx.compose.ui.platform.LocalContext\r\nimport androidx.compose.ui.res.painterResource\r\nimport androidx.compose.ui.res.stringResource\r\nimport androidx.compose.ui.unit.dp\r\nimport androidx.lifecycle.viewmodel.compose.viewModel\r\nimport com.nextapp.monasterio.R\r\nimport com.nextapp.monasterio.viewModels.HistoriaViewModel\r\n\r\n@Composable\r\nfun HistoriaScreen(\r\n    isEditing: Boolean = false,\r\n    viewModel: HistoriaViewModel = viewModel()\r\n) {\r\n    val context = LocalContext.current\r\n    val activity = (context as? Activity)\r\n\r\n    // Datos de Firebase\r\n    val historyPeriods by viewModel.historyPeriods.collectAsState()\r\n    val uploadingPeriodId by viewModel.uploadingPeriodId.collectAsState()\r\n\r\n    // Estado para controlar qué período está seleccionando imagen\r\n    var selectedPeriodId by remember { mutableStateOf<String?>(null) }\r\n    \r\n    // Launcher para seleccionar imagen\r\n    val imagePickerLauncher = rememberLauncherForActivityResult(\r\n        contract = ActivityResultContracts.GetContent()\r\n    ) { uri: Uri? ->\r\n        uri?.let { imageUri ->\r\n            selectedPeriodId?.let { periodId ->\r\n                viewModel.uploadImage(imageUri, context, periodId)\r\n            }\r\n        }\r\n        selectedPeriodId = null\r\n    }\r\n\r\n    DisposableEffect(Unit) {\r\n        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED\r\n        onDispose { }\r\n    }\r\n\r\n    Box(modifier = Modifier.fillMaxSize()) {\r\n\r\n        // 2. Imagen de fondo que ocupa todo el espacio\r\n        Image(\r\n            painter = painterResource(id = R.drawable.fondo_desplegable),\r\n            contentDescription = \"Fondo de pantalla\",\r\n            contentScale = ContentScale.Crop,\r\n            modifier = Modifier.matchParentSize()\r\n        )\r\n\r\n        // 3. El contenido (la columna desplazable)\r\n        Column(\r\n            modifier = Modifier\r\n                .fillMaxSize()\r\n                // Eliminamos .background(backgroundColor) y dejamos que la imagen del Box se muestre\r\n                .verticalScroll(rememberScrollState())\r\n                .padding(16.dp)\r\n        ) {\r\n            // Iteramos sobre los períodos de Firebase ordenados por 'order'\r\n            historyPeriods.forEach { period ->\r\n                ExpandableHistoryCard(\r\n                    title = period.title,\r\n                    contentMap = period.content,\r\n                    imageUrls = period.imageUrls,\r\n                    isEditing = isEditing,\r\n                    isUploading = uploadingPeriodId == period.id,\r\n                    onAddImage = {\r\n                        selectedPeriodId = period.id\r\n                        imagePickerLauncher.launch(\"image/*\")\r\n                    },\r\n                    onDeleteImage = { imageUrl ->\r\n                        viewModel.deleteImage(period.id, imageUrl)\r\n                    },\r\n                    onUpdateContent = { newContentMap ->\r\n                        viewModel.updatePeriodContent(period.id, newContentMap)\r\n                    },\r\n                    onUpdateTitle = { newTitleMap ->\r\n                        viewModel.updatePeriodTitle(period.id, newTitleMap)\r\n                    }\r\n                )\r\n            }\r\n        }\r\n    }\r\n}\r\n\r\n\r\n@Composable\r\nfun ExpandableHistoryCard(\r\n    title: Map<String, String>,\r\n    contentMap: Map<String, String>,\r\n    imageUrls: List<String> = emptyList(),\r\n    isEditing: Boolean = false,\r\n    isUploading: Boolean = false,\r\n    onAddImage: () -> Unit = {},\r\n    onDeleteImage: (String) -> Unit = {},\r\n    onUpdateContent: (Map<String, String>) -> Unit = {},\r\n    onUpdateTitle: (Map<String, String>) -> Unit = {}\r\n) {\r\n    var expanded by remember { mutableStateOf(false) }\r\n    val rotationAngle by animateFloatAsState(\r\n        targetValue = if (expanded) 180f else 0f,\r\n        label = \"rotation\"\r\n    )\r\n\r\n    Column(\r\n        modifier = Modifier\r\n            .fillMaxWidth()\r\n            .padding(vertical = 8.dp)\r\n    ) {\r\n        Row(\r\n            modifier = Modifier\r\n                .fillMaxWidth()\r\n                .clickable { expanded = !expanded }\r\n                .padding(vertical = 8.dp),\r\n            verticalAlignment = Alignment.CenterVertically\r\n        ) {\r\n            // Título editable\r\n            com.nextapp.monasterio.ui.components.EditableText(\r\n                textMap = title,\r\n                isEditing = isEditing,\r\n                onTextMapChange = onUpdateTitle,\r\n                modifier = Modifier.weight(1f),\r\n                readOnlyStyle = MaterialTheme.typography.titleLarge\r\n            )\r\n            \r\n            Icon(\r\n                painter = painterResource(id = R.drawable.arrow_down),\r\n                contentDescription = \"Expandir/Colapsar\",\r\n                modifier = Modifier.rotate(rotationAngle)\r\n            )\r\n        }\r\n\r\n        HorizontalDivider(thickness = 1.dp, color = Color.Gray)\r\n\r\n        AnimatedVisibility(visible = expanded) {\r\n            Column(modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)) {\r\n                \r\n                // Usamos el nuevo EditableText con soporte para mapa de idiomas\r\n                com.nextapp.monasterio.ui.components.EditableText(\r\n                    textMap = contentMap,\r\n                    isEditing = isEditing,\r\n                    onTextMapChange = onUpdateContent,\r\n                    modifier = Modifier.padding(bottom = 16.dp),\r\n                    readOnlyStyle = MaterialTheme.typography.bodyMedium\r\n                )\r\n\r\n                // Galería de imágenes (solo muestra si hay imágenes o está editando)\r\n                if (imageUrls.isNotEmpty() || isEditing) {\r\n                    com.nextapp.monasterio.ui.components.EditableImageGallery(\r\n                        imageUrls = imageUrls,\r\n                        isEditing = isEditing,\r\n                        isUploading = isUploading,\r\n                        onAddImage = onAddImage,\r\n                        onDeleteImage = onDeleteImage,\r\n                        title = stringResource(id = R.string.image_gallery_title)\r\n                    )\r\n                }\r\n            }\r\n        }\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/nextapp/monasterio/ui/screens/HistoriaScreen.kt b/app/src/main/java/com/nextapp/monasterio/ui/screens/HistoriaScreen.kt
+--- a/app/src/main/java/com/nextapp/monasterio/ui/screens/HistoriaScreen.kt	(revision f2cd9feb8c2ffcad197d5c13bbe57ce97a6cc7a1)
++++ b/app/src/main/java/com/nextapp/monasterio/ui/screens/HistoriaScreen.kt	(date 1764667998950)
+@@ -8,7 +8,6 @@
+ import androidx.compose.animation.AnimatedVisibility
+ import androidx.compose.animation.core.animateFloatAsState
+ import androidx.compose.foundation.Image
+-import androidx.compose.foundation.background
+ import androidx.compose.foundation.clickable
+ import androidx.compose.foundation.layout.*
+ import androidx.compose.foundation.rememberScrollState
+@@ -31,7 +30,8 @@
+ @Composable
+ fun HistoriaScreen(
+     isEditing: Boolean = false,
+-    viewModel: HistoriaViewModel = viewModel()
++    viewModel: HistoriaViewModel = viewModel(),
++    topPadding: PaddingValues = PaddingValues(0.dp) // Recibimos el padding
+ ) {
+     val context = LocalContext.current
+     val activity = (context as? Activity)
+@@ -42,7 +42,7 @@
+ 
+     // Estado para controlar qué período está seleccionando imagen
+     var selectedPeriodId by remember { mutableStateOf<String?>(null) }
+-    
++
+     // Launcher para seleccionar imagen
+     val imagePickerLauncher = rememberLauncherForActivityResult(
+         contract = ActivityResultContracts.GetContent()
+@@ -60,46 +60,53 @@
+         onDispose { }
+     }
+ 
++    // --- ESTRUCTURA PRINCIPAL ---
+     Box(modifier = Modifier.fillMaxSize()) {
+ 
+-        // 2. Imagen de fondo que ocupa todo el espacio
++        // 1. IMAGEN DE FONDO (Ocupa todo, sin padding)
+         Image(
+             painter = painterResource(id = R.drawable.fondo_desplegable),
+             contentDescription = "Fondo de pantalla",
+             contentScale = ContentScale.Crop,
+-            modifier = Modifier.matchParentSize()
++            modifier = Modifier.fillMaxSize()
+         )
+ 
+-        // 3. El contenido (la columna desplazable)
+-        Column(
+-            modifier = Modifier
+-                .fillMaxSize()
+-                // Eliminamos .background(backgroundColor) y dejamos que la imagen del Box se muestre
+-                .verticalScroll(rememberScrollState())
+-                .padding(16.dp)
+-        ) {
+-            // Iteramos sobre los períodos de Firebase ordenados por 'order'
+-            historyPeriods.forEach { period ->
+-                ExpandableHistoryCard(
+-                    title = period.title,
+-                    contentMap = period.content,
+-                    imageUrls = period.imageUrls,
+-                    isEditing = isEditing,
+-                    isUploading = uploadingPeriodId == period.id,
+-                    onAddImage = {
+-                        selectedPeriodId = period.id
+-                        imagePickerLauncher.launch("image/*")
+-                    },
+-                    onDeleteImage = { imageUrl ->
+-                        viewModel.deleteImage(period.id, imageUrl)
+-                    },
+-                    onUpdateContent = { newContentMap ->
+-                        viewModel.updatePeriodContent(period.id, newContentMap)
+-                    },
+-                    onUpdateTitle = { newTitleMap ->
+-                        viewModel.updatePeriodTitle(period.id, newTitleMap)
+-                    }
+-                )
++        // 2. CONTENIDO (Aplica el padding AQUÍ para respetar la barra roja)
++        Box(
++            modifier = Modifier
++                .fillMaxSize()
++                .padding(topPadding) // 👈 El contenido baja
++        ) {
++            // 3. Columna con Scroll y márgenes internos
++            Column(
++                modifier = Modifier
++                    .fillMaxSize()
++                    .verticalScroll(rememberScrollState())
++                    .padding(16.dp) // Margen interno visual
++            ) {
++                // Iteramos sobre los períodos de Firebase ordenados por 'order'
++                historyPeriods.forEach { period ->
++                    ExpandableHistoryCard(
++                        title = period.title,
++                        contentMap = period.content,
++                        imageUrls = period.imageUrls,
++                        isEditing = isEditing,
++                        isUploading = uploadingPeriodId == period.id,
++                        onAddImage = {
++                            selectedPeriodId = period.id
++                            imagePickerLauncher.launch("image/*")
++                        },
++                        onDeleteImage = { imageUrl ->
++                            viewModel.deleteImage(period.id, imageUrl)
++                        },
++                        onUpdateContent = { newContentMap ->
++                            viewModel.updatePeriodContent(period.id, newContentMap)
++                        },
++                        onUpdateTitle = { newTitleMap ->
++                            viewModel.updatePeriodTitle(period.id, newTitleMap)
++                        }
++                    )
++                }
+             }
+         }
+     }
+@@ -144,7 +151,7 @@
+                 modifier = Modifier.weight(1f),
+                 readOnlyStyle = MaterialTheme.typography.titleLarge
+             )
+-            
++
+             Icon(
+                 painter = painterResource(id = R.drawable.arrow_down),
+                 contentDescription = "Expandir/Colapsar",
+@@ -156,7 +163,7 @@
+ 
+         AnimatedVisibility(visible = expanded) {
+             Column(modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)) {
+-                
++
+                 // Usamos el nuevo EditableText con soporte para mapa de idiomas
+                 com.nextapp.monasterio.ui.components.EditableText(
+                     textMap = contentMap,
+Index: app/src/main/java/com/nextapp/monasterio/ui/screens/InfoScreen.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.nextapp.monasterio.ui.screens\r\n\r\nimport android.app.Activity\r\nimport android.content.pm.ActivityInfo\r\nimport android.content.res.Configuration\r\nimport androidx.compose.foundation.layout.*\r\nimport androidx.compose.foundation.rememberScrollState\r\nimport androidx.compose.foundation.shape.RoundedCornerShape\r\nimport androidx.compose.foundation.verticalScroll\r\nimport androidx.compose.material3.*\r\nimport androidx.compose.runtime.*\r\nimport androidx.compose.ui.Alignment\r\nimport androidx.compose.ui.Modifier\r\nimport androidx.compose.ui.graphics.Color\r\nimport androidx.compose.ui.platform.LocalConfiguration\r\nimport androidx.compose.ui.platform.LocalContext\r\nimport androidx.compose.ui.res.painterResource\r\nimport androidx.compose.ui.res.stringResource\r\nimport androidx.compose.ui.text.font.FontWeight\r\nimport androidx.compose.ui.unit.dp\r\nimport androidx.lifecycle.viewmodel.compose.viewModel\r\nimport com.nextapp.monasterio.R\r\nimport com.nextapp.monasterio.models.InfoModel // \uD83D\uDC48 IMPORTANTE: Usamos tu modelo real\r\nimport com.nextapp.monasterio.ui.components.EditableText\r\nimport com.nextapp.monasterio.ui.theme.MonasteryRed\r\nimport com.nextapp.monasterio.ui.theme.White\r\nimport com.nextapp.monasterio.viewModels.InfoViewModel\r\n\r\n@Composable\r\nfun InfoScreen(\r\n    isEditing: Boolean = false,\r\n    viewModel: InfoViewModel = viewModel()\r\n) {\r\n    val context = LocalContext.current\r\n    val activity = (context as? Activity)\r\n\r\n    // Obtenemos el estado (que es de tipo InfoModel según tu ViewModel)\r\n    val infoData by viewModel.infoState.collectAsState()\r\n    val backgroundColor = Color(0xFFC8A284)\r\n    // Detectar orientación\r\n    val configuration = LocalConfiguration.current\r\n    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE\r\n\r\n    // Permitir rotación\r\n    DisposableEffect(Unit) {\r\n        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED\r\n        onDispose { }\r\n    }\r\n\r\n    // --- CONTENEDOR PRINCIPAL ---\r\n    Box(\r\n        modifier = Modifier\r\n            .fillMaxSize()\r\n            .padding(16.dp)\r\n    ) {\r\n        if (isLandscape) {\r\n            // --- DISEÑO HORIZONTAL ---\r\n            Row(\r\n                modifier = Modifier.fillMaxSize(),\r\n                horizontalArrangement = Arrangement.spacedBy(24.dp)\r\n            ) {\r\n                // IZQUIERDA: Texto Principal\r\n                Box(\r\n                    modifier = Modifier\r\n                        .weight(0.6f)\r\n                        .fillMaxHeight()\r\n                ) {\r\n                    InfoMainContent(\r\n                        infoData = infoData,\r\n                        isEditing = isEditing,\r\n                        viewModel = viewModel\r\n                    )\r\n                }\r\n\r\n                // DERECHA: Tarjeta Roja\r\n                Box(\r\n                    modifier = Modifier\r\n                        .weight(0.4f)\r\n                        .fillMaxHeight(),\r\n                    contentAlignment = Alignment.Center\r\n                ) {\r\n                    // Scroll vertical por si la pantalla es bajita\r\n                    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {\r\n                        InfoDetailsCard(\r\n                            infoData = infoData,\r\n                            isEditing = isEditing,\r\n                            viewModel = viewModel\r\n                        )\r\n                    }\r\n                }\r\n            }\r\n        } else {\r\n            // --- DISEÑO VERTICAL (Tu original) ---\r\n            Column(\r\n                modifier = Modifier.fillMaxSize()\r\n            ) {\r\n                // ARRIBA: Texto Principal\r\n                Box(\r\n                    modifier = Modifier\r\n                        .weight(1f)\r\n                        .fillMaxWidth()\r\n                ) {\r\n                    InfoMainContent(\r\n                        infoData = infoData,\r\n                        isEditing = isEditing,\r\n                        viewModel = viewModel\r\n                    )\r\n                }\r\n\r\n                // ABAJO: Tarjeta Roja\r\n                Box(modifier = Modifier.padding(top = 16.dp)) {\r\n                    InfoDetailsCard(\r\n                        infoData = infoData,\r\n                        isEditing = isEditing,\r\n                        viewModel = viewModel\r\n                    )\r\n                }\r\n            }\r\n        }\r\n    }\r\n}\r\n\r\n// -----------------------------------------------------------\r\n// COMPONENTES REUTILIZABLES\r\n// -----------------------------------------------------------\r\n\r\n@Composable\r\nfun InfoMainContent(\r\n    infoData: InfoModel, // \uD83D\uDC48 Usamos InfoModel\r\n    isEditing: Boolean,\r\n    viewModel: InfoViewModel\r\n) {\r\n    Column(\r\n        modifier = Modifier\r\n            .fillMaxSize()\r\n            .verticalScroll(rememberScrollState())\r\n    ) {\r\n        Text(\r\n            text = \"Información General\",\r\n            style = MaterialTheme.typography.headlineMedium\r\n        )\r\n        Spacer(modifier = Modifier.height(16.dp))\r\n\r\n        EditableText(\r\n            textMap = infoData.mainContent,\r\n            isEditing = isEditing,\r\n            onTextMapChange = { viewModel.updateMainContent(it) },\r\n            readOnlyStyle = MaterialTheme.typography.bodyLarge\r\n        )\r\n    }\r\n}\r\n\r\n@Composable\r\nfun InfoDetailsCard(\r\n    infoData: InfoModel, // \uD83D\uDC48 Usamos InfoModel\r\n    isEditing: Boolean,\r\n    viewModel: InfoViewModel\r\n) {\r\n    Card(\r\n        modifier = Modifier.fillMaxWidth(),\r\n        shape = RoundedCornerShape(8.dp),\r\n        colors = CardDefaults.cardColors(\r\n            containerColor = MonasteryRed\r\n        ),\r\n        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)\r\n    ) {\r\n        Column(\r\n            modifier = Modifier.padding(16.dp)\r\n        ) {\r\n            Text(\r\n                text = stringResource(id = R.string.general_info),\r\n                style = MaterialTheme.typography.titleLarge,\r\n                color = White,\r\n                fontWeight = FontWeight.Bold\r\n            )\r\n            Spacer(modifier = Modifier.height(16.dp))\r\n\r\n            InfoRow(\r\n                iconResId = R.drawable.location,\r\n                textMap = infoData.location,\r\n                isEditing = isEditing,\r\n                onUpdate = { viewModel.updateLocation(it) }\r\n            )\r\n\r\n            Spacer(modifier = Modifier.height(8.dp))\r\n\r\n            InfoRow(\r\n                iconResId = R.drawable.ic_time_24,\r\n                textMap = infoData.hours,\r\n                isEditing = isEditing,\r\n                onUpdate = { viewModel.updateHours(it) }\r\n            )\r\n        }\r\n    }\r\n}\r\n\r\n@Composable\r\nfun InfoRow(\r\n    iconResId: Int,\r\n    textMap: Map<String, String>,\r\n    isEditing: Boolean,\r\n    onUpdate: (Map<String, String>) -> Unit,\r\n) {\r\n    Row(\r\n        verticalAlignment = Alignment.CenterVertically,\r\n        modifier = Modifier.fillMaxWidth()\r\n    ) {\r\n        Icon(\r\n            painter = painterResource(id = iconResId),\r\n            contentDescription = null,\r\n            tint = White,\r\n            modifier = Modifier.size(24.dp)\r\n        )\r\n        Spacer(modifier = Modifier.width(16.dp))\r\n\r\n        // Contenido editable\r\n        Box(modifier = Modifier.weight(1f)) {\r\n            EditableText(\r\n                textMap = textMap,\r\n                isEditing = isEditing,\r\n                onTextMapChange = onUpdate,\r\n                readOnlyStyle = MaterialTheme.typography.bodyLarge.copy(color = White),\r\n                editTextColor = White\r\n            )\r\n        }\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/nextapp/monasterio/ui/screens/InfoScreen.kt b/app/src/main/java/com/nextapp/monasterio/ui/screens/InfoScreen.kt
+--- a/app/src/main/java/com/nextapp/monasterio/ui/screens/InfoScreen.kt	(revision f2cd9feb8c2ffcad197d5c13bbe57ce97a6cc7a1)
++++ b/app/src/main/java/com/nextapp/monasterio/ui/screens/InfoScreen.kt	(date 1764669008603)
+@@ -3,6 +3,7 @@
+ import android.app.Activity
+ import android.content.pm.ActivityInfo
+ import android.content.res.Configuration
++import androidx.compose.foundation.Image // IMPORTANTE: Añadido import de Image
+ import androidx.compose.foundation.layout.*
+ import androidx.compose.foundation.rememberScrollState
+ import androidx.compose.foundation.shape.RoundedCornerShape
+@@ -12,6 +13,7 @@
+ import androidx.compose.ui.Alignment
+ import androidx.compose.ui.Modifier
+ import androidx.compose.ui.graphics.Color
++import androidx.compose.ui.layout.ContentScale // IMPORTANTE: Añadido
+ import androidx.compose.ui.platform.LocalConfiguration
+ import androidx.compose.ui.platform.LocalContext
+ import androidx.compose.ui.res.painterResource
+@@ -20,7 +22,7 @@
+ import androidx.compose.ui.unit.dp
+ import androidx.lifecycle.viewmodel.compose.viewModel
+ import com.nextapp.monasterio.R
+-import com.nextapp.monasterio.models.InfoModel // 👈 IMPORTANTE: Usamos tu modelo real
++import com.nextapp.monasterio.models.InfoModel
+ import com.nextapp.monasterio.ui.components.EditableText
+ import com.nextapp.monasterio.ui.theme.MonasteryRed
+ import com.nextapp.monasterio.ui.theme.White
+@@ -29,7 +31,8 @@
+ @Composable
+ fun InfoScreen(
+     isEditing: Boolean = false,
+-    viewModel: InfoViewModel = viewModel()
++    viewModel: InfoViewModel = viewModel(),
++    topPadding: PaddingValues = PaddingValues(0.dp)
+ ) {
+     val context = LocalContext.current
+     val activity = (context as? Activity)
+@@ -47,73 +50,85 @@
+         onDispose { }
+     }
+ 
+-    // --- CONTENEDOR PRINCIPAL ---
+-    Box(
+-        modifier = Modifier
+-            .fillMaxSize()
+-            .padding(16.dp)
+-    ) {
+-        if (isLandscape) {
+-            // --- DISEÑO HORIZONTAL ---
+-            Row(
+-                modifier = Modifier.fillMaxSize(),
+-                horizontalArrangement = Arrangement.spacedBy(24.dp)
+-            ) {
+-                // IZQUIERDA: Texto Principal
+-                Box(
+-                    modifier = Modifier
+-                        .weight(0.6f)
+-                        .fillMaxHeight()
+-                ) {
+-                    InfoMainContent(
+-                        infoData = infoData,
+-                        isEditing = isEditing,
+-                        viewModel = viewModel
+-                    )
+-                }
++    // --- CONTENEDOR RAÍZ CON FONDO ---
++    Box(modifier = Modifier.fillMaxSize()) {
++        // 1. IMAGEN DE FONDO (Ocupa todo, SIN padding)
++        Image(
++            painter = painterResource(id = R.drawable.fondo_desplegable), // 👈 TU IMAGEN
++            contentDescription = "Fondo",
++            contentScale = ContentScale.Crop,
++            modifier = Modifier.fillMaxSize()
++        )
++
++        // 2. CONTENIDO (Con Padding)
++        Box(
++            modifier = Modifier
++                .fillMaxSize()
++                .padding(topPadding) // 👈 AJUSTE AL TOP PADDING
++                .padding(16.dp)      // Padding interno original
++        ) {
++            if (isLandscape) {
++                // --- DISEÑO HORIZONTAL ---
++                Row(
++                    modifier = Modifier.fillMaxSize(),
++                    horizontalArrangement = Arrangement.spacedBy(24.dp)
++                ) {
++                    // IZQUIERDA: Texto Principal
++                    Box(
++                        modifier = Modifier
++                            .weight(0.6f)
++                            .fillMaxHeight()
++                    ) {
++                        InfoMainContent(
++                            infoData = infoData,
++                            isEditing = isEditing,
++                            viewModel = viewModel
++                        )
++                    }
+ 
+-                // DERECHA: Tarjeta Roja
+-                Box(
+-                    modifier = Modifier
+-                        .weight(0.4f)
+-                        .fillMaxHeight(),
+-                    contentAlignment = Alignment.Center
+-                ) {
+-                    // Scroll vertical por si la pantalla es bajita
+-                    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+-                        InfoDetailsCard(
+-                            infoData = infoData,
+-                            isEditing = isEditing,
+-                            viewModel = viewModel
+-                        )
+-                    }
+-                }
+-            }
+-        } else {
+-            // --- DISEÑO VERTICAL (Tu original) ---
+-            Column(
+-                modifier = Modifier.fillMaxSize()
+-            ) {
+-                // ARRIBA: Texto Principal
+-                Box(
+-                    modifier = Modifier
+-                        .weight(1f)
+-                        .fillMaxWidth()
+-                ) {
+-                    InfoMainContent(
+-                        infoData = infoData,
+-                        isEditing = isEditing,
+-                        viewModel = viewModel
+-                    )
+-                }
++                    // DERECHA: Tarjeta Roja
++                    Box(
++                        modifier = Modifier
++                            .weight(0.4f)
++                            .fillMaxHeight(),
++                        contentAlignment = Alignment.Center
++                    ) {
++                        // Scroll vertical por si la pantalla es bajita
++                        Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
++                            InfoDetailsCard(
++                                infoData = infoData,
++                                isEditing = isEditing,
++                                viewModel = viewModel
++                            )
++                        }
++                    }
++                }
++            } else {
++                // --- DISEÑO VERTICAL (Tu original) ---
++                Column(
++                    modifier = Modifier.fillMaxSize()
++                ) {
++                    // ARRIBA: Texto Principal
++                    Box(
++                        modifier = Modifier
++                            .weight(1f)
++                            .fillMaxWidth()
++                    ) {
++                        InfoMainContent(
++                            infoData = infoData,
++                            isEditing = isEditing,
++                            viewModel = viewModel
++                        )
++                    }
+ 
+-                // ABAJO: Tarjeta Roja
+-                Box(modifier = Modifier.padding(top = 16.dp)) {
+-                    InfoDetailsCard(
+-                        infoData = infoData,
+-                        isEditing = isEditing,
+-                        viewModel = viewModel
+-                    )
++                    // ABAJO: Tarjeta Roja
++                    Box(modifier = Modifier.padding(top = 16.dp)) {
++                        InfoDetailsCard(
++                            infoData = infoData,
++                            isEditing = isEditing,
++                            viewModel = viewModel
++                        )
++                    }
+                 }
+             }
+         }
+@@ -121,12 +136,12 @@
+ }
+ 
+ // -----------------------------------------------------------
+-// COMPONENTES REUTILIZABLES
++// COMPONENTES REUTILIZABLES (SIN CAMBIOS)
+ // -----------------------------------------------------------
+ 
+ @Composable
+ fun InfoMainContent(
+-    infoData: InfoModel, // 👈 Usamos InfoModel
++    infoData: InfoModel,
+     isEditing: Boolean,
+     viewModel: InfoViewModel
+ ) {
+@@ -152,7 +167,7 @@
+ 
+ @Composable
+ fun InfoDetailsCard(
+-    infoData: InfoModel, // 👈 Usamos InfoModel
++    infoData: InfoModel,
+     isEditing: Boolean,
+     viewModel: InfoViewModel
+ ) {
+Index: app/src/main/java/com/nextapp/monasterio/MainActivity.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.nextapp.monasterio\r\n\r\nimport android.R.attr.text\r\nimport android.app.Activity\r\nimport android.os.Bundle\r\nimport android.widget.Toast\r\nimport androidx.activity.compose.setContent\r\nimport androidx.appcompat.app.AppCompatActivity\r\nimport androidx.appcompat.app.AppCompatDelegate\r\nimport androidx.compose.animation.AnimatedVisibility\r\nimport androidx.compose.animation.fadeIn\r\nimport androidx.compose.animation.fadeOut\r\nimport androidx.compose.foundation.Image\r\nimport androidx.compose.foundation.border\r\nimport androidx.compose.foundation.layout.*\r\nimport androidx.compose.foundation.shape.RoundedCornerShape\r\nimport androidx.compose.material3.*\r\nimport androidx.compose.runtime.*\r\nimport androidx.compose.runtime.saveable.rememberSaveable\r\nimport androidx.compose.ui.Alignment\r\nimport androidx.compose.ui.Modifier\r\nimport androidx.compose.ui.platform.LocalContext\r\nimport androidx.compose.ui.res.painterResource\r\nimport androidx.compose.ui.res.stringResource\r\nimport androidx.navigation.compose.rememberNavController\r\nimport com.nextapp.monasterio.ui.navigation.AppDrawerContent\r\nimport com.nextapp.monasterio.ui.navigation.AppNavigationHost\r\nimport com.nextapp.monasterio.ui.theme.*\r\nimport kotlinx.coroutines.launch\r\nimport androidx.compose.ui.draw.clip\r\nimport androidx.compose.ui.graphics.Color\r\nimport androidx.compose.ui.layout.ContentScale\r\nimport androidx.compose.ui.platform.LocalConfiguration\r\nimport androidx.compose.ui.platform.LocalDensity\r\nimport androidx.compose.ui.unit.Density\r\nimport androidx.compose.ui.unit.dp\r\nimport androidx.lifecycle.viewmodel.compose.viewModel\r\nimport androidx.navigation.compose.currentBackStackEntryAsState\r\nimport com.nextapp.monasterio.utils.FontSize\r\nimport com.nextapp.monasterio.viewModels.AuthViewModel\r\nimport com.nextapp.monasterio.ui.screens.pinEdition.components.AppStatus\r\n\r\n\r\nclass MainActivity : AppCompatActivity() {\r\n    override fun onCreate(savedInstanceState: Bundle?) {\r\n        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)\r\n        super.onCreate(savedInstanceState)\r\n        LanguageHelper.loadLocale(this)\r\n\r\n        setContent {\r\n            // 1. Leemos el tamaño guardado\r\n            val appFontScale = FontSize.devolverFontScale(this)\r\n            val currentDensity = LocalDensity.current\r\n            val currentConfig = LocalConfiguration.current\r\n\r\n            // 2. Calculamos la nueva Densidad\r\n            val newDensity = Density(\r\n                density = currentDensity.density,\r\n                fontScale = appFontScale\r\n            )\r\n\r\n            // 3. Actualizamos la Configuración\r\n            val newConfiguration = android.content.res.Configuration(currentConfig).apply {\r\n                fontScale = appFontScale\r\n            }\r\n\r\n            // 4. Inyectamos AMBOS valores\r\n            CompositionLocalProvider(\r\n                LocalDensity provides newDensity,\r\n                LocalConfiguration provides newConfiguration\r\n            ) {\r\n                Smov_monasterioTheme {\r\n                    // \uD83D\uDC47 PASAMOS 'this' (la actividad)\r\n                    MonasteryAppScreen(activity = this@MainActivity)\r\n                }\r\n            }\r\n        }\r\n    }\r\n}\r\n\r\n@OptIn(ExperimentalMaterial3Api::class)\r\n@Composable\r\nfun MonasteryAppScreen(activity: AppCompatActivity) { // \uD83D\uDC48 Recibimos la actividad\r\n    val context = LocalContext.current\r\n    val navController = rememberNavController()\r\n    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)\r\n    val scope = rememberCoroutineScope()\r\n\r\n    // ViewModel Auth\r\n    val authViewModel: AuthViewModel = viewModel()\r\n    val currentUser by authViewModel.currentUser.collectAsState(initial = null)\r\n\r\n    // Estado global edición\r\n    var isEditing by remember { mutableStateOf(false) }\r\n\r\n    val currentTitle = remember { mutableStateOf(context.getString(R.string.title_inicio)) }\r\n\r\n    // Detectar ruta actual\r\n    val currentBackStackEntry by navController.currentBackStackEntryAsState()\r\n    val currentRoute = currentBackStackEntry?.destination?.route\r\n\r\n    // --- LÓGICA DE MODO INMERSIVO (CORREGIDA) ---\r\n\r\n    // 1. Pantallas de 360 y Edición\r\n    val isPanorama = currentRoute?.startsWith(AppRoutes.PANORAMA) == true\r\n    val isPin360 = currentRoute?.startsWith(AppRoutes.PIN_360) == true\r\n    val isEdicion = currentRoute == AppRoutes.EDICION_PINES\r\n    val isEdicionFondo = currentRoute == AppRoutes.EDICION_FONDO_INICIO\r\n\r\n    // 2. Visita Virtual (Mapa General, Submapas y Pines)\r\n    // Usamos 'contains' en lugar de '==' para cubrir todas las variaciones\r\n    // y sub-rutas que puedan generarse al navegar.\r\n    val isMapSection = currentRoute?.let { route ->\r\n        route.startsWith(AppRoutes.VIRTUAL_VISIT) || // Cubre la entrada principal\r\n                route.contains(\"pin_detalle\") ||             // Cubre los detalles de los pines\r\n                route.contains(\"plano\")                      // Cubre los submapas (claustro, iglesia...)\r\n    } ?: false\r\n\r\n    // La vista es inmersiva si cumple CUALQUIERA de estas condiciones\r\n    val isImmersive = isPanorama || isPin360 || isEdicion || isMapSection\r\n\r\n    val gesturesEnabled = when(currentRoute){\r\n        AppRoutes.VIRTUAL_VISIT -> false\r\n        else -> true\r\n    }\r\n    LaunchedEffect(navController) {\r\n        navController.currentBackStackEntryFlow.collect { backStackEntry ->\r\n            val route = backStackEntry.destination.route\r\n            val routeBase = route?.split(\"/\")?.firstOrNull() ?: route\r\n\r\n            currentTitle.value = when (routeBase) { // <-- Usamos routeBase\r\n                AppRoutes.INFO -> context.getString(R.string.title_info_general)\r\n                AppRoutes.HISTORIA -> context.getString(R.string.title_history)\r\n                AppRoutes.GALERIA -> context.getString(R.string.title_gallery)\r\n                AppRoutes.PERFIL -> context.getString(R.string.title_profile)\r\n                AppRoutes.AJUSTES -> context.getString(R.string.title_settings)\r\n                AppRoutes.OPCIONES_RESERVA,\r\n                AppRoutes.RESERVA,\r\n                AppRoutes.CONFIRMACION_RESERVA -> context.getString(R.string.title_appointment)\r\n                AppRoutes.VIRTUAL_VISIT -> context.getString(R.string.title_monasterio)\r\n                AppRoutes.MODO_NINYOS -> context.getString(R.string.child_mode_view)\r\n                AppRoutes.VIDEO_NINYOS -> context.getString(R.string.video_view)\r\n                AppRoutes.JUEGO_NINYOS -> context.getString(R.string.game_view)\r\n                AppRoutes.MODO_EDICION -> context.getString(R.string.edit_mode)\r\n                AppRoutes.PIN_ENTRADA_MONASTERIO -> context.getString(R.string.title_entrada)\r\n                AppRoutes.JUEGO_PUZZLE -> context.getString(R.string.puzzle_screen)\r\n                AppRoutes.JUEGO_PAREJAS -> context.getString(R.string.memory_screen)\r\n                AppRoutes.PUZZLENIVEL1 -> context.getString(R.string.puzzle_screen)\r\n                AppRoutes.PUZZLENIVEL2 -> context.getString(R.string.puzzle_screen)\r\n                AppRoutes.PUZZLENIVEL3 -> context.getString(R.string.puzzle_screen)\r\n                AppRoutes.PUZZLENIVEL4 -> context.getString(R.string.puzzle_screen)\r\n                AppRoutes.PAREJASNIVEL1 -> context.getString(R.string.memory_screen)\r\n                AppRoutes.PAREJASNIVEL2 -> context.getString(R.string.memory_screen)\r\n                AppRoutes.PAREJASNIVEL3 -> context.getString(R.string.memory_screen)\r\n                AppRoutes.PAREJASNIVEL4 -> context.getString(R.string.memory_screen)\r\n                AppRoutes.EDICION_FONDO_INICIO -> context.getString(R.string.background_edit_screen)\r\n                AppRoutes.EDICION_PINES -> context.getString(R.string.pin_edit_screen)\r\n                AppRoutes.JUEGO_DIFERENCIAS -> context.getString(R.string.differences_screen)\r\n                else -> context.getString(R.string.title_inicio)\r\n            }\r\n        }\r\n    }\r\n\r\n    ModalNavigationDrawer(\r\n        drawerState = drawerState,\r\n        drawerContent = {\r\n            AppDrawerContent(\r\n                navController = navController,\r\n                scope = scope,\r\n                drawerState = drawerState\r\n            )\r\n        },\r\n        gesturesEnabled = gesturesEnabled && !isImmersive\r\n    ) {\r\n        Scaffold(\r\n            topBar = {\r\n                if (!isImmersive) {\r\n                    Column {\r\n                        CenterAlignedTopAppBar(\r\n                            title = { Text(currentTitle.value) },\r\n                            colors = TopAppBarDefaults.topAppBarColors(\r\n                                containerColor = MonasteryRed,\r\n                                titleContentColor = White,\r\n                                navigationIconContentColor = White,\r\n                                actionIconContentColor = White\r\n                            ),\r\n\r\n                            navigationIcon = {\r\n                                if(!isEdicionFondo) {\r\n                                    IconButton(onClick = {\r\n                                        scope.launch {\r\n                                            if (drawerState.isClosed) drawerState.open() else drawerState.close()\r\n                                        }\r\n                                    }) {\r\n                                        val iconRes =\r\n                                            if (drawerState.isOpen) R.drawable.menu_close else R.drawable.ic_menu_24\r\n                                        Icon(\r\n                                            painter = painterResource(id = iconRes),\r\n                                            contentDescription = stringResource(id = R.string.navigation_drawer_open)\r\n                                        )\r\n                                    }\r\n                                }\r\n                            },\r\n                            actions = {\r\n                                if(!isEdicionFondo) {\r\n                                    // SELECTOR DE IDIOMA\r\n                                    MainLanguageSelector(activity)\r\n\r\n                                    // Icono Editar (solo si hay usuario)\r\n                                    if (currentUser != null) {\r\n                                        IconButton(onClick = {\r\n                                            isEditing = !isEditing\r\n                                            val message = if (isEditing)\r\n                                                context.getString(R.string.edit_mode_activate_message)\r\n                                            else\r\n                                                context.getString(R.string.edit_mode_deactivate_message)\r\n                                            Toast.makeText(context, message, Toast.LENGTH_SHORT)\r\n                                                .show()\r\n                                        }) {\r\n                                            Icon(\r\n                                                painter = painterResource(id = R.drawable.lapiz),\r\n                                                contentDescription = if (isEditing)\r\n                                                    stringResource(id = R.string.edit_mode_deactivate_icon)\r\n                                                else\r\n                                                    stringResource(id = R.string.edit_mode_activate_icon),\r\n                                                tint = White\r\n                                            )\r\n                                        }\r\n                                    }\r\n                                }\r\n                            }\r\n                        )\r\n\r\n                        // Barra de progreso global (Subida de imágenes, etc.)\r\n                        val isGlobalLoading by AppStatus.isUploading.collectAsState()\r\n                        AnimatedVisibility(\r\n                            visible = isGlobalLoading,\r\n                            enter = fadeIn(),\r\n                            exit = fadeOut()\r\n                        ) {\r\n                            LinearProgressIndicator(\r\n                                modifier = Modifier.fillMaxWidth(),\r\n                                color = MonasteryBlue\r\n                            )\r\n                        }\r\n                    }\r\n                }\r\n            }\r\n        ) { paddingValues ->\r\n            val isHome = currentRoute == AppRoutes.INICIO\r\n            val isModoNinyos = currentRoute == AppRoutes.MODO_NINYOS\r\n            val isVideo = currentRoute == AppRoutes.VIDEO_NINYOS\r\n            val isJuegos = currentRoute == AppRoutes.JUEGO_NINYOS\r\n            val isReservas = currentRoute == AppRoutes.OPCIONES_RESERVA\r\n            val isReservas2 = currentRoute == AppRoutes.RESERVA\r\n\r\n\r\n\r\n            AppNavigationHost(\r\n                authViewModel = authViewModel,\r\n                navController = navController,\r\n                isEditing = isEditing,\r\n                // TRUCO: Si es Home, NO ponemos padding al contenedor (para que el fondo se estire).\r\n                // Si es otra pantalla, SÍ ponemos padding.\r\n                modifier = if (isHome||isModoNinyos||isVideo||isJuegos||isReservas||isReservas2) Modifier else Modifier.padding(paddingValues),\r\n                // Pasamos el padding adentro para usarlo solo en los botones del Home\r\n                scaffoldPadding = paddingValues\r\n            )\r\n        }\r\n    }\r\n}\r\n\r\n// --- COMPONENTES DE IDIOMA PARA LA BARRA ---\r\n\r\n@Composable\r\nfun MainLanguageSelector(activity: AppCompatActivity) {\r\n    var expanded by rememberSaveable { mutableStateOf(false) }\r\n\r\n    val configuration = LocalConfiguration.current\r\n    // Obtenemos idioma actual\r\n    val currentLanguageCode = configuration.locales[0].language\r\n    // Determinamos bandera actual\r\n    val currentFlag = when (currentLanguageCode) {\r\n        \"de\" -> R.drawable.alemania\r\n        \"en\" -> R.drawable.reinounido\r\n        \"fr\" -> R.drawable.francia\r\n        else -> R.drawable.espanya\r\n\r\n    }\r\n\r\n    Box {\r\n        // Botón de la bandera\r\n        IconButton(onClick = { expanded = true }) {\r\n            Image(\r\n                painter = painterResource(id = currentFlag),\r\n                contentDescription = \"Cambiar idioma\",\r\n                contentScale = ContentScale.Crop,\r\n                modifier = Modifier\r\n                    .size(28.dp)\r\n                    .clip(RoundedCornerShape(4.dp))\r\n                    .border(1.dp, Color.White.copy(alpha = 0.5f), RoundedCornerShape(4.dp))\r\n            )\r\n        }\r\n\r\n        // Menú desplegable\r\n        DropdownMenu(\r\n            expanded = expanded,\r\n            onDismissRequest = { expanded = false },\r\n            modifier = Modifier.width(150.dp)\r\n        ) {\r\n            MainLanguageItem(activity, \"es\", stringResource(R.string.lang_es), R.drawable.espanya) { expanded = false }\r\n            MainLanguageItem(activity, \"en\", stringResource(R.string.lang_en), R.drawable.reinounido) { expanded = false }\r\n            MainLanguageItem(activity, \"de\", stringResource(R.string.lang_de), R.drawable.alemania) { expanded = false }\r\n            MainLanguageItem(activity, \"fr\", stringResource(R.string.lang_fr), R.drawable.francia) { expanded = false }\r\n        }\r\n    }\r\n}\r\n\r\n@Composable\r\nfun MainLanguageItem(\r\n    activity: AppCompatActivity,\r\n    code: String,\r\n    name: String,\r\n    flagRes: Int,\r\n    onDismiss: () -> Unit\r\n) {\r\n    DropdownMenuItem(\r\n        text = {\r\n            Row(verticalAlignment = Alignment.CenterVertically) {\r\n                Image(\r\n                    painter = painterResource(id = flagRes),\r\n                    contentDescription = null,\r\n                    modifier = Modifier.size(24.dp).clip(RoundedCornerShape(2.dp))\r\n                )\r\n                Spacer(modifier = Modifier.width(12.dp))\r\n                Text(text = name, style = MaterialTheme.typography.bodyMedium)\r\n            }\r\n        },\r\n        onClick = {\r\n            onDismiss()\r\n            val currentLanguage = activity.resources.configuration.locales[0].language\r\n            if (currentLanguage != code) {\r\n                LanguageHelper.saveLocale(activity, code)\r\n                activity.recreate()\r\n            }\r\n        }\r\n    )\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/nextapp/monasterio/MainActivity.kt b/app/src/main/java/com/nextapp/monasterio/MainActivity.kt
+--- a/app/src/main/java/com/nextapp/monasterio/MainActivity.kt	(revision f2cd9feb8c2ffcad197d5c13bbe57ce97a6cc7a1)
++++ b/app/src/main/java/com/nextapp/monasterio/MainActivity.kt	(date 1764668128994)
+@@ -253,8 +253,10 @@
+             val isJuegos = currentRoute == AppRoutes.JUEGO_NINYOS
+             val isReservas = currentRoute == AppRoutes.OPCIONES_RESERVA
+             val isReservas2 = currentRoute == AppRoutes.RESERVA
+-
+-
++            val isParejas = currentRoute == AppRoutes.JUEGO_PAREJAS
++            val isPuzzle = currentRoute == AppRoutes.JUEGO_PUZZLE
++            val isHistoria = currentRoute == AppRoutes.HISTORIA
++            val isInfo = currentRoute == AppRoutes.INFO
+ 
+             AppNavigationHost(
+                 authViewModel = authViewModel,
+@@ -262,7 +264,7 @@
+                 isEditing = isEditing,
+                 // TRUCO: Si es Home, NO ponemos padding al contenedor (para que el fondo se estire).
+                 // Si es otra pantalla, SÍ ponemos padding.
+-                modifier = if (isHome||isModoNinyos||isVideo||isJuegos||isReservas||isReservas2) Modifier else Modifier.padding(paddingValues),
++                modifier = if (isHome||isModoNinyos||isVideo||isJuegos||isReservas||isReservas2||isParejas||isPuzzle||isHistoria||isInfo) Modifier else Modifier.padding(paddingValues),
+                 // Pasamos el padding adentro para usarlo solo en los botones del Home
+                 scaffoldPadding = paddingValues
+             )
