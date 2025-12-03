@@ -123,6 +123,24 @@ fun TranslatableTextField(
                         singleLine = singleLine,
                         modifier = Modifier.fillMaxWidth()
                     )
+
+                    Spacer(Modifier.height(16.dp))
+
+                    Text(
+                        text = "$label (FR) - Opcional",
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 16.sp
+                        )
+                    )
+
+                    OutlinedTextField(
+                        value = state.fr,
+                        onValueChange = { state.fr = it },
+                        label = { Text("Texto opcional en francés", fontSize = 10.sp) },
+                        singleLine = singleLine,
+                        modifier = Modifier.fillMaxWidth()
+                    )
                 }
             }
         }

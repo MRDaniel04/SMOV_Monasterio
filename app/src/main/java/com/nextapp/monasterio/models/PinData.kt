@@ -32,7 +32,7 @@ data class PinData(
 
     val audioUrl_es: String? = null,
     val audioUrl_en: String? = null,
-    val audioUrl_ge: String? = null,
+    val audioUrl_de: String? = null,
     val audioUrl_fr: String? = null
 )
 

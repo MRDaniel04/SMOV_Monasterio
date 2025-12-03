@@ -9,6 +9,5 @@ data class ImagenData(
     val tituloAleman: String = "",
     val tituloFrances: String = "",
     val foco: Float =0f,
-    val type: String = "",
     val tipo: String = ""
 )

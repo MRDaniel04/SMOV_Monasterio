@@ -178,18 +178,37 @@ fun EdicionPines(
 
                 PinRepository.updatePin(
                     pinId = pinId,
+
+                    // --- TÍTULOS y DESCRIPCIONES ---
                     titulo = vm.pinTitle,
                     descripcion = vm.descripcion.es,
 
-                    tituloIngles = vm.pinTitle,
-                    descripcionIngles = vm.descripcion.en,
+                    tituloIngles = vm.pinTitleIngles,        // ✅ CORREGIDO
+                    descripcionIngles = vm.descripcion.en,   // ✅ CORREGIDO
 
-                    tituloAleman = vm.pinTitle,
-                    descripcionAleman = vm.descripcion.de,
+                    tituloAleman = vm.pinTitleAleman,        // ✅ CORREGIDO
+                    descripcionAleman = vm.descripcion.de,   // ✅ CORREGIDO
 
+                    tituloFrances = vm.pinTitleFrances,      // ✅ AÑADIDO
+                    descripcionFrances = vm.descripcion.fr,  // ✅ AÑADIDO
+
+                    // --- UBICACIONES ---
                     ubicacion = vm.pinUbicacion,
+                    ubicacionIngles = vm.pinUbicacionIngles, // ✅ AÑADIDO
+                    ubicacionAleman = vm.pinUbicacionAleman, // ✅ AÑADIDO
+                    ubicacionFrances = vm.pinUbicacionFrances, // ✅ AÑADIDO
 
-                    imagenes = vm.imagenes.uris.map { it.toString() }, // Lista URLs Cloudinary o locales
+                    // --- AUDIOS ---
+                    audioUrl_es = vm.audioUrl_es,            // ✅ AÑADIDO
+                    audioUrl_en = vm.audioUrl_en,            // ✅ AÑADIDO
+                    audioUrl_de = vm.audioUrl_de,            // ✅ AÑADIDO
+                    audioUrl_fr = vm.audioUrl_fr,            // ✅ AÑADIDO
+
+                    // --- RADIO ---
+                    tapRadius = vm.tapRadius ?: 0.06f,       // ✅ AÑADIDO (Usando default si es null)
+
+                    // --- IMÁGENES ---
+                    imagenes = vm.imagenes.uris.map { it.toString() },
                     imagen360 = vm.imagen360?.toString()
                 )
 

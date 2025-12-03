@@ -134,7 +134,7 @@ fun PinDetalleScreen(
     val context = LocalContext.current
     val audioUrl = when (language) {
         "en" -> pin.audioUrl_en
-        "de" -> pin.audioUrl_ge
+        "de" -> pin.audioUrl_de
         "fr" -> pin.audioUrl_fr
         else -> pin.audioUrl_es
     }

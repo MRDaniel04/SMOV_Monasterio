@@ -53,26 +53,16 @@ fun PinDetailsPanel(
     var isDeleteDialogOpen by remember { mutableStateOf(false) }
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
-
-    // 🌟 ESTADO DE CARGA FORZADO: Siempre inicia en true.
     var isLoading by remember(selectedPin.id) { mutableStateOf(true) }
 
-    // Simula la carga de las imágenes, garantizando que isLoading sea 'true' inicialmente.
+
     LaunchedEffect(selectedPin.id) {
-        // ⭐ IMPORTANTE: Aquí deberías poner la lógica real que carga `imagenesDetalladas`
-        // o, si ya se cargó en el ViewModel padre, poner un pequeño delay para forzar
-        // la visualización del spinner de carga.
-
-        // Simulación de una carga de 500ms
         delay(500)
-
-        // Una vez que el proceso de "carga" haya terminado, se establece a false
         isLoading = false
     }
 
     val hasImages = imagenesDetalladas.isNotEmpty()
 
-    // Bloque principal: Box
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -92,13 +82,12 @@ fun PinDetailsPanel(
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
-            // ... (Controles de Edición, Mover, Borrar) ... (Sin cambios)
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Grupo Izquierdo: Acciones de Edición (Mover, Editar, BORRAR)
+
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                     verticalAlignment = Alignment.CenterVertically
@@ -156,7 +145,6 @@ fun PinDetailsPanel(
 
             Spacer(modifier = Modifier.height(4.dp))
 
-
             val ubicacionText = selectedPin.ubicacion?.name?.let { " ($it)" } ?: ""
             Text(
                 text = (selectedPin.titulo ?: "Detalle del Pin") + ubicacionText,
@@ -169,9 +157,8 @@ fun PinDetailsPanel(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // --- SECCIÓN DE CARGA DE IMÁGENES REVISADA CON FLUJO FORZADO ---
             when {
-                // 1. ESTADO INICIAL: CARGANDO... (Siempre se muestra primero)
+
                 isLoading -> {
                     Column(
                         modifier = Modifier

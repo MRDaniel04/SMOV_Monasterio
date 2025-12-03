@@ -71,15 +71,13 @@ fun VirtualVisitScreen(navController: NavHostController? = null, viewModel: Ajus
         ) { backStackEntry ->
             val pinId = backStackEntry.arguments?.getString("pinId") ?: ""
 
-            // 👇 AQUÍ ESTABA EL ERROR: AÑADIMOS 'viewModel = viewModel'
             PinDetalleFirestoreScreen(
-                viewModel = viewModel, // <--- ¡CORREGIDO!
+                viewModel = viewModel,
                 pinId = pinId,
                 navController = localNavController,
                 rootNavController = navController
             )
         }
-
 
         // --- 🔹 Pantalla genérica de detalle de Figura
         composable(

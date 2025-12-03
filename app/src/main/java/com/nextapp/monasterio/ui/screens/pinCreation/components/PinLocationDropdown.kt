@@ -150,7 +150,7 @@ fun AreaPrincipalSelector(
     selectedArea: String,
     onAreaSelected: (String) -> Unit
 ) {
-    // ✅ MODIFICADO: Solo las dos opciones solicitadas
+
     val areas = listOf("Iglesia", "Monasterio")
     Row(
         modifier = Modifier.fillMaxWidth(),
