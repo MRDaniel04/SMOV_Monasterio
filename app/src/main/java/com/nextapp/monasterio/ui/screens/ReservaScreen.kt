@@ -118,7 +118,7 @@ fun ReservaScreen(
 
         // 1. FONDO
         Image(
-            painter = painterResource(R.drawable.fondo),
+            painter = painterResource(R.drawable.fondo_desplegable3),
             contentDescription = "Fondo",
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize()

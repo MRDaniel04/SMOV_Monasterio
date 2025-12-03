@@ -53,7 +53,7 @@ fun OpcionesReservaScreen(
 
         // 1. IMAGEN DE FONDO (Ocupa todo)
         Image(
-            painter = painterResource(R.drawable.fondo),
+            painter = painterResource(R.drawable.fondo_desplegable3),
             contentDescription = "Fondo",
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize()
@@ -174,7 +174,7 @@ fun ReservaOptionButton(
                     painter = painterResource(iconRes),
                     contentDescription = null,
                     modifier = Modifier.size(iconSize),
-                    tint = Color.Black // Aseguramos color negro
+                    tint = Color.White // Aseguramos color negro
                 )
 
                 Spacer(Modifier.width(24.dp))
@@ -185,7 +185,7 @@ fun ReservaOptionButton(
                     fontFamily = FontFamily.Serif,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center,
-                    color = Color.Black
+                    color = Color.White
                 )
             }
         }

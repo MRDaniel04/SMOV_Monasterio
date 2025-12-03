@@ -10,11 +10,13 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
@@ -25,6 +27,8 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -44,6 +48,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.nextapp.monasterio.AppRoutes
 import com.nextapp.monasterio.R
 import com.nextapp.monasterio.models.ParejasPieza
 import com.nextapp.monasterio.models.ParejasSize
@@ -58,16 +63,24 @@ fun ParejasScreen(
     size : ParejasSize,
     imagenes : List<Int>
 ){
-    val prefsRepository = remember { UserPreferencesRepository.instance }
 
-    val factory = remember { ParejasViewModelFactory(size, imagenes,prefsRepository) }
+    val factory = remember { ParejasViewModelFactory(size, imagenes) }
     val viewModel: ParejasViewModel = viewModel(factory = factory)
     val state by viewModel.uiState.collectAsState()
 
     val context = LocalContext.current
     val activity = context as? Activity
 
-    val showInstructionsPreviewDialog by viewModel.showInstructionsDialog.collectAsState()
+    var showInstructionsPreviewDialog by remember { mutableStateOf(true) }
+
+    val ruta = remember(size){
+        when(size.rows * size.columns){
+            6 -> AppRoutes.PAREJASNIVEL1
+            8 -> AppRoutes.PAREJASNIVEL2
+            10 -> AppRoutes.PAREJASNIVEL3
+            else -> AppRoutes.PAREJASNIVEL4
+        }
+    }
 
     DisposableEffect(Unit) {
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
@@ -78,9 +91,9 @@ fun ParejasScreen(
 
     if(showInstructionsPreviewDialog){
         ParejaDialog(
-            onDismiss = {},
+            onDismiss = {showInstructionsPreviewDialog=false},
             onConfirm = {
-                viewModel.markInstructionsAsShown()
+                showInstructionsPreviewDialog=false
                 viewModel.iniciarJuego() },
             titulo = stringResource(R.string.title_instructions),
             texto = stringResource(R.string.text_instructions_pairs)
@@ -96,17 +109,29 @@ fun ParejasScreen(
         verticalArrangement = Arrangement.Center
     ) {
 
-        Column(
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
+                .padding(bottom = 8.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ){
             Text(
                 text = stringResource(R.string.left_pairs,state.parejas),
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(start = 4.dp)
             )
+            IconButton(
+                onClick = { showInstructionsPreviewDialog = true },
+                modifier = Modifier
+                    .size(48.dp)
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.help),
+                    contentDescription = stringResource(R.string.title_instructions),
+                    tint = Color.Black.copy(alpha = 0.7f),
+                )
+            }
         }
 
         LazyVerticalGrid(
@@ -137,7 +162,18 @@ fun ParejasScreen(
     }
 
     if (state.solucionado) {
-        ParejaDialog(onDismiss = {}, onConfirm = { navController.popBackStack() },stringResource(R.string.congratulations),stringResource(R.string.message_game_completed))
+        ParejaDialog(
+            onDismiss = {},
+            onConfirm = {
+                navController.navigate(ruta){
+                    popUpTo(ruta){
+                        inclusive = true
+                    }
+                }
+            },
+            stringResource(R.string.congratulations),
+            stringResource(R.string.message_game_completed)
+        )
     }
 }
 

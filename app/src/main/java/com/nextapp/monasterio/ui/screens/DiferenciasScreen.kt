@@ -1,23 +1,30 @@
 package com.nextapp.monasterio.ui.screens
 
 import android.util.Log
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.nextapp.monasterio.AppRoutes
 import com.nextapp.monasterio.viewModels.ImagenConToque
 import com.nextapp.monasterio.viewModels.DiferenciasViewModel
 import com.nextapp.monasterio.R
 import com.nextapp.monasterio.repository.UserPreferencesRepository
-import com.nextapp.monasterio.viewModels.PuzzleViewModel
-import com.nextapp.monasterio.viewModels.PuzzleViewModelFactory
 
 @Composable
 fun DiferenciasScreen(navController : NavController
@@ -33,13 +40,12 @@ fun DiferenciasScreen(navController : NavController
     val diferenciasList = juegoActual.diferencias
     val juegoTerminado = contador == diferenciasList.size
 
-    val showInstructionsPreviewDialog by viewModel.showInstructionsDialog.collectAsState()
+    var showInstructionsPreviewDialog by remember { mutableStateOf(true) }
 
     if(showInstructionsPreviewDialog){
         PuzzleDialog(
-            onDismiss = {viewModel.markInstructionsAsShown()},
-            onConfirm = {
-                viewModel.markInstructionsAsShown()},
+            onDismiss = {showInstructionsPreviewDialog =false},
+            onConfirm = {showInstructionsPreviewDialog =false},
             titulo = stringResource(R.string.title_instructions),
             texto = stringResource(R.string.text_instructions_spot_the_difference)
         )
@@ -50,13 +56,31 @@ fun DiferenciasScreen(navController : NavController
             .fillMaxSize()
             .padding(8.dp)
     ) {
-       Text(
-            text = stringResource(R.string.differences_counter,contador,diferenciasList.size),
-            style = MaterialTheme.typography.titleLarge,
+        Row(
             modifier = Modifier
-                .padding(vertical = 8.dp)
                 .fillMaxWidth()
-        )
+                .padding(bottom = 8.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = stringResource(R.string.differences_counter, contador, diferenciasList.size),
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier
+                    .padding(vertical = 8.dp)
+            )
+            IconButton(
+                onClick = { showInstructionsPreviewDialog = true },
+                modifier = Modifier
+                    .size(48.dp)
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.help),
+                    contentDescription = stringResource(R.string.title_instructions),
+                    tint = Color.Black.copy(alpha = 0.7f),
+                )
+            }
+        }
 
         Column(
             modifier = Modifier
@@ -64,11 +88,13 @@ fun DiferenciasScreen(navController : NavController
                 .weight(1f),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            ImagenConToque(
-                resId = juegoActual.imagenOriginal,
-                diferencias = diferenciasList,
-                onHit = viewModel::onTouch,
-                modifier = Modifier.weight(1f)
+            Image(
+                painter = painterResource(juegoActual.imagenOriginal),
+                contentDescription="",
+                contentScale = ContentScale.Fit,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
             )
 
             ImagenConToque(
@@ -86,7 +112,7 @@ fun DiferenciasScreen(navController : NavController
             text = { Text(stringResource(R.string.message_game_completed)) },
             confirmButton = {
                 Button(onClick = {
-                    navController.popBackStack()
+                    navController.navigate(AppRoutes.JUEGO_DIFERENCIAS)
                 }) {
                     Text(stringResource(R.string.ready))
                 }
