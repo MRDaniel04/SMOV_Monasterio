@@ -228,7 +228,10 @@ fun MonasteryAppScreen(activity: AppCompatActivity) { // 👈 Recibimos la activ
                                                 .show()
                                         }) {
                                             Icon(
-                                                painter = painterResource(id = R.drawable.lapiz),
+                                                painter = if (isEditing)
+                                                    painterResource(id = R.drawable.baseline_done_24)
+                                                else
+                                                    painterResource(id = R.drawable.lapiz),
                                                 contentDescription = if (isEditing)
                                                     stringResource(id = R.string.edit_mode_deactivate_icon)
                                                 else
