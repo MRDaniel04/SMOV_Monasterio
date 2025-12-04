@@ -113,8 +113,7 @@ fun MonasteryAppScreen(activity: AppCompatActivity) { // 👈 Recibimos la activ
     val isMapSection = currentRoute?.let { route ->
         route.startsWith(AppRoutes.VIRTUAL_VISIT) || // Cubre la entrada principal
                 route.contains("pin_detalle") ||             // Cubre los detalles de los pines
-                route.contains("plano") ||                   // Cubre los submapas (claustro, iglesia...)
-                route.startsWith(AppRoutes.PIN_ENTRADA_MONASTERIO) // ⭐ ADICIÓN PARA LA PANTALLA DE ENTRADA
+                route.contains("plano")              // Cubre los submapas (claustro, iglesia...)
     } ?: false
 
     // La vista es inmersiva si cumple CUALQUIERA de estas condiciones
