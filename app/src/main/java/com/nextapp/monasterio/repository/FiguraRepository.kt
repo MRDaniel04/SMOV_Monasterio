@@ -1,8 +1,10 @@
 package com.nextapp.monasterio.repository
 
 import android.util.Log
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.nextapp.monasterio.models.FiguraData
+import com.nextapp.monasterio.models.Punto
 import kotlinx.coroutines.tasks.await
 
 object FiguraRepository {
@@ -11,38 +13,33 @@ object FiguraRepository {
 
     suspend fun getAllFiguras(): List<FiguraData> {
         val db = FirebaseFirestore.getInstance()
-
-        Log.d(TAG, "Iniciando consulta a la colección 'figuras'...")
-
-        try {
+        return try {
             val snapshot = db.collection("figuras").get().await()
-
-            if (snapshot.isEmpty) {
-                Log.d(TAG, "Consulta exitosa, pero la colección 'figuras' está vacía.")
-                return emptyList()
+            snapshot.documents.mapNotNull { doc ->
+                mapDocumentToFigura(doc.id, doc.data)
             }
-
-            Log.d(TAG, "Consulta exitosa. Documentos encontrados: ${snapshot.size()}")
-
-            // ✅ CORRECCIÓN CRÍTICA: Mapear el ID del documento
-            val figurasList = snapshot.documents.mapNotNull { document ->
-                // document.id contiene el ID de Firebase (ej. "arco_mudejar")
-                // Se deserializa el objeto y se le añade el ID con .copy()
-                document.toObject(FiguraData::class.java)?.copy(id = document.id)
-            }
-
-            Log.d(TAG, "Resultado final de FiguraRepository.getAllFiguras() (con ID): ${figurasList.size} figuras.")
-
-            // Opcional: Log para verificar que el ID se mapeó correctamente
-            figurasList.take(2).forEach {
-                Log.d(TAG, "Verificación ID: ${it.nombre} -> ID: ${it.id}")
-            }
-
-            return figurasList
-
         } catch (e: Exception) {
-            Log.e(TAG, "Error al obtener las figuras de Firestore", e)
-            return emptyList()
+            Log.e(TAG, "Error getAllFiguras", e)
+            emptyList()
+        }
+    }
+
+    suspend fun getFiguraByNombre(nombre: String): FiguraData? {
+        val db = FirebaseFirestore.getInstance()
+        return try {
+            val snapshot = db.collection("figuras")
+                .whereEqualTo("nombre", nombre)
+                .limit(1)
+                .get()
+                .await()
+
+            if (!snapshot.isEmpty) {
+                val doc = snapshot.documents[0]
+                mapDocumentToFigura(doc.id, doc.data)
+            } else null
+        } catch (e: Exception) {
+            Log.e(TAG, "Error getFiguraByNombre", e)
+            null
         }
     }
 
@@ -51,13 +48,63 @@ object FiguraRepository {
         return try {
             val doc = db.collection("figuras").document(id).get().await()
             if (doc.exists()) {
-                doc.toObject(FiguraData::class.java)?.copy(id = doc.id)
-            } else {
-                null
-            }
+                mapDocumentToFigura(doc.id, doc.data)
+            } else null
         } catch (e: Exception) {
-            Log.e(TAG, "Error al obtener la figura $id de Firestore", e)
+            Log.e(TAG, "Error getFiguraById", e)
             null
+        }
+    }
+
+    // 👇 FUNCIÓN DE MAPEO MANUAL PARA EVITAR ERRORES DE TIPO 👇
+    private fun mapDocumentToFigura(id: String, data: Map<String, Any>?): FiguraData? {
+        if (data == null) return null
+        try {
+            // 1. Tratamiento especial para IMÁGENES (Reference -> String)
+            val imagenesRaw = data["imagenes"]
+            val imagenesList = if (imagenesRaw is List<*>) {
+                imagenesRaw.mapNotNull { item ->
+                    if (item is DocumentReference) item.id else item.toString()
+                }
+            } else emptyList()
+
+            // 2. Tratamiento especial para PATH (List<HashMap> -> List<Punto>)
+            val pathRaw = data["path"] as? List<Map<String, Number>>
+            val pathList = pathRaw?.map {
+                Punto((it["x"]?.toFloat() ?: 0f), (it["y"]?.toFloat() ?: 0f))
+            } ?: emptyList()
+
+            return FiguraData(
+                id = id,
+                nombre = data["nombre"] as? String ?: "",
+                descripcion = data["descripcion"] as? String ?: "",
+                imagenes = imagenesList, // Ahora es List<String>
+
+                info_es = data["info_es"] as? String ?: "",
+                info_en = data["info_en"] as? String ?: "",
+                info_de = data["info_de"] as? String ?: "",
+                info_fr = data["info_fr"] as? String ?: "",
+
+                path = pathList,
+                colorResaltado = (data["colorResaltado"] as? Number)?.toLong() ?: 0xFFFFFFFF,
+                scale = (data["scale"] as? Number)?.toFloat() ?: 1f,
+                offsetX = (data["offsetX"] as? Number)?.toFloat() ?: 0f,
+                offsetY = (data["offsetY"] as? Number)?.toFloat() ?: 0f,
+
+                tipoDestino = data["tipoDestino"] as? String ?: "",
+                valorDestino = data["valorDestino"] as? String ?: "",
+
+                audioUrl_es = data["audioUrl_es"] as? String,
+                audioUrl_en = data["audioUrl_en"] as? String,
+                audioUrl_de = data["audioUrl_de"] as? String ?: data["audioUrl_ge"] as? String, // Soporte doble
+                audioUrl_fr = data["audioUrl_fr"] as? String,
+
+                // 👇 AHORA SÍ LO LEEMOS CORRECTAMENTE
+                vista360Url = data["vista360Url"] as? String
+            )
+        } catch (e: Exception) {
+            Log.e(TAG, "Error mapeando figura $id", e)
+            return null
         }
     }
 }

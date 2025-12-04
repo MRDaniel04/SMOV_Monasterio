@@ -33,6 +33,8 @@ import androidx.navigation.NavHostController
 import android.graphics.Matrix
 import android.graphics.Path
 import android.util.Log
+import androidx.compose.foundation.border
+import androidx.compose.material3.FloatingActionButtonDefaults.elevation
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import com.nextapp.monasterio.R
@@ -227,9 +229,8 @@ fun PlanoScreen(
                         x = pin.x,
                         y = pin.y,
                         iconId = R.drawable.pin3,
-                        isPressed = pin.id == selectedPinId, // ⭐ CAMBIO: Compara el ID
-                        isMoving = false,
-                        pinColor = android.graphics.Color.RED
+                        isPressed = pin.id == selectedPinId,
+                        isMoving = false
                     )
                 }
 
@@ -309,65 +310,56 @@ fun PlanoScreen(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             if (botonesVisibles) {
-                FloatingActionButton(onClick = {
-                    photoViewRef?.let {
-                        it.setScale(
-                            (it.scale + 0.2f).coerceAtMost(
-                                it.maximumScale
-                            ), true
-                        )
-                    }
-                }) {
-                    Box(
-                        modifier = Modifier.size(48.dp)
-                            .background(Color.White.copy(alpha = 0.7f), CircleShape),
-                        contentAlignment = Alignment.Center
-                    ) {
+                // --- BOTÓN AUMENTAR ---
+                FloatingActionButton(
+                    onClick = { photoViewRef?.let { it.setScale((it.scale + 0.2f).coerceAtMost(it.maximumScale), true) } },
+                    containerColor = Color.White,
+                    elevation = FloatingActionButtonDefaults.elevation(0.dp)
+                ) {
+                    Box(modifier = Modifier.size(48.dp).background(Color.White.copy(alpha = 0.7f), CircleShape).border(1.dp, Color.Black, CircleShape), contentAlignment = Alignment.Center) {
                         Icon(
                             painter = painterResource(id = R.drawable.aumentar_zoom),
                             contentDescription = stringResource(R.string.increase),
-                            tint = Color.Unspecified
+                            tint = Color.Unspecified,
+                            modifier = Modifier.size(32.dp)
                         )
                     }
                 }
-                FloatingActionButton(onClick = {
-                    photoViewRef?.let {
-                        it.setScale(
-                            (it.scale - 0.2f).coerceAtLeast(
-                                it.minimumScale
-                            ), true
-                        )
-                    }
-                }) {
-                    Box(
-                        modifier = Modifier.size(48.dp)
-                            .background(Color.White.copy(alpha = 0.7f), CircleShape),
-                        contentAlignment = Alignment.Center
-                    ) {
+
+                // --- BOTÓN DISMINUIR ---
+                FloatingActionButton(
+                    onClick = { photoViewRef?.let { it.setScale((it.scale - 0.2f).coerceAtLeast(it.minimumScale), true) } },
+                    containerColor = Color.White,
+                    elevation = FloatingActionButtonDefaults.elevation(0.dp)
+                ) {
+                    Box(modifier = Modifier.size(48.dp).background(Color.White.copy(alpha = 0.7f), CircleShape).border(1.dp, Color.Black, CircleShape), contentAlignment = Alignment.Center) {
                         Icon(
                             painter = painterResource(id = R.drawable.disminuir_zoom),
                             contentDescription = stringResource(R.string.decrease),
-                            tint = Color.Unspecified
+                            tint = Color.Unspecified,
+                            modifier = Modifier.size(32.dp)
                         )
                     }
                 }
-                FloatingActionButton(onClick = {
-                    photoViewRef?.apply {
-                        setScale(
-                            initialZoom,
-                            true
-                        ); setTranslationX(0f); setTranslationY(0f)
-                    }
-                }) {
+
+                // --- BOTÓN REAJUSTAR (CON BORDE NEGRO) ---
+                FloatingActionButton(
+                    onClick = { photoViewRef?.apply { setScale(initialZoom, true); setTranslationX(0f); setTranslationY(0f) } },
+                    containerColor = Color.White,
+                    elevation = FloatingActionButtonDefaults.elevation(0.dp)
+                ) {
                     Box(
-                        modifier = Modifier.size(48.dp)
-                            .background(Color.White.copy(alpha = 0.7f), CircleShape),
+                        modifier = Modifier
+                            .size(48.dp)
+                            .background(Color.White.copy(alpha = 0.7f), CircleShape)
+                            .border(1.dp, Color.Black, CircleShape),
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
                             painter = painterResource(id = R.drawable.reajustar),
                             contentDescription = stringResource(R.string.readjust),
-                            tint = Color.Unspecified
+                            tint = Color.Unspecified,
+                            modifier = Modifier.size(36.dp)
                         )
                     }
                 }

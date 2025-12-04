@@ -113,8 +113,7 @@ fun MonasteryAppScreen(activity: AppCompatActivity) { // 👈 Recibimos la activ
     val isMapSection = currentRoute?.let { route ->
         route.startsWith(AppRoutes.VIRTUAL_VISIT) || // Cubre la entrada principal
                 route.contains("pin_detalle") ||             // Cubre los detalles de los pines
-                route.contains("plano") ||                   // Cubre los submapas (claustro, iglesia...)
-                route.startsWith(AppRoutes.PIN_ENTRADA_MONASTERIO) // ⭐ ADICIÓN PARA LA PANTALLA DE ENTRADA
+                route.contains("plano")              // Cubre los submapas (claustro, iglesia...)
     } ?: false
 
     // La vista es inmersiva si cumple CUALQUIERA de estas condiciones
@@ -216,8 +215,8 @@ fun MonasteryAppScreen(activity: AppCompatActivity) { // 👈 Recibimos la activ
                                     // SELECTOR DE IDIOMA
                                     MainLanguageSelector(activity)
 
-                                    // Icono Editar (solo si hay usuario)
-                                    if (currentUser != null) {
+                                    // Edicion de contenido
+                                    if (currentUser != null && currentRoute != AppRoutes.INICIO) {
                                         IconButton(onClick = {
                                             isEditing = !isEditing
                                             val message = if (isEditing)
@@ -228,7 +227,10 @@ fun MonasteryAppScreen(activity: AppCompatActivity) { // 👈 Recibimos la activ
                                                 .show()
                                         }) {
                                             Icon(
-                                                painter = painterResource(id = R.drawable.lapiz),
+                                                painter = if (isEditing)
+                                                    painterResource(id = R.drawable.baseline_done_24)
+                                                else
+                                                    painterResource(id = R.drawable.lapiz),
                                                 contentDescription = if (isEditing)
                                                     stringResource(id = R.string.edit_mode_deactivate_icon)
                                                 else
@@ -237,6 +239,7 @@ fun MonasteryAppScreen(activity: AppCompatActivity) { // 👈 Recibimos la activ
                                             )
                                         }
                                     }
+
                                 }
                             }
                         )

@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.FrameLayout
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -35,6 +36,10 @@ import coil.size.Precision
 import coil.size.Scale
 import okhttp3.OkHttpClient
 import java.util.concurrent.TimeUnit
+import com.nextapp.monasterio.utils.AudioPlayerManager
+import androidx.compose.ui.platform.LocalConfiguration
+import com.nextapp.monasterio.repository.FiguraRepository
+import java.util.Locale
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -50,19 +55,78 @@ fun Pin360Screen(
     var errorMessage by remember { mutableStateOf<String?>(null) }
     var bitmap by remember { mutableStateOf<Bitmap?>(null) }
 
+    // 1. OBTENER IDIOMA Y URL DE AUDIO
+    val configuration = LocalConfiguration.current
+    val language = configuration.locales[0].language
+
+    // Calculamos la URL del audio igual que en la pantalla anterior
+    val audioUrl = remember(pin, language) {
+        pin?.let { p ->
+            val selectedUrl = when (language) {
+                "es" -> p.audioUrl_es
+                "en" -> p.audioUrl_en
+                "de" -> p.audioUrl_de
+                "fr" -> p.audioUrl_fr
+                else -> p.audioUrl_es
+            }
+            selectedUrl.takeIf { !it.isNullOrBlank() } ?: p.audioUrl_en
+        }
+    }
+
+    // 2. CONECTAR CON EL GESTOR DE AUDIO GLOBAL
+    // Esto nos dice si está sonando ahora mismo para poner el icono de Pausa o Play
+    val isAudioPlaying by AudioPlayerManager.isPlaying.collectAsState()
+    var hasUserInteracted by remember { mutableStateOf(false) }
+    DisposableEffect(Unit) {
+        onDispose {
+            // Al salir de la pantalla (Back o Destroy), pausamos el audio global
+            AudioPlayerManager.pause()
+        }
+    }
     // 1. Cargar datos del Pin
+    // 1. Cargar datos (Buscando en Pines Y en Figuras)
     LaunchedEffect(pinId) {
         isLoading = true
         try {
-            val loadedPin = PinRepository.getPinById(pinId)
-            if (loadedPin?.vista360Url.isNullOrBlank()) {
-                errorMessage = "Pin no encontrado o no tiene URL 360"
-                isLoading = false
+            // INTENTO 1: Buscar como Pin normal
+            val loadedData = PinRepository.getPinById(pinId)
+
+            if (loadedData != null) {
+                // Es un Pin real
+                pin = loadedData
             } else {
-                pin = loadedPin
+                // INTENTO 2: Buscar como Figura (Arco, Iglesia...)
+                val figura = FiguraRepository.getFiguraById(pinId)
+                if (figura != null) {
+                    // ¡Truco! Creamos un PinData temporal.
+                    // Rellenamos los datos obligatorios que faltaban con valores vacíos o ceros.
+                    pin = PinData(
+                        id = figura.id,
+                        titulo = figura.nombre,
+                        // 👇 RELLENAMOS LO QUE FALTABA PARA CORREGIR EL ERROR 👇
+                        tituloIngles = "",
+                        tituloAleman = "",
+                        tituloFrances = "",
+                        x = 0f,
+                        y = 0f,
+                        // -------------------------------------------------------
+                        descripcion = figura.descripcion,
+                        vista360Url = figura.vista360Url,
+                        // Mapeamos los audios
+                        audioUrl_es = figura.audioUrl_es,
+                        audioUrl_en = figura.audioUrl_en,
+                        audioUrl_de = figura.audioUrl_de,
+                        audioUrl_fr = figura.audioUrl_fr
+                    )
+                }
+            }
+
+            if (pin?.vista360Url.isNullOrBlank()) {
+                errorMessage = "No se encontró imagen 360 para este elemento."
+                isLoading = false
             }
         } catch (e: Exception) {
-            errorMessage = "Error al cargar pin: ${e.message}"
+            errorMessage = "Error de carga: ${e.message}"
             isLoading = false
         }
     }
@@ -159,6 +223,32 @@ fun Pin360Screen(
                 contentDescription = "Volver",
                 tint = Color.White
             )
+        }
+        if (!audioUrl.isNullOrBlank()) {
+            val iconRes = when {
+                isAudioPlaying -> R.drawable.pause
+                !hasUserInteracted -> R.drawable.sound
+                else -> R.drawable.play_arrow
+            }
+            IconButton(
+                onClick = {
+                    hasUserInteracted = true
+                    AudioPlayerManager.initialize(context)
+                    AudioPlayerManager.playOrPause(audioUrl!!)
+                },
+                modifier = Modifier
+                    .align(Alignment.TopEnd) // 👈 Esquina Superior Derecha
+                    .statusBarsPadding()
+                    .padding(16.dp)
+                    .background(Color.Black.copy(alpha = 0.5f), CircleShape)
+            ) {
+                Icon(
+                    painter = painterResource(id = iconRes),
+                    contentDescription = "Audio",
+                    tint = Color.White,
+                    modifier = Modifier.size(24.dp)
+                )
+            }
         }
     }
 }

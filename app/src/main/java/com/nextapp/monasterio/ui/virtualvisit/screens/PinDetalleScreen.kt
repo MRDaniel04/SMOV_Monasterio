@@ -98,6 +98,10 @@ fun PinDetalleScreen(
     var selectedImageTitle by remember { mutableStateOf<String?>(null) }
 
     val configuration = LocalConfiguration.current
+    val screenHeight = configuration.screenHeightDp.dp
+    val isTablet = configuration.screenWidthDp > 600
+    var carouselHeight = 0.dp
+    if(isTablet){carouselHeight = screenHeight*0.5f} else {carouselHeight = screenHeight*0.35f}
     val locale: Locale = configuration.locales[0]
     val language = locale.language
 
@@ -237,7 +241,7 @@ fun PinDetalleScreen(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(250.dp)
+                        .height(carouselHeight)
                         .clip(RoundedCornerShape(16.dp))
                         .border(3.dp, Color.Black, RoundedCornerShape(16.dp))
                         // 👇 CAPTURAMOS POSICIÓN REAL
@@ -313,7 +317,7 @@ fun PinDetalleScreen(
                 if (!audioUrl.isNullOrBlank()) {
                     val iconRes = when {
                         isPlaying -> R.drawable.pause
-                        !hasUserInteracted -> R.drawable.microphone
+                        !hasUserInteracted -> R.drawable.sound
                         else -> R.drawable.play_arrow
                     }
                     Row(

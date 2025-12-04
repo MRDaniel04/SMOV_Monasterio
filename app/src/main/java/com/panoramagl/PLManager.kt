@@ -580,7 +580,7 @@ open class PLManager(private val context: Context) : PLIView, SensorEventListene
      */
     protected fun drawView(): Boolean {
         if (mIsRendererCreated && renderer!!.isRunning && mPanorama != null) {
-            val speedMultiplier = 15.0f
+            val speedMultiplier = 10.0f
             if (!mIsValidForFov)
             // --- INICIO DE LA MODIFICACIÓN (Correcta) ---
 

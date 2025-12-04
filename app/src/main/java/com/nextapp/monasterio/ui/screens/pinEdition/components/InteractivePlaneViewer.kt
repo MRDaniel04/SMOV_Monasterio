@@ -97,7 +97,6 @@ fun InteractivePlanoViewer(
                     isPressed = false,
                     isMoving = false,
 
-                    pinColor = baseColorInt // Aplicamos el color (Rojo o Transparente)
                 )
             }
             // 3. Lógica: OCULTAR PANEL AL DESPLAZAR/HACER ZOOM (MATRIX CHANGE)
