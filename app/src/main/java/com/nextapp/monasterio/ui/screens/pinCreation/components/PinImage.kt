@@ -1,6 +1,7 @@
 package com.nextapp.monasterio.ui.screens.pinCreation.state
 
 import android.net.Uri
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -24,21 +25,21 @@ class ImagenesState(
 
     fun addTaggedImage(pinImage: PinImage) {
         images = images + pinImage
+        Log.d("FLUJO_PIN_IMAGES", "Imagen añadida: ${pinImage.uri}. now size=${images.size}")
     }
 
     fun remove(uriString: String) {
         images = images.filter { it.uri.toString() != uriString }
+        Log.d("FLUJO_PIN_IMAGES", "Imagen eliminada: $uriString. now size=${images.size}")
     }
 
     fun updateTag(uri: Uri, newTag: ImageTag) {
         images = images.map { pinImage ->
             if (pinImage.uri == uri) {
-                // Usamos copy() para que Compose detecte el cambio de estado en la lista inmutable
                 pinImage.copy(tag = newTag)
-            } else {
-                pinImage
-            }
+            } else pinImage
         }
+        Log.d("FLUJO_PIN_IMAGES", "Imagen tag actualizada: ${uri} -> $newTag. canonical now: ${images.map { it.uri.toString() to it.tag }}")
     }
 
 

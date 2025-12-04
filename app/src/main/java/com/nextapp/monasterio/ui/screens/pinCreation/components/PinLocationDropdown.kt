@@ -47,17 +47,30 @@ fun PinLocationDropdown(
 
     var manualTitleText by remember { mutableStateOf(if (selectedDropdownLocation == OTRA_UBICACION_DETALLADA) currentTitle else "") }
 
-    val isManualEntry = selectedDropdownLocation == OTRA_UBICACION_DETALLADA
-
     LaunchedEffect(currentTitle, currentUbicacion) {
 
-        if (currentTitle.isBlank() && currentUbicacion.isBlank() && selectedDropdownLocation.isNotBlank()) {
+        // --- SINCRONIZACIÓN AL EDITAR ---
+        if (currentTitle.isNotBlank()) {
+            if (ubicacionDetalladaOptions.contains(currentTitle)) {
+                selectedDropdownLocation = currentTitle
+                manualTitleText = ""
+            } else {
+                selectedDropdownLocation = OTRA_UBICACION_DETALLADA
+                manualTitleText = currentTitle
+            }
 
+            onUbicacionChange(currentUbicacion)
+        }
+
+        // --- INICIALIZACIÓN CUANDO SE CARGA "nuevo" pin ---
+        if (currentTitle.isBlank() && currentUbicacion.isBlank() && selectedDropdownLocation.isNotBlank()) {
             onTitleChange(selectedDropdownLocation)
             val areaPrincipal = getAreaPrincipalForLocation(selectedDropdownLocation)
             onUbicacionChange(areaPrincipal ?: "")
         }
     }
+
+    val isManualEntry = selectedDropdownLocation == OTRA_UBICACION_DETALLADA
 
     Column(modifier = Modifier.fillMaxWidth()) {
         ExposedDropdownMenuBox(

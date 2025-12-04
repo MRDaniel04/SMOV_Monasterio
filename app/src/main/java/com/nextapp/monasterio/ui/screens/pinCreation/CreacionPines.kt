@@ -43,28 +43,26 @@ fun CreacionPinesScreen(
     val imagenesState = vm.imagenes
     val imagen360 = vm.imagen360
 
-    val isFormValid = remember(
+    val isFormValid =
+        descripcionState.es.value.isNotBlank() &&
+                imagenesState.images.isNotEmpty() &&
+                imagenesState.allImagesTagged &&
+                vm.ubicacion_es.isNotBlank() && // Campo complejo (antes pinTitle)
+                vm.area_es.isNotBlank() // Campo simple (antes pinUbicacion)
 
-        descripcionState.es,
-        imagenesState.images,
-        imagenesState.allImagesTagged,
-        vm.pinTitle,
-        vm.pinUbicacion
-    ) {
-        descripcionState.es.isNotBlank() &&
-        imagenesState.images.isNotEmpty() &&
-        imagenesState.allImagesTagged &&
-        vm.pinTitle.isNotBlank() &&
-        vm.pinUbicacion.isNotBlank()
-    }
 
     Scaffold(
         topBar = {
+            Log.d("FLUJO_PIN_UI", "UI: pinUbicacion='${vm.area_es}'")
             val isSaveEnabled = if (isEditing) {
-                isFormValid && isModified
+                Log.d("FLUJO_PIN_UI", "UI: pinUbicacion='${vm.area_es}'")
+                val enabled = isFormValid && isModified
+                Log.d("FLUJO_PIN_UI", "UI: isFormValid=$isFormValid, isModified=$isModified, isSaveEnabled=$enabled, ubicacion='${vm.ubicacion_es}', descripcion_es_len=${vm.descripcion.es.value.length}, imagenes_count=${vm.imagenes.images.size}, allTagged=${vm.imagenes.allImagesTagged}")
+                enabled
             } else {
-                isFormValid
+                isFormValid.also { Log.d("FLUJO_PIN_UI", "UI: CREACIÓN isFormValid=$it") }
             }
+
             PinTopBar(
                 enabled = isSaveEnabled,
                 isEditing = isEditing,
@@ -102,25 +100,34 @@ fun CreacionPinesScreen(
             Spacer(Modifier.height(8.dp))
 
             PinLocationDropdown(
-                currentTitle = vm.pinTitle, // Pasamos el valor actual para mostrar
-                currentUbicacion = vm.pinUbicacion, // Pasamos el valor actual para mostrar
-                onTitleChange = { newTitle -> vm.pinTitle = newTitle }, // Callback: actualiza el TÍTULO
-                onUbicacionChange = { newUbicacion -> vm.pinUbicacion = newUbicacion } // Callback: actualiza la UBICACIÓN
+                currentTitle = vm.ubicacion_es, // 🆕 Antes vm.pinTitle
+                currentUbicacion = vm.area_es, // 🆕 Antes vm.pinUbicacion
+                onTitleChange = { newUbicacion -> vm.ubicacion_es = newUbicacion }, // 🆕 Actualiza ubicacion_es
+                onUbicacionChange = { newArea -> vm.area_es = newArea } // 🆕 Actualiza area_es
             )
 
             Spacer(Modifier.height(24.dp))
             PinDescriptionFields(
                 state = descripcionState,
-                isEditing = isEditing, // Usamos la variable local 'isEditing'
+                isEditing = isEditing,
+                onChanged = {
+                    Log.d("FLUJO_PIN_UI", "UI: Descripción onChanged() → descripcion.es='${vm.descripcion.es.value.take(60)}'")
+                    vm.checkIfModified()
+                    Log.d("FLUJO_PIN_UI", "UI: tras check: isModified=${vm.isModified}")
+                }
             )
-
 
             Spacer(Modifier.height(24.dp))
             PinImageSelector(
                 label = "Imágenes del Pin",
                 state = imagenesState,
                 mandatory = true,
-                onChanged = { vm.checkIfModified() } // ⬅️ AGREGADO: Notifica al VM si la lista de imágenes cambia.
+                onChanged = {
+                    Log.d("FLUJO_PIN_UI", "UI: PinImageSelector.onChanged() llamado. imagenes.size=${vm.imagenes.images.size}, allTagged=${vm.imagenes.allImagesTagged}")
+                    vm.checkIfModified()
+                    Log.d("FLUJO_PIN_UI", "UI: tras check: isModified=${vm.isModified}")
+                }
+
             )
 
             Spacer(Modifier.height(24.dp))
@@ -133,6 +140,7 @@ fun CreacionPinesScreen(
             )
 
             Spacer(Modifier.height(32.dp))
+
         }
     }
 }

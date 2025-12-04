@@ -4,5 +4,6 @@ class DescripcionState(
     es: String = "",
     en: String = "",
     de: String = "",
-    fr: String = ""
-) : TranslationFieldState(es, en, de, fr)
+    fr: String = "",
+    onChanged: (() -> Unit)? = null
+) : TranslationFieldState(es, en, de, fr, onChanged)

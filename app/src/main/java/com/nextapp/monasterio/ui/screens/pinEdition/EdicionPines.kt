@@ -68,15 +68,14 @@ fun EdicionPines(
     var isPinMoving by remember { mutableStateOf(false) }
     var ignoreNextMatrixChange by remember { mutableStateOf(false) }
     var pinBeingMoved by remember { mutableStateOf<PinData?>(null) }
-    var pinDragOffset by remember { mutableStateOf(Offset.Zero) } // Posición en píxeles de pantalla durante el arrastre
-    var pinTapScreenPosition by remember { mutableStateOf<Offset?>(null) } // Posición inicial en píxeles de pantalla al hacer tap/abrir panel
-    var photoViewSize by remember { mutableStateOf(IntSize.Zero) } // Tamaño del Box principal
+    var pinDragOffset by remember { mutableStateOf(Offset.Zero) }
+    var pinTapScreenPosition by remember { mutableStateOf<Offset?>(null) }
+    var photoViewSize by remember { mutableStateOf(IntSize.Zero) }
 
     val parentEntry = remember(navController.currentBackStackEntry) {
         try {
             navController.getBackStackEntry("pins_graph")
         } catch (e: Exception) {
-            // La excepción es esperada y logeada.
             null
         }
     }
@@ -86,8 +85,7 @@ fun EdicionPines(
     else
         viewModel<CreacionPinSharedViewModel>()
 
-    var isNewPinMode by remember { mutableStateOf(false) }  // <- identifica modo mover NUEVO pin
-
+    var isNewPinMode by remember { mutableStateOf(false) }
 
     // --- Carga inicial del plano y pines ---
     LaunchedEffect(Unit) {
@@ -116,12 +114,11 @@ fun EdicionPines(
             return@LaunchedEffect
         }
 
-        Log.d("FLUJO_PIN", "EdicionPines: 🚀 formSubmitted DETECTADO. Iniciando modo de colocación de Pin.") // ✅ LOG
-        // Esperar 1 frame para que photoViewSize tenga valor real
+        Log.d("FLUJO_PIN", "EdicionPines: 🚀 formSubmitted DETECTADO. Iniciando modo de colocación de Pin.")
         delay(50)
 
         if (photoViewSize.width == 0 || photoViewSize.height == 0) {
-            Log.e("FLUJO_PIN", "EdicionPines: ❌ ERROR. Tamaño del PhotoView aún no disponible. Abortando inicio de colocación.") // ✅ LOG
+            Log.e("FLUJO_PIN", "EdicionPines: ❌ ERROR. Tamaño del PhotoView aún no disponible. Abortando inicio de colocación.")
             return@LaunchedEffect
         }
 
@@ -132,20 +129,24 @@ fun EdicionPines(
         photoViewRef?.translationY = 0f
         isNewPinMode = true
 
-        Log.d("FLUJO_PIN", "EdicionPines: Pin temporal creado en el centro. PinMoving=true, NewPinMode=true.") // ✅ LOG
+        Log.d("FLUJO_PIN", "EdicionPines: Pin temporal creado en el centro. PinMoving=true, NewPinMode=true.")
 
-        // Crear pin en movimiento
+        // 🆕 Pin Being Moved: Usando los nuevos campos del ViewModel
         pinBeingMoved = PinData(
             id = "temp",
-            titulo = vm.pinTitle,
-            tituloIngles = vm.pinTitle,
-            tituloAleman = vm.pinTitle,
-            tituloFrances = vm.pinTitle,
+            ubicacion_es = vm.ubicacion_es,
+            ubicacion_en = vm.ubicacion_en,
+            ubicacion_de = vm.ubicacion_de,
+            ubicacion_fr = vm.ubicacion_fr,
+            area_es = vm.area_es,
+            area_en = vm.area_en,
+            area_de = vm.area_de,
+            area_fr = vm.area_fr,
             x = 0.5f,
             y = 0.5f,
             iconRes = R.drawable.pin3,
             imagenes = vm.imagenes.uris.map { it.toString() },
-            descripcion = vm.descripcion.es
+            descripcion_es = vm.descripcion.es.value // Usamos la descripción ES para la vista previa
         )
 
         pinDragOffset = Offset(
@@ -156,7 +157,6 @@ fun EdicionPines(
         isPinMoving = true
         ignoreNextMatrixChange = true
 
-// Ignorar matrix-changes durante 500ms
         scope.launch {
             ignoreNextMatrixChange = true
             delay(500)
@@ -178,36 +178,36 @@ fun EdicionPines(
         scope.launch {
             try {
 
+                // 🆕 ACTUALIZACIÓN DE PIN: Usando los nuevos campos en la llamada a PinRepository
                 PinRepository.updatePin(
                     pinId = pinId,
 
-                    // --- TÍTULOS y DESCRIPCIONES ---
-                    titulo = vm.pinTitle,
-                    descripcion = vm.descripcion.es,
+                    // --- UBICACIÓN (Compleja, antes TÍTULOS) ---
+                    ubicacion_es = vm.ubicacion_es,
+                    ubicacion_en = vm.ubicacion_en,
+                    ubicacion_de = vm.ubicacion_de,
+                    ubicacion_fr = vm.ubicacion_fr,
 
-                    tituloIngles = vm.pinTitleIngles,        // ✅ CORREGIDO
-                    descripcionIngles = vm.descripcion.en,   // ✅ CORREGIDO
+                    // --- DESCRIPCIONES ---
+                    descripcion_es = vm.descripcion.es.value,
+                    descripcion_en = vm.descripcion.en.value,
+                    descripcion_de = vm.descripcion.de.value,
+                    descripcion_fr = vm.descripcion.fr.value,
 
-                    tituloAleman = vm.pinTitleAleman,        // ✅ CORREGIDO
-                    descripcionAleman = vm.descripcion.de,   // ✅ CORREGIDO
-
-                    tituloFrances = vm.pinTitleFrances,      // ✅ AÑADIDO
-                    descripcionFrances = vm.descripcion.fr,  // ✅ AÑADIDO
-
-                    // --- UBICACIONES ---
-                    ubicacion = vm.pinUbicacion,
-                    ubicacionIngles = vm.pinUbicacionIngles, // ✅ AÑADIDO
-                    ubicacionAleman = vm.pinUbicacionAleman, // ✅ AÑADIDO
-                    ubicacionFrances = vm.pinUbicacionFrances, // ✅ AÑADIDO
+                    // --- ÁREA (Simple, antes UBICACIONES) ---
+                    area_es = vm.area_es,
+                    area_en = vm.area_en,
+                    area_de = vm.area_de,
+                    area_fr = vm.area_fr,
 
                     // --- AUDIOS ---
-                    audioUrl_es = vm.audioUrl_es,            // ✅ AÑADIDO
-                    audioUrl_en = vm.audioUrl_en,            // ✅ AÑADIDO
-                    audioUrl_de = vm.audioUrl_de,            // ✅ AÑADIDO
-                    audioUrl_fr = vm.audioUrl_fr,            // ✅ AÑADIDO
+                    audioUrl_es = vm.audioUrl_es,
+                    audioUrl_en = vm.audioUrl_en,
+                    audioUrl_de = vm.audioUrl_de,
+                    audioUrl_fr = vm.audioUrl_fr,
 
                     // --- RADIO ---
-                    tapRadius = vm.tapRadius ?: 0.06f,       // ✅ AÑADIDO (Usando default si es null)
+                    tapRadius = vm.tapRadius ?: 0.06f,
 
                     // --- IMÁGENES ---
                     imagenes = vm.imagenes.uris.map { it.toString() },
@@ -234,12 +234,10 @@ fun EdicionPines(
         vm.editingPinId = null
     }
 
-
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Color(0xFFF5F5F5))
-            // ⭐ MODIFICACIÓN: Capturar el tamaño del Box ⭐
             .onGloballyPositioned { coordinates ->
                 photoViewSize = coordinates.size
             }
@@ -260,41 +258,30 @@ fun EdicionPines(
             pinBeingMoved = pinBeingMoved,
             ignoreNextMatrixChange = ignoreNextMatrixChange,
 
-            // Callbacks (Eventos que se envían de vuelta al padre)
-            onRefReady = { photoView ->
-                photoViewRef = photoView // 1. Para guardar la referencia del PhotoView
-            },
-            onSizeChange = { size ->
-                photoViewSize = size // 2. Para guardar el tamaño (necesario para MovingPinOverlay)
-            },
+            // Callbacks
+            onRefReady = { photoView -> photoViewRef = photoView },
+            onSizeChange = { size -> photoViewSize = size },
             onMatrixChange = {
-                // 3. LÓGICA: OCULTAR PANEL AL DESPLAZAR/HACER ZOOM (PAN/MATRIX CHANGE)
-                // (Mismo código que estaba en setOnMatrixChangeListener)
                 Log.e("MATRIX", "❌ MatrixChange REAL → cancelando modo mover/panel")
                 isPinMoving = false
                 selectedPin = null
             },
             onPinTap = { pin, screenX, screenY ->
-                // 4. LÓGICA DE TAP SOBRE PIN (Parte 1: Guardar posición y estado)
                 pinTapScreenPosition = Offset(screenX, screenY)
                 selectedPin = pin
 
-                // Parte 2: Cargar datos completos del Pin
                 scope.launch {
                     val fullPin = PinRepository.getPinById(pin.id)
                     selectedPin = fullPin ?: selectedPin
                     if (fullPin == null) {
                         Log.e("EdicionPines", "❌ No se pudo cargar el pin detallado: ${pin.id}")
-                        selectedPin = null // Ocultar el panel si falla
+                        selectedPin = null
                     }
                 }
-                // NOTA: La lógica de desplazamiento (translationY/X) se ha movido al Viewer.
             },
             onBackgroundTap = {
-                // 5. LÓGICA DE TOQUE FUERA DEL PIN: Oculta el panel y RESTAURA AMBOS DESPLAZAMIENTOS
                 if (selectedPin != null) {
                     Log.d("EdicionPines", "❌ Toque estático fuera de Pin. Ocultando panel y RESTAURANDO POSICIONES.")
-                    // ¡IMPORTANTE! Restaurar desplazamiento, si lo hay.
                     photoViewRef?.translationY = 0f
                     photoViewRef?.translationX = 0f
                     selectedPin = null
@@ -346,37 +333,30 @@ fun EdicionPines(
             )
         }
 
-
-        // -------------------------
-        // ⭐ ADICIÓN: OVERLAY DE PIN EN MOVIMIENTO ⭐
-        // -------------------------
         if (isPinMoving && pinBeingMoved != null) {
 
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .zIndex(999f)   // 👈 SUPER IMPORTANTE
+                    .zIndex(999f)
             ) {
                 MovingPinOverlay(
                     pinData = pinBeingMoved!!,
                     initialOffset = pinDragOffset,
 
-                    isPressed = true, // ⭐ ADICIÓN CLAVE: Fuerza el color verde
+                    isPressed = true,
                     onPinDrag = { newOffset ->
-                        // Guardamos la nueva posición de pantalla
                         pinDragOffset = newOffset
                     },
                     onCancel = {
 
                         if (isNewPinMode) {
                             vm.formSubmitted = false
-                            // Volver al formulario con estados preservados
                             navController.navigate(AppRoutes.CREACION_PINES)
                             isNewPinMode = false
                         }
-                        // Acción de Cancelar: Restaurar estado anterior
                         isPinMoving = false
-                        selectedPin = pinBeingMoved // Vuelve a abrir el panel con el pin original
+                        selectedPin = pinBeingMoved
                         pinBeingMoved = null
                         pinDragOffset = Offset.Zero
                         Toast.makeText(
@@ -389,7 +369,7 @@ fun EdicionPines(
 
                         vm.isUploading = true
                         vm.uploadMessage = "Subiendo imágenes… Esto puede tardar unos segundos"
-                        Log.d("FLUJO_PIN", "EdicionPines: Botón CONFIRMAR pulsado. Calculando coordenadas...") // ✅ LOG
+                        Log.d("FLUJO_PIN", "EdicionPines: Botón CONFIRMAR pulsado. Calculando coordenadas...")
 
                         val currentScreenPos = pinDragOffset
                         var normalizedCoords: PointF? = null
@@ -403,9 +383,8 @@ fun EdicionPines(
 
 
                         if (normalizedCoords == null) {
-                            Log.e("FLUJO_PIN", "❌ ERROR: normalizedCoords es NULL. Posiblemente PhotoView no está listo.") // ✅ LOG
+                            Log.e("FLUJO_PIN", "❌ ERROR: normalizedCoords es NULL. Posiblemente PhotoView no está listo.")
                             Toast.makeText(context, "Error al obtener la posición del pin.", Toast.LENGTH_SHORT).show()
-                            // Si falla, el valor de retorno ya fue manejado.
                             return@MovingPinOverlay
                         }
 
@@ -415,16 +394,19 @@ fun EdicionPines(
 
                         if (isNewPinMode) {
 
-
+                            // 🆕 VALIDACIÓN: Usando los nuevos campos
                             val isPinValid =
-                                    vm.descripcion.es.isNotBlank() &&
-                                    vm.imagenes.uris.isNotEmpty()
+                                vm.descripcion.es.value.isNotBlank() &&
+                                        vm.imagenes.uris.isNotEmpty() &&
+                                        vm.ubicacion_es.isNotBlank() && // Campo complejo
+                                        vm.area_es.isNotBlank() // Campo simple
 
-                            Log.d("FLUJO_PIN", "EdicionPines: Validando formulario en onConfirm. isPinValid=$isPinValid") // ✅ LOG
+
+                            Log.d("FLUJO_PIN", "EdicionPines: Validando formulario en onConfirm. isPinValid=$isPinValid")
 
                             if (!isPinValid) {
-                                Toast.makeText(context, "Error: Faltan datos obligatorios (Descripción/Imágenes).", Toast.LENGTH_LONG).show()
-                                Log.w("FLUJO_PIN", "EdicionPines: ❌ Validación fallida. Cancelando creación de Pin.") // ✅ LOG
+                                Toast.makeText(context, "Error: Faltan datos obligatorios (Descripción, Imágenes, Ubicación/Área).", Toast.LENGTH_LONG).show()
+                                Log.w("FLUJO_PIN", "EdicionPines: ❌ Validación fallida. Cancelando creación de Pin.")
                                 vm.isUploading = false
                                 vm.uploadMessage = ""
                                 return@MovingPinOverlay
@@ -432,8 +414,9 @@ fun EdicionPines(
 
                             scope.launch {
 
-                                Log.d("FLUJO_PIN", "EdicionPines: ⏳ Corrutina de CREACIÓN iniciada.") // ✅ LOG
+                                Log.d("FLUJO_PIN", "EdicionPines: ⏳ Corrutina de CREACIÓN iniciada.")
                                 val start = System.currentTimeMillis()
+
                                 // 1. SUBIR IMÁGENES NORMALES
                                 val uploadedImageUrls = vm.imagenes.uris.mapNotNull { uri ->
                                     val result = CloudinaryService.uploadImage(uri, context)
@@ -450,7 +433,7 @@ fun EdicionPines(
                                 // C. VALIDACIÓN FINAL DE SUBIDA
                                 if (uploadedImageUrls.isEmpty()) {
                                     Toast.makeText(context, "Error: No se pudo subir ninguna imagen. Pin NO creado.", Toast.LENGTH_LONG).show()
-                                    Log.e("FLUJO_PIN", "❌ ERROR CLOUDINARY: Subida de imágenes falló o URIs vacías.") // ✅ LOG
+                                    Log.e("FLUJO_PIN", "❌ ERROR CLOUDINARY: Subida de imágenes falló o URIs vacías.")
                                     vm.isUploading = false
                                     vm.uploadMessage = ""
 
@@ -460,41 +443,42 @@ fun EdicionPines(
                                 // D. CREAR PIN CON LAS URLs Y COORDENADAS FINALES
                                 try {
 
+                                    // 🆕 LLAMADA A PinRepository.createPinFromForm: Usando los nuevos campos
                                     val newPinId = PinRepository.createPinFromForm(
 
-                                        // --- TÍTULOS ---
-                                        titulo = vm.pinTitle,
-                                        tituloIngles = vm.pinTitleIngles.ifBlank { null }, // Usar la variable de traducción
-                                        tituloAleman = vm.pinTitleAleman.ifBlank { null },
-                                        tituloFrances = vm.pinTitleFrances.ifBlank { null }, // ✅ CLAVE: Campo Francés
+                                        // --- UBICACIÓN (Compleja, antes TÍTULOS) ---
+                                        ubicacion_es = vm.ubicacion_es,
+                                        ubicacion_en = vm.ubicacion_en.ifBlank { null },
+                                        ubicacion_de = vm.ubicacion_de.ifBlank { null },
+                                        ubicacion_fr = vm.ubicacion_fr.ifBlank { null },
 
                                         // --- DESCRIPCIONES ---
-                                        descripcion = vm.descripcion.es,
-                                        descripcionIngles = vm.descripcion.en.ifBlank { null },
-                                        descripcionAleman = vm.descripcion.de.ifBlank { null },
-                                        descripcionFrances = vm.descripcion.fr.ifBlank { null }, // ✅ CLAVE: Campo Francés
+                                        descripcion_es = vm.descripcion.es.value,
+                                        descripcion_en = vm.descripcion.en.value.ifBlank { null },
+                                        descripcion_de = vm.descripcion.de.value.ifBlank { null },
+                                        descripcion_fr = vm.descripcion.fr.value.ifBlank { null },
 
-                                        // --- UBICACIONES (ES y Traducciones) ---
-                                        ubicacion = vm.pinUbicacion,
-                                        ubicacionIngles = vm.pinUbicacionIngles.ifBlank { null }, // Traducción de ubicación
-                                        ubicacionAleman = vm.pinUbicacionAleman.ifBlank { null }, // Traducción de ubicación
-                                        ubicacionFrances = vm.pinUbicacionFrances.ifBlank { null }, // ✅ CLAVE: Campo Francés
+                                        // --- ÁREA (Simple, antes UBICACIÓN) ---
+                                        area_es = vm.area_es,
+                                        area_en = vm.area_en.ifBlank { null },
+                                        area_de = vm.area_de.ifBlank { null },
+                                        area_fr = vm.area_fr.ifBlank { null },
 
                                         // --- AUDIO ---
-                                        audioUrl_es = vm.audioUrl_es, // Ya es nullable
-                                        audioUrl_en = vm.audioUrl_en, // Ya es nullable
-                                        audioUrl_de = vm.audioUrl_de, // Ya es nullable
-                                        audioUrl_fr = vm.audioUrl_fr, // ✅ CLAVE: Campo Francés de audio
+                                        audioUrl_es = vm.audioUrl_es,
+                                        audioUrl_en = vm.audioUrl_en,
+                                        audioUrl_de = vm.audioUrl_de,
+                                        audioUrl_fr = vm.audioUrl_fr,
 
                                         // --- COORDENADAS y RADIO ---
-                                        tapRadius = vm.tapRadius, // Ya es nullable (Float?)
+                                        tapRadius = vm.tapRadius,
                                         imagenes = uploadedImageUrls,
                                         imagen360 = uploaded360Url,
                                         x = finalX,
                                         y = finalY
                                     )
 
-                                    Log.d("FLUJO_PIN", "EdicionPines: ✅ PinRepository.createPinFromForm EXITOSO. ID=$newPinId") // ✅ LOG
+                                    Log.d("FLUJO_PIN", "EdicionPines: ✅ PinRepository.createPinFromForm EXITOSO. ID=$newPinId")
 
                                     PlanoRepository.addPinToPlano(
                                         planoId = "monasterio_interior",
@@ -516,12 +500,12 @@ fun EdicionPines(
                                     pines = allPins.filter { pinRefs.contains(it.id) }
 
                                 } catch (e: Exception) {
-                                    Log.e("FLUJO_PIN", "❌ ERROR FIREBASE: Error en PinRepository.createPinFromForm: ${e.message}") // ✅ LOG
+                                    Log.e("FLUJO_PIN", "❌ ERROR FIREBASE: Error en PinRepository.createPinFromForm: ${e.message}")
                                     Toast.makeText(context, "Error al guardar el Pin en Firebase.", Toast.LENGTH_LONG).show()
                                 } finally {
                                     vm.isUploading = false
                                     vm.uploadMessage = ""
-                                    Log.d("FLUJO_PIN", "EdicionPines: Corrutina de CREACIÓN finalizada.") // ✅ LOG
+                                    Log.d("FLUJO_PIN", "EdicionPines: Corrutina de CREACIÓN finalizada.")
                                 }
                             }
 
@@ -529,8 +513,7 @@ fun EdicionPines(
                             isNewPinMode = false
 
                         } else {
-                            // Este es el bloque de código que YA tenías para actualizar la posición
-                            // de un pin que ya existía.
+                            // Este bloque para mover un pin existente sigue usando la función de posición
                             scope.launch {
                                 try {
                                     PinRepository.updatePinPosition(
@@ -539,7 +522,6 @@ fun EdicionPines(
                                         newY = finalY
                                     )
 
-                                    // Actualizar el estado local (para forzar el redibujo del mapa)
                                     pines = pines.map { pin ->
                                         if (pin.id == pinToUpdate.id) {
                                             pin.copy(x = finalX, y = finalY)
@@ -562,7 +544,6 @@ fun EdicionPines(
 
                         // 2. Salir del modo movimiento
                         isPinMoving = false
-                        // No reabrimos el panel para forzar la actualización del mapa con las nuevas coordenadas.
                         selectedPin = null
                         pinBeingMoved = null
                         pinDragOffset = Offset.Zero
@@ -573,15 +554,15 @@ fun EdicionPines(
         }
 
         // -------------------------
-        // ⭐ 1. BOTÓN DE ATRÁS (Alineado a TopStart) ⭐
+        // ⭐ TOOLBARS (No afectadas por los cambios de nombre) ⭐
         // -------------------------
         Box(
             modifier = Modifier
-                .align(Alignment.TopStart) // Alineado a la esquina superior izquierda
-                .zIndex(100f) // Aseguramos que esté por encima del mapa
+                .align(Alignment.TopStart)
+                .zIndex(100f)
                 .padding(12.dp)
                 .clip(RoundedCornerShape(8.dp))
-                .background(Color(0xBB000000)) // Fondo semi-transparente
+                .background(Color(0xBB000000))
         ) {
             IconButton(
                 onClick = {
@@ -591,7 +572,6 @@ fun EdicionPines(
                 modifier = Modifier.padding(4.dp)
             ) {
                 Icon(
-                    // Asumo que tienes R.drawable.arrow_back o similar
                     painter = painterResource(id = R.drawable.arrow_back),
                     contentDescription = "Volver",
                     tint = Color.White
@@ -599,17 +579,12 @@ fun EdicionPines(
             }
         }
 
-        // -------------------------
-        // ⭐ 2. TOOLBAR DE EDICIÓN (Alineado a TopEnd - Componente Extraído) ⭐
-        // -------------------------
         PinEditionToolbar(
             onPinAddClick = {
-                // Lógica de Añadir Pin (Preservada)
                 vm.reset()
                 navController.navigate(AppRoutes.CREACION_PINES)
             },
             onCrosshairClick = {
-                // LÓGICA DE REAJUSTE (Preservada, utiliza photoViewRef)
                 Log.d(
                     "EdicionPines",
                     "Botón Reajustar Plano pulsado. Restaurando posición inicial."
@@ -637,7 +612,7 @@ fun EdicionPines(
             onHelpClick = {
                 Toast.makeText(context, "Mostrar Ayuda", Toast.LENGTH_SHORT).show()
             },
-            modifier = Modifier.align(Alignment.TopEnd).zIndex(100f) // Alineado a la derecha
+            modifier = Modifier.align(Alignment.TopEnd).zIndex(100f)
         )
 
         if (vm.isUploading) {
@@ -645,6 +620,7 @@ fun EdicionPines(
         }
 
     }
+
 }
 
 

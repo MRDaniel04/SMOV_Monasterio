@@ -57,11 +57,18 @@ fun EntradaMonasterioScreen(
     val locale: Locale = configuration.locales[0]
     val lang = locale.language
 
-    // ⭐ TITULO DEL PIN SEGÚN IDIOMA
-    val titulo_pin = when (lang) {
-        "de" -> pin.tituloAleman.ifBlank { pin.titulo }
-        "en" -> pin.tituloIngles.ifBlank { pin.titulo }
-        else -> pin.titulo
+    val titulo_pin: String = when (lang) {
+        "de" -> pin.ubicacion_de.orEmpty().ifBlank { pin.ubicacion_es.orEmpty() }
+        "en" -> pin.ubicacion_en.orEmpty().ifBlank { pin.ubicacion_es.orEmpty() }
+        "fr" -> pin.ubicacion_fr.orEmpty().ifBlank { pin.ubicacion_es.orEmpty() }
+        else -> pin.ubicacion_es.orEmpty()
+    }
+
+    val descripcion_pin: String = when (lang) {
+        "de" -> pin.descripcion_de.orEmpty().ifBlank { pin.descripcion_es.orEmpty() }
+        "en" -> pin.descripcion_en.orEmpty().ifBlank { pin.descripcion_es.orEmpty() }
+        "fr" -> pin.descripcion_fr.orEmpty().ifBlank { pin.descripcion_es.orEmpty() }
+        else -> pin.descripcion_es.orEmpty()
     }
 
     // ⭐ TEXTOS MULTIDIOMA
@@ -168,6 +175,16 @@ fun EntradaMonasterioScreen(
                         .fillMaxWidth()
                         .padding(horizontal = 24.dp, vertical = 16.dp)
                 ) {
+
+                    // 🆕 DESCRIPCIÓN DEL PIN (Añadido aquí)
+                    if (descripcion_pin.isNotBlank()) {
+                        Text(
+                            text = descripcion_pin,
+                            fontSize = 16.sp,
+                            color = Color.Black.copy(alpha = 0.8f),
+                            modifier = Modifier.padding(bottom = 30.dp)
+                        )
+                    }
 
                     // ⭐ TÍTULO CENTRADO (Multidioma)
                     Text(

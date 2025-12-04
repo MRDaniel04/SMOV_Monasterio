@@ -40,19 +40,27 @@ object PinRepository {
 
         return try {
 
-            val titulo = data["titulo"] as? String ?: ""
-            val tituloIngles = data["tituloIngles"] as? String ?: ""
-            val tituloAleman = data["tituloAleman"] as? String ?: ""
-            val tituloFrances = data["tituloFrances"] as? String ?: ""
+            val ubicacion_es = data["ubicacion"] as? String // FB: "ubicacion"
+            val ubicacion_en = data["ubicacionIngles"] as? String // FB: "ubicacionIngles"
+            val ubicacion_de = data["ubicacionAleman"] as? String // FB: "ubicacionAleman"
+            val ubicacion_fr = data["ubicacionFrances"] as? String // FB: "ubicacionFrances"
 
-            val ubicacion = (data["ubicacion"] as? String)?.let { safeUbicacionOf(it) }
-            val ubicacionIngles = (data["ubicacionIngles"] as? String)?.let { safeUbicacionOf(it) }
-            val ubicacionAleman = (data["ubicacionAleman"] as? String)?.let { safeUbicacionOf(it) }
-            val ubicacionFrances = (data["ubicacionFrances"] as? String)?.let { safeUbicacionOf(it) }
-
+            // 2. ÁREA (Simple)
+            val area_es = data["area"] as? String // FB: "area"
+            val area_en = data["areaIngles"] as? String // FB: "areaIngles"
+            val area_de = data["areaAleman"] as? String // FB: "areaAleman"
+            val area_fr = data["areaFrances"] as? String // FB: "areaFrances"
 
             val x = (data["x"] as? Number)?.toFloat() ?: 0f
             val y = (data["y"] as? Number)?.toFloat() ?: 0f
+
+
+            // 3. DESCRIPCIÓN
+            val descripcion_es = data["descripcion"] as? String // FB: "descripcion"
+            val descripcion_en = data["descripcionIngles"] as? String // FB: "descripcionIngles"
+            val descripcion_de = data["descripcionAleman"] as? String // FB: "descripcionAleman"
+            val descripcion_fr = data["descripcionFrances"] as? String // FB: "descripcionFrances"
+            val vista360Url = data["vista360Url"] as? String
 
             val imagenes: List<String> = when (val raw = data["imagenes"]) {
                 is List<*> -> raw.mapNotNull { ref ->
@@ -64,11 +72,6 @@ object PinRepository {
                 else -> emptyList()
             }
 
-            val descripcion = data["descripcion"] as? String
-            val descripcionIngles = data["descripcionIngles"] as? String
-            val descripcionAleman = data["descripcionAleman"] as? String
-            val descripcionFrances = data["descripcionFrances"] as? String
-            val vista360Url = data["vista360Url"] as? String
 
             val audioUrl_es = data["audioUrl_es"] as? String
             val audioUrl_en = data["audioUrl_en"] as? String
@@ -89,23 +92,23 @@ object PinRepository {
 
             PinData(
                 id = docId,
-                titulo = titulo,
-                tituloIngles = tituloIngles,
-                tituloAleman = tituloAleman,
-                tituloFrances = tituloFrances,
-                ubicacion = ubicacion,
-                ubicacionIngles = ubicacionIngles,
-                ubicacionAleman = ubicacionAleman,
-                ubicacionFrances = ubicacionFrances,
+                ubicacion_es = ubicacion_es, // ⬅️ Nuevo nombre en PinData
+                ubicacion_en = ubicacion_en,
+                ubicacion_de = ubicacion_de,
+                ubicacion_fr = ubicacion_fr,
+                area_es = area_es, // ⬅️ Nuevo nombre en PinData
+                area_en = area_en,
+                area_de = area_de,
+                area_fr = area_fr,
                 x = x,
                 y = y,
                 iconRes = null,
                 imagenes = imagenes,
                 imagenesDetalladas = emptyList(),
-                descripcion = descripcion,
-                descripcionIngles = descripcionIngles,
-                descripcionAleman = descripcionAleman,
-                descripcionFrances = descripcionFrances,
+                descripcion_es = descripcion_es,
+                descripcion_en = descripcion_en,
+                descripcion_de = descripcion_de,
+                descripcion_fr = descripcion_fr,
                 tipoDestino = tipoDestino,
                 valorDestino = valorDestino,
                 destino = destino,
@@ -133,18 +136,24 @@ object PinRepository {
     }
 
     suspend fun createPinFromForm(
-        titulo: String,
-        tituloIngles: String? = null,
-        tituloAleman: String? = null,
-        tituloFrances: String? = null,
-        descripcion: String?,
-        descripcionIngles: String? = null,
-        descripcionAleman: String? = null,
-        descripcionFrances: String? = null,
-        ubicacion: String?,
-        ubicacionIngles: String?,
-        ubicacionAleman: String?,
-        ubicacionFrances: String?,
+        // 🆕 UBICACIÓN (Compleja)
+        ubicacion_es: String?, // ⬅️ Antes 'titulo'
+        ubicacion_en: String? = null,
+        ubicacion_de: String? = null,
+        ubicacion_fr: String? = null,
+
+        // 🆕 DESCRIPCIÓN
+        descripcion_es: String?, // ⬅️ Antes 'descripcion'
+        descripcion_en: String? = null,
+        descripcion_de: String? = null,
+        descripcion_fr: String? = null,
+
+        // 🆕 ÁREA (Simple)
+        area_es: String?, // ⬅️ Antes 'ubicacion'
+        area_en: String?,
+        area_de: String?,
+        area_fr: String?,
+
         imagenes: List<String>,   // URLs de Cloudinary
         imagen360: String?,       // URL de la imagen 360 (opcional)
         x: Float,
@@ -157,25 +166,30 @@ object PinRepository {
     ): String {
 
         Log.d("REPO-DEBUG", "📌 Guardando PIN...")
-        Log.d("REPO-DEBUG", "Título Francés a guardar: $tituloFrances")
-        Log.d("REPO-DEBUG", "Descripción Francés a guardar: $descripcionFrances")
+
         val imagenesRefs: List<DocumentReference> = imagenes.map { url ->
             createImagenDocument(url)
         }
 
         val payload = mapOf(
-            "titulo" to titulo,
-            "tituloIngles" to tituloIngles.orEmpty(),
-            "tituloAleman" to tituloAleman.orEmpty(),
-            "tituloFrances" to tituloFrances.orEmpty(),
-            "descripcion" to descripcion,
-            "descripcionIngles" to descripcionIngles,
-            "descripcionAleman" to descripcionAleman,
-            "descripcionFrances" to descripcionFrances,
-            "ubicacion" to ubicacion,
-            "ubicacion" to ubicacionIngles,
-            "ubicacionAleman" to ubicacionAleman,
-            "ubicacionFrances" to ubicacionFrances,
+            // UBICACIÓN (Mapeo de 'ubicacion_es' a "ubicacion" en FB, etc.)
+            "ubicacion" to ubicacion_es,
+            "ubicacionIngles" to ubicacion_en.orEmpty(),
+            "ubicacionAleman" to ubicacion_de.orEmpty(),
+            "ubicacionFrances" to ubicacion_fr.orEmpty(),
+
+            // DESCRIPCIÓN
+            "descripcion" to descripcion_es,
+            "descripcionIngles" to descripcion_en,
+            "descripcionAleman" to descripcion_de,
+            "descripcionFrances" to descripcion_fr,
+
+            // ÁREA (Mapeo de 'area_es' a "area" en FB, etc.)
+            "area" to area_es,
+            "areaIngles" to area_en,
+            "areaAleman" to area_de,
+            "areaFrances" to area_fr,
+
             "x" to x.toDouble(),
             "y" to y.toDouble(),
             "tapRadius" to tapRadius,
@@ -227,17 +241,6 @@ object PinRepository {
     }
 
 
-
-    private fun safeUbicacionOf(name: String): Ubicacion? {
-        return try {
-            Ubicacion.valueOf(name)
-        } catch (_: Exception) {
-            null
-        }
-    }
-
-
-
     suspend fun deletePinAndImages(pinId: String): Boolean {
         return try {
             val firestore = FirebaseFirestore.getInstance()
@@ -287,24 +290,29 @@ object PinRepository {
 
     suspend fun updatePin(
         pinId: String,
-        titulo: String,
-        descripcion: String?,
-        tituloIngles: String?,
-        descripcionIngles: String?,
-        tituloAleman: String?,
-        descripcionAleman: String?,
-        tituloFrances: String?,
-        descripcionFrances: String?,
-        ubicacion: String?,
-        ubicacionIngles: String?,
-        ubicacionAleman: String?,
-        ubicacionFrances: String?,
+
+        ubicacion_es: String?,
+        ubicacion_en: String?,
+        ubicacion_de: String?,
+        ubicacion_fr: String?,
+
+        // 🆕 DESCRIPCIÓN
+        descripcion_es: String?,
+        descripcion_en: String?,
+        descripcion_de: String?,
+        descripcion_fr: String?,
+
+        // 🆕 ÁREA (Simple)
+        area_es: String?, // ⬅️ Antes 'ubicacion'
+        area_en: String?,
+        area_de: String?,
+        area_fr: String?,
+
         audioUrl_es: String?,
         audioUrl_en: String?,
         audioUrl_de: String?,
         audioUrl_fr: String?,
         tapRadius: Float?,
-        // El resto
         imagenes: List<String>,
         imagen360: String?
     ) {
@@ -325,21 +333,27 @@ object PinRepository {
             }
 
             val updates = mapOf<String, Any?>(
-                "titulo" to titulo,
-                "descripcion" to descripcion,
-                "ubicacion" to ubicacion,
+                // UBICACIÓN (Mapeo de 'ubicacion_es' a "ubicacion" en FB)
+                "ubicacion" to ubicacion_es,
+                "ubicacionIngles" to ubicacion_en,
+                "ubicacionAleman" to ubicacion_de,
+                "ubicacionFrances" to ubicacion_fr,
+
+                // DESCRIPCIÓN
+                "descripcion" to descripcion_es,
+                "descripcionIngles" to descripcion_en,
+                "descripcionAleman" to descripcion_de,
+                "descripcionFrances" to descripcion_fr,
+
+                // ÁREA (Mapeo de 'area_es' a "area" en FB)
+                "area" to area_es,
+                "areaIngles" to area_en,
+                "areaAleman" to area_de,
+                "areaFrances" to area_fr,
+
+                // Otros campos
                 "imagenes" to imagenesRefsNuevas,
                 "vista360Url" to imagen360,
-
-                "tituloIngles" to tituloIngles,
-                "descripcionIngles" to descripcionIngles,
-                "tituloAleman" to tituloAleman,
-                "descripcionAleman" to descripcionAleman,
-                "tituloFrances" to tituloFrances,
-                "descripcionFrances" to descripcionFrances,
-                "ubicacionIngles" to ubicacionIngles,
-                "ubicacionAleman" to ubicacionAleman,
-                "ubicacionFrances" to ubicacionFrances,
                 "audioUrl_es" to audioUrl_es,
                 "audioUrl_en" to audioUrl_en,
                 "audioUrl_de" to audioUrl_de,

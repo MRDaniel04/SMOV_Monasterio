@@ -64,7 +64,6 @@ fun PinDetalleScreen(
     onBack: () -> Unit,
     onVer360: (() -> Unit)? = null
 ) {
-    // --- Configuración de Ventana y Orientación ---
     val view = LocalView.current
     LaunchedEffect(Unit) {
         val window = (view.context as? Activity)?.window
@@ -103,30 +102,30 @@ fun PinDetalleScreen(
     val language = locale.language
 
     // --- Textos Multilingües ---
-    val titulo_pin: String
-    val descripcion_pin: String?
-    val ubicacion_pin: Ubicacion?
+    val titulo_pin: String // Ubicación compleja
+    val descripcion_pin: String // Descripción detallada
+    val area_pin: String? // Nombre del Área (anteriormente Ubicacion)
 
     when (language) {
-        "es" -> {
-            titulo_pin = pin.titulo
-            descripcion_pin = pin.descripcion
-            ubicacion_pin = pin.ubicacion
-        }
         "de" -> {
-            titulo_pin = pin.tituloAleman
-            descripcion_pin = pin.descripcionAleman
-            ubicacion_pin = pin.ubicacionAleman
+            titulo_pin = pin.ubicacion_de.orEmpty().ifBlank { pin.ubicacion_es.orEmpty() }
+            descripcion_pin = pin.descripcion_de.orEmpty().ifBlank { pin.descripcion_es.orEmpty() }
+            area_pin = pin.area_de
         }
         "fr" -> {
-            titulo_pin = pin.tituloFrances
-            descripcion_pin = pin.descripcionFrances
-            ubicacion_pin = pin.ubicacionFrances
+            titulo_pin = pin.ubicacion_fr.orEmpty().ifBlank { pin.ubicacion_es.orEmpty() }
+            descripcion_pin = pin.descripcion_fr.orEmpty().ifBlank { pin.descripcion_es.orEmpty() }
+            area_pin = pin.area_fr
         }
-        else -> {
-            titulo_pin = pin.tituloIngles
-            descripcion_pin = pin.descripcionIngles
-            ubicacion_pin = pin.ubicacionIngles
+        "en" -> {
+            titulo_pin = pin.ubicacion_en.orEmpty().ifBlank { pin.ubicacion_es.orEmpty() }
+            descripcion_pin = pin.descripcion_en.orEmpty().ifBlank { pin.descripcion_es.orEmpty() }
+            area_pin = pin.area_en
+        }
+        else -> { // Español por defecto
+            titulo_pin = pin.ubicacion_es.orEmpty()
+            descripcion_pin = pin.descripcion_es.orEmpty()
+            area_pin = pin.area_es
         }
     }
 
@@ -139,7 +138,7 @@ fun PinDetalleScreen(
         else -> pin.audioUrl_es
     }
 
-    Log.d("AudioDebug", "Pin: '${pin.titulo}', Idioma: $language, URL Audio: [$audioUrl]")
+    Log.d("AudioDebug", "Pin: '${pin.ubicacion_es}', Idioma: $language, URL Audio: [$audioUrl]")
 
     val exoPlayer = remember { ExoPlayer.Builder(context).build() }
     var isPlaying by remember { mutableStateOf(false) }
@@ -212,11 +211,11 @@ fun PinDetalleScreen(
                     )
                 }
 
-                // 2. TÍTULO (Alineado al Centro Absoluto)
+
                 Text(
                     text = buildString {
                         append(titulo_pin)
-                        ubicacion_pin?.let { append(" (${it.displayName})") }
+                        area_pin?.let { if (it.isNotBlank()) append(" ($it)") }
                     },
                     // Bajamos un poco la fuente (de 26 a 22) para que quepa mejor junto a la flecha
                     fontSize = 22.sp,

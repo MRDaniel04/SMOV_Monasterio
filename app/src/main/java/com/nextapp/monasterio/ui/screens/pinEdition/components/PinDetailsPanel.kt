@@ -145,9 +145,16 @@ fun PinDetailsPanel(
 
             Spacer(modifier = Modifier.height(4.dp))
 
-            val ubicacionText = selectedPin.ubicacion?.name?.let { " ($it)" } ?: ""
+            // ⭐ CORRECCIÓN 1: Manejo seguro de 'area_es' (null safety)
+            val areaText = if (selectedPin.area_es?.isNotBlank() == true) {
+                " (${selectedPin.area_es})"
+            } else {
+                ""
+            }
+
             Text(
-                text = (selectedPin.titulo ?: "Detalle del Pin") + ubicacionText,
+                // Usa ubicacion_es (con fallback en caso de null o blank) y le añade el texto del área
+                text = (selectedPin.ubicacion_es?.ifBlank { "Detalle del Pin" } ?: "Detalle del Pin") + areaText,
                 style = TextStyle(
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold
@@ -227,8 +234,9 @@ fun PinDetailsPanel(
                     .weight(1f)
                     .verticalScroll(rememberScrollState())
             ) {
+                // ⭐ CORRECCIÓN 2: Manejo seguro de 'descripcion_es' (usando orEmpty() o Elvis)
                 Text(
-                    text = selectedPin.descripcion ?: "Descripción no disponible.",
+                    text = selectedPin.descripcion_es.orEmpty().ifBlank { "Descripción no disponible." },
                     style = TextStyle(fontSize = 12.sp),
                     color = Color.DarkGray
                 )
@@ -237,12 +245,15 @@ fun PinDetailsPanel(
         }
     }
 
-    // --- DIÁLOGO DE CONFIRMACIÓN DE BORRADO PERMANENTE --- (Sin cambios)
+    // --- DIÁLOGO DE CONFIRMACIÓN DE BORRADO PERMANENTE ---
     if (isDeleteDialogOpen) {
+        // ⭐ CORRECCIÓN 3: Manejo seguro de 'ubicacion_es' en el diálogo
+        val pinTitleForDialog = selectedPin.ubicacion_es.orEmpty().ifBlank { "SIN TÍTULO" }
+
         AlertDialog(
             onDismissRequest = { isDeleteDialogOpen = false },
             title = { Text(text = "Confirmar Eliminación") },
-            text = { Text("Estás a punto de eliminar permanentemente el pin '${selectedPin.titulo}'. Esta acción no se puede deshacer. ¿Deseas continuar?") },
+            text = { Text("Estás a punto de eliminar permanentemente el pin '${pinTitleForDialog}'. Esta acción no se puede deshacer. ¿Deseas continuar?") },
             confirmButton = {
                 Button(
                     onClick = {

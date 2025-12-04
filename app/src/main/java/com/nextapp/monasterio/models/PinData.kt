@@ -1,26 +1,31 @@
 package com.nextapp.monasterio.models
 
-import androidx.compose.ui.graphics.Color
-
 data class PinData(
     val id: String,
-    val titulo: String,
-    val tituloIngles: String,
-    val tituloAleman: String,
-    val tituloFrances: String,
-    val ubicacion: Ubicacion? = null,
-    val ubicacionIngles: Ubicacion? = null,
-    val ubicacionAleman: Ubicacion? = null,
-    val ubicacionFrances: Ubicacion? = null,
+
+    // 🆕 UBICACIÓN (Compleja)
+    val ubicacion_es: String? = null, // Antes 'ubicacion'
+    val ubicacion_en: String? = null, // Antes 'ubicacionIngles'
+    val ubicacion_de: String? = null, // Antes 'ubicacionAleman'
+    val ubicacion_fr: String? = null, // Antes 'ubicacionFrances'
+
+    // 🆕 ÁREA (Simple)
+    val area_es: String? = null, // Antes 'area'
+    val area_en: String? = null, // Antes 'areaIngles'
+    val area_de: String? = null, // Antes 'areaAleman'
+    val area_fr: String? = null, // Antes 'areaFrances'
+
     val x: Float,
     val y: Float,
     val iconRes: Int? = null,
     val imagenes: List<String> = emptyList(),
     val imagenesDetalladas: List<ImagenData> = emptyList(),
-    val descripcion: String? = null,
-    val descripcionIngles: String? = null,
-    val descripcionAleman: String? = null,
-    val descripcionFrances: String?=null,
+
+    // 🆕 DESCRIPCIÓN
+    val descripcion_es: String? = null, // Antes 'descripcion'
+    val descripcion_en: String? = null, // Antes 'descripcionIngles'
+    val descripcion_de: String? = null, // Antes 'descripcionAleman'
+    val descripcion_fr: String?=null, // Antes 'descripcionFrances'
 
     // 🔹 Nuevo: destino dinámico leído de Firebase
     val tipoDestino: String? = null,
@@ -30,6 +35,7 @@ data class PinData(
     val tapRadius: Float = 0.04f,
     val vista360Url: String? = null,
 
+    // Estos ya usan el sufijo, se mantienen igual
     val audioUrl_es: String? = null,
     val audioUrl_en: String? = null,
     val audioUrl_de: String? = null,
