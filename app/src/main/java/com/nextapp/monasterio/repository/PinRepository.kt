@@ -101,7 +101,7 @@ object PinRepository {
                 y = y,
                 iconRes = null,
                 imagenes = imagenes,
-                imagenesDetalladas = emptyList(),   // ✔ CORRECTO
+                imagenesDetalladas = emptyList(),
                 descripcion = descripcion,
                 descripcionIngles = descripcionIngles,
                 descripcionAleman = descripcionAleman,
@@ -116,7 +116,6 @@ object PinRepository {
                 audioUrl_de = audioUrl_de,
                 audioUrl_fr = audioUrl_fr
             )
-
 
         } catch (e: Exception) {
             Log.e("PinRepository", "❌ Error mapeando pin $docId", e)
@@ -135,21 +134,31 @@ object PinRepository {
 
     suspend fun createPinFromForm(
         titulo: String,
-        descripcion: String?,
         tituloIngles: String? = null,
         tituloAleman: String? = null,
         tituloFrances: String? = null,
+        descripcion: String?,
         descripcionIngles: String? = null,
         descripcionAleman: String? = null,
         descripcionFrances: String? = null,
         ubicacion: String?,
+        ubicacionIngles: String?,
+        ubicacionAleman: String?,
+        ubicacionFrances: String?,
         imagenes: List<String>,   // URLs de Cloudinary
         imagen360: String?,       // URL de la imagen 360 (opcional)
         x: Float,
-        y: Float
+        y: Float,
+        tapRadius: Float?,
+        audioUrl_es: String? = null,
+        audioUrl_en: String? = null,
+        audioUrl_de: String? = null,
+        audioUrl_fr: String? = null
     ): String {
 
-
+        Log.d("REPO-DEBUG", "📌 Guardando PIN...")
+        Log.d("REPO-DEBUG", "Título Francés a guardar: $tituloFrances")
+        Log.d("REPO-DEBUG", "Descripción Francés a guardar: $descripcionFrances")
         val imagenesRefs: List<DocumentReference> = imagenes.map { url ->
             createImagenDocument(url)
         }
@@ -164,14 +173,18 @@ object PinRepository {
             "descripcionAleman" to descripcionAleman,
             "descripcionFrances" to descripcionFrances,
             "ubicacion" to ubicacion,
+            "ubicacion" to ubicacionIngles,
+            "ubicacionAleman" to ubicacionAleman,
+            "ubicacionFrances" to ubicacionFrances,
             "x" to x.toDouble(),
             "y" to y.toDouble(),
+            "tapRadius" to tapRadius,
             "imagenes" to imagenesRefs,
             "vista360Url" to imagen360,
-            "audioUrl_es" to null,
-            "audioUrl_en" to null,
-            "audioUrl_de" to null,
-            "audioUrl_fr" to null,
+            "audioUrl_es" to audioUrl_es,
+            "audioUrl_en" to audioUrl_en,
+            "audioUrl_de" to audioUrl_de,
+            "audioUrl_fr" to audioUrl_fr,
             "tipoDestino" to "detalle",
             "valorDestino" to "auto"
         )
@@ -208,7 +221,6 @@ object PinRepository {
                 .await()
 
         } catch (e: Exception) {
-            // ⭐ CAMBIO: Registrar el error ANTES de propagarlo
             Log.e("PinRepository", "❌ Error al actualizar posición del pin $pinId", e)
             throw e // Propagar el error para manejo en la UI
         }

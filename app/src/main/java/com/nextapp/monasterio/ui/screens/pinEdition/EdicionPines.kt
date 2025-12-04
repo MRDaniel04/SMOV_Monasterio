@@ -65,9 +65,6 @@ fun EdicionPines(
     var selectedPin by remember { mutableStateOf<PinData?>(null) }
     var planoUrl by remember { mutableStateOf("") }
     val scope = rememberCoroutineScope()
-
-
-    // ⭐ ESTADOS PARA EL MODO MOVIMIENTO ⭐
     var isPinMoving by remember { mutableStateOf(false) }
     var ignoreNextMatrixChange by remember { mutableStateOf(false) }
     var pinBeingMoved by remember { mutableStateOf<PinData?>(null) }
@@ -114,13 +111,17 @@ fun EdicionPines(
 
 
     LaunchedEffect(vm.formSubmitted) {
-        if (!vm.formSubmitted) return@LaunchedEffect
+        if (!vm.formSubmitted) {
+            Log.d("FLUJO_PIN", "EdicionPines: Observando formSubmitted. Estado actual: false. Esperando...")
+            return@LaunchedEffect
+        }
 
+        Log.d("FLUJO_PIN", "EdicionPines: 🚀 formSubmitted DETECTADO. Iniciando modo de colocación de Pin.") // ✅ LOG
         // Esperar 1 frame para que photoViewSize tenga valor real
         delay(50)
 
         if (photoViewSize.width == 0 || photoViewSize.height == 0) {
-            Log.e("EdicionPines", "Tamaño aún no disponible, reintentando…")
+            Log.e("FLUJO_PIN", "EdicionPines: ❌ ERROR. Tamaño del PhotoView aún no disponible. Abortando inicio de colocación.") // ✅ LOG
             return@LaunchedEffect
         }
 
@@ -130,6 +131,8 @@ fun EdicionPines(
         photoViewRef?.translationX = 0f
         photoViewRef?.translationY = 0f
         isNewPinMode = true
+
+        Log.d("FLUJO_PIN", "EdicionPines: Pin temporal creado en el centro. PinMoving=true, NewPinMode=true.") // ✅ LOG
 
         // Crear pin en movimiento
         pinBeingMoved = PinData(
@@ -162,7 +165,6 @@ fun EdicionPines(
 
     }
 
-    // ⭐⭐⭐ NUEVO: manejar modo EDITAR ⭐⭐⭐
     LaunchedEffect(vm.updateRequested) {
         if (!vm.updateRequested) return@LaunchedEffect
         vm.updateRequested = false
@@ -387,6 +389,7 @@ fun EdicionPines(
 
                         vm.isUploading = true
                         vm.uploadMessage = "Subiendo imágenes… Esto puede tardar unos segundos"
+                        Log.d("FLUJO_PIN", "EdicionPines: Botón CONFIRMAR pulsado. Calculando coordenadas...") // ✅ LOG
 
                         val currentScreenPos = pinDragOffset
                         var normalizedCoords: PointF? = null
@@ -400,7 +403,7 @@ fun EdicionPines(
 
 
                         if (normalizedCoords == null) {
-                            Log.e("EdicionPines", "Error al convertir coordenadas a normalizadas. Confirmación cancelada.")
+                            Log.e("FLUJO_PIN", "❌ ERROR: normalizedCoords es NULL. Posiblemente PhotoView no está listo.") // ✅ LOG
                             Toast.makeText(context, "Error al obtener la posición del pin.", Toast.LENGTH_SHORT).show()
                             // Si falla, el valor de retorno ya fue manejado.
                             return@MovingPinOverlay
@@ -417,8 +420,11 @@ fun EdicionPines(
                                     vm.descripcion.es.isNotBlank() &&
                                     vm.imagenes.uris.isNotEmpty()
 
+                            Log.d("FLUJO_PIN", "EdicionPines: Validando formulario en onConfirm. isPinValid=$isPinValid") // ✅ LOG
+
                             if (!isPinValid) {
                                 Toast.makeText(context, "Error: Faltan datos obligatorios (Descripción/Imágenes).", Toast.LENGTH_LONG).show()
+                                Log.w("FLUJO_PIN", "EdicionPines: ❌ Validación fallida. Cancelando creación de Pin.") // ✅ LOG
                                 vm.isUploading = false
                                 vm.uploadMessage = ""
                                 return@MovingPinOverlay
@@ -426,9 +432,7 @@ fun EdicionPines(
 
                             scope.launch {
 
-                                Log.d("EdicionPines", "Confirmando posición final. Iniciando subida de imágenes a Cloudinary...")
-
-                                Log.d("PIN", "⏳ Subiendo imágenes...")
+                                Log.d("FLUJO_PIN", "EdicionPines: ⏳ Corrutina de CREACIÓN iniciada.") // ✅ LOG
                                 val start = System.currentTimeMillis()
                                 // 1. SUBIR IMÁGENES NORMALES
                                 val uploadedImageUrls = vm.imagenes.uris.mapNotNull { uri ->
@@ -446,7 +450,7 @@ fun EdicionPines(
                                 // C. VALIDACIÓN FINAL DE SUBIDA
                                 if (uploadedImageUrls.isEmpty()) {
                                     Toast.makeText(context, "Error: No se pudo subir ninguna imagen. Pin NO creado.", Toast.LENGTH_LONG).show()
-                                    Log.e("EdicionPines", "ERROR: Subida de imágenes falló o se descartaron las URIs.")
+                                    Log.e("FLUJO_PIN", "❌ ERROR CLOUDINARY: Subida de imágenes falló o URIs vacías.") // ✅ LOG
                                     vm.isUploading = false
                                     vm.uploadMessage = ""
 
@@ -455,25 +459,42 @@ fun EdicionPines(
 
                                 // D. CREAR PIN CON LAS URLs Y COORDENADAS FINALES
                                 try {
+
                                     val newPinId = PinRepository.createPinFromForm(
 
+                                        // --- TÍTULOS ---
                                         titulo = vm.pinTitle,
-                                        tituloIngles = vm.pinTitle.ifBlank { null },
-                                        tituloAleman = vm.pinTitle.ifBlank { null },
+                                        tituloIngles = vm.pinTitleIngles.ifBlank { null }, // Usar la variable de traducción
+                                        tituloAleman = vm.pinTitleAleman.ifBlank { null },
+                                        tituloFrances = vm.pinTitleFrances.ifBlank { null }, // ✅ CLAVE: Campo Francés
 
-
+                                        // --- DESCRIPCIONES ---
                                         descripcion = vm.descripcion.es,
                                         descripcionIngles = vm.descripcion.en.ifBlank { null },
                                         descripcionAleman = vm.descripcion.de.ifBlank { null },
+                                        descripcionFrances = vm.descripcion.fr.ifBlank { null }, // ✅ CLAVE: Campo Francés
 
-                                        ubicacion = vm.pinUbicacion, // Usamos la nueva variable pinUbicacion
+                                        // --- UBICACIONES (ES y Traducciones) ---
+                                        ubicacion = vm.pinUbicacion,
+                                        ubicacionIngles = vm.pinUbicacionIngles.ifBlank { null }, // Traducción de ubicación
+                                        ubicacionAleman = vm.pinUbicacionAleman.ifBlank { null }, // Traducción de ubicación
+                                        ubicacionFrances = vm.pinUbicacionFrances.ifBlank { null }, // ✅ CLAVE: Campo Francés
 
+                                        // --- AUDIO ---
+                                        audioUrl_es = vm.audioUrl_es, // Ya es nullable
+                                        audioUrl_en = vm.audioUrl_en, // Ya es nullable
+                                        audioUrl_de = vm.audioUrl_de, // Ya es nullable
+                                        audioUrl_fr = vm.audioUrl_fr, // ✅ CLAVE: Campo Francés de audio
+
+                                        // --- COORDENADAS y RADIO ---
+                                        tapRadius = vm.tapRadius, // Ya es nullable (Float?)
                                         imagenes = uploadedImageUrls,
                                         imagen360 = uploaded360Url,
                                         x = finalX,
                                         y = finalY
                                     )
 
+                                    Log.d("FLUJO_PIN", "EdicionPines: ✅ PinRepository.createPinFromForm EXITOSO. ID=$newPinId") // ✅ LOG
 
                                     PlanoRepository.addPinToPlano(
                                         planoId = "monasterio_interior",
@@ -495,11 +516,12 @@ fun EdicionPines(
                                     pines = allPins.filter { pinRefs.contains(it.id) }
 
                                 } catch (e: Exception) {
-                                    Log.e("EdicionPines", "Error en PinRepository.createPinFromForm", e)
+                                    Log.e("FLUJO_PIN", "❌ ERROR FIREBASE: Error en PinRepository.createPinFromForm: ${e.message}") // ✅ LOG
                                     Toast.makeText(context, "Error al guardar el Pin en Firebase.", Toast.LENGTH_LONG).show()
                                 } finally {
                                     vm.isUploading = false
                                     vm.uploadMessage = ""
+                                    Log.d("FLUJO_PIN", "EdicionPines: Corrutina de CREACIÓN finalizada.") // ✅ LOG
                                 }
                             }
 

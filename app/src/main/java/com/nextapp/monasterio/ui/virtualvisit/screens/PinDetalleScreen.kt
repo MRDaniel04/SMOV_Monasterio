@@ -47,7 +47,7 @@ import com.nextapp.monasterio.ui.virtualvisit.components.GenericTutorialOverlay
 import com.nextapp.monasterio.viewModels.AjustesViewModel
 import java.util.Locale
 
-// Clase privada para definir los pasos del tutorial del Pin de forma dinámica
+
 private data class PinTutorialStep(
     val description: String,
     val focusCenter: Offset,

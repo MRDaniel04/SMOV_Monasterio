@@ -1,11 +1,8 @@
 package com.nextapp.monasterio.ui.screens.pinCreation.components
 
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.material3.*
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
 import com.nextapp.monasterio.R
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -17,7 +14,9 @@ fun PinTopBar(
     onBack: () -> Unit
 ) {
     TopAppBar(
-        title = { Text("Crear Pin") },
+        title = {
+            Text(text = if (isEditing) "Editar Pin" else "Crear Pin")
+        },
         navigationIcon = {
             IconButton(onClick = onBack) {
                 Icon(

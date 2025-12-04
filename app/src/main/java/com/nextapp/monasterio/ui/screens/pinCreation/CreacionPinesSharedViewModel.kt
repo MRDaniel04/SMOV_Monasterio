@@ -19,18 +19,39 @@ class CreacionPinSharedViewModel : ViewModel() {
     private val pinRepository = PinRepository
     val descripcion = DescripcionState()
     val imagenes = ImagenesState()
-    var imagen360 by mutableStateOf<Uri?>(null)
-    var pinTitle by mutableStateOf("")
-    // ✅ La variable pinUbicacion ahora usa el getter/setter de una propiedad
+
+    // CAMPO IMAGEN 360
+// Implementación con setter explícito para forzar checkIfModified()
+    private var _imagen360 by mutableStateOf<Uri?>(null)
+    var imagen360: Uri?
+        get() = _imagen360
+        set(value) {
+            _imagen360 = value
+            checkIfModified() // ✅ LLAMADA AGREGADA
+        }
+
+    var _pinTitle by mutableStateOf("")
+
+    // CAMPO TÍTULO (Implementación ya correcta)
+    var pinTitle: String
+        get() = _pinTitle
+        set(value) {
+            _pinTitle = value
+            checkIfModified() // ✅ Llama a la detección de cambios
+        }
 
     var _pinUbicacion by mutableStateOf("")
+
+    // CAMPO UBICACIÓN (Implementación ya correcta)
     var pinUbicacion: String
         get() = _pinUbicacion
         set(value) {
             _pinUbicacion = value
             updatePinUbicacion(value) // Llama a la lógica de traducción
+            checkIfModified() // ✅ Llama a la detección de cambios
         }
 
+    // CAMPOS DE TRADUCCIÓN (Se mantienen igual, asumiendo que son actualizados por funciones que ya llaman a checkIfModified)
     var pinTitleIngles by mutableStateOf("")
     var pinTitleAleman by mutableStateOf("")
     var pinTitleFrances by mutableStateOf("")
@@ -39,17 +60,60 @@ class CreacionPinSharedViewModel : ViewModel() {
     var pinUbicacionFrances by mutableStateOf("")
 
     // --- CAMPOS DE AUDIO ---
-    var audioUrl_es by mutableStateOf<String?>(null)
-    var audioUrl_en by mutableStateOf<String?>(null)
-    var audioUrl_de by mutableStateOf<String?>(null)
-    var audioUrl_fr by mutableStateOf<String?>(null)
+// CORRECCIÓN: Aplicar setter explícito para audioUrl_es
+    private var _audioUrl_es by mutableStateOf<String?>(null)
+    var audioUrl_es: String?
+        get() = _audioUrl_es
+        set(value) {
+            _audioUrl_es = value
+            checkIfModified() // ✅ LLAMADA AGREGADA
+        }
+
+    // CORRECCIÓN: Aplicar setter explícito para audioUrl_en
+    private var _audioUrl_en by mutableStateOf<String?>(null)
+    var audioUrl_en: String?
+        get() = _audioUrl_en
+        set(value) {
+            _audioUrl_en = value
+            checkIfModified() // ✅ LLAMADA AGREGADA
+        }
+
+    // CORRECCIÓN: Aplicar setter explícito para audioUrl_de
+    private var _audioUrl_de by mutableStateOf<String?>(null)
+    var audioUrl_de: String?
+        get() = _audioUrl_de
+        set(value) {
+            _audioUrl_de = value
+            checkIfModified() // ✅ LLAMADA AGREGADA
+        }
+
+    // CORRECCIÓN: Aplicar setter explícito para audioUrl_fr
+    private var _audioUrl_fr by mutableStateOf<String?>(null)
+    var audioUrl_fr: String?
+        get() = _audioUrl_fr
+        set(value) {
+            _audioUrl_fr = value
+            checkIfModified() // ✅ LLAMADA AGREGADA
+        }
+
 
     // --- RADIO ---
-    var tapRadius by mutableStateOf<Float?>(0.06f)
+// CORRECCIÓN: Aplicar setter explícito para tapRadius
+    private var _tapRadius by mutableStateOf<Float?>(0.06f)
+    var tapRadius: Float?
+        get() = _tapRadius
+        set(value) {
+            _tapRadius = value
+            checkIfModified() // ✅ LLAMADA AGREGADA
+        }
 
 
     // --- EDICIÓN ---
+    private var originalPin: PinData? = null
+
+
     var isEditing by mutableStateOf(false)
+    var isModified by mutableStateOf(false)
     var updateRequested by mutableStateOf(false)
     var editingPinId: String? = null
     var isUploading by mutableStateOf(false)
@@ -59,17 +123,21 @@ class CreacionPinSharedViewModel : ViewModel() {
     var modoMoverPin: Boolean = false
     var formSubmitted: Boolean = false
     var coordenadasFinales: Pair<Float, Float>? = null
-
-
     fun reset() {
 
-        descripcion.es = ""; descripcion.en = ""; descripcion.de = ""
+        pinTitle = ""
+        pinTitleIngles = ""
+        pinTitleAleman = ""
+        pinTitleFrances = ""
+        descripcion.es = ""; descripcion.en = ""; descripcion.de = ""; descripcion.fr = "";
 
         imagenes.images = emptyList()
         imagen360 = null
 
-        pinTitle = ""
         pinUbicacion = ""
+        pinUbicacionIngles = ""
+        pinUbicacionAleman = ""
+        pinUbicacionFrances = ""
 
         audioUrl_es = null
         audioUrl_en = null
@@ -93,13 +161,6 @@ class CreacionPinSharedViewModel : ViewModel() {
         editingPinId = pin.id
 
         pinTitle = pin.titulo ?: ""
-
-        descripcion.es = pin.descripcion ?: ""
-        descripcion.en = pin.descripcionIngles ?: ""
-        descripcion.de = pin.descripcionAleman ?: ""
-
-        _pinUbicacion = pin.ubicacion?.name ?: ""
-
         pinTitleIngles = pin.tituloIngles ?: ""
         pinTitleAleman = pin.tituloAleman ?: ""
         pinTitleFrances = pin.tituloFrances ?: ""
@@ -109,6 +170,7 @@ class CreacionPinSharedViewModel : ViewModel() {
         descripcion.de = pin.descripcionAleman ?: ""
         descripcion.fr = pin.descripcionFrances ?: ""
 
+        pinUbicacion = pin.ubicacion?.name ?: ""
         pinUbicacionIngles = pin.ubicacionIngles?.name ?: ""
         pinUbicacionAleman = pin.ubicacionAleman?.name ?: ""
         pinUbicacionFrances = pin.ubicacionFrances?.name ?: ""
@@ -124,7 +186,6 @@ class CreacionPinSharedViewModel : ViewModel() {
             pin.imagenesDetalladas.isNotEmpty() -> {
                 pin.imagenesDetalladas.mapNotNull { img ->
 
-                    // ⭐ NUEVO LOG: Muestra el objeto ImagenData COMPLETO ⭐
                     Log.d("PinEdit-IMG", "ImagenData COMPLETO: $img")
                     Log.d("PinEdit-TAG", "Procesando imagen, Tipo desde DB: '${img.tipo}'")
                     try {
@@ -151,6 +212,9 @@ class CreacionPinSharedViewModel : ViewModel() {
 
         // Imagen 360
         imagen360 = pin.vista360Url?.let { Uri.parse(it) }
+        originalPin = pin.copy()
+        checkIfModified()
+        Log.d("FLUJO_PIN", "VM: ✅ Pin Original cargado. ID: ${editingPinId}. isModified=false.")
     }
 
 
@@ -159,12 +223,19 @@ class CreacionPinSharedViewModel : ViewModel() {
      */
     fun onSaveClicked() {
         // Solo permitimos guardar si estamos en modo edición y no estamos ya subiendo.
-        if (!isEditing || isUploading || formSubmitted) return
+        if (!isEditing || isUploading || formSubmitted) {
+            Log.d("FLUJO_PIN", "VM: onSaveClicked ignorado. isEditing=$isEditing, isUploading=$isUploading, formSubmitted=$formSubmitted")
+            return
+        }
 
         val id = editingPinId ?: run {
             Log.e("VM", "Error: Intento de actualizar sin editingPinId")
             return
         }
+
+        // CAMBIO: Log de inicio de guardado
+        Log.d("FLUJO_PIN", "VM: 🚀 Iniciando subida de actualización para Pin ID: $id")
+
 
         // 1. Recopilar datos
         val imageUrls = imagenes.images.map { it.uri.toString() }
@@ -203,7 +274,7 @@ class CreacionPinSharedViewModel : ViewModel() {
                     audioUrl_fr = audioUrl_fr,
 
                     // --- RADIO e IMÁGENES ---
-                    tapRadius = finalTapRadius,
+                    tapRadius = tapRadius ?: 0.06f,
                     imagenes = imageUrls,
                     imagen360 = imagen360Url
                 )
@@ -212,6 +283,9 @@ class CreacionPinSharedViewModel : ViewModel() {
                 uploadMessage = "Pin actualizado con éxito."
                 updateRequested = true // Notifica a la UI que la actualización terminó
                 formSubmitted = false
+
+                // CAMBIO: Resetear isModified después de guardar con éxito
+                isModified = false
 
             } catch (e: Exception) {
                 // Fracaso
@@ -223,6 +297,25 @@ class CreacionPinSharedViewModel : ViewModel() {
                 isUploading = false
             }
         }
+    }
+
+
+    /**
+     * Se llama cuando el usuario pulsa el botón de Guardar en modo CREACIÓN.
+     */
+    fun onCreateClicked(onSuccess: () -> Unit) {
+        // Solo permitimos crear si NO estamos en modo edición y no estamos ya subiendo.
+        if (isEditing || isUploading || formSubmitted) {
+            Log.d("FLUJO_PIN", "VM: onCreateClicked ignorado. isEditing=$isEditing, isUploading=$isUploading, formSubmitted=$formSubmitted")
+            return
+        }
+
+        // 1. Marcar el estado del formulario como SUBMITTED
+        formSubmitted = true
+        Log.d("FLUJO_PIN", "VM: ✅ Formulario listo. Establecido formSubmitted = true.")
+
+        onSuccess()
+
     }
 
     companion object {
@@ -254,6 +347,78 @@ class CreacionPinSharedViewModel : ViewModel() {
             pinUbicacionAleman = ""
             pinUbicacionFrances = ""
         }
+    }
+
+    fun checkIfModified() {
+        // CAMBIO: Log de inicio
+        Log.d("FLUJO_PIN", "VM: -> Ejecutando checkIfModified().")
+
+        // Si no estamos editando o no hay pin original, no hay cambios que rastrear.
+        if (!isEditing || originalPin == null) {
+            // CAMBIO: Log de salida temprana
+            Log.d("FLUJO_PIN", "VM: ❌ Salida temprana. isEditing: $isEditing, originalPin is null: ${originalPin == null}")
+            isModified = false
+            return
+        }
+
+        val original = originalPin!!
+
+        // Comparación de campos simples (títulos, ubicaciones, descripciones)
+        val isTitleModified = pinTitle != original.titulo
+        val isUbicacionModified = _pinUbicacion != original.ubicacion?.name
+
+        // Comparación de traducciones
+        val isTitleTradsModified = pinTitleIngles != original.tituloIngles ||
+                pinTitleAleman != original.tituloAleman ||
+                pinTitleFrances != original.tituloFrances
+
+        val isUbicacionTradsModified = pinUbicacionIngles != original.ubicacionIngles?.name ||
+                pinUbicacionAleman != original.ubicacionAleman?.name ||
+                pinUbicacionFrances != original.ubicacionFrances?.name
+
+        val isDescModified = descripcion.es != original.descripcion ||
+                descripcion.en != original.descripcionIngles ||
+                descripcion.de != original.descripcionAleman ||
+                descripcion.fr != original.descripcionFrances
+
+        // Comparación de audio y radio
+        val isAudioModified = audioUrl_es != original.audioUrl_es ||
+                audioUrl_en != original.audioUrl_en ||
+                audioUrl_de != original.audioUrl_de ||
+                audioUrl_fr != original.audioUrl_fr
+
+        val isRadiusModified = tapRadius != original.tapRadius
+
+        // 1. Crear una lista canónica (URL, Tag) del Pin Original, ordenada por URL.
+        val originalImageCanonical = original.imagenesDetalladas
+            .map { it.url to it.tipo } // Pair<String, String> (URL, TagString de Firebase)
+            .sortedBy { it.first }
+
+        // 2. Crear una lista canónica (URL, Tag) del estado actual, ordenada por URL.
+        // Asumimos que PinImage.tag tiene un método toFirestoreString()
+        val currentImageCanonical = imagenes.images
+            .map { it.uri.toString() to it.tag?.toFirestoreString() } // PinImage -> Pair<String, String>
+            .sortedBy { it.first }
+
+        // 3. Comparar ambas listas canónicas. Si difieren en URLs o Tags, es modificado.
+        val isImagesModified = originalImageCanonical != currentImageCanonical ||
+                imagen360?.toString() != original.vista360Url
+
+        // Si cualquier campo es diferente, el pin está modificado
+        isModified = isTitleModified ||
+                isUbicacionModified ||
+                isTitleTradsModified ||
+                isUbicacionTradsModified ||
+                isDescModified ||
+                isAudioModified ||
+                isRadiusModified ||
+                isImagesModified
+
+        // CAMBIO: Log de resultado
+        Log.d("FLUJO_PIN", "VM: Resultado de checkIfModified:")
+        Log.d("FLUJO_PIN", "   - Titulo/Ubicacion Modificado: $isTitleModified / $isUbicacionModified")
+        Log.d("FLUJO_PIN", "   - Descripciones Modificado: $isDescModified")
+        Log.d("FLUJO_PIN", "   - isModified (FINAL): $isModified")
     }
 
 

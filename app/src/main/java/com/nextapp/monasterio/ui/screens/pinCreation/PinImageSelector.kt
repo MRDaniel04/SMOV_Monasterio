@@ -98,7 +98,8 @@ fun ImageTaggingDialog(
 fun PinImageSelector(
     label: String,
     state: ImagenesState,
-    mandatory: Boolean
+    mandatory: Boolean,
+    onChanged: () -> Unit
 ) {
     var urisToTag by remember { mutableStateOf<List<Uri>>(emptyList()) }
     var currentTaggingIndex by remember { mutableStateOf(0) }
@@ -145,9 +146,11 @@ fun PinImageSelector(
                     pinImage = pinImage,
                     onRemove = {
                         state.remove(pinImage.uri.toString())
+                        onChanged() // 💥 PUNTO CLAVE 1: Notificar al eliminar una imagen.
                     },
                     onTagSelected = { newTag ->
                         state.updateTag(pinImage.uri, newTag)
+                        onChanged() // 💥 PUNTO CLAVE 2: Notificar al actualizar la etiqueta de una imagen.
                     }
                 )
             }
@@ -166,7 +169,7 @@ fun PinImageSelector(
                 fontWeight = FontWeight.SemiBold
             ),
             color = MaterialTheme.colorScheme.secondary,
-            // Alineación: 120dp (AddImageButton) + 16dp (Spacing) = 136.dp
+
             modifier = Modifier.padding(start = 136.dp)
         )
     }
@@ -219,6 +222,7 @@ fun PinImageSelector(
                     // Proceso finalizado
                     urisToTag = emptyList()
                     currentTaggingIndex = 0
+                    onChanged()
                 }
             },
             onCancel = {

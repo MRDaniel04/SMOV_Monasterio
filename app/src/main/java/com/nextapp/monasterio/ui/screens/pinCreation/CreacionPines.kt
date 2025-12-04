@@ -36,6 +36,8 @@ fun CreacionPinesScreen(
     else
         viewModel<CreacionPinSharedViewModel>()
 
+    val isEditing = vm.isEditing
+    val isModified = vm.isModified
 
     val descripcionState = vm.descripcion
     val imagenesState = vm.imagenes
@@ -58,18 +60,25 @@ fun CreacionPinesScreen(
 
     Scaffold(
         topBar = {
+            val isSaveEnabled = if (isEditing) {
+                isFormValid && isModified
+            } else {
+                isFormValid
+            }
             PinTopBar(
-                enabled = isFormValid,
-                isEditing = vm.isEditing,   // ← Añadido
+                enabled = isSaveEnabled,
+                isEditing = isEditing,
                 onSave = {
-                    if (vm.isEditing) {
-                        vm.updateRequested = true
+                    if (isEditing) {
+                        Log.d("FLUJO_PIN", "CreacionPinesScreen: Guardar en modo EDICIÓN.")
+                        vm.onSaveClicked()
                         navController.popBackStack()
                     } else {
-                        vm.formSubmitted = true
-                        navController.popBackStack()
+                        Log.d("FLUJO_PIN", "CreacionPinesScreen: Botón CREAR pulsado. Llamando a vm.onCreateClicked().")
+                        vm.onCreateClicked {
+                            navController.popBackStack()
+                        }
                     }
-
                 },
                 onBack = { navController.popBackStack() }
             )
@@ -100,14 +109,18 @@ fun CreacionPinesScreen(
             )
 
             Spacer(Modifier.height(24.dp))
-            PinDescriptionFields(state = descripcionState, isEditing = vm.isEditing)
+            PinDescriptionFields(
+                state = descripcionState,
+                isEditing = isEditing, // Usamos la variable local 'isEditing'
+            )
 
 
             Spacer(Modifier.height(24.dp))
             PinImageSelector(
                 label = "Imágenes del Pin",
                 state = imagenesState,
-                mandatory = true
+                mandatory = true,
+                onChanged = { vm.checkIfModified() } // ⬅️ AGREGADO: Notifica al VM si la lista de imágenes cambia.
             )
 
             Spacer(Modifier.height(24.dp))

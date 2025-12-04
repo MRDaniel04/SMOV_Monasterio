@@ -1,3 +1,4 @@
+// TranslatableTextField.kt (MODIFICADO)
 package com.nextapp.monasterio.ui.screens.pinCreation.components
 
 import androidx.compose.foundation.BorderStroke
@@ -18,7 +19,9 @@ fun TranslatableTextField(
     label: String,
     state: TranslationFieldState,
     singleLine: Boolean,
-    isEditing: Boolean = false    // ⭐ SE AÑADE AQUÍ
+    isEditing: Boolean = false,
+    // 1. AÑADIDO: Callback para notificar al ViewModel
+    onChanged: () -> Unit = {}
 ) {
     var expanded by remember { mutableStateOf(false) }
 
@@ -34,7 +37,11 @@ fun TranslatableTextField(
 
         OutlinedTextField(
             value = state.es,
-            onValueChange = { state.es = it },
+            // 2. MODIFICADO: Llamamos a onChanged()
+            onValueChange = {
+                state.es = it
+                onChanged()
+            },
             isError = state.es.isBlank(),
             label = { Text("Introduce el texto en español", fontSize = 10.sp) },
             singleLine = singleLine,
@@ -100,7 +107,11 @@ fun TranslatableTextField(
 
                     OutlinedTextField(
                         value = state.en,
-                        onValueChange = { state.en = it },
+                        // 3. MODIFICADO: Llamamos a onChanged()
+                        onValueChange = {
+                            state.en = it
+                            onChanged()
+                        },
                         label = { Text("Texto opcional en inglés", fontSize = 10.sp) },
                         singleLine = singleLine,
                         modifier = Modifier.fillMaxWidth()
@@ -118,7 +129,11 @@ fun TranslatableTextField(
 
                     OutlinedTextField(
                         value = state.de,
-                        onValueChange = { state.de = it },
+                        // 4. MODIFICADO: Llamamos a onChanged()
+                        onValueChange = {
+                            state.de = it
+                            onChanged()
+                        },
                         label = { Text("Texto opcional en alemán", fontSize = 10.sp) },
                         singleLine = singleLine,
                         modifier = Modifier.fillMaxWidth()
@@ -136,7 +151,11 @@ fun TranslatableTextField(
 
                     OutlinedTextField(
                         value = state.fr,
-                        onValueChange = { state.fr = it },
+                        // 5. MODIFICADO: Llamamos a onChanged()
+                        onValueChange = {
+                            state.fr = it
+                            onChanged()
+                        },
                         label = { Text("Texto opcional en francés", fontSize = 10.sp) },
                         singleLine = singleLine,
                         modifier = Modifier.fillMaxWidth()

@@ -1,5 +1,6 @@
 package com.nextapp.monasterio.ui.screens.pinEdition.components
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -76,6 +77,7 @@ fun MovingPinOverlay(
 
                     currentOffset = Offset(boundedX, boundedY)
                     onPinDrag(currentOffset)
+                    Log.v("FLUJO_PIN", "Overlay: Pin arrastrado a pantalla (X=${currentOffset.x.toInt()}, Y=${currentOffset.y.toInt()})") // ✅ LOG
                 }
             }
     ) {
@@ -106,7 +108,10 @@ fun MovingPinOverlay(
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                IconButton(onClick = onCancel, modifier = Modifier.size(buttonSize)) {
+                IconButton(onClick = {
+                    Log.d("FLUJO_PIN", "Overlay: ↩️ CANCELAR pulsado.") // ✅ LOG
+                    onCancel()
+                }, modifier = Modifier.size(buttonSize)) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_close_24),
                         contentDescription = "Cancelar Movimiento",
@@ -115,7 +120,10 @@ fun MovingPinOverlay(
                     )
                 }
                 // Botón de Confirmación (✔️)
-                IconButton(onClick = onConfirm, modifier = Modifier.size(buttonSize)) {
+                IconButton(onClick = {
+                    Log.d("FLUJO_PIN", "Overlay: ✅ CONFIRMAR pulsado.") // ✅ LOG
+                    onConfirm()
+                }, modifier = Modifier.size(buttonSize)) {
                     Icon(
                         painter = painterResource(id = R.drawable.baseline_done_24),
                         contentDescription = "Confirmar Posición",
