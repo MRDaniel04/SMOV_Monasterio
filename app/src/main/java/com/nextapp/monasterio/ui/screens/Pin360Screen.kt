@@ -102,17 +102,35 @@ fun Pin360Screen(
                     // Rellenamos los datos obligatorios que faltaban con valores vacíos o ceros.
                     pin = PinData(
                         id = figura.id,
-                        titulo = figura.nombre,
-                        // 👇 RELLENAMOS LO QUE FALTABA PARA CORREGIR EL ERROR 👇
-                        tituloIngles = "",
-                        tituloAleman = "",
-                        tituloFrances = "",
+
+                        // Mapeo de Ubicación (antiguo 'nombre' de Figura -> 'ubicacion_es')
+                        ubicacion_es = figura.nombre,
+                        ubicacion_en = null,
+                        ubicacion_de = null,
+                        ubicacion_fr = null,
+
+                        // Mapeo de Descripción (antiguo 'descripcion' de Figura -> 'descripcion_es')
+                        descripcion_es = figura.descripcion,
+                        descripcion_en = null,
+                        descripcion_de = null,
+                        descripcion_fr = null,
+
+                        // Campos de Área (nuevos, no existen en Figura, se inicializan a null)
+                        area_es = null,
+                        area_en = null,
+                        area_de = null,
+                        area_fr = null,
+
+                        // Campos de coordenadas/radio (se mantienen los defaults)
                         x = 0f,
                         y = 0f,
-                        // -------------------------------------------------------
-                        descripcion = figura.descripcion,
+                        tapRadius = 0f,
+
+                        // Campos de imágenes y 360
+                        imagenesDetalladas = emptyList(),
                         vista360Url = figura.vista360Url,
-                        // Mapeamos los audios
+
+                        // Campos de Audio (ya usan la convención correcta)
                         audioUrl_es = figura.audioUrl_es,
                         audioUrl_en = figura.audioUrl_en,
                         audioUrl_de = figura.audioUrl_de,
