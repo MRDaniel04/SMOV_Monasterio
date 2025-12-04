@@ -29,31 +29,16 @@ data class parejasUiState(
 class ParejasViewModel (
     val size: ParejasSize,
     val imagenesIds: List<Int>,
-    private val prefsRepository: UserPreferencesRepository
 ): ViewModel(){
 
     private val _uiState = MutableStateFlow(parejasUiState(size=size))
 
     val uiState: StateFlow<parejasUiState> = _uiState
 
-    val showInstructionsDialog : StateFlow<Boolean> = prefsRepository.isInstructionsPairsDismissed
-        .map { isDismissed -> !isDismissed }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = false
-        )
-
     val piezasManager = ParejasManager(size)
 
     init{
         resetGame()
-    }
-
-    fun markInstructionsAsShown() {
-        viewModelScope.launch {
-            prefsRepository.dismissInstructionsPairs()
-        }
     }
 
     fun resetGame(){
@@ -161,12 +146,11 @@ class ParejasViewModel (
 class ParejasViewModelFactory(
     private val size: ParejasSize,
     private val imagenesIds: List<Int>,
-    private val prefsRepository: UserPreferencesRepository
 ) : ViewModelProvider.Factory{
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(ParejasViewModel::class.java)) {
-            return ParejasViewModel(size, imagenesIds,prefsRepository) as T
+            return ParejasViewModel(size, imagenesIds) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

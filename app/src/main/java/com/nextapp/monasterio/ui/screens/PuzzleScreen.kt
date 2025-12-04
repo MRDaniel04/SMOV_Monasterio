@@ -9,6 +9,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -18,6 +19,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.SegmentedButtonDefaults.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -27,6 +31,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInWindow
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -38,6 +43,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.nextapp.monasterio.AppRoutes
 import com.nextapp.monasterio.models.GridPosicion
 import com.nextapp.monasterio.models.PiezaPuzzle
 import com.nextapp.monasterio.models.PuzzleSize
@@ -63,6 +69,14 @@ fun PuzzleScreen(
         }
     }
 
+    val ruta = remember(tamaño){
+        when(tamaño.rows * tamaño.columns){
+            4 -> AppRoutes.PUZZLENIVEL1
+            9 -> AppRoutes.PUZZLENIVEL2
+            16 -> AppRoutes.PUZZLENIVEL3
+            else -> AppRoutes.PUZZLENIVEL4
+        }
+    }
     val tamañoTotal = tamaño.rows * tamaño.columns
 
     val puzzleSetSeleccionado = remember {
@@ -73,9 +87,8 @@ fun PuzzleScreen(
     val listaPiezas = puzzleSetSeleccionado.piezas
     val imagenCompleta = puzzleSetSeleccionado.imagenCompleta
 
-    val prefsRepository = remember { UserPreferencesRepository.instance }
 
-    val factory = remember { PuzzleViewModelFactory(tamaño, listaPiezas,prefsRepository,imagenCompleta) }
+    val factory = remember { PuzzleViewModelFactory(tamaño, listaPiezas,imagenCompleta) }
     val viewModel: PuzzleViewModel = viewModel(factory = factory)
     val state by viewModel.uiState.collectAsState()
     val density = LocalDensity.current
@@ -94,7 +107,7 @@ fun PuzzleScreen(
     // Mapa de posiciones iniciales de las piezas SUELTAS en la bandeja (llenado por LazyRow)
     val trayPositionsMap = remember { mutableStateMapOf<Int, Offset>() }
     var showImagePreviewDialog by remember { mutableStateOf(false) }
-    val showInstructionsPreviewDialog by viewModel.showInstructionsDialog.collectAsState()
+    var showInstructionsPreviewDialog by remember { mutableStateOf(true) }
 
     val screenWidth = LocalConfiguration.current.screenWidthDp
     val isTablet = screenWidth > 600
@@ -110,9 +123,9 @@ fun PuzzleScreen(
 
     if(showInstructionsPreviewDialog){
         PuzzleDialog(
-            onDismiss = {viewModel.markInstructionsAsShown()},
+            onDismiss = {showInstructionsPreviewDialog=false},
             onConfirm = {
-                viewModel.markInstructionsAsShown()},
+                showInstructionsPreviewDialog = false},
             titulo = stringResource(R.string.title_instructions),
             texto = stringResource(R.string.text_instructions_puzzle)
         )
@@ -125,6 +138,25 @@ fun PuzzleScreen(
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 8.dp),
+                horizontalArrangement = Arrangement.End,
+                verticalAlignment = Alignment.CenterVertically
+            ){
+                IconButton(
+                    onClick = { showInstructionsPreviewDialog = true },
+                    modifier = Modifier
+                        .size(48.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.help),
+                        contentDescription = stringResource(R.string.title_instructions),
+                        tint = Color.Black.copy(alpha = 0.7f),
+                    )
+                }
+            }
             // --- 1. PUZZLE GRID (Drop Targets y Piezas Encajadas) ---
             LazyVerticalGrid(
                 columns = GridCells.Fixed(tamaño.columns),
@@ -185,7 +217,13 @@ fun PuzzleScreen(
             if (state.solucionado) {
                 PuzzleDialog(
                     onDismiss = {},
-                    onConfirm = { navController.popBackStack() },
+                    onConfirm = {
+                        navController.navigate(ruta){
+                            popUpTo(ruta){
+                                inclusive = true
+                            }
+                        }
+                    },
                     stringResource(R.string.congratulations),
                     stringResource(R.string.message_game_completed)
                 )

@@ -79,20 +79,6 @@ fun AppNavigationHost(
         composable(AppRoutes.PAREJASNIVEL4){ParejasScreen(navController=navController,size= ParejasSize(4,3),imagenes= ParejasData.IMAGENES_NIVEL4)}
         composable(AppRoutes.JUEGO_DIFERENCIAS){DiferenciasScreen(navController=navController)}
 
-        // Ruta de Panorama 360 (Inmersiva, desde Galería / res/raw)
-        composable(
-            route = AppRoutes.PANORAMA + "/{vistaId}",
-            arguments = listOf(navArgument("vistaId") { type = NavType.StringType })
-        ) { backStackEntry ->
-            val vistaId = backStackEntry.arguments?.getString("vistaId")
-            if (vistaId != null) {
-                PanoramaScreen(
-                    vistaId = vistaId,
-                    navController = navController
-                )
-            }
-        }
-
         // Ruta de Visita Virtual (Mapa)
         composable(AppRoutes.VIRTUAL_VISIT) {
             VirtualVisitScreen(navController = navController,viewModel = ajustesViewModel)

@@ -30,15 +30,6 @@ class DiferenciasViewModel(
         prefsRepository.getUltimoParID()
     }
 
-    val showInstructionsDialog: StateFlow<Boolean> =
-        prefsRepository.isInstructionsDifferencesDismissed
-            .map { isDismissed -> !isDismissed }
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5000),
-                initialValue = false
-            )
-
     private fun seleccionarParAlAzar(): NivelJuego {
         var parSeleccionado = todosLosPares.random()
 
@@ -79,11 +70,6 @@ class DiferenciasViewModel(
     private val _diferenciasEncontradas = MutableStateFlow(0)
     val diferenciasEncontradas: StateFlow<Int> = _diferenciasEncontradas.asStateFlow()
 
-    fun markInstructionsAsShown() {
-        viewModelScope.launch {
-            prefsRepository.dismissInstructionsDifferences()
-        }
-    }
 
 
     fun onTouch(touchX: Float, touchY: Float) {

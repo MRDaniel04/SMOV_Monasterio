@@ -122,6 +122,15 @@ fun MonasteryAppScreen(activity: AppCompatActivity) { // 👈 Recibimos la activ
 
     val gesturesEnabled = when(currentRoute){
         AppRoutes.VIRTUAL_VISIT -> false
+        AppRoutes.JUEGO_DIFERENCIAS -> false
+        AppRoutes.PUZZLENIVEL1 -> false
+        AppRoutes.PUZZLENIVEL2 -> false
+        AppRoutes.PUZZLENIVEL3 -> false
+        AppRoutes.PUZZLENIVEL4 -> false
+        AppRoutes.PAREJASNIVEL1 -> false
+        AppRoutes.PAREJASNIVEL2 -> false
+        AppRoutes.PAREJASNIVEL3 -> false
+        AppRoutes.PAREJASNIVEL4 -> false
         else -> true
     }
     LaunchedEffect(navController) {
