@@ -229,9 +229,8 @@ fun PlanoScreen(
                         x = pin.x,
                         y = pin.y,
                         iconId = R.drawable.pin3,
-                        isPressed = pin.id == selectedPinId, // ⭐ CAMBIO: Compara el ID
-                        isMoving = false,
-                        pinColor = android.graphics.Color.RED
+                        isPressed = pin.id == selectedPinId,
+                        isMoving = false
                     )
                 }
 
