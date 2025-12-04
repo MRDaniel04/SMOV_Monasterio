@@ -216,8 +216,8 @@ fun MonasteryAppScreen(activity: AppCompatActivity) { // 👈 Recibimos la activ
                                     // SELECTOR DE IDIOMA
                                     MainLanguageSelector(activity)
 
-                                    // Icono Editar (solo si hay usuario)
-                                    if (currentUser != null) {
+                                    // Edicion de contenido
+                                    if (currentUser != null && currentRoute != AppRoutes.INICIO) {
                                         IconButton(onClick = {
                                             isEditing = !isEditing
                                             val message = if (isEditing)
@@ -240,6 +240,7 @@ fun MonasteryAppScreen(activity: AppCompatActivity) { // 👈 Recibimos la activ
                                             )
                                         }
                                     }
+
                                 }
                             }
                         )
