@@ -1,26 +1,41 @@
 package com.nextapp.monasterio.models
 
-import com.google.firebase.firestore.DocumentReference
-
 data class FiguraData(
-    var id: String = "",
-    var nombre: String = "",
-    var offsetX: Float = 0f,
-    var offsetY: Float = 0f,
-    var scale: Float = 1f,
-    var colorResaltado: Long = 0,
-    var tipoDestino: String = "",
-    var valorDestino: String = "",
-    var path: List<Point> = emptyList(), //Nuevos campos para DetalleFiguraScreen
-    var info_es: String = "",
-    var info_en: String = "",
-    var info_de: String = "",
-    var info_fr: String = "",
-    var imagenes: List<DocumentReference> = emptyList() // Array de referencias a documentos en la colección 'imagenes'
+    val id: String = "",
+    val nombre: String = "",
+    val descripcion: String = "",
+    // Cambiamos a List<String> para guardar solo los IDs
+    val imagenes: List<String> = emptyList(),
 
-) {
-    data class Point(
-        val x: Float = 0f,
-        val y: Float = 0f
-    )
-}
+    // Textos multilenguaje
+    val info_es: String = "",
+    val info_en: String = "",
+    val info_de: String = "",
+    val info_fr: String = "",
+
+    // Geometría
+    val path: List<Punto> = emptyList(),
+    val escala: Float = 1f,
+    val colorResaltado: Long = 0xFFFFFFFF,
+    val offsetX: Float = 0f,
+    val offsetY: Float = 0f,
+    val scale: Float = 1f,
+
+    // Navegación
+    val tipoDestino: String = "",
+    val valorDestino: String = "",
+
+    // Audio
+    val audioUrl_es: String? = null,
+    val audioUrl_en: String? = null,
+    val audioUrl_de: String? = null,
+    val audioUrl_fr: String? = null,
+
+    // 👇👇 AÑADE ESTO PARA ARREGLAR EL ERROR "Unresolved reference" 👇👇
+    val vista360Url: String? = null
+)
+
+data class Punto(
+    val x: Float = 0f,
+    val y: Float = 0f
+)

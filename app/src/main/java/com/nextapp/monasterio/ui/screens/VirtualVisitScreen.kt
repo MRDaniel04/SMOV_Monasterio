@@ -81,13 +81,16 @@ fun VirtualVisitScreen(navController: NavHostController? = null, viewModel: Ajus
 
         // --- 🔹 Pantalla genérica de detalle de Figura
         composable(
-            route = "${VirtualVisitRoutes.DETALLE_GENERICO}/{figuraId}",
-            arguments = listOf(navArgument("figuraId") { type = NavType.StringType })
+            route = "${VirtualVisitRoutes.DETALLE_GENERICO}/{nombre}",
+            arguments = listOf(navArgument("nombre") { type = NavType.StringType })
         ) { backStackEntry ->
-            val figuraId = backStackEntry.arguments?.getString("figuraId") ?: ""
+            val nombreArg = backStackEntry.arguments?.getString("nombre") ?: ""
+
             DetalleFiguraScreen(
                 navController = localNavController,
-                figuraId = figuraId
+                // 👇 PÁSALE EL NAV CONTROLLER RAÍZ AQUÍ
+                rootNavController = navController, // (navController de la función VirtualVisitScreen es el raíz)
+                nombre = nombreArg
             )
         }
     }

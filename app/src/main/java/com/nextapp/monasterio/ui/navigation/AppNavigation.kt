@@ -93,12 +93,11 @@ fun AppNavigationHost(
         // --- ¡¡AQUÍ ESTÁ LA NUEVA RUTA!! ---
         // Ruta inmersiva para el 360 de un Pin (desde Firebase URL)
         composable(
-            route = AppRoutes.PIN_360 + "/{pinId}", // Recibe el ID del Pin
+            route = AppRoutes.PIN_360 + "/{pinId}",
             arguments = listOf(navArgument("pinId") { type = NavType.StringType })
         ) { backStackEntry ->
             val pinId = backStackEntry.arguments?.getString("pinId")
             if (pinId != null) {
-                // Llama a la NUEVA pantalla 360
                 Pin360Screen(
                     pinId = pinId,
                     navController = navController
