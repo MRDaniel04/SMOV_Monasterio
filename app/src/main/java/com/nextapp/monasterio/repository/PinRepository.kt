@@ -46,10 +46,10 @@ object PinRepository {
             val ubicacion_fr = data["ubicacionFrances"] as? String // FB: "ubicacionFrances"
 
             // 2. ÁREA (Simple)
-            val area_es = data["area"] as? String // FB: "area"
-            val area_en = data["areaIngles"] as? String // FB: "areaIngles"
-            val area_de = data["areaAleman"] as? String // FB: "areaAleman"
-            val area_fr = data["areaFrances"] as? String // FB: "areaFrances"
+            val area_es = data["area_es"] as? String // FB: "area"
+            val area_en = data["area_en"] as? String // FB: "areaIngles"
+            val area_de = data["area_de"] as? String // FB: "areaAleman"
+            val area_fr = data["area_fr"] as? String // FB: "areaFrances"
 
             val x = (data["x"] as? Number)?.toFloat() ?: 0f
             val y = (data["y"] as? Number)?.toFloat() ?: 0f
