@@ -154,7 +154,7 @@ object PinRepository {
         area_de: String?,
         area_fr: String?,
 
-        imagenes: List<String>,   // URLs de Cloudinary
+        imagenes: List<ImagenData>,   // URLs de Cloudinary
         imagen360: String?,       // URL de la imagen 360 (opcional)
         x: Float,
         y: Float,
@@ -167,8 +167,8 @@ object PinRepository {
 
         Log.d("REPO-DEBUG", "📌 Guardando PIN...")
 
-        val imagenesRefs: List<DocumentReference> = imagenes.map { url ->
-            createImagenDocument(url)
+        val imagenesRefs: List<DocumentReference> = imagenes.map { image ->
+            createImagenDocument(image)
         }
 
         val payload = mapOf(
@@ -206,21 +206,30 @@ object PinRepository {
         return createPinAutoId(payload)
     }
 
-    private suspend fun createImagenDocument(url: String): DocumentReference {
+    private suspend fun createImagenDocument(image: ImagenData): DocumentReference {
         val imagenesCollection = firestore.collection("imagenes")
 
+        // 1. Determinar DocumentReference (usar ID existente o generar uno nuevo)
+        val docRef = if (image.id.isNotBlank()) {
+            imagenesCollection.document(image.id)
+        } else {
+            imagenesCollection.document()
+        }
+
+        // 2. Crear Payload con todos los datos, incluidos los títulos
         val payload = mapOf(
-            "url" to url,
-            "etiqueta" to "",
-            "titulo" to "",
-            "tituloIngles" to "",
-            "tituloAleman" to "",
-            "tituloFrances" to "",
-            "foco" to 0,
-            "tipo" to ""
+            "url" to image.url,
+            "etiqueta" to image.etiqueta,
+            "titulo" to image.titulo,
+            "tituloIngles" to image.tituloIngles,
+            "tituloAleman" to image.tituloAleman,
+            "tituloFrances" to image.tituloFrances,
+            "foco" to image.foco.toDouble(), // Firebase usa Double para números
+            "tipo" to image.tipo
         )
 
-        val docRef = imagenesCollection.add(payload).await()
+        // 3. Guardar/Actualizar el documento
+        docRef.set(payload, SetOptions.merge()).await()
         return docRef
     }
 
@@ -313,7 +322,7 @@ object PinRepository {
         audioUrl_de: String?,
         audioUrl_fr: String?,
         tapRadius: Float?,
-        imagenes: List<String>,
+        imagenes: List<ImagenData>,
         imagen360: String?
     ) {
         try {
@@ -323,13 +332,16 @@ object PinRepository {
             if (pinDoc.exists()) {
                 val imagenesRefsAntiguas = pinDoc.get("imagenes") as? List<DocumentReference> ?: emptyList()
                 imagenesRefsAntiguas.forEach { ref ->
+                    // ⚠️ NOTA: Si una imagen antigua no está en la nueva lista, aquí se elimina.
+                    // Si la quieres reutilizar, deberías omitir la eliminación aquí.
                     try { ref.delete().await() }
-                    catch (e: Exception) { Log.e("PinRepository", "❌ Advertencia: No se pudo eliminar la imagen antigua ${ref.id}. Posible orfandad.", e) }
+                    catch (e: Exception) { Log.e("PinRepository", "❌ Advertencia: No se pudo eliminar la imagen antigua ${ref.id}.", e) }
                 }
             }
 
-            val imagenesRefsNuevas: List<DocumentReference> = imagenes.map { url ->
-                createImagenDocument(url)
+            // 2. Crear/Actualizar documentos de imagen (con títulos)
+            val imagenesRefsNuevas: List<DocumentReference> = imagenes.map { image ->
+                createImagenDocument(image) // 🆕 USAMOS LA FUNCIÓN ACTUALIZADA
             }
 
             val updates = mapOf<String, Any?>(
@@ -376,3 +388,4 @@ object PinRepository {
     }
 
 }
+

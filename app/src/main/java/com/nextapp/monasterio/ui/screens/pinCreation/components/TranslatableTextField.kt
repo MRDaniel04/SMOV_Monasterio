@@ -1,4 +1,3 @@
-// TranslatableTextField.kt (MODIFICADO)
 package com.nextapp.monasterio.ui.screens.pinCreation.components
 
 import androidx.compose.foundation.BorderStroke
@@ -26,63 +25,94 @@ fun TranslatableTextField(
 
     Column(Modifier.fillMaxWidth()) {
 
-        Text(text = "$label (ES)", style = MaterialTheme.typography.titleSmall)
+        Text(
+            text = "$label (ES)",
+            style = MaterialTheme.typography.titleSmall,
+            fontWeight = FontWeight.Bold // Añadido para hacer el título más claro
+        )
 
+        // 1. CAMPO ESPAÑOL (MANDATORIO)
         OutlinedTextField(
-            value = state.es.value,   // ← ← ← CORREGIDO
-            onValueChange = {
-                state.updateEs(it)    // ← ← ← CORREGIDO
+            value = state.es, // 🛑 CORRECCIÓN: Eliminado .value
+            onValueChange = { newValue ->
+                state.updateEs(newValue)
                 onChanged()
             },
-            isError = state.es.value.isBlank(),
+            isError = state.es.isBlank(), // 🛑 CORRECCIÓN: Eliminado .value
             label = { Text("Introduce el texto en español", fontSize = 10.sp) },
             singleLine = singleLine,
-            modifier = Modifier.fillMaxWidth().padding(top = 4.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 4.dp),
             minLines = if (!singleLine) 3 else 1
         )
 
         Spacer(Modifier.height(12.dp))
 
+        // 2. BOTÓN DE TRADUCCIÓN (Para expandir/colapsar)
         OutlinedButton(
             onClick = { expanded = !expanded },
-            modifier = Modifier.fillMaxWidth()
-        ) { /* … */ }
+            modifier = Modifier.fillMaxWidth(),
+            border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary), // Aseguramos el borde
+            shape = RoundedCornerShape(8.dp), // Forma consistente
+            contentPadding = PaddingValues(12.dp)
+        ) {
+            Icon(
+                painter = painterResource(id = if (expanded) R.drawable.ic_arrow_up else R.drawable.ic_arrow_down), // Mantenemos tus iconos de flecha
+                contentDescription = if (expanded) "Ocultar traducciones" else "Mostrar traducciones",
+                modifier = Modifier.size(20.dp)
+            )
+            Spacer(Modifier.width(8.dp))
+            Text(
+                text = if (expanded) "Ocultar Traducciones Opcionales" else "Añadir Traducciones Opcionales",
+                fontWeight = FontWeight.Medium
+            )
+        }
 
+        // 3. CAMPOS DE TRADUCCIÓN (COLLAPSIBLE)
         if (expanded) {
-            Surface {
-                Column(Modifier.padding(16.dp)) {
+            Column(
+                Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp)
+            ) {
 
-                    OutlinedTextField(
-                        value = state.en.value,     // ← ← ← CORREGIDO
-                        onValueChange = {
-                            state.updateEn(it)      // ← ← ← CORREGIDO
-                            onChanged()
-                        },
-                        label = { Text("Texto opcional en inglés") }
-                    )
+                // Campo Inglés
+                OutlinedTextField(
+                    value = state.en, // 🛑 CORRECCIÓN: Eliminado .value
+                    onValueChange = { newValue ->
+                        state.updateEn(newValue)
+                        onChanged()
+                    },
+                    label = { Text("Texto opcional en inglés") },
+                    modifier = Modifier.fillMaxWidth()
+                )
 
-                    Spacer(Modifier.height(16.dp))
+                Spacer(Modifier.height(16.dp))
 
-                    OutlinedTextField(
-                        value = state.de.value,
-                        onValueChange = {
-                            state.updateDe(it)
-                            onChanged()
-                        },
-                        label = { Text("Texto opcional en alemán") }
-                    )
+                // Campo Alemán
+                OutlinedTextField(
+                    value = state.de, // 🛑 CORRECCIÓN: Eliminado .value
+                    onValueChange = { newValue ->
+                        state.updateDe(newValue)
+                        onChanged()
+                    },
+                    label = { Text("Texto opcional en alemán") },
+                    modifier = Modifier.fillMaxWidth()
+                )
 
-                    Spacer(Modifier.height(16.dp))
+                Spacer(Modifier.height(16.dp))
 
-                    OutlinedTextField(
-                        value = state.fr.value,
-                        onValueChange = {
-                            state.updateFr(it)
-                            onChanged()
-                        },
-                        label = { Text("Texto opcional en francés") }
-                    )
-                }
+                // Campo Francés
+                OutlinedTextField(
+                    value = state.fr, // 🛑 CORRECCIÓN: Eliminado .value
+                    onValueChange = { newValue ->
+                        state.updateFr(newValue)
+                        onChanged()
+                    },
+                    label = { Text("Texto opcional en francés") },
+                    modifier = Modifier.fillMaxWidth()
+                )
             }
         }
     }

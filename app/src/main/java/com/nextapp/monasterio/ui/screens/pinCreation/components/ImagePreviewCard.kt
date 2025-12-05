@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.*
@@ -16,14 +17,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.nextapp.monasterio.R
-import com.nextapp.monasterio.models.ImageTag
 import com.nextapp.monasterio.ui.screens.pinCreation.state.PinImage
 
 @Composable
 fun ImagePreviewCard(
     pinImage: PinImage,
     onRemove: () -> Unit,
-    onTagSelected: (ImageTag) -> Unit
+    onEditDetails: (PinImage) -> Unit // 🆕 Nuevo callback
 ) {
     var showMenu by remember { mutableStateOf(false) }
 
@@ -44,7 +44,7 @@ fun ImagePreviewCard(
                 onClick = onRemove,
                 modifier = Modifier
                     .align(Alignment.TopEnd)
-                    .padding(4.dp)
+                    .offset(x = 18.dp, y = (-4).dp) // Movemos a la derecha
                     .background(Color.Black.copy(alpha = 0.6f), shape = MaterialTheme.shapes.small)
                     .size(24.dp)
             ) {
@@ -55,37 +55,35 @@ fun ImagePreviewCard(
                 )
             }
 
+            IconButton(
+                onClick = { onEditDetails(pinImage) }, // Disparamos el diálogo
+                modifier = Modifier
+                    .align(Alignment.TopStart)
+                    .offset(x = (-4).dp, y = (-4).dp) // Movemos a la izquierda
+                    .background(Color.Black.copy(alpha = 0.6f), shape = MaterialTheme.shapes.small)
+                    .size(24.dp)
+            ) {
+                Icon(
+                    painterResource(R.drawable.lapiz), // ⚠️ Necesitas un icono ic_edit_24.
+                    contentDescription = "Editar detalles de imagen",
+                    tint = Color.White
+                )
+            }
+
             // CHIP DE ETIQUETA (Bottom End)
             pinImage.tag?.let { tag ->
                 AssistChip(
-                    onClick = { showMenu = true },
+                    onClick = { onEditDetails(pinImage) }, // 🆕 Clic en el chip también edita
                     label = { Text(tag.displayName) },
                     colors = AssistChipDefaults.assistChipColors(
                         containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.85f),
                         labelColor = MaterialTheme.colorScheme.onPrimary
                     ),
                     modifier = Modifier
-                        .align(Alignment.BottomEnd)
+                        .align(Alignment.BottomStart)
                         .padding(4.dp)
                 )
 
-                // MINI MENÚ DESPLEGABLE (Para Reedición)
-                DropdownMenu(
-                    expanded = showMenu,
-                    onDismissRequest = { showMenu = false }
-                ) {
-                    // ¡ELIMINADO: Text("Cambiar a:") y Divider!
-                    ImageTag.entries.forEach { newTag ->
-                        DropdownMenuItem(
-                            text = { Text(newTag.displayName) },
-                            onClick = {
-                                onTagSelected(newTag)
-                                showMenu = false
-                            },
-                            enabled = newTag != tag
-                        )
-                    }
-                }
             }
         }
     }

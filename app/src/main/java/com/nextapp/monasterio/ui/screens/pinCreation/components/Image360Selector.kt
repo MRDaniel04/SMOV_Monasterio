@@ -42,16 +42,14 @@ fun Image360Selector(
             text = if (uri == null) "Añadir" else "Cambiar"
         ) { launcher.launch("image/*") }
 
-        // CORRECCIÓN DEL ERROR DE COMPATIBILIDAD
         uri?.let {
-            // Creamos un PinImage temporal: tag es nulo porque es una 360
             val pinImage360 = PinImage(uri = it, tag = null)
 
             ImagePreviewCard(
-                pinImage = pinImage360, // Pasamos el PinImage
+                pinImage = pinImage360,
                 onRemove = { onRemove() },
-                // La imagen 360 no tiene etiqueta, la reedición no hace nada
-                onTagSelected = { /* No hacer nada */ }
+                // ⚠️ CORRECCIÓN: Añadimos el nuevo parámetro obligatorio
+                onEditDetails = { /* No tiene detalles para editar */ }
             )
         }
     }

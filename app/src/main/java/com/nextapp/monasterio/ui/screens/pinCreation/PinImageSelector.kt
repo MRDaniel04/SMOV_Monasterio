@@ -23,33 +23,49 @@ import com.nextapp.monasterio.ui.screens.pinCreation.state.ImagenesState
 import com.nextapp.monasterio.ui.screens.pinCreation.state.PinImage
 
 @Composable
-fun ImageTaggingDialog(
-    uri: Uri,
+fun ImageDetailsDialog( // 🆕 Renombrado
+    pinImage: PinImage, // 🆕 Ahora recibe el objeto PinImage completo
     index: Int,
     totalImages: Int,
-    onTagSelected: (ImageTag) -> Unit,
+    isInitialTagging: Boolean, // 🆕 Nuevo: Indica si es la primera vez que se etiquetan las URIs.
+    onSave: (ImageTag?, String, String, String, String) -> Unit, // 🆕 Guarda tag y 4 títulos
     onCancel: () -> Unit
 ) {
-    var selectedTag by remember { mutableStateOf<ImageTag?>(null) }
+    // 1. Estados locales para los campos del diálogo
+    var selectedTag by remember { mutableStateOf(pinImage.tag) }
+    var tituloEs by remember { mutableStateOf(pinImage.titulo_es) }
+    var tituloEn by remember { mutableStateOf(pinImage.titulo_en) }
+    var tituloDe by remember { mutableStateOf(pinImage.titulo_de) }
+    var tituloFr by remember { mutableStateOf(pinImage.titulo_fr) }
+
+    val isFormValid = tituloEs.isNotBlank() && selectedTag != null
+    val dialogTitle = if (isInitialTagging) {
+        "Etiqueta y Título (Imagen ${index + 1} de $totalImages)"
+    } else {
+        "Editar Detalles de Imagen"
+    }
 
     Dialog(onDismissRequest = onCancel) {
         Card(modifier = Modifier.padding(16.dp)) {
             Column(
-                // Ajustamos la altura mínima para el diseño 2x2
-                modifier = Modifier.padding(20.dp).heightIn(min = 350.dp),
+                modifier = Modifier
+                    .padding(20.dp)
+                    .fillMaxWidth()
+                    .heightIn(max = 600.dp), // Limitar altura para hacer espacio para el scroll
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "Etiqueta para la Imagen ${index + 1} de $totalImages",
+                    text = dialogTitle,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold
                 )
 
                 Spacer(Modifier.height(16.dp))
 
+                // --- VISUALIZACIÓN DE IMAGEN ---
                 Card(modifier = Modifier.size(150.dp)) {
                     Image(
-                        painter = rememberAsyncImagePainter(uri),
+                        painter = rememberAsyncImagePainter(pinImage.uri),
                         contentDescription = null,
                         contentScale = ContentScale.Crop,
                         modifier = Modifier.fillMaxSize()
@@ -58,7 +74,7 @@ fun ImageTaggingDialog(
 
                 Spacer(Modifier.height(16.dp))
 
-                // Selector de Etiquetas (Con "Otro")
+                // --- SELECTOR DE ETIQUETAS ---
                 ImageTagSelector(
                     selectedTag = selectedTag,
                     onTagSelected = { selectedTag = it }
@@ -66,28 +82,68 @@ fun ImageTaggingDialog(
 
                 Spacer(Modifier.height(16.dp))
 
-                // ALINEACIÓN DE BOTONES (DESCARTAR a la izquierda, SIGUIENTE/HECHO a la derecha)
+                // --- CAMPOS DE TÍTULO MULTILINGÜE ---
+                Column(
+                    modifier = Modifier.fillMaxWidth().weight(1f, fill = false)
+                ) {
+                    Text(
+                        text = "Título del Contenido de la Imagen (ES - Obligatorio)",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                    Spacer(Modifier.height(4.dp))
+                    OutlinedTextField(
+                        value = tituloEs,
+                        onValueChange = { tituloEs = it },
+                        label = { Text("Título (ES)") },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    Spacer(Modifier.height(8.dp))
+
+                    OutlinedTextField(
+                        value = tituloEn,
+                        onValueChange = { tituloEn = it },
+                        label = { Text("Título (EN - Opcional)") },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    Spacer(Modifier.height(8.dp))
+                    OutlinedTextField(
+                        value = tituloDe,
+                        onValueChange = { tituloDe = it },
+                        label = { Text("Título (DE - Opcional)") },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    Spacer(Modifier.height(8.dp))
+                    OutlinedTextField(
+                        value = tituloFr,
+                        onValueChange = { tituloFr = it },
+                        label = { Text("Título (FR - Opcional)") },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+
+                Spacer(Modifier.height(16.dp))
+
+                // --- BOTONES ---
                 Row(
-                    horizontalArrangement = Arrangement.SpaceBetween, // Alinea extremos
+                    horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    // Botón DESCARTAR (Izquierda)
                     TextButton(onClick = onCancel) {
-                        Text("DESCARTAR")
+                        Text(if (isInitialTagging) "DESCARTAR" else "CANCELAR")
                     }
 
-                    // Botón SIGUIENTE/HECHO (Derecha)
                     Button(
                         onClick = {
-                            if (selectedTag != null) {
-                                onTagSelected(selectedTag!!)
-                                selectedTag = null
-                            }
+                            onSave(selectedTag, tituloEs, tituloEn, tituloDe, tituloFr)
+                            // Limpiamos los estados locales, aunque el diálogo se cierra.
+                            selectedTag = null
+                            tituloEs = ""
                         },
-                        enabled = selectedTag != null,
+                        enabled = isFormValid,
                         modifier = Modifier.height(40.dp)
                     ) {
-                        Text(if (index < totalImages - 1) "SIGUIENTE" else "HECHO")
+                        Text(if (isInitialTagging && index < totalImages - 1) "SIGUIENTE" else "GUARDAR")
                     }
                 }
             }
@@ -104,6 +160,9 @@ fun PinImageSelector(
     var urisToTag by remember { mutableStateOf<List<Uri>>(emptyList()) }
     var currentTaggingIndex by remember { mutableStateOf(0) }
     var isSelecting by remember { mutableStateOf(false) }
+
+    // 🆕 Estado para la edición individual
+    var imageToEdit by remember { mutableStateOf<PinImage?>(null) }
 
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetMultipleContents()
@@ -146,12 +205,10 @@ fun PinImageSelector(
                     pinImage = pinImage,
                     onRemove = {
                         state.remove(pinImage.uri.toString())
-                        onChanged() // 💥 PUNTO CLAVE 1: Notificar al eliminar una imagen.
+                        onChanged()
                     },
-                    onTagSelected = { newTag ->
-                        state.updateTag(pinImage.uri, newTag)
-                        onChanged() // 💥 PUNTO CLAVE 2: Notificar al actualizar la etiqueta de una imagen.
-                    }
+                    // 🆕 Nuevo: Dispara el diálogo de edición
+                    onEditDetails = { imageToEdit = it }
                 )
             }
         }
@@ -174,46 +231,77 @@ fun PinImageSelector(
         )
     }
 
-    Spacer(Modifier.height(6.dp))
+    Spacer(Modifier.height(16.dp))
 
-    Spacer(Modifier.height(10.dp))
-
-    val hasUntaggedImages = !state.allImagesTagged
+    val hasUntaggedOrUntitledImages = !state.allImagesTagged
 
     if (mandatory && state.images.isEmpty()) {
         Text(
-            text = "Debe añadir al menos una imagen",
+            text = "Debe añadir al menos una imagen.",
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.error,
             modifier = Modifier.padding(top = 4.dp)
         )
-    } else if (hasUntaggedImages) {
+    } else if (hasUntaggedOrUntitledImages) {
         Text(
-            text = "Una o más imágenes cargadas no tienen etiqueta. Por favor, corríjalo.",
+            text = "Una o más imágenes no tienen etiqueta o les falta el Título (ES). Por favor, corríjalo.",
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.error,
             modifier = Modifier.padding(top = 4.dp)
         )
     }
 
-    // LÓGICA DEL DIÁLOGO SECUENCIAL
-    if (urisToTag.isNotEmpty()) {
+    // --- LÓGICA DEL DIÁLOGO DE EDICIÓN INDIVIDUAL ---
+    imageToEdit?.let { image ->
+        ImageDetailsDialog(
+            pinImage = image,
+            index = -1, // Irrelevante para edición
+            totalImages = 1, // Irrelevante para edición
+            isInitialTagging = false,
+            onSave = { tag, es, en, de, fr ->
+                state.updateImageDetails(image.uri, tag, es, en, de, fr)
+                imageToEdit = null
+                onChanged()
+            },
+            onCancel = {
+                imageToEdit = null
+            }
+        )
+    }
+
+
+    // --- LÓGICA DEL DIÁLOGO SECUENCIAL (Creación) ---
+    if (urisToTag.isNotEmpty() && imageToEdit == null) { // Aseguramos que no se superpongan diálogos
         if (currentTaggingIndex >= urisToTag.size) {
 
             urisToTag = emptyList()
             currentTaggingIndex = 0
+            onChanged() // Llamamos onChanged al finalizar el flujo
             return
         }
 
         val currentUri = urisToTag[currentTaggingIndex]
 
-        ImageTaggingDialog(
-            uri = currentUri,
+        // Creamos un objeto PinImage temporal para el diálogo.
+        val tempPinImage = remember { PinImage(uri = currentUri) }
+
+
+        ImageDetailsDialog(
+            pinImage = tempPinImage,
             index = currentTaggingIndex,
             totalImages = urisToTag.size,
-            onTagSelected = { tag ->
-                val taggedPinImage = PinImage(uri = currentUri, tag = tag)
-                state.addTaggedImage(taggedPinImage)
+            isInitialTagging = true, // Indica que es el flujo secuencial
+            onSave = { tag, es, en, de, fr ->
+                // Creamos el PinImage final con todos los detalles
+                val taggedPinImage = PinImage(
+                    uri = currentUri,
+                    tag = tag,
+                    titulo_es = es,
+                    titulo_en = en,
+                    titulo_de = de,
+                    titulo_fr = fr
+                )
+                state.addTaggedImage(taggedPinImage) // Añadimos la imagen completa
 
                 val nextIndex = currentTaggingIndex + 1
                 if (nextIndex < urisToTag.size) {
@@ -233,6 +321,7 @@ fun PinImageSelector(
                 } else {
                     urisToTag = emptyList()
                     currentTaggingIndex = 0
+                    onChanged() // Llamamos onChanged al descartar todas las pendientes
                 }
             }
         )

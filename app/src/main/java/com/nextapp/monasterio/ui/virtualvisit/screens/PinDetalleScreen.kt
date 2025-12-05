@@ -42,7 +42,6 @@ import coil.load
 import com.github.chrisbanes.photoview.PhotoView
 import com.nextapp.monasterio.R
 import com.nextapp.monasterio.models.PinData
-import com.nextapp.monasterio.models.Ubicacion
 import com.nextapp.monasterio.ui.virtualvisit.components.GenericTutorialOverlay
 import com.nextapp.monasterio.viewModels.AjustesViewModel
 import java.util.Locale

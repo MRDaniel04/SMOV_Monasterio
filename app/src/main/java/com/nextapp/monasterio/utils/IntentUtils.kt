@@ -5,7 +5,6 @@ import android.content.Intent
 import android.net.Uri
 import com.nextapp.monasterio.R
 import android.widget.Toast
-import com.nextapp.monasterio.models.Ubicacion
 
 fun Context.llamarTelefono(telefono : String){
     val telefonoMonasterio = telefono

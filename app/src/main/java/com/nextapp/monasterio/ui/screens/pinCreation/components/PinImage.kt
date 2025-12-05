@@ -11,7 +11,11 @@ import com.nextapp.monasterio.models.ImageTag
 data class PinImage(
     val id: String = java.util.UUID.randomUUID().toString(), // <--- NUEVO
     val uri: Uri,
-    var tag: ImageTag? = null
+    var tag: ImageTag? = null,
+    val titulo_es: String = "",
+    val titulo_en: String = "",
+    val titulo_de: String = "",
+    val titulo_fr: String = ""
 )
 
 class ImagenesState(
@@ -33,6 +37,8 @@ class ImagenesState(
         Log.d("FLUJO_PIN_IMAGES", "Imagen eliminada: $uriString. now size=${images.size}")
     }
 
+    // ⚠️ Esta función (updateTag) ya no es la principal, pero la dejamos por compatibilidad si no se elimina.
+
     fun updateTag(uri: Uri, newTag: ImageTag) {
         images = images.map { pinImage ->
             if (pinImage.uri == uri) {
@@ -42,7 +48,31 @@ class ImagenesState(
         Log.d("FLUJO_PIN_IMAGES", "Imagen tag actualizada: ${uri} -> $newTag. canonical now: ${images.map { it.uri.toString() to it.tag }}")
     }
 
+    // 🆕 FUNCIÓN CLAVE: Actualiza la etiqueta y los 4 títulos de la imagen.
+    fun updateImageDetails(
+        targetUri: Uri,
+        newTag: ImageTag?,
+        titulo_es: String,
+        titulo_en: String,
+        titulo_de: String,
+        titulo_fr: String
+    ) {
+        images = images.map { pinImage ->
+            if (pinImage.uri == targetUri) {
+                pinImage.copy(
+                    tag = newTag,
+                    titulo_es = titulo_es.trim(),
+                    titulo_en = titulo_en.trim(),
+                    titulo_de = titulo_de.trim(),
+                    titulo_fr = titulo_fr.trim()
+                )
+            } else pinImage
+        }
+        Log.d("FLUJO_PIN_IMAGES", "Detalles de imagen actualizados para: $targetUri")
+    }
 
+
+    // ⚠️ VALIDACIÓN ACTUALIZADA: Ahora requiere Tag y Título en Español (ES)
     val allImagesTagged: Boolean
-        get() = images.all { it.tag != null }
+        get() = images.all { it.tag != null && it.titulo_es.isNotBlank() }
 }

@@ -34,6 +34,7 @@ import com.nextapp.monasterio.AppRoutes
 import androidx.compose.ui.zIndex
 import com.nextapp.monasterio.ui.screens.pinCreation.CreacionPinSharedViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.nextapp.monasterio.models.ImagenData
 import com.nextapp.monasterio.services.CloudinaryService
 import com.nextapp.monasterio.ui.screens.pinCreation.components.LoadingOverlay
 import com.nextapp.monasterio.ui.screens.pinEdition.components.InteractivePlanoViewer
@@ -122,8 +123,6 @@ fun EdicionPines(
             return@LaunchedEffect
         }
 
-
-        vm.formSubmitted = false
         selectedPin = null
         photoViewRef?.translationX = 0f
         photoViewRef?.translationY = 0f
@@ -135,18 +134,18 @@ fun EdicionPines(
         pinBeingMoved = PinData(
             id = "temp",
             ubicacion_es = vm.ubicacion_es,
-            ubicacion_en = vm.ubicacion_en,
-            ubicacion_de = vm.ubicacion_de,
-            ubicacion_fr = vm.ubicacion_fr,
+            ubicacion_en = vm.pinTitleManualTrads.en.ifBlank { null },
+            ubicacion_de = vm.pinTitleManualTrads.de.ifBlank { null },
+            ubicacion_fr = vm.pinTitleManualTrads.fr.ifBlank { null },
             area_es = vm.area_es,
-            area_en = vm.area_en,
-            area_de = vm.area_de,
-            area_fr = vm.area_fr,
+            area_en = vm.area_en, // Usando nuevo getter
+            area_de = vm.area_de, // Usando nuevo getter
+            area_fr = vm.area_fr, // Usando nuevo getter
             x = 0.5f,
             y = 0.5f,
             iconRes = R.drawable.pin3,
             imagenes = vm.imagenes.uris.map { it.toString() },
-            descripcion_es = vm.descripcion.es.value // Usamos la descripción ES para la vista previa
+            descripcion_es = vm.descripcion.es // Acceso directo (sin .value)
         )
 
         pinDragOffset = Offset(
@@ -167,6 +166,7 @@ fun EdicionPines(
 
     LaunchedEffect(vm.updateRequested) {
         if (!vm.updateRequested) return@LaunchedEffect
+
         vm.updateRequested = false
 
         val pinId = vm.editingPinId
@@ -177,44 +177,6 @@ fun EdicionPines(
 
         scope.launch {
             try {
-
-                // 🆕 ACTUALIZACIÓN DE PIN: Usando los nuevos campos en la llamada a PinRepository
-                PinRepository.updatePin(
-                    pinId = pinId,
-
-                    // --- UBICACIÓN (Compleja, antes TÍTULOS) ---
-                    ubicacion_es = vm.ubicacion_es,
-                    ubicacion_en = vm.ubicacion_en,
-                    ubicacion_de = vm.ubicacion_de,
-                    ubicacion_fr = vm.ubicacion_fr,
-
-                    // --- DESCRIPCIONES ---
-                    descripcion_es = vm.descripcion.es.value,
-                    descripcion_en = vm.descripcion.en.value,
-                    descripcion_de = vm.descripcion.de.value,
-                    descripcion_fr = vm.descripcion.fr.value,
-
-                    // --- ÁREA (Simple, antes UBICACIONES) ---
-                    area_es = vm.area_es,
-                    area_en = vm.area_en,
-                    area_de = vm.area_de,
-                    area_fr = vm.area_fr,
-
-                    // --- AUDIOS ---
-                    audioUrl_es = vm.audioUrl_es,
-                    audioUrl_en = vm.audioUrl_en,
-                    audioUrl_de = vm.audioUrl_de,
-                    audioUrl_fr = vm.audioUrl_fr,
-
-                    // --- RADIO ---
-                    tapRadius = vm.tapRadius ?: 0.06f,
-
-                    // --- IMÁGENES ---
-                    imagenes = vm.imagenes.uris.map { it.toString() },
-                    imagen360 = vm.imagen360?.toString()
-                )
-
-
                 // Recargar pines
                 val plano = PlanoRepository.getPlanoById("monasterio_interior")
                 val allPins = PinRepository.getAllPins()
@@ -224,14 +186,15 @@ fun EdicionPines(
                 Toast.makeText(context, "Pin actualizado correctamente", Toast.LENGTH_SHORT).show()
 
             } catch (e: Exception) {
-                Log.e("EdicionPines", "❌ Error al actualizar el pin", e)
-                Toast.makeText(context, "Error al actualizar el pin", Toast.LENGTH_LONG).show()
+                Log.e("EdicionPines", "❌ Error al recargar el plano/pines tras la actualización", e)
+                Toast.makeText(context, "Error al recargar el mapa tras la actualización.", Toast.LENGTH_LONG).show()
             }
         }
 
-        // Reset final
+        // Reset final del modo edición
         vm.isEditing = false
         vm.editingPinId = null
+
     }
 
     Box(
@@ -394,12 +357,11 @@ fun EdicionPines(
 
                         if (isNewPinMode) {
 
-                            // 🆕 VALIDACIÓN: Usando los nuevos campos
                             val isPinValid =
-                                vm.descripcion.es.value.isNotBlank() &&
-                                        vm.imagenes.uris.isNotEmpty() &&
-                                        vm.ubicacion_es.isNotBlank() && // Campo complejo
-                                        vm.area_es.isNotBlank() // Campo simple
+                                vm.descripcion.es.isNotBlank() && // Descripción ES obligatoria
+                                        vm.imagenes.allImagesTagged && // Etiqueta y Título ES en imagen
+                                        vm.ubicacion_es.isNotBlank() && // Ubicación/Título ES obligatoria
+                                        vm.area_es.isNotBlank() // Área ES obligatoria
 
 
                             Log.d("FLUJO_PIN", "EdicionPines: Validando formulario en onConfirm. isPinValid=$isPinValid")
@@ -440,6 +402,22 @@ fun EdicionPines(
                                     return@launch
                                 }
 
+                                val imagesWithData = vm.imagenes.images.mapIndexed { index, pinImage ->
+                                    val uploadedUrl = uploadedImageUrls.getOrNull(index) ?: pinImage.uri.toString()
+
+                                    ImagenData(
+                                        id = "",
+                                        url = uploadedUrl,
+                                        tipo = pinImage.tag?.toFirestoreString() ?: "",
+                                        titulo = pinImage.titulo_es,
+                                        tituloIngles = pinImage.titulo_en,
+                                        tituloAleman = pinImage.titulo_de,
+                                        tituloFrances = pinImage.titulo_fr,
+                                        foco = 0f,
+                                        etiqueta = ""
+                                    )
+                                }
+
                                 // D. CREAR PIN CON LAS URLs Y COORDENADAS FINALES
                                 try {
 
@@ -448,31 +426,31 @@ fun EdicionPines(
 
                                         // --- UBICACIÓN (Compleja, antes TÍTULOS) ---
                                         ubicacion_es = vm.ubicacion_es,
-                                        ubicacion_en = vm.ubicacion_en.ifBlank { null },
-                                        ubicacion_de = vm.ubicacion_de.ifBlank { null },
-                                        ubicacion_fr = vm.ubicacion_fr.ifBlank { null },
+                                        ubicacion_en = vm.pinTitleManualTrads.en.ifBlank { null },
+                                        ubicacion_de = vm.pinTitleManualTrads.de.ifBlank { null },
+                                        ubicacion_fr = vm.pinTitleManualTrads.fr.ifBlank { null },
 
                                         // --- DESCRIPCIONES ---
-                                        descripcion_es = vm.descripcion.es.value,
-                                        descripcion_en = vm.descripcion.en.value.ifBlank { null },
-                                        descripcion_de = vm.descripcion.de.value.ifBlank { null },
-                                        descripcion_fr = vm.descripcion.fr.value.ifBlank { null },
+                                        descripcion_es = vm.descripcion.es.ifBlank { null },
+                                        descripcion_en = vm.descripcion.en.ifBlank { null },
+                                        descripcion_de = vm.descripcion.de.ifBlank { null },
+                                        descripcion_fr = vm.descripcion.fr.ifBlank { null },
 
                                         // --- ÁREA (Simple, antes UBICACIÓN) ---
                                         area_es = vm.area_es,
-                                        area_en = vm.area_en.ifBlank { null },
-                                        area_de = vm.area_de.ifBlank { null },
-                                        area_fr = vm.area_fr.ifBlank { null },
+                                        area_en = vm.area_en.orEmpty().ifBlank { null },
+                                        area_de = vm.area_de.orEmpty().ifBlank { null },
+                                        area_fr = vm.area_fr.orEmpty().ifBlank { null },
 
                                         // --- AUDIO ---
-                                        audioUrl_es = vm.audioUrl_es,
-                                        audioUrl_en = vm.audioUrl_en,
-                                        audioUrl_de = vm.audioUrl_de,
-                                        audioUrl_fr = vm.audioUrl_fr,
+                                        audioUrl_es = null, // Dejamos a null, ya que el VM no lo controla en este modo
+                                        audioUrl_en = null,
+                                        audioUrl_de = null,
+                                        audioUrl_fr = null,
 
                                         // --- COORDENADAS y RADIO ---
-                                        tapRadius = vm.tapRadius,
-                                        imagenes = uploadedImageUrls,
+                                        tapRadius = null, // El repositorio usará el valor por defecto si es null
+                                        imagenes = imagesWithData, // 🔨 CORREGIDO (List<ImagenData>)
                                         imagen360 = uploaded360Url,
                                         x = finalX,
                                         y = finalY
@@ -498,6 +476,8 @@ fun EdicionPines(
                                     val allPins = PinRepository.getAllPins()
                                     val pinRefs = plano?.pines?.map { it.substringAfterLast("/") } ?: emptyList()
                                     pines = allPins.filter { pinRefs.contains(it.id) }
+
+                                    vm.reset() // Limpiamos el formulario tras el éxito.
 
                                 } catch (e: Exception) {
                                     Log.e("FLUJO_PIN", "❌ ERROR FIREBASE: Error en PinRepository.createPinFromForm: ${e.message}")

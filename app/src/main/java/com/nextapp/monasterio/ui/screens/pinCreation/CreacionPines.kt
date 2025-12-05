@@ -44,7 +44,7 @@ fun CreacionPinesScreen(
     val imagen360 = vm.imagen360
 
     val isFormValid =
-        descripcionState.es.value.isNotBlank() &&
+        descripcionState.es.isNotBlank() &&
                 imagenesState.images.isNotEmpty() &&
                 imagenesState.allImagesTagged &&
                 vm.ubicacion_es.isNotBlank() && // Campo complejo (antes pinTitle)
@@ -57,7 +57,7 @@ fun CreacionPinesScreen(
             val isSaveEnabled = if (isEditing) {
                 Log.d("FLUJO_PIN_UI", "UI: pinUbicacion='${vm.area_es}'")
                 val enabled = isFormValid && isModified
-                Log.d("FLUJO_PIN_UI", "UI: isFormValid=$isFormValid, isModified=$isModified, isSaveEnabled=$enabled, ubicacion='${vm.ubicacion_es}', descripcion_es_len=${vm.descripcion.es.value.length}, imagenes_count=${vm.imagenes.images.size}, allTagged=${vm.imagenes.allImagesTagged}")
+                Log.d("FLUJO_PIN_UI", "UI: isFormValid=$isFormValid, isModified=$isModified, isSaveEnabled=$enabled, ubicacion='${vm.ubicacion_es}', descripcion_es_len=${vm.descripcion.es.length}, imagenes_count=${vm.imagenes.images.size}, allTagged=${vm.imagenes.allImagesTagged}")
                 enabled
             } else {
                 isFormValid.also { Log.d("FLUJO_PIN_UI", "UI: CREACIÓN isFormValid=$it") }
@@ -100,10 +100,14 @@ fun CreacionPinesScreen(
             Spacer(Modifier.height(8.dp))
 
             PinLocationDropdown(
-                currentTitle = vm.ubicacion_es, // 🆕 Antes vm.pinTitle
-                currentUbicacion = vm.area_es, // 🆕 Antes vm.pinUbicacion
-                onTitleChange = { newUbicacion -> vm.ubicacion_es = newUbicacion }, // 🆕 Actualiza ubicacion_es
-                onUbicacionChange = { newArea -> vm.area_es = newArea } // 🆕 Actualiza area_es
+                currentTitle = vm.ubicacion_es,
+                currentUbicacion = vm.area_es,
+                onTitleChange = { newUbicacion -> vm.ubicacion_es = newUbicacion },
+                onUbicacionChange = { newArea -> vm.area_es = newArea },
+
+                // Pasamos el estado de las traducciones manuales y el callback
+                titleManualTrads = vm.pinTitleManualTrads,
+                onTitleManualTradsUpdate = { en, de, fr -> vm.updateTitleManualTrads(en, de, fr) }
             )
 
             Spacer(Modifier.height(24.dp))
@@ -111,7 +115,7 @@ fun CreacionPinesScreen(
                 state = descripcionState,
                 isEditing = isEditing,
                 onChanged = {
-                    Log.d("FLUJO_PIN_UI", "UI: Descripción onChanged() → descripcion.es='${vm.descripcion.es.value.take(60)}'")
+                    Log.d("FLUJO_PIN_UI", "UI: Descripción onChanged() → descripcion.es='${vm.descripcion.es.take(60)}'")
                     vm.checkIfModified()
                     Log.d("FLUJO_PIN_UI", "UI: tras check: isModified=${vm.isModified}")
                 }

@@ -1,6 +1,7 @@
 
 package com.nextapp.monasterio.ui.screens.pinCreation.components
 
+import android.R.attr.label
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -8,6 +9,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.nextapp.monasterio.models.UbicacionDetalladaTag
+import com.nextapp.monasterio.ui.screens.pinCreation.CreacionPinSharedViewModel
+import com.nextapp.monasterio.ui.screens.pinCreation.PinTitleManualTrads
 
 // Lista de opciones se mantiene
 
@@ -27,11 +30,13 @@ fun getAreaPrincipalForLocation(location: String): String? {
 @Composable
 fun PinLocationDropdown(
 
-    currentTitle: String, // Valor actual del Título (para mostrar)
-    currentUbicacion: String, // Valor actual de la Ubicación (para mostrar)
-    onTitleChange: (String) -> Unit, // Callback para actualizar TÍTULO en el ViewModel
-    onUbicacionChange: (String) -> Unit, // Callback para actualizar UBICACIÓN en el ViewModel
-    label: String = "Ubicación Detallada (Título del Pin)" // Nombre actualizado
+    currentTitle: String,
+    currentUbicacion: String,
+    onTitleChange: (String) -> Unit,
+    onUbicacionChange: (String) -> Unit,
+
+    titleManualTrads: PinTitleManualTrads,
+    onTitleManualTradsUpdate: (en: String, de: String, fr: String) -> Unit
 
 ) {
     var expanded by remember { mutableStateOf(false) }
@@ -82,7 +87,7 @@ fun PinLocationDropdown(
                 value = selectedDropdownLocation,
                 onValueChange = { /* Solo cambia a través del DropdownMenuItem */ },
                 readOnly = true,
-                label = { Text(label) },
+                label = { Text("Ubicación Detallada (ES) o Fija") },
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -97,16 +102,17 @@ fun PinLocationDropdown(
                     DropdownMenuItem(
                         text = { Text(location) },
                         onClick = {
-                            selectedDropdownLocation = location // ✅ MODIFICADO: Actualizamos el estado local del Dropdown
+                            selectedDropdownLocation = location
                             expanded = false
 
                             if (location != OTRA_UBICACION_DETALLADA) {
                                 onTitleChange(location)
                                 manualTitleText = ""
+                                // Limpiamos las traducciones manuales si se elige una opción fija
+                                onTitleManualTradsUpdate("", "", "")
 
-                                // ✅ AÑADIR ESTAS DOS LÍNEAS PARA ASIGNAR EL ÁREA PRINCIPAL AUTOMÁTICAMENTE
                                 val areaPrincipal = getAreaPrincipalForLocation(location)
-                                onUbicacionChange(areaPrincipal ?: "") // <-- Llama al callback para actualizar vm.pinUbicacio
+                                onUbicacionChange(areaPrincipal ?: "")
                             } else {
 
                                 onTitleChange(manualTitleText)
@@ -123,34 +129,71 @@ fun PinLocationDropdown(
             Column {
                 Spacer(modifier = Modifier.height(16.dp))
 
+                // 📌 CAMPO 1: UBICACIÓN/TÍTULO EN ESPAÑOL (ES)
                 Text(
-                    text = "Escriba aquí la Ubicación Detallada (Título del Pin):",
+                    text = "Escriba aquí la Ubicación Detallada (Título del Pin) - ESPAÑOL:",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.primary
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 OutlinedTextField(
-                    value = manualTitleText, // ✅ MODIFICADO: Usa el campo Manual LOCAL
+                    value = manualTitleText,
                     onValueChange = { newValue ->
-                        manualTitleText = newValue // Actualiza el campo Manual LOCAL
-                        onTitleChange(newValue) // ✅ CLAVE: El valor escrito se guarda en la variable 'titulo' del ViewModel
+                        manualTitleText = newValue
+                        onTitleChange(newValue) // Actualiza ubicacion_es en el ViewModel
                     },
-                    label = { Text("Ubicación Detallada (Manual)") },
+                    label = { Text("Título (ES)") },
                     modifier = Modifier.fillMaxWidth()
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
+                // 📌 CAMPO 2: UBICACIÓN/TÍTULO EN INGLÉS (EN)
+                OutlinedTextField(
+                    value = titleManualTrads.en,
+                    onValueChange = { newValue ->
+                        onTitleManualTradsUpdate(newValue, titleManualTrads.de, titleManualTrads.fr)
+                    },
+                    label = { Text("Título (EN)") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                // 📌 CAMPO 3: UBICACIÓN/TÍTULO EN ALEMÁN (DE)
+                OutlinedTextField(
+                    value = titleManualTrads.de,
+                    onValueChange = { newValue ->
+                        onTitleManualTradsUpdate(titleManualTrads.en, newValue, titleManualTrads.fr)
+                    },
+                    label = { Text("Título (DE)") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                // 📌 CAMPO 4: UBICACIÓN/TÍTULO EN FRANCÉS (FR)
+                OutlinedTextField(
+                    value = titleManualTrads.fr,
+                    onValueChange = { newValue ->
+                        onTitleManualTradsUpdate(titleManualTrads.en, titleManualTrads.de, newValue)
+                    },
+                    label = { Text("Título (FR)") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // 📌 SELECTOR DE ÁREA PRINCIPAL
                 Text(
                     text = "Seleccione el Área Principal (Ubicación del Pin):",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.primary
                 )
                 Spacer(modifier = Modifier.height(4.dp))
-                // ✅ MODIFICADO: Pasamos el valor de ubicación directamente al selector
                 AreaPrincipalSelector(
                     selectedArea = currentUbicacion,
-                    onAreaSelected = onUbicacionChange // ✅ CLAVE: El valor seleccionado se guarda en la variable 'ubicacion' del ViewModel
+                    onAreaSelected = onUbicacionChange
                 )
             }
         }
