@@ -269,7 +269,7 @@ fun MonasteryAppScreen(activity: AppCompatActivity) { // 👈 Recibimos la activ
             val isParejas = currentRoute == AppRoutes.JUEGO_PAREJAS
             val isPuzzle = currentRoute == AppRoutes.JUEGO_PUZZLE
             val isHistoria = currentRoute == AppRoutes.HISTORIA
-            val isInfo = currentRoute == AppRoutes.PIN_ENTRADA_MONASTERIO
+            val isInfo = currentRoute == AppRoutes.INFO
 
             AppNavigationHost(
                 authViewModel = authViewModel,
