@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Column // ⬅️ Añadir este import
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
@@ -23,20 +24,17 @@ fun PinEditionToolbar(
     onCrosshairClick: () -> Unit,
     onCancelEditClick: () -> Unit,
     onHelpClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isPortrait: Boolean // ⬅️ NUEVO: Indicador de orientación
 ) {
     Box(
-        modifier = modifier // El alineamiento (e.g., Alignment.TopEnd) se aplica aquí
+        modifier = modifier // El alineamiento (e.g., Alignment.CenterStart) se aplica aquí
             .padding(12.dp)
             .clip(RoundedCornerShape(8.dp))
             .background(Color(0xBB000000)) // Fondo semi-transparente
     ) {
-        Row(
-            modifier = Modifier.padding(4.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(4.dp)
-        ) {
-
+        // Definimos el contenido de la Toolbar para evitar repetirlo
+        val toolbarContent = @Composable {
             // Botón 2: Añadir Pin
             IconButton(onClick = onPinAddClick) {
                 Icon(
@@ -61,6 +59,26 @@ fun PinEditionToolbar(
                     contentDescription = "Ayuda",
                     tint = Color.White
                 )
+            }
+        }
+
+        if (isPortrait) {
+            // MODO VERTICAL (Portrait): Row (Horizontal)
+            Row(
+                modifier = Modifier.padding(4.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                toolbarContent()
+            }
+        } else {
+            // MODO HORIZONTAL (Landscape): Column (Vertical)
+            Column(
+                modifier = Modifier.padding(4.dp),
+                horizontalAlignment = Alignment.CenterHorizontally, // Centra los iconos
+                verticalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                toolbarContent()
             }
         }
     }

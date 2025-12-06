@@ -48,7 +48,8 @@ fun PinDetailsPanel(
     onStartMove: (PinData, Offset) -> Unit,
     onEdit: (PinData) -> Unit,
     panelHeightFraction: Float,
-    onPinDeleted: (String) -> Unit
+    onPinDeleted: (String) -> Unit,
+    panelAlignment: String
 ) {
     var isDeleteDialogOpen by remember { mutableStateOf(false) }
     val context = LocalContext.current
@@ -63,13 +64,19 @@ fun PinDetailsPanel(
 
     val hasImages = imagenesDetalladas.isNotEmpty()
 
+    val panelShape = if (panelAlignment == "RIGHT") {
+        RoundedCornerShape(topStart = 20.dp, bottomStart = 20.dp) // Esquina redondeada a la izquierda
+    } else {
+        RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp) // Esquina redondeada arriba (Original)
+    }
+
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .fillMaxHeight(panelHeightFraction)
+            .fillMaxHeight(panelHeightFraction) // Puedes ignorar esta línea si usas el modifier en EdicionPines
             .background(
                 Color.White,
-                shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)
+                shape = panelShape // ⬅️ USAR FORMA DINÁMICA
             )
             .padding(horizontal = 16.dp, vertical = 8.dp)
             .clickable(

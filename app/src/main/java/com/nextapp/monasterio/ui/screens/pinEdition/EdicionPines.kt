@@ -2,6 +2,7 @@ package com.nextapp.monasterio.ui.screens.pinEdition
 
 import android.app.Activity
 import android.content.pm.ActivityInfo
+import android.content.res.Configuration
 import android.graphics.PointF
 import android.util.Log
 import android.widget.ImageView
@@ -29,6 +30,7 @@ import kotlinx.coroutines.launch
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.layout.onGloballyPositioned // Necesario para obtener el tamaño de la caja
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.IntSize // Necesario para obtener el tamaño de la caja
 import com.nextapp.monasterio.AppRoutes
 import androidx.compose.ui.zIndex
@@ -51,11 +53,13 @@ fun EdicionPines(
 ) {
     val context = LocalContext.current
     val activity = context as? Activity
+    val configuration = LocalConfiguration.current // ⬅️ NEW
+    val isPortrait = configuration.orientation == Configuration.ORIENTATION_PORTRAIT // ⬅️ NEW
+
     val PANEL_HEIGHT_FRACTION = 0.50f
+    val PANEL_WIDTH_FRACTION = 0.40f // ⬅️ NEW
 
     Log.d("EdicionPines", "Composición iniciada - Modo Interacción Pin (Panel 35%)")
-
-
 
     // --- Estados de Datos y UI ---
     var pines by remember { mutableStateOf<List<PinData>>(emptyList()) }
@@ -273,22 +277,39 @@ fun EdicionPines(
                 } else {
                     Log.d("EdicionPines", "Toque fuera y no había Pin seleccionado. Ignorando.")
                 }
-            }
+            },
+
+            isPortrait = isPortrait // ⬅️ ¡AÑADIR ESTA LÍNEA!
         )
 
         // -------------------------
         // ⭐ PANEL INFORMATIVO (Estructura fija/scroll de descripción) ⭐
         // -------------------------
         selectedPin?.let { pin ->
+
+            val panelModifier = if (isPortrait) {
+                // MODO VERTICAL (Portrait): Panel ABAJO (comportamiento que quieres para vertical)
+                Modifier
+                    .align(Alignment.BottomCenter)
+                    .fillMaxWidth()
+                    .fillMaxHeight(PANEL_HEIGHT_FRACTION)
+            } else {
+                // MODO HORIZONTAL (Landscape): Panel a la DERECHA (comportamiento que quieres para horizontal)
+                Modifier
+                    .align(Alignment.CenterEnd) // Usar CenterEnd en lugar de TopEnd
+                    .fillMaxHeight(1f) // ⬅️ Ocupa 100% de la altura
+                    .fillMaxWidth(PANEL_WIDTH_FRACTION)
+                    .padding(end = 12.dp, top = 12.dp, bottom = 12.dp) // ⬅️ Padding uniforme, sin los 70.dp
+            }
+
             PinDetailsPanel(
-                modifier = Modifier
-                    .zIndex(50f)
-                    .align(Alignment.BottomCenter),
+                modifier = panelModifier
+                    .zIndex(50f),
                 selectedPin = pin,
                 imagenesDetalladas = pin.imagenesDetalladas,
                 pinTapScreenPosition = pinTapScreenPosition,
-                panelHeightFraction = PANEL_HEIGHT_FRACTION,
-
+                panelHeightFraction = PANEL_HEIGHT_FRACTION, // Se mantiene por si se usa internamente
+                panelAlignment = if (isPortrait) "BOTTOM" else "RIGHT", // ⬅️ CAMBIO: La lógica de orientación se invierte
                 onClosePanel = {
                     photoViewRef?.translationY = 0f
                     photoViewRef?.translationX = 0f
@@ -490,6 +511,14 @@ fun EdicionPines(
             }
         }
 
+        val toolbarModifier = if (isPortrait) {
+            // MODO VERTICAL (Portrait): Arriba a la derecha (Horizontal)
+            Modifier.align(Alignment.TopEnd)
+        } else {
+            // MODO HORIZONTAL (Landscape): Centrada a la Izquierda (Vertical)
+            Modifier.align(Alignment.CenterStart) // ⬅️ CAMBIO: Alineación a la izquierda, centrada
+        }
+
         PinEditionToolbar(
             onPinAddClick = {
                 vm.reset()
@@ -523,7 +552,8 @@ fun EdicionPines(
             onHelpClick = {
                 Toast.makeText(context, "Mostrar Ayuda", Toast.LENGTH_SHORT).show()
             },
-            modifier = Modifier.align(Alignment.TopEnd).zIndex(100f)
+            modifier = toolbarModifier.zIndex(100f),
+            isPortrait = isPortrait // ⬅️ Pasar el nuevo parámetro al componente
         )
 
         if (vm.isUploading) {

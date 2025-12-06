@@ -34,12 +34,14 @@ fun InteractivePlanoViewer(
     onSizeChange: (IntSize) -> Unit, // Para notificar el tamaño del PhotoView al padre
     onMatrixChange: () -> Unit, // Para notificar que se ha hecho pan/zoom (ocultar panel/modo mover)
     onPinTap: (PinData, Float, Float) -> Unit, // Pin tocado + coordenadas de pantalla (X, Y)
-    onBackgroundTap: () -> Unit // Toque fuera de un pin
+    onBackgroundTap: () -> Unit, // Toque fuera de un pin
+    isPortrait: Boolean
 ) {
     val context = LocalContext.current
     val photoViewRef = remember { mutableStateOf<DebugPhotoView?>(null) }
     val CENTRALIZATION_THRESHOLD = 0.15f
     val PANEL_HEIGHT_FRACTION = 0.50f
+    val PANEL_WIDTH_FRACTION = 0.40f
     val pinMarginDp = 80.dp
     val density = context.resources.displayMetrics.density
     val pinMarginPx = pinMarginDp.value * density
@@ -55,7 +57,7 @@ fun InteractivePlanoViewer(
                 setImageFromUrl(planoUrl)
 
                 post {
-                    attacher.scaleType = ImageView.ScaleType.FIT_END
+                    attacher.scaleType = ImageView.ScaleType.FIT_CENTER
                     Log.d("InteractivePlanoViewer", "Plano alineado al final (abajo) usando FIT_END.")
                 }
             }.also {
@@ -172,48 +174,70 @@ fun InteractivePlanoViewer(
                     // El padre (EdicionPines) se encargará de cargar los datos completos y actualizar selectedPin
                     onPinTap(touchedPin!!, pinScreenXCoord, pinScreenYCoord)
 
+                    if (!isPortrait) { // Si es Landscape (Horizontal) -> Panel a la DERECHA
+                        // MODO HORIZONTAL (Landscape): Panel a la DERECHA -> Desplazamiento HORIZONTAL
 
-                    // --- GESTIÓN DEL DESPLAZAMIENTO HORIZONTAL (Centralización)
-                    val screenWidth = photoView.width.toFloat()
-                    val targetCenter = screenWidth / 2f
-                    val thresholdPx = screenWidth * CENTRALIZATION_THRESHOLD
+                        val screenWidth = photoView.width.toFloat()
+                        val pinTargetX = screenWidth * (1f - PANEL_WIDTH_FRACTION) - pinMarginPx
 
-                    var neededShiftX = 0f
+                        if (pinScreenXCoord > pinTargetX) {
+                            val neededShiftX = pinScreenXCoord - pinTargetX
+                            // Mover a la izquierda (valor negativo) para que el pin se vea
+                            photoViewRef.value?.moveHorizontalFree(-neededShiftX)
 
-                    // Borde Izquierdo (0% al 15%)
-                    if (pinScreenXCoord < thresholdPx) {
-                        neededShiftX = targetCenter - pinScreenXCoord
-                        // Borde Derecho (85% al 100%)
-                    } else if (pinScreenXCoord > (screenWidth - thresholdPx)) {
-                        neededShiftX = targetCenter - pinScreenXCoord
+                            Log.w(
+                                "InteractivePlanoViewer",
+                                "Pin oculto por panel lateral. Desplazando X: -${String.format("%.0f", neededShiftX)}px."
+                            )
+                        }
+
+                    } else { // Si es Portrait (Vertical) -> Panel ABAJO
+                        // MODO VERTICAL (Portrait): Panel ABAJO -> Desplazamiento VERTICAL
+
+                        // 1. Centralización horizontal
+                        val screenWidth = photoView.width.toFloat()
+                        val targetCenter = screenWidth / 2f
+                        val thresholdPx = screenWidth * CENTRALIZATION_THRESHOLD
+
+                        var neededShiftX = 0f
+
+                        // Borde Izquierdo (0% al 15%)
+                        if (pinScreenXCoord < thresholdPx) {
+                            neededShiftX = targetCenter - pinScreenXCoord
+                            // Borde Derecho (85% al 100%)
+                        } else if (pinScreenXCoord > (screenWidth - thresholdPx)) {
+                            neededShiftX = targetCenter - pinScreenXCoord
+                        }
+
+                        if (neededShiftX != 0f) {
+                            photoViewRef.value?.moveHorizontalFree(neededShiftX)
+                        }
+
+
+                        // 2. Desplazamiento vertical para evitar el panel inferior
+                        val panelHeightPx = photoView.height * PANEL_HEIGHT_FRACTION
+                        val pinTargetY = photoView.height - panelHeightPx - pinMarginPx
+
+                        if (pinScreenYCoord > pinTargetY) {
+                            val neededShiftY = pinScreenYCoord - pinTargetY
+                            photoViewRef.value?.moveVerticalFree(-neededShiftY)
+
+                            Log.w(
+                                "InteractivePlanoViewer",
+                                "Pin oculto por panel inferior. Desplazando Y: -${String.format("%.0f", neededShiftY)}px."
+                            )
+                        } else if (neededShiftX != 0f) {
+                            Toast.makeText(
+                                context,
+                                "Desplazando plano: X:${String.format("%.0f", neededShiftX)} px",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     }
 
-                    if (neededShiftX != 0f) {
-                        photoViewRef.value?.moveHorizontalFree(neededShiftX)
-                    }
-
-                    // --- GESTIÓN DEL DESPLAZAMIENTO VERTICAL ---
-                    val panelHeightPx = photoView.height * PANEL_HEIGHT_FRACTION
-                    val pinTargetY = photoView.height - panelHeightPx - pinMarginPx
-
-                    if (pinScreenYCoord > pinTargetY) {
-                        val neededShiftY = pinScreenYCoord - pinTargetY
-                        photoViewRef.value?.moveVerticalFree(-neededShiftY)
-
-                        Log.w(
-                            "InteractivePlanoViewer",
-                            "Pin oculto. Desplazando Y: -${String.format("%.0f", neededShiftY)}px."
-                        )
-                    } else if (neededShiftX != 0f) {
-                        Toast.makeText(
-                            context,
-                            "Desplazando plano: X:${String.format("%.0f", neededShiftX)} px",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
 
                 } else {
-                    // ⭐ AVISO AL PADRE: Toque fuera de un pin
+
                     onBackgroundTap()
                 }
                 photoView.invalidate()
