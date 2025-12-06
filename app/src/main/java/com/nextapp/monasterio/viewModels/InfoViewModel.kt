@@ -66,7 +66,7 @@ class InfoViewModel : ViewModel() {
         }
     }
 
-    fun updateLocation(newLocation: Map<String, String>) {
+    fun updateLocation(newLocation: String) {
         updateField("location", newLocation) { current ->
             current.copy(location = newLocation)
         }
@@ -75,6 +75,18 @@ class InfoViewModel : ViewModel() {
     fun updateHours(newHours: Map<String, String>) {
         updateField("hours", newHours) { current ->
             current.copy(hours = newHours)
+        }
+    }
+
+    fun updateEmail(newEmail: String) {
+        updateField("email", newEmail) { current ->
+            current.copy(email = newEmail)
+        }
+    }
+
+    fun updatePhone(newPhone: String) {
+        updateField("phone", newPhone) { current ->
+            current.copy(phone = newPhone)
         }
     }
 

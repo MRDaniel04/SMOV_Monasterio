@@ -57,6 +57,7 @@ fun AppNavigationHost(
         modifier = modifier
     ) {
         composable(AppRoutes.INICIO)   { HomeScreenContent(navController = navController, topPadding = scaffoldPadding, authViewModel = authViewModel) }
+        composable(AppRoutes.INFO) { InfoScreen(isEditing = isEditing, viewModel = infoViewModel, topPadding = scaffoldPadding) }
         composable(AppRoutes.HISTORIA) { HistoriaScreen(isEditing = isEditing, viewModel = historiaViewModel,topPadding = scaffoldPadding) }
         composable(AppRoutes.GALERIA)  { GaleriaScreen(navController = navController) }
         composable(AppRoutes.MODO_NINYOS)   { OpcionesModoNiño(navController = navController, topPadding = scaffoldPadding) }
@@ -188,7 +189,7 @@ fun AppDrawerContent(
             Spacer(modifier = Modifier.height(32.dp))
 
             DrawerMenuItem(text = stringResource(id = R.string.title_inicio)) { navigateTo(AppRoutes.INICIO) }
-            DrawerMenuItem(text = stringResource(id = R.string.menu_info)) { navigateTo(AppRoutes.PIN_ENTRADA_MONASTERIO+"/" + "pin_entrada") }
+            DrawerMenuItem(text = stringResource(id = R.string.menu_info)) { navigateTo(AppRoutes.INFO) }
             DrawerMenuItem(text = stringResource(id = R.string.menu_history)) { navigateTo(AppRoutes.HISTORIA) }
             DrawerMenuItem(text = stringResource(id = R.string.menu_gallery)) { navigateTo(AppRoutes.GALERIA) }
             DrawerMenuItem(text = stringResource(id = R.string.menu_profile)) { navigateTo(AppRoutes.PERFIL) }

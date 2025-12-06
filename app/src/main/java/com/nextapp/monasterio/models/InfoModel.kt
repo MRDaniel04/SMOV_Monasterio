@@ -6,6 +6,8 @@ package com.nextapp.monasterio.models
 data class InfoModel(
     val id: String = "general",
     val mainContent: Map<String, String> = emptyMap(),
-    val location: Map<String, String> = emptyMap(),
-    val hours: Map<String, String> = emptyMap()
+    val location: String = "",
+    val hours: Map<String, String> = emptyMap(),
+    val email: String = "",
+    val phone: String = ""
 )
