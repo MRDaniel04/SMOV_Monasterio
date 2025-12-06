@@ -50,7 +50,7 @@ object CloudinaryService {
                 .build()
 
             val request = Request.Builder()
-                .url(CloudinaryConfig.UPLOAD_URL)
+                .url(CloudinaryConfig.UPLOAD_IMAGE_URL)
                 .post(requestBody)
                 .build()
 
@@ -100,5 +100,46 @@ object CloudinaryService {
             null
         }
     }
+
+
+    suspend fun uploadFile(file: File, mimeType: String): Result<String> = withContext(Dispatchers.IO) {
+        try {
+            Log.d(TAG, "Iniciando subida de archivo: ${file.name} con MIME: $mimeType")
+
+            // Crear request multipart
+            val requestBody = MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("file", file.name, file.asRequestBody(mimeType.toMediaTypeOrNull()))
+                .addFormDataPart("upload_preset", CloudinaryConfig.UPLOAD_PRESET)
+                .build()
+
+            val request = Request.Builder()
+                .url(CloudinaryConfig.UPLOAD_AUDIO_URL) // Ahora usa /auto/upload
+                .post(requestBody)
+                .build()
+
+            // Ejecutar request
+            val response = client.newCall(request).execute()
+
+            if (!response.isSuccessful) {
+                Log.e(TAG, "Error en la respuesta: ${response.code}")
+                return@withContext Result.failure(Exception("Error al subir archivo: ${response.code}"))
+            }
+
+            // Parsear respuesta JSON
+            val responseBody = response.body?.string()
+            val jsonResponse = JSONObject(responseBody ?: "{}")
+            val fileUrl = jsonResponse.getString("secure_url")
+
+            Log.d(TAG, "Archivo subido exitosamente: $fileUrl")
+            Result.success(fileUrl)
+
+        } catch (e: Exception) {
+            Log.e(TAG, "Error al subir archivo", e)
+            Result.failure(e)
+        }
+    }
+
+
 
 }

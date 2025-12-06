@@ -18,6 +18,7 @@ import androidx.navigation.NavController
 import com.nextapp.monasterio.ui.screens.pinCreation.components.Image360Selector
 import com.nextapp.monasterio.ui.screens.pinCreation.components.PinLocationDropdown
 import com.nextapp.monasterio.ui.screens.pinCreation.components.PinTopBar
+import androidx.compose.ui.platform.LocalContext // ⬅️ IMPORTANTE: Añadir este import
 
 
 @Composable
@@ -25,6 +26,7 @@ fun CreacionPinesScreen(
     navController: NavController
 ) {
 
+    val context = LocalContext.current
     val parentEntry = remember(navController.currentBackStackEntry) {
         try {
             navController.getBackStackEntry("pins_graph")
@@ -69,12 +71,12 @@ fun CreacionPinesScreen(
                 onSave = {
                     if (isEditing) {
                         Log.d("FLUJO_PIN", "CreacionPinesScreen: Guardar en modo EDICIÓN.")
-                        vm.onSaveClicked()
+                        vm.onSaveClicked(context)
                         navController.popBackStack()
                     } else {
                         Log.d("FLUJO_PIN", "CreacionPinesScreen: Botón CREAR pulsado. Llamando a vm.onCreateClicked().")
-                        vm.onCreateClicked {
-                            navController.popBackStack()
+                        vm.onCreateClicked(context) {
+                             navController.popBackStack()
                         }
                     }
                 },

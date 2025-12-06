@@ -1,5 +1,6 @@
 package com.nextapp.monasterio.ui.screens.pinCreation
 
+import android.content.Context
 import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.getValue
@@ -11,6 +12,8 @@ import com.nextapp.monasterio.models.ImageTag
 import com.nextapp.monasterio.models.ImagenData
 import com.nextapp.monasterio.models.PinData
 import com.nextapp.monasterio.repository.PinRepository
+import com.nextapp.monasterio.repository.PlanoRepository
+import com.nextapp.monasterio.services.CloudinaryService
 import com.nextapp.monasterio.ui.screens.pinCreation.state.*
 import kotlinx.coroutines.launch
 
@@ -123,10 +126,9 @@ class CreacionPinSharedViewModel : ViewModel() {
     var isUploading by mutableStateOf(false)
     var uploadMessage by mutableStateOf("")
 
-
     var modoMoverPin: Boolean = false
     var formSubmitted: Boolean = false
-    var coordenadasFinales: Pair<Float, Float>? = null
+
 
     fun reset() {
 
@@ -138,7 +140,6 @@ class CreacionPinSharedViewModel : ViewModel() {
         imagenes.images = emptyList()
         imagen360 = null
         modoMoverPin = false
-        coordenadasFinales = null
         formSubmitted = false
         isEditing = false
         editingPinId = null
@@ -224,7 +225,7 @@ class CreacionPinSharedViewModel : ViewModel() {
     /**
      * Se llama cuando el usuario pulsa el botón de Guardar en modo edición.
      */
-    fun onSaveClicked() {
+    fun onSaveClicked(context: Context) {
         // Solo permitimos guardar si estamos en modo edición y no estamos ya subiendo.
         if (!isEditing || isUploading || formSubmitted) {
             Log.d("FLUJO_PIN", "VM: onSaveClicked ignorado. isEditing=$isEditing, isUploading=$isUploading, formSubmitted=$formSubmitted")
@@ -240,7 +241,7 @@ class CreacionPinSharedViewModel : ViewModel() {
 
         val imagenesParaGuardar = imagenes.images.map { pinImage ->
             ImagenData(
-                id = "", // Generado en el repositorio o irrelevante para actualización
+                id = pinImage.id, // ⬅️ CORRECCIÓN: Usar el ID original
                 url = pinImage.uri.toString(), // URL de la imagen
                 tipo = pinImage.tag?.toFirestoreString() ?: "", // Tipo/Tag
                 titulo = pinImage.titulo_es, // Título en español
@@ -263,13 +264,53 @@ class CreacionPinSharedViewModel : ViewModel() {
 
         val originalRadius = originalPin!!.tapRadius ?: 0.06f // Si no se cargó, toma el valor original
 
-        val audioUrl_es_final = if (descripcion.es != original.descripcion_es) null else original.audioUrl_es
-        val audioUrl_en_final = if (descripcion.en != original.descripcion_en) null else original.audioUrl_en
-        val audioUrl_de_final = if (descripcion.de != original.descripcion_de) null else original.audioUrl_de
-        val audioUrl_fr_final = if (descripcion.fr != original.descripcion_fr) null else original.audioUrl_fr
+        val descriptionTasks = mapOf(
+            "es" to Pair(descripcion.es, original.descripcion_es),
+            "en" to Pair(descripcion.en, original.descripcion_en),
+            "de" to Pair(descripcion.de, original.descripcion_de),
+            "fr" to Pair(descripcion.fr, original.descripcion_fr)
+        )
+
+        // 2. Inicializamos las URLs finales con las originales
+        val audioUrlsFinal: MutableMap<String, String?> = mutableMapOf(
+            "es" to original.audioUrl_es,
+            "en" to original.audioUrl_en,
+            "de" to original.audioUrl_de,
+            "fr" to original.audioUrl_fr
+        )
 
         viewModelScope.launch {
             try {
+
+                for ((lang, texts) in descriptionTasks) {
+                    val (currentText, originalText) = texts
+
+                    val textModified = currentText != originalText
+                    if (textModified) {
+                        // El texto ha cambiado. Decidimos si subir o borrar.
+
+                        if (currentText.isNotBlank()) {
+                            // 1. TEXTO MODIFICADO Y NO VACÍO -> REGENERAR Y SUBIR
+                            uploadMessage = "Generando y subiendo audio para ${lang.uppercase()}..."
+
+                            // 🚨 LLAMADA CRÍTICA AL REPOSITORIO
+                            val generatedUrl = pinRepository.generateAndUploadAudio(context, currentText, lang)
+
+                            audioUrlsFinal[lang] = generatedUrl // Guarda la nueva URL
+                        } else {
+                            // 2. TEXTO MODIFICADO A VACÍO -> BORRAR
+                            // El original tenía audio, pero el nuevo texto no. Borramos el link.
+                            audioUrlsFinal[lang] = null
+                        }
+                    }
+                }
+
+                // 4. Obtener las URLs finales para la llamada al repositorio
+                val audioUrl_es_final = audioUrlsFinal["es"]
+                val audioUrl_en_final = audioUrlsFinal["en"]
+                val audioUrl_de_final = audioUrlsFinal["de"]
+                val audioUrl_fr_final = audioUrlsFinal["fr"]
+
                 pinRepository.updatePin(
                     pinId = id,
 
@@ -324,21 +365,136 @@ class CreacionPinSharedViewModel : ViewModel() {
     /**
      * Se llama cuando el usuario pulsa el botón de Guardar en modo CREACIÓN.
      */
-    fun onCreateClicked(onSuccess: () -> Unit) {
-        // Solo permitimos crear si NO estamos en modo edición y no estamos ya subiendo.
+    fun onCreateConfirmed(context: Context, finalX: Float, finalY: Float, onSuccess: () -> Unit) {
+
+        // Solo permitimos crear si NO estamos editando, NO estamos subiendo y tenemos coordenadas.
+        if (isEditing || isUploading) {
+            Log.e("FLUJO_PIN", "VM: onCreateConfirmed ignorado. Modo incorrecto o ya subiendo.")
+            uploadMessage = "Error interno: Ya subiendo o en edición."
+            isUploading = false
+            return
+        }
+
+        isUploading = true
+        uploadMessage = "Iniciando proceso de creación y subida de archivos..."
+
+
+
+        // Mapeo de traducciones y áreas
+        val (area_en_auto, area_de_auto, area_fr_auto) = area_traducciones_automaticas
+        val ubicacion_en_manual = if (pinTitleManualTrads.en.isNotBlank()) pinTitleManualTrads.en else null
+        val ubicacion_de_manual = if (pinTitleManualTrads.de.isNotBlank()) pinTitleManualTrads.de else null
+        val ubicacion_fr_manual = if (pinTitleManualTrads.fr.isNotBlank()) pinTitleManualTrads.fr else null
+
+
+        viewModelScope.launch {
+            try {
+                // --- 1. SUBIDA DE IMÁGENES NORMALES ---
+                uploadMessage = "Subiendo imágenes normales..."
+                val uploadedImageUrls = imagenes.uris.mapNotNull { uri ->
+                    CloudinaryService.uploadImage(uri, context).getOrNull()
+                }
+                // Validar que se subieron todas las imágenes necesarias
+                if (uploadedImageUrls.size != imagenes.uris.size) {
+                    throw Exception("Fallo al subir una o más imágenes a Cloudinary.")
+                }
+
+                // --- 2. SUBIDA DE IMAGEN 360 ---
+                uploadMessage = "Subiendo imagen 360 (si existe)..."
+                val uploaded360Url: String? = imagen360?.let { uri ->
+                    CloudinaryService.uploadImage(uri, context).getOrNull()
+                }
+
+                // Mapear URLs subidas con sus datos de título/tag
+                val imagesWithData = imagenes.images.mapIndexed { index, pinImage ->
+                    val uploadedUrl = uploadedImageUrls.getOrNull(index) ?: pinImage.uri.toString()
+                    ImagenData(
+                        id = "", url = uploadedUrl,
+                        tipo = pinImage.tag?.toFirestoreString() ?: "", titulo = pinImage.titulo_es,
+                        tituloIngles = pinImage.titulo_en, tituloAleman = pinImage.titulo_de,
+                        tituloFrances = pinImage.titulo_fr, foco = 0f, etiqueta = ""
+                    )
+                }
+
+
+                // --- 3. GENERACIÓN Y SUBIDA DE AUDIOS (¡INTEGRADO!) ---
+                val audioUrlsFinal: MutableMap<String, String?> = mutableMapOf()
+                val creationDescriptions = mapOf(
+                    "es" to descripcion.es, "en" to descripcion.en,
+                    "de" to descripcion.de, "fr" to descripcion.fr
+                )
+
+                for ((lang, currentText) in creationDescriptions) {
+                    if (currentText.isNotBlank()) {
+                        uploadMessage = "Generando y subiendo audio para ${lang.uppercase()}..."
+                        val generatedUrl = pinRepository.generateAndUploadAudio(context, currentText, lang)
+                        audioUrlsFinal[lang] = generatedUrl
+                    } else {
+                        audioUrlsFinal[lang] = null
+                    }
+                }
+
+
+                // --- 4. CREACIÓN DEL PIN FINAL EN EL REPOSITORIO ---
+                uploadMessage = "Guardando Pin y asociando al plano..."
+
+                val newPinId = pinRepository.createPinFromForm(
+                    // UBICACIÓN (Compleja)
+                    ubicacion_es = ubicacion_es, ubicacion_en = ubicacion_en_manual,
+                    ubicacion_de = ubicacion_de_manual, ubicacion_fr = ubicacion_fr_manual,
+
+                    // DESCRIPCIONES
+                    descripcion_es = descripcion.es.ifBlank { null }, descripcion_en = descripcion.en.ifBlank { null },
+                    descripcion_de = descripcion.de.ifBlank { null }, descripcion_fr = descripcion.fr.ifBlank { null },
+
+                    // ÁREA (Simple)
+                    area_es = area_es, area_en = area_en_auto, area_de = area_de_auto, area_fr = area_fr_auto,
+
+                    // AUDIO (USANDO LAS URLS GENERADAS)
+                    audioUrl_es = audioUrlsFinal["es"], audioUrl_en = audioUrlsFinal["en"],
+                    audioUrl_de = audioUrlsFinal["de"], audioUrl_fr = audioUrlsFinal["fr"],
+
+                    // ARCHIVOS Y COORDENADAS
+                    tapRadius = null,
+                    imagenes = imagesWithData,
+                    imagen360 = uploaded360Url,
+                    x = finalX, y = finalY
+                )
+
+                PlanoRepository.addPinToPlano(planoId = "monasterio_interior", pinId = newPinId)
+
+                // Éxito:
+                uploadMessage = "Pin creado con éxito."
+                formSubmitted = false // Resetear formSubmitted (si lo usa la UI)
+                onSuccess() // Informar a EdicionPines para que recargue
+
+            } catch (e: Exception) {
+                Log.e("FLUJO_PIN", "❌ ERROR en proceso de creación: ${e.message}", e)
+                uploadMessage = "Error: " + (e.message ?: "Fallo desconocido en el guardado.")
+
+                formSubmitted = false // Resetear en caso de fallo
+            } finally {
+                isUploading = false
+            }
+        }
+    }
+
+    fun onCreateClicked(context: android.content.Context, onSuccess: () -> Unit) {
+        // Aquí puedes añadir alguna validación de formulario si es crítica antes de pasar al mapa.
+        // Por simplicidad, solo chequeamos el estado.
         if (isEditing || isUploading || formSubmitted) {
-            Log.d("FLUJO_PIN", "VM: onCreateClicked ignorado. isEditing=$isEditing, isUploading=$isUploading, formSubmitted=$formSubmitted")
+            Log.w("FLUJO_PIN", "VM: onCreateClicked ignorado. Formulario ya en proceso o en edición.")
             return
         }
 
         // 1. Marcar el estado del formulario como SUBMITTED
+        // Esto es lo que activará el LaunchedEffect en EdicionPines (el mapa)
         formSubmitted = true
-        Log.d("FLUJO_PIN", "VM: ✅ Formulario listo. Establecido formSubmitted = true.")
+        Log.d("FLUJO_PIN", "VM: ✅ Formulario listo para posicionamiento. formSubmitted = true.")
 
-        onSuccess()
-
+        // 2. Llama al callback de navegación.
+        onSuccess() // Esto llama a navController.popBackStack() para ir al mapa (EdicionPines)
     }
-
 
 
     /**

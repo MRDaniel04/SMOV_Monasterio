@@ -1,12 +1,24 @@
 package com.nextapp.monasterio.repository
 
+import android.content.Context
+import android.os.Bundle
+import android.speech.tts.TextToSpeech
+import android.speech.tts.UtteranceProgressListener
 import android.util.Log
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import com.nextapp.monasterio.models.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
+import java.io.File
+import kotlin.coroutines.resume
+import java.util.Locale
+
+
 
 object PinRepository {
     private val firestore = FirebaseFirestore.getInstance()
@@ -382,6 +394,136 @@ object PinRepository {
             throw e
         }
     }
+
+    /**
+     * Función que envuelve la generación del audio TTS, su subida a Cloudinary y la limpieza.
+     *
+     * @param context Contexto de la aplicación para gestión de archivos temporales.
+     * @param text Texto de la descripción.
+     * @param langCode Código del idioma ("es", "en", etc.).
+     * @return URL de Cloudinary del archivo subido o null si falla/no hay texto.
+     */
+    suspend fun generateAndUploadAudio(context: Context, text: String, langCode: String): String? {
+        if (text.isBlank()) return null
+        Log.d("AUDIO_FLOW", "Iniciando proceso de generación y subida para $langCode.")
+
+        // 1. Generar el archivo de audio TTS (usando la función que acabamos de corregir)
+        val audioFile = generateTtsFile(context, text, langCode)
+
+        if (audioFile == null || !audioFile.exists() || audioFile.length() == 0L) {
+            Log.e("AUDIO_UPLOAD", "Error: Archivo TTS no válido o vacío para $langCode.")
+            return null
+        }
+
+        try {
+            // 2. Subir el archivo de audio a Cloudinary
+            // Importante: El MIME type para audio MP3 es "audio/mp3"
+            val result = com.nextapp.monasterio.services.CloudinaryService.uploadFile(audioFile, "audio/mp3")
+
+            // Devuelve la URL o lanza excepción si falla la subida
+            return result.getOrThrow()
+
+        } catch (e: Exception) {
+            Log.e("AUDIO_UPLOAD", "Fallo al subir audio $langCode a Cloudinary", e)
+            return null
+        } finally {
+            // 3. Limpiar el archivo temporal
+            if (audioFile.exists()) {
+                audioFile.delete()
+                Log.d("AUDIO_FLOW", "Archivo temporal limpiado: ${audioFile.name}")
+            }
+        }
+    }
+
+    private suspend fun generateTtsFile(context: Context, text: String, langCode: String): File? = withContext(Dispatchers.IO) {
+        if (text.isBlank()) return@withContext null
+        Log.d("TTS_REAL", "REAL: Iniciando generación de TTS para idioma=$langCode, texto='${text.take(30)}...'")
+
+        val tempFile = File.createTempFile("tts_pin_${langCode}_", ".mp3", context.cacheDir)
+        tempFile.delete() // Aseguramos que el archivo no exista antes de la síntesis
+
+        // ⬅️ CAMBIO: Declarar tts como anulable para la clausura de cancelación.
+        var tts: TextToSpeech? = null
+
+        return@withContext suspendCancellableCoroutine { continuation ->
+
+            // 1. Inicializar TextToSpeech
+            // El 'it' que recibimos es el objeto TextToSpeech ya inicializado
+            tts = TextToSpeech(context) { status ->
+                if (status == TextToSpeech.SUCCESS) {
+
+                    // Usamos 'tts!!' ya que sabemos que se inicializó correctamente aquí
+                    val initializedTts = tts!!
+
+                    // 2. Configurar Idioma de manera compatible
+                    @Suppress("DEPRECATION")
+                    val locale = when (langCode) {
+                        "es" -> Locale("es", "ES")
+                        "en" -> Locale.ENGLISH
+                        "de" -> Locale.GERMAN
+                        "fr" -> Locale.FRENCH
+                        else -> Locale.getDefault()
+                    }
+
+                    val result = initializedTts.setLanguage(locale)
+
+                    if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                        Log.e("TTS_REAL", "Idioma $langCode no soportado por TTS. Fallando.")
+                        initializedTts.shutdown()
+                        if (continuation.isActive) continuation.resume(null)
+                        return@TextToSpeech
+                    }
+
+                    // 3. Configurar Listener de Progreso
+                    initializedTts.setOnUtteranceProgressListener(object : UtteranceProgressListener() {
+
+                        override fun onStart(utteranceId: String?) {}
+
+                        override fun onDone(utteranceId: String?) {
+                            Log.d("TTS_REAL", "REAL: TTS de $langCode completado. Tamaño: ${tempFile.length()} bytes.")
+                            initializedTts.shutdown()
+                            if (continuation.isActive) continuation.resume(tempFile)
+                        }
+
+                        override fun onError(utteranceId: String?, errorCode: Int) {
+                            Log.e("TTS_REAL", "Error al generar TTS para $langCode: $errorCode")
+                            initializedTts.shutdown()
+                            tempFile.delete()
+                            if (continuation.isActive) continuation.resume(null)
+                        }
+
+                        @Deprecated("Deprecated in Java")
+                        override fun onError(utteranceId: String?) { onError(utteranceId, -1) }
+                    })
+
+                    // 4. Sintetizar el archivo
+                    val bundle = Bundle()
+                    @Suppress("DEPRECATION")
+                    val resultSynthesis = initializedTts.synthesizeToFile(text, bundle, tempFile, "tts_synthesis")
+
+                    if (resultSynthesis == TextToSpeech.ERROR) {
+                        Log.e("TTS_REAL", "Fallo inmediato al llamar a synthesizeToFile.")
+                        initializedTts.shutdown()
+                        if (continuation.isActive) continuation.resume(null)
+                    }
+
+                } else {
+                    Log.e("TTS_REAL", "Fallo al inicializar TTS: $status")
+                    tts?.shutdown() // Intentamos cerrar si es que se llegó a inicializar parcialmente
+                    if (continuation.isActive) continuation.resume(null)
+                }
+            }
+
+            // Manejo de la cancelación de corrutina
+            continuation.invokeOnCancellation {
+                // ⬅️ Usamos el safe-call operator '?.' para evitar el error de nulabilidad
+                tts?.stop()
+                tts?.shutdown()
+                tempFile.delete()
+            }
+        }
+    }
+
 
 }
 

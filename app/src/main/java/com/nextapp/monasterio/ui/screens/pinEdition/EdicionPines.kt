@@ -352,8 +352,6 @@ fun EdicionPines(
                     },
                     onConfirm = {
 
-                        vm.isUploading = true
-                        vm.uploadMessage = "Subiendo imágenes… Esto puede tardar unos segundos"
                         Log.d("FLUJO_PIN", "EdicionPines: Botón CONFIRMAR pulsado. Calculando coordenadas...")
 
                         val currentScreenPos = pinDragOffset
@@ -366,10 +364,10 @@ fun EdicionPines(
                             )
                         }
 
-
                         if (normalizedCoords == null) {
                             Log.e("FLUJO_PIN", "❌ ERROR: normalizedCoords es NULL. Posiblemente PhotoView no está listo.")
                             Toast.makeText(context, "Error al obtener la posición del pin.", Toast.LENGTH_SHORT).show()
+                            vm.isUploading = false // Asegurar que se apaga en caso de fallo crítico de coordenadas
                             return@MovingPinOverlay
                         }
 
@@ -380,139 +378,50 @@ fun EdicionPines(
                         if (isNewPinMode) {
 
                             val isPinValid =
-                                vm.descripcion.es.isNotBlank() && // Descripción ES obligatoria
-                                        vm.imagenes.allImagesTagged && // Etiqueta y Título ES en imagen
-                                        vm.ubicacion_es.isNotBlank() && // Ubicación/Título ES obligatoria
-                                        vm.area_es.isNotBlank() // Área ES obligatoria
-
-
-                            Log.d("FLUJO_PIN", "EdicionPines: Validando formulario en onConfirm. isPinValid=$isPinValid")
+                                vm.descripcion.es.isNotBlank() &&
+                                        vm.imagenes.allImagesTagged &&
+                                        vm.ubicacion_es.isNotBlank() &&
+                                        vm.area_es.isNotBlank()
 
                             if (!isPinValid) {
-                                Toast.makeText(context, "Error: Faltan datos obligatorios (Descripción, Imágenes, Ubicación/Área).", Toast.LENGTH_LONG).show()
-                                Log.w("FLUJO_PIN", "EdicionPines: ❌ Validación fallida. Cancelando creación de Pin.")
+                                Log.e("FLUJO_PIN", "❌ VALIDACIÓN FALLIDA: Faltan datos obligatorios para crear el Pin. Abortando.")
                                 vm.isUploading = false
                                 vm.uploadMessage = ""
-                                return@MovingPinOverlay
+                                return@MovingPinOverlay // <-- Sale si la validación falla (motivo más probable del fallo reportado)
                             }
 
-                            scope.launch {
-
-                                Log.d("FLUJO_PIN", "EdicionPines: ⏳ Corrutina de CREACIÓN iniciada.")
-                                val start = System.currentTimeMillis()
-
-                                // 1. SUBIR IMÁGENES NORMALES
-                                val uploadedImageUrls = vm.imagenes.uris.mapNotNull { uri ->
-                                    val result = CloudinaryService.uploadImage(uri, context)
-                                    result.getOrNull()
-                                }
-
-                                Log.d("PIN", "✅ Imagenes subidas en: ${System.currentTimeMillis() - start}ms")
-
-                                val uploaded360Url: String? = vm.imagen360?.let { uri ->
-                                    val result = CloudinaryService.uploadImage(uri, context)
-                                    result.getOrNull()
-                                }
-
-                                // C. VALIDACIÓN FINAL DE SUBIDA
-                                if (uploadedImageUrls.isEmpty()) {
-                                    Toast.makeText(context, "Error: No se pudo subir ninguna imagen. Pin NO creado.", Toast.LENGTH_LONG).show()
-                                    Log.e("FLUJO_PIN", "❌ ERROR CLOUDINARY: Subida de imágenes falló o URIs vacías.")
-                                    vm.isUploading = false
-                                    vm.uploadMessage = ""
-
-                                    return@launch
-                                }
-
-                                val imagesWithData = vm.imagenes.images.mapIndexed { index, pinImage ->
-                                    val uploadedUrl = uploadedImageUrls.getOrNull(index) ?: pinImage.uri.toString()
-
-                                    ImagenData(
-                                        id = "",
-                                        url = uploadedUrl,
-                                        tipo = pinImage.tag?.toFirestoreString() ?: "",
-                                        titulo = pinImage.titulo_es,
-                                        tituloIngles = pinImage.titulo_en,
-                                        tituloAleman = pinImage.titulo_de,
-                                        tituloFrances = pinImage.titulo_fr,
-                                        foco = 0f,
-                                        etiqueta = ""
-                                    )
-                                }
-
-                                // D. CREAR PIN CON LAS URLs Y COORDENADAS FINALES
-                                try {
-
-                                    // 🆕 LLAMADA A PinRepository.createPinFromForm: Usando los nuevos campos
-                                    val newPinId = PinRepository.createPinFromForm(
-
-                                        // --- UBICACIÓN (Compleja, antes TÍTULOS) ---
-                                        ubicacion_es = vm.ubicacion_es,
-                                        ubicacion_en = vm.pinTitleManualTrads.en.ifBlank { null },
-                                        ubicacion_de = vm.pinTitleManualTrads.de.ifBlank { null },
-                                        ubicacion_fr = vm.pinTitleManualTrads.fr.ifBlank { null },
-
-                                        // --- DESCRIPCIONES ---
-                                        descripcion_es = vm.descripcion.es.ifBlank { null },
-                                        descripcion_en = vm.descripcion.en.ifBlank { null },
-                                        descripcion_de = vm.descripcion.de.ifBlank { null },
-                                        descripcion_fr = vm.descripcion.fr.ifBlank { null },
-
-                                        // --- ÁREA (Simple, antes UBICACIÓN) ---
-                                        area_es = vm.area_es,
-                                        area_en = vm.area_en.orEmpty().ifBlank { null },
-                                        area_de = vm.area_de.orEmpty().ifBlank { null },
-                                        area_fr = vm.area_fr.orEmpty().ifBlank { null },
-
-                                        // --- AUDIO ---
-                                        audioUrl_es = null, // Dejamos a null, ya que el VM no lo controla en este modo
-                                        audioUrl_en = null,
-                                        audioUrl_de = null,
-                                        audioUrl_fr = null,
-
-                                        // --- COORDENADAS y RADIO ---
-                                        tapRadius = null, // El repositorio usará el valor por defecto si es null
-                                        imagenes = imagesWithData, // 🔨 CORREGIDO (List<ImagenData>)
-                                        imagen360 = uploaded360Url,
-                                        x = finalX,
-                                        y = finalY
-                                    )
-
-                                    Log.d("FLUJO_PIN", "EdicionPines: ✅ PinRepository.createPinFromForm EXITOSO. ID=$newPinId")
-
-                                    PlanoRepository.addPinToPlano(
-                                        planoId = "monasterio_interior",
-                                        pinId = newPinId
-                                    )
-
-                                    vm.isUploading = false
-                                    vm.uploadMessage = ""
 
 
-                                    // F. ÉXITO
-                                    Toast.makeText(context, "Pin Creado.", Toast.LENGTH_LONG).show()
-                                    Log.d("EdicionPines", "Pin con ID:$newPinId creado correctamente en (x=$finalX, y=$finalY)")
+                            // 3. Llamar al VM para iniciar el proceso de guardado ASÍNCRONO
+                            vm.onCreateConfirmed(context, finalX, finalY) {
+                                // Callback de ÉXITO del ViewModel (se ejecuta cuando el Pin ya está en Firebase/Cloudinary)
 
-                                    // Recargar la lista de pines para mostrar el nuevo pin
-                                    val plano = PlanoRepository.getPlanoById("monasterio_interior")
-                                    val allPins = PinRepository.getAllPins()
-                                    val pinRefs = plano?.pines?.map { it.substringAfterLast("/") } ?: emptyList()
-                                    pines = allPins.filter { pinRefs.contains(it.id) }
+                                vm.isUploading = false
+                                vm.uploadMessage = ""
 
-                                    vm.reset() // Limpiamos el formulario tras el éxito.
+                                // 4. Resetear el estado de la UI (MOVIDO AQUÍ DENTRO)
+                                isPinMoving = false
+                                isNewPinMode = false
+                                pinBeingMoved = null
+                                pinDragOffset = Offset.Zero
+                                selectedPin = null // Asegurar que no hay pin seleccionado
 
-                                } catch (e: Exception) {
-                                    Log.e("FLUJO_PIN", "❌ ERROR FIREBASE: Error en PinRepository.createPinFromForm: ${e.message}")
-                                    Toast.makeText(context, "Error al guardar el Pin en Firebase.", Toast.LENGTH_LONG).show()
-                                } finally {
-                                    vm.isUploading = false
-                                    vm.uploadMessage = ""
-                                    Log.d("FLUJO_PIN", "EdicionPines: Corrutina de CREACIÓN finalizada.")
+                                // Recargar la lista de pines y limpiar el formulario
+                                scope.launch {
+                                    try {
+                                        val plano = PlanoRepository.getPlanoById("monasterio_interior")
+                                        val allPins = PinRepository.getAllPins()
+                                        val pinRefs = plano?.pines?.map { it.substringAfterLast("/") } ?: emptyList()
+                                        pines = allPins.filter { pinRefs.contains(it.id) }
+                                        vm.reset() // Limpiamos el formulario tras el éxito.
+                                        Toast.makeText(context, "Pin Creado y guardado con éxito.", Toast.LENGTH_LONG).show()
+                                    } catch (e: Exception) {
+                                        Log.e("EdicionPines", "Error recargando pines: ${e.message}")
+                                    }
                                 }
                             }
 
-                            vm.formSubmitted = false
-                            isNewPinMode = false
+                            return@MovingPinOverlay
 
                         } else {
                             // Este bloque para mover un pin existente sigue usando la función de posición
