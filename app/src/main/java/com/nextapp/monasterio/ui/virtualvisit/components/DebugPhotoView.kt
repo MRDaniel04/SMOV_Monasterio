@@ -2,9 +2,10 @@ package com.nextapp.monasterio.ui.virtualvisit.components
 
 import android.content.Context
 import android.graphics.*
+import android.graphics.drawable.Animatable
+import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.util.Log
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.github.chrisbanes.photoview.PhotoView
 
@@ -14,29 +15,34 @@ class DebugPhotoView @JvmOverloads constructor(
     defStyle: Int = 0
 ) : PhotoView(context, attrs, defStyle) {
 
+    private val TAG = "DEBUG_MAPA"
+
     var highlightColor: Int = Color.TRANSPARENT
     var interactivePath: Path? = null
 
     data class StaticZoneData(val path: Path, val color: Int)
     var staticZones: List<StaticZoneData> = emptyList()
 
-    var blinkingAlpha:Float=1.0f
+    var blinkingAlpha: Float = 1.0f
 
+    // CACHÉ: Guardamos TODOS los iconos (estáticos y GIFs) para no cargarlos en bucle
+    private val drawableCache = mutableMapOf<Int, Drawable>()
 
     data class PinData(
         val x: Float,
         val y: Float,
         val iconId: Int?,
         val isPressed: Boolean,
-        val isMoving: Boolean
+        val isMoving: Boolean,
+        val pinColor: Int = Color.WHITE
     )
-    var pins: List<PinData> = emptyList()
 
-    private val highlightPaint = Paint().apply {
-        style = Paint.Style.STROKE
-        strokeWidth = 15f
-        isAntiAlias = true
-    }
+    var pins: List<PinData> = emptyList()
+        set(value) {
+            field = value
+            // No invalidamos aquí a lo loco, dejamos que el ciclo de animación lo haga si es necesario
+            invalidate()
+        }
 
     private val zonePaint = Paint().apply{
         style = Paint.Style.STROKE
@@ -44,13 +50,22 @@ class DebugPhotoView @JvmOverloads constructor(
         isAntiAlias = true
     }
 
+    private val highlightPaint = Paint().apply {
+        style = Paint.Style.STROKE
+        strokeWidth = 15f
+        isAntiAlias = true
+    }
+
+    private val density = context.resources.displayMetrics.density
+
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
         val d = drawable ?: return
+
+        // 1. Obtener matriz de la imagen (Zoom y Pan)
         val matrixValues = FloatArray(9)
         imageMatrix.getValues(matrixValues)
-
         val scaleX = matrixValues[Matrix.MSCALE_X]
         val scaleY = matrixValues[Matrix.MSCALE_Y]
         val transX = matrixValues[Matrix.MTRANS_X]
@@ -61,23 +76,22 @@ class DebugPhotoView @JvmOverloads constructor(
             postTranslate(transX, transY)
         }
 
+        // 2. Dibujar Zonas Interactivas
         if (staticZones.isNotEmpty()) {
             staticZones.forEach { zone ->
                 val baseColor = zone.color
-                val baseRed = Color.red(baseColor)
-                val baseGreen = Color.green(baseColor)
-                val baseBlue = Color.blue(baseColor)
-                val baseAlpha = Color.alpha(baseColor)
+                // Calculamos el alpha basado en el parpadeo
+                val newAlpha = (Color.alpha(baseColor) * blinkingAlpha).toInt().coerceIn(0, 255)
 
-                val newAlpha = (baseAlpha * blinkingAlpha).toInt()
+                zonePaint.color = Color.argb(newAlpha, Color.red(baseColor), Color.green(baseColor), Color.blue(baseColor))
 
-                zonePaint.color = Color.argb(newAlpha, baseRed, baseGreen, baseBlue)
                 val pathCopy = Path(zone.path)
                 pathCopy.transform(drawMatrix)
                 canvas.drawPath(pathCopy, zonePaint)
             }
         }
 
+        // 3. Dibujar Resaltado (Click)
         interactivePath?.let { path ->
             if (highlightColor != Color.TRANSPARENT) {
                 val pathCopy = Path(path)
@@ -87,42 +101,89 @@ class DebugPhotoView @JvmOverloads constructor(
             }
         }
 
+        // 4. DIBUJAR PINES (OPTIMIZADO)
         pins.forEach { pin ->
-            val icon = ContextCompat.getDrawable(context, pin.iconId ?: 0) ?: return@forEach
+            val iconId = pin.iconId ?: 0
+            if (iconId == 0) return@forEach
 
+            // A. Obtener de caché o cargar UNA VEZ
+            var icon = drawableCache[iconId]
+            if (icon == null) {
+                try {
+                    val loaded = ContextCompat.getDrawable(context, iconId)
+                    if (loaded != null) {
+                        icon = loaded
+                        // Si es animado, le damos el callback para que se mueva
+                        if (icon is Animatable) {
+                            icon.callback = this
+                            icon.start()
+                        }
+                        drawableCache[iconId] = icon
+                    }
+                } catch (e: Exception) {
+                    Log.e(TAG, "Error cargando icono $iconId", e)
+                }
+            }
+
+            if (icon == null) return@forEach
+
+            // B. Configurar Tinte
+            if (pin.pinColor != Color.WHITE) {
+                icon.setTint(pin.pinColor)
+            } else {
+                icon.setTintList(null)
+            }
+
+            // C. Calcular Posición en Pantalla
             val imageX = pin.x * d.intrinsicWidth
             val imageY = pin.y * d.intrinsicHeight
-
             val screenX = imageX * scaleX + transX
             val screenY = imageY * scaleY + transY
 
+            // D. Calcular Tamaño basado en DENSIDAD (dp) en lugar de píxeles brutos
+            val pressScale = if (pin.isPressed) 0.85f else 1.0f
 
-            val scale = if (pin.isPressed) 0.85f else 1.0f
-            val sizePx = 80f * scale
-            val left = (screenX - sizePx / 2).toInt()
-            val top = (screenY - sizePx).toInt()
-            val right = (screenX + sizePx / 2).toInt()
-            val bottom = (screenY).toInt()
+            // Usamos 40dp como tamaño base estándar (ajusta el 40f si lo quieres más grande/pequeño)
+            val sizeDp = 40f
+            val sizePx = sizeDp * density * pressScale
 
-            icon.setBounds(left, top, right, bottom)
+            val halfSize = sizePx / 2
+
+            // E. DIBUJAR USANDO TRANSFORMACIÓN DE CANVAS
+            canvas.save()
+            // Movemos el "papel" a la posición del pin
+            canvas.translate(screenX, screenY)
+
+            // Definimos los límites centrados en (0,0) local.
+            // El pin se dibuja hacia arri  ba desde el punto (0,0) que es la punta.
+            icon.setBounds((-halfSize).toInt(), (-sizePx).toInt(), (halfSize).toInt(), 0)
+
             icon.draw(canvas)
+            canvas.restore()
+        }
+    }
+
+    // Necesario para que los GIFs se animen
+    override fun verifyDrawable(who: Drawable): Boolean {
+        return super.verifyDrawable(who) || drawableCache.containsValue(who)
+    }
+
+    override fun invalidateDrawable(drawable: Drawable) {
+        if (verifyDrawable(drawable)) {
+            invalidate()
+        } else {
+            super.invalidateDrawable(drawable)
         }
     }
 
     fun setImageFromUrl(url: String) {
         try {
-            // Carga la imagen remota usando Glide (descarga y la muestra en el PhotoView)
-            com.bumptech.glide.Glide.with(context)
-                .asBitmap()
-                .load(url)
-                .into(this)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+            com.bumptech.glide.Glide.with(context).asBitmap().load(url).into(this)
+        } catch (e: Exception) { e.printStackTrace() }
     }
 
     fun getNormalizedImageCoords(screenX: Float, screenY: Float): PointF? {
-        val d = drawable ?: return null // Necesitas un Drawable para obtener sus dimensiones
+        val d = drawable ?: return null
         val matrixValues = FloatArray(9)
         imageMatrix.getValues(matrixValues)
 
@@ -130,56 +191,25 @@ class DebugPhotoView @JvmOverloads constructor(
         val transX = matrixValues[Matrix.MTRANS_X]
         val transY = matrixValues[Matrix.MTRANS_Y]
 
-        // 1. Convertir coordenadas de pantalla (X/Y) a coordenadas de imagen escaladas y trasladadas
-        // Coordenada de imagen (píxeles) = (Coordenada de pantalla - Traslación) / Escala
-
         val imageX = (screenX - transX) / scaleX
-        val imageY = (screenY - transY) / scaleX // Asumimos scaleY = scaleX
-
-        // 2. Normalizar las coordenadas (0-1) dividiendo por las dimensiones intrínsecas del Drawable
-        // Coordenada normalizada = Coordenada de imagen / Dimensión intrínseca
+        val imageY = (screenY - transY) / scaleX
 
         val normalizedX = imageX / d.intrinsicWidth
         val normalizedY = imageY / d.intrinsicHeight
 
-        // Log.d("CONVERSION", "Screen($screenX, $screenY) -> Image($imageX, $imageY) -> Norm($normalizedX, $normalizedY)")
-
-        // Pequeña corrección de límites por si acaso
         val finalX = normalizedX.coerceIn(0f, 1f)
         val finalY = normalizedY.coerceIn(0f, 1f)
 
         return PointF(finalX, finalY)
     }
 
-
     fun moveVerticalFree(deltaY: Float) {
-
-        // Esta función asume que está dentro de una clase que hereda de View (como DebugPhotoView).
-
-        // Si deltaY es positivo (como +120f), la vista se moverá hacia abajo.
-        // No hay chequeos de límites, por lo que puede moverse indefinidamente.
-
-        // Aplicar el movimiento directamente a la propiedad de traslación de la View.
         this.translationY += deltaY
-
         Log.d("MOVE_FREE", "Desplazamiento aplicado: $deltaY. Nueva translationY: ${this.translationY}")
     }
 
     fun moveHorizontalFree(deltaX: Float) {
-
-        // Esta función aplica un desplazamiento horizontal sin límites.
-
-        // Si deltaX es positivo (+), la vista se moverá hacia la DERECHA.
-        // Si deltaX es negativo (-), la vista se moverá hacia la IZQUIERDA.
-
-        // Aplicar el movimiento directamente a la propiedad de traslación horizontal de la View.
         this.translationX += deltaX
-
         Log.d("MOVE_FREE_H", "Desplazamiento aplicado: $deltaX. Nueva translationX: ${this.translationX}")
     }
-
-
-
-
-
 }

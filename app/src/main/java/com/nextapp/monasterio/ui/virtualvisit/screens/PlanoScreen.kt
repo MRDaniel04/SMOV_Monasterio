@@ -8,6 +8,7 @@ import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -26,6 +27,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavController
@@ -33,10 +36,6 @@ import androidx.navigation.NavHostController
 import android.graphics.Matrix
 import android.graphics.Path
 import android.util.Log
-import androidx.compose.foundation.border
-import androidx.compose.material3.FloatingActionButtonDefaults.elevation
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import com.nextapp.monasterio.R
 import com.nextapp.monasterio.AppRoutes
 import com.nextapp.monasterio.models.*
@@ -47,15 +46,15 @@ import com.nextapp.monasterio.ui.virtualvisit.utils.isPointInPinArea
 import com.nextapp.monasterio.ui.screens.VirtualVisitRoutes
 import com.nextapp.monasterio.viewModels.AjustesViewModel
 import com.nextapp.monasterio.ui.virtualvisit.components.GenericTutorialOverlay
+import kotlinx.coroutines.delay
 
 // Clase auxiliar para definir los pasos del tutorial
 private data class TutorialStep(
-    val title: String? = null,
     val description: String,
     val focusCenter: Offset,
     val focusRadius: Float = 0f,
-    val rectSize: Size? = null, // Añadido para soportar focos rectangulares (ej. Zoom)
-    val alignment: Alignment = Alignment.BottomCenter // Para controlar si el texto sale arriba o abajo
+    val rectSize: Size? = null,
+    val alignment: Alignment = Alignment.BottomCenter
 )
 
 @Composable
@@ -73,19 +72,10 @@ fun PlanoScreen(
         onDispose {}
     }
 
-
-
-    // -----------------------------------------------------------
-    // 1. CAPTURA DE COORDENADAS REALES (LAYOUT)
-    // -----------------------------------------------------------
+    // 1. CÁLCULOS DE PANTALLA (LAYOUT)
     val configuration = LocalConfiguration.current
     val density = LocalDensity.current
 
-    // Calculamos el ancho y alto total en píxeles
-    val screenWidthPx = with(density) { configuration.screenWidthDp.dp.toPx() }
-    val screenHeightPx = with(density) { configuration.screenHeightDp.dp.toPx() }
-
-    // El centro de la pantalla siempre se puede calcular matemáticamente
     val screenCenter = remember(configuration) {
         with(density) {
             Offset(
@@ -95,8 +85,7 @@ fun PlanoScreen(
         }
     }
 
-    // Variables de estado para guardar la posición real de los elementos flotantes
-    // Se rellenarán automáticamente gracias a .onGloballyPositioned
+    // Variables de estado para layout real
     var backButtonLayout by remember { mutableStateOf<Pair<Offset, Size>?>(null) }
     var zoomControlsLayout by remember { mutableStateOf<Pair<Offset, Size>?>(null) }
 
@@ -106,30 +95,31 @@ fun PlanoScreen(
     var plano by remember { mutableStateOf<PlanoData?>(null) }
     var figuras by remember { mutableStateOf<List<FiguraData>>(emptyList()) }
     var pines by remember { mutableStateOf<List<PinData>>(emptyList()) }
-    var isLoading by remember { mutableStateOf(true) }
 
-    // --- Estados para carga del tutorial ---
+    var isLoading by remember { mutableStateOf(true) }
     var isError by remember { mutableStateOf(false) }
     var retryTrigger by remember { mutableIntStateOf(0) }
 
     // --- Estados Visuales ---
     var activePath by remember { mutableStateOf<Path?>(null) }
     var activeHighlight by remember { mutableStateOf<Color?>(null) }
+    var isPinPressed by remember { mutableStateOf(false) }
     var selectedPinId by remember { mutableStateOf<String?>(null) }
+
+    // 👇 ESTADO PARA ANIMACIÓN DE PINES (GIF)
+    var animatingPinId by remember { mutableStateOf<String?>(null) }
 
     // --- LOGICA DE TUTORIAL ---
     val isMainDismissed by viewModel.isMainMapDismissed.collectAsState()
     val isSubDismissed by viewModel.isSubMapDismissed.collectAsState()
     var showTutorialSession by remember { mutableStateOf(true) }
 
-    // Estado para saber en qué paso del tutorial estamos (0, 1, 2...)
     var currentStepIndex by remember { mutableIntStateOf(0) }
 
     val initialZoom = 1f
     val planoBackgroundColor = Color(0xFFF5F5F5)
     val botonesVisibles by viewModel.botonesVisibles.collectAsState()
 
-    // --- Efecto de parpadeo ---
     val infiniteTransition = rememberInfiniteTransition(label = "BlinkTransition")
     val blinkAlpha by infiniteTransition.animateFloat(
         initialValue = 0f, targetValue = 1f,
@@ -141,23 +131,13 @@ fun PlanoScreen(
         isLoading = true
         isError = false
         showTutorialSession = true
-        currentStepIndex = 0 // Reiniciamos los pasos al cambiar de plano
+        currentStepIndex = 0
         try {
             plano = PlanoRepository.getPlanoById(planoId)
             if (plano != null) {
                 Log.d("PlanoUniversal", "✅ Plano cargado: ${plano!!.nombre}")
-                Log.d("DEBUG_PLANO", "plano.figuras RAW: ${plano!!.figuras}")
-
                 val figuraRefs = plano!!.figuras.map { it.substringAfterLast("/") }
-
-                Log.d("DEBUG_PLANO", "IDs de figuras a buscar: $figuraRefs")
                 figuras = FiguraRepository.getAllFiguras().filter { figuraRefs.contains(it.id) }
-
-                Log.d("DEBUG_PLANO", "Figuras finales dibujadas: ${figuras.size}")
-                if (figuras.isEmpty()) {
-                    Log.e("DEBUG_PLANO", "🚨 ¡La lista de figuras es CERO! Revisar mapeo de ID en FiguraRepository o referencias en PlanoData.")
-                }
-
                 val pinRefs = plano!!.pines.map { it.substringAfterLast("/") }
                 pines = PinRepository.getAllPins().filter { pinRefs.contains(it.id) }
             } else {
@@ -166,14 +146,30 @@ fun PlanoScreen(
             }
         } catch (e: Exception) {
             Log.e("PlanoUniversal", "❌ Error cargando plano", e)
-            Toast.makeText(
-                context,
-                context.getString(R.string.error_loading_plane),
-                Toast.LENGTH_SHORT
-            ).show()
             isError = true
         } finally {
             isLoading = false
+        }
+    }
+    // 👇 TEMPORIZADOR DE ANIMACIÓN MEJORADO 👇
+    // Usamos 'Unit' para que SOLO se lance una vez y el bucle while controle todo
+    LaunchedEffect(Unit) {
+        while (true) {
+            // 1. Fase estática (4 segundos)
+            animatingPinId = null
+            delay(4000)
+
+            // 2. Fase Animada (Elegir y activar)
+            if (pines.isNotEmpty()) {
+                val randomPin = pines.random()
+                animatingPinId = randomPin.id
+
+                // 3. Duración del GIF (2.5 segundos)
+                delay(2500)
+
+                // 4. Apagar
+                animatingPinId = null
+            }
         }
     }
 
@@ -185,7 +181,7 @@ fun PlanoScreen(
     ) {
         if (isLoading) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text(stringResource(R.string.plane_loading))
+                CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
             }
             return@Box
         }
@@ -214,6 +210,7 @@ fun PlanoScreen(
                     this.pins = emptyList()
                 }
             },
+            // El bloque update se llama cuando cambia animatingPinId
             update = { photoView ->
                 photoView.staticZones = figuras.map {
                     DebugPhotoView.StaticZoneData(
@@ -223,12 +220,16 @@ fun PlanoScreen(
                 }
 
                 photoView.pins = pines.map { pin ->
-                    // Calcular el color base, usando el color del modelo (si existe) o Rojo por defecto (Android Color)
+                    val baseColorInt = android.graphics.Color.WHITE
+
+                    // 👇 SELECCIÓN DE ICONO (GIF vs ESTÁTICO)
+                    val isAnimating = pin.id == animatingPinId
+                    val iconRes = R.drawable.pin_animado
 
                     DebugPhotoView.PinData(
                         x = pin.x,
                         y = pin.y,
-                        iconId = R.drawable.pin3,
+                        iconId = iconRes, // Usamos el recurso dinámico
                         isPressed = pin.id == selectedPinId,
                         isMoving = false
                     )
@@ -249,29 +250,21 @@ fun PlanoScreen(
                             Handler(Looper.getMainLooper()).postDelayed({
                                 activeHighlight = null
                                 when (figura.tipoDestino) {
-                                    "detalle" -> navController.navigate("${VirtualVisitRoutes.DETALLE_GENERICO}/${figura.id}")
+                                    "detalle" -> navController.navigate("${VirtualVisitRoutes.DETALLE_GENERICO}/${figura.valorDestino}")
                                     "plano" -> {
                                         val destinoId = figura.valorDestino
                                         if (destinoId.isNotBlank()) navController.navigate("${VirtualVisitRoutes.PLANO}/$destinoId")
-                                        else Toast.makeText(
-                                            context,
-                                            context.getString(R.string.notdefined_destinyplane),
-                                            Toast.LENGTH_SHORT
-                                        ).show()
+                                        else Toast.makeText(context, context.getString(R.string.notdefined_destinyplane), Toast.LENGTH_SHORT).show()
                                     }
-                                    else -> Toast.makeText(
-                                        context,
-                                        context.getString(R.string.notdefined_destiny),
-                                        Toast.LENGTH_SHORT
-                                    ).show()
+                                    else -> Toast.makeText(context, context.getString(R.string.notdefined_destiny), Toast.LENGTH_SHORT).show()
                                 }
                             }, 200)
                         }
 
                         pin != null -> {
-                            selectedPinId = pin.id // ⭐ CAMBIO: Almacena el ID del pin tocado
+                            selectedPinId = pin.id
                             Handler(Looper.getMainLooper()).postDelayed({
-                                selectedPinId = null // ⭐ CAMBIO: Restaura a nulo después del delay (deselección)
+                                selectedPinId = null
                                 when (pin.tipoDestino?.lowercase()) {
                                     "ruta" -> if (pin.valorDestino != null) rootNavController?.navigate(
                                         "${AppRoutes.PIN_ENTRADA_MONASTERIO}/${pin.id}"
@@ -281,15 +274,10 @@ fun PlanoScreen(
                             }, 200)
                         }
 
-                        else -> { // ⭐ CAMBIO: Abrimos un bloque para añadir la lógica de deselección
-                            selectedPinId = null // ⭐ ADICIÓN: Deseleccionar cualquier pin activo
-                            Toast.makeText(
-                                context,
-                                context.getString(R.string.out_interactive_area),
-                                Toast.LENGTH_SHORT
-                            ).show()
+                        else -> {
+                            selectedPinId = null
+                            Toast.makeText(context, context.getString(R.string.out_interactive_area), Toast.LENGTH_SHORT).show()
                         }
-
                     }
                 }
                 photoViewRef = photoView
@@ -301,7 +289,6 @@ fun PlanoScreen(
             modifier = Modifier
                 .align(Alignment.CenterEnd)
                 .padding(end = 16.dp, bottom = 80.dp)
-                // 👇 CAPTURAR POSICIÓN REAL (Para que el tutorial no se descuadre)
                 .onGloballyPositioned { coordinates ->
                     val position = coordinates.positionInRoot()
                     val size = coordinates.size
@@ -310,10 +297,10 @@ fun PlanoScreen(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             if (botonesVisibles) {
-                // --- BOTÓN AUMENTAR ---
+                // --- AUMENTAR ---
                 FloatingActionButton(
                     onClick = { photoViewRef?.let { it.setScale((it.scale + 0.2f).coerceAtMost(it.maximumScale), true) } },
-                    containerColor = Color.White,
+                    containerColor = Color.Transparent,
                     elevation = FloatingActionButtonDefaults.elevation(0.dp)
                 ) {
                     Box(modifier = Modifier.size(48.dp).background(Color.White.copy(alpha = 0.7f), CircleShape).border(1.dp, Color.Black, CircleShape), contentAlignment = Alignment.Center) {
@@ -326,10 +313,10 @@ fun PlanoScreen(
                     }
                 }
 
-                // --- BOTÓN DISMINUIR ---
+                // --- DISMINUIR ---
                 FloatingActionButton(
                     onClick = { photoViewRef?.let { it.setScale((it.scale - 0.2f).coerceAtLeast(it.minimumScale), true) } },
-                    containerColor = Color.White,
+                    containerColor = Color.Transparent,
                     elevation = FloatingActionButtonDefaults.elevation(0.dp)
                 ) {
                     Box(modifier = Modifier.size(48.dp).background(Color.White.copy(alpha = 0.7f), CircleShape).border(1.dp, Color.Black, CircleShape), contentAlignment = Alignment.Center) {
@@ -342,17 +329,17 @@ fun PlanoScreen(
                     }
                 }
 
-                // --- BOTÓN REAJUSTAR (CON BORDE NEGRO) ---
+                // --- REAJUSTAR ---
                 FloatingActionButton(
                     onClick = { photoViewRef?.apply { setScale(initialZoom, true); setTranslationX(0f); setTranslationY(0f) } },
-                    containerColor = Color.White,
+                    containerColor = Color.Transparent,
                     elevation = FloatingActionButtonDefaults.elevation(0.dp)
                 ) {
                     Box(
                         modifier = Modifier
                             .size(48.dp)
                             .background(Color.White.copy(alpha = 0.7f), CircleShape)
-                            .border(1.dp, Color.Black, CircleShape),
+                            .border(1.dp, Color.Black, CircleShape), // BORDE NEGRO
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
@@ -374,9 +361,7 @@ fun PlanoScreen(
                         rootNavController?.popBackStack()
                     } else {
                         navController.navigate("${VirtualVisitRoutes.PLANO}/monasterio_exterior") {
-                            popUpTo("${VirtualVisitRoutes.PLANO}/monasterio_exterior") {
-                                inclusive = false
-                            }
+                            popUpTo("${VirtualVisitRoutes.PLANO}/monasterio_exterior") { inclusive = false }
                         }
                     }
                 }
@@ -385,8 +370,7 @@ fun PlanoScreen(
                 .align(Alignment.TopStart)
                 .statusBarsPadding()
                 .padding(16.dp)
-                .background(Color.Black.copy(alpha = 0.5f), shape = RoundedCornerShape(12.dp))
-                // 👇 CAPTURAR POSICIÓN REAL (Para que el tutorial no se descuadre)
+                .background(Color.Black.copy(alpha = 0.5f), RoundedCornerShape(12.dp))
                 .onGloballyPositioned { coordinates ->
                     val position = coordinates.positionInRoot()
                     val size = coordinates.size
@@ -400,20 +384,16 @@ fun PlanoScreen(
             )
         }
 
-        // 4. TUTORIALES (Lógica Step-by-Step Dinámica)
+        // 4. TUTORIALES
         val isMainMap = (planoId == "monasterio_exterior")
-
-        // Solo mostrar si tenemos las coordenadas capturadas
         val isLayoutReady = backButtonLayout != null && !isLoading && !isError
 
         if (showTutorialSession && isLayoutReady) {
             if (isMainMap && !isMainDismissed) {
-
-                // --- TUTORIAL MAPA PRINCIPAL (3 Pasos) ---
+                // ... (Lógica tutorial mapa principal) ...
                 val steps = remember(backButtonLayout, zoomControlsLayout) {
                     val list = mutableListOf<TutorialStep>()
 
-                    // Paso 0: Bienvenida (Foco Botón Atrás)
                     if (backButtonLayout != null) {
                         val (pos, size) = backButtonLayout!!
                         list.add(
@@ -426,26 +406,23 @@ fun PlanoScreen(
                         )
                     }
 
-                    // Paso 1: Zoom (Foco Mapa Centro)
                     list.add(
                         TutorialStep(
                             description = context.getString(R.string.map_tutorial_body1_2),
-                            focusCenter = Offset(screenWidthPx * 0.3f, screenHeightPx * 0.45f),
+                            focusCenter = screenCenter,
                             focusRadius = 250f,
                             alignment = Alignment.BottomCenter
                         )
                     )
 
-                    // Paso 2: Zoom Controls (Foco Rectangular en controles)
                     if (zoomControlsLayout != null) {
                         val (pos, size) = zoomControlsLayout!!
                         list.add(
                             TutorialStep(
                                 description = context.getString(R.string.map_tutorial_body1_3),
                                 focusCenter = Offset(pos.x + size.width / 2, pos.y + size.height / 2),
-                                rectSize = size, // Usamos foco cuadrado para los botones
-                                focusRadius = 0f, // No usamos radio
-                                alignment = Alignment.BottomCenter // Diálogo arriba para no tapar botones
+                                rectSize = size,
+                                alignment = Alignment.TopCenter
                             )
                         )
                     }
@@ -455,11 +432,9 @@ fun PlanoScreen(
                 if (steps.isNotEmpty() && currentStepIndex < steps.size) {
                     val step = steps[currentStepIndex]
                     val isLastStep = currentStepIndex == steps.size - 1
-                    val btnText =
-                        if (isLastStep) stringResource(R.string.understand) else stringResource(R.string.next)
+                    val btnText = if (isLastStep) stringResource(R.string.understand) else stringResource(R.string.next)
 
                     GenericTutorialOverlay(
-                        title = step.title,
                         description = step.description,
                         highlightCenter = step.focusCenter,
                         highlightRadius = step.focusRadius,
@@ -479,40 +454,37 @@ fun PlanoScreen(
                 }
 
             } else if (!isMainMap && !isSubDismissed) {
-
+                // ... (Lógica tutorial submapa) ...
                 val subSteps = remember(backButtonLayout) {
                     val list = mutableListOf<TutorialStep>()
+
+                    list.add(
+                        TutorialStep(
+                            description = context.getString(R.string.submapa_1),
+                            focusCenter = screenCenter,
+                            focusRadius = 300f,
+                            alignment = Alignment.BottomCenter
+                        )
+                    )
 
                     if (backButtonLayout != null) {
                         val (pos, size) = backButtonLayout!!
                         list.add(
                             TutorialStep(
-                                description = context.getString(R.string.submapa_1),
+                                description = context.getString(R.string.submapa_2),
                                 focusCenter = Offset(pos.x + size.width / 2, pos.y + size.height / 2),
                                 focusRadius = 100f,
                                 alignment = Alignment.BottomCenter
                             )
                         )
                     }
-
-                    val (pos, size) = backButtonLayout!!
-                    list.add(
-                        TutorialStep(
-                            description = context.getString(R.string.submapa_2),
-                            focusCenter = Offset(screenWidthPx * 0.5f, screenHeightPx * 0.2f),
-                            focusRadius = 300f,
-                            alignment = Alignment.BottomCenter
-                        )
-                    )
-
                     list
                 }
 
                 if (subSteps.isNotEmpty() && currentStepIndex < subSteps.size) {
                     val step = subSteps[currentStepIndex]
                     val isLastStep = currentStepIndex == subSteps.size - 1
-                    val btnText =
-                        if (isLastStep) stringResource(R.string.understand) else stringResource(R.string.next)
+                    val btnText = if (isLastStep) stringResource(R.string.understand) else stringResource(R.string.next)
 
                     GenericTutorialOverlay(
                         description = step.description,
@@ -537,40 +509,19 @@ fun PlanoScreen(
     }
 }
 
-// --- Helper para crear Paths (Fuera del composable) ---
-private fun createPathFromFirebase(figura: FiguraData): Path {
-    val path = Path()
-    if (figura.path.isEmpty()) return path
-    path.moveTo(figura.path[0].x, figura.path[0].y)
-    for (i in 1 until figura.path.size) {
-        path.lineTo(figura.path[i].x, figura.path[i].y)
-    }
-    path.close()
-    val matrix = Matrix().apply {
-        setScale(figura.scale, figura.scale)
-        postTranslate(figura.offsetX, figura.offsetY)
-    }
-    path.transform(matrix)
-    return path
-}
-
+// --- COMPONENTE DE ERROR DE CONEXIÓN ---
 @Composable
 fun ConnectionErrorView(onRetry: () -> Unit, onBack: () -> Unit) {
-    // 1. Definimos la secuencia de imágenes para la animación
-    // (Asegúrate de que los nombres coinciden con tus archivos en res/drawable)
     val wifiIcons = listOf(
         R.drawable.wifi_1_bar,
         R.drawable.wifi_2_bar,
         R.drawable.wifi
     )
-
-    // 2. Estado para controlar qué imagen se muestra
     var currentIconIndex by remember { mutableIntStateOf(0) }
 
-    // 3. El bucle de animación
     LaunchedEffect(Unit) {
         while (true) {
-            kotlinx.coroutines.delay(500) // Cambia de imagen cada 0.5 segundos
+            kotlinx.coroutines.delay(500)
             currentIconIndex = (currentIconIndex + 1) % wifiIcons.size
         }
     }
@@ -586,14 +537,12 @@ fun ConnectionErrorView(onRetry: () -> Unit, onBack: () -> Unit) {
             verticalArrangement = Arrangement.Center,
             modifier = Modifier.padding(32.dp)
         ) {
-            // 4. Icono animado (Cambia según el índice)
             Icon(
                 painter = painterResource(id = wifiIcons[currentIconIndex]),
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.error, // Color rojo de error
+                tint = MaterialTheme.colorScheme.error,
                 modifier = Modifier.size(80.dp)
             )
-
             Spacer(Modifier.height(16.dp))
 
             Text(
@@ -603,7 +552,6 @@ fun ConnectionErrorView(onRetry: () -> Unit, onBack: () -> Unit) {
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center
             )
-
             Spacer(Modifier.height(8.dp))
 
             Text(
@@ -612,7 +560,6 @@ fun ConnectionErrorView(onRetry: () -> Unit, onBack: () -> Unit) {
                 color = Color.Gray,
                 textAlign = TextAlign.Center
             )
-
             Spacer(Modifier.height(32.dp))
 
             Button(
@@ -639,4 +586,21 @@ fun ConnectionErrorView(onRetry: () -> Unit, onBack: () -> Unit) {
             )
         }
     }
+}
+
+// --- Helper para crear Paths ---
+private fun createPathFromFirebase(figura: FiguraData): Path {
+    val path = Path()
+    if (figura.path.isEmpty()) return path
+    path.moveTo(figura.path[0].x, figura.path[0].y)
+    for (i in 1 until figura.path.size) {
+        path.lineTo(figura.path[i].x, figura.path[i].y)
+    }
+    path.close()
+    val matrix = Matrix().apply {
+        setScale(figura.scale, figura.scale)
+        postTranslate(figura.offsetX, figura.offsetY)
+    }
+    path.transform(matrix)
+    return path
 }

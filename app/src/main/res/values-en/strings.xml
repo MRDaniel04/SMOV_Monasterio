@@ -73,9 +73,9 @@
     <string name="font_big">Large</string>
     <string name="title_monasterio">Monastery</string>
     <string name="title_entrada">Monastery Entrance</string>
-    <string name="spanish_language">Spanish</string>
-    <string name="german_language">German</string>
-    <string name="lang_fr">French</string>
+    <string name="spanish_language">Español</string>
+    <string name="german_language">Deutsch</string>
+    <string name="lang_fr">Français</string>
     <string name="english_language">English</string>
     <string name="navegation_button">Hide navigation buttons</string>
     <string name="close">Close</string>

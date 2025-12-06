@@ -580,7 +580,12 @@ open class PLManager(private val context: Context) : PLIView, SensorEventListene
      */
     protected fun drawView(): Boolean {
         if (mIsRendererCreated && renderer!!.isRunning && mPanorama != null) {
-            val speedMultiplier = 10.0f
+            // Detectar si es Tablet (ancho mínimo >= 600dp)
+            val isTablet = context.resources.configuration.smallestScreenWidthDp >= 600
+
+            // Asignar velocidad: 5.0f para Tablet, 15.0f para Móvil
+            val speedMultiplier = if (isTablet) 3.0f else 15.0f
+
             if (!mIsValidForFov)
             // --- INICIO DE LA MODIFICACIÓN (Correcta) ---
 

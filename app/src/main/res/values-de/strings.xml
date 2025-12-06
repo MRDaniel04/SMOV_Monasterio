@@ -73,10 +73,10 @@
     <string name="font_big">Groß</string>
     <string name="title_monasterio">Kloster</string>
     <string name="title_entrada">Klostereingang</string>
-    <string name="spanish_language">Spanisch</string>
+    <string name="spanish_language">Español</string>
     <string name="german_language">Deutsch</string>
-    <string name="lang_fr">Französisch</string>
-    <string name="english_language">Englisch</string>
+    <string name="lang_fr">Français</string>
+    <string name="english_language">English</string>
     <string name="navegation_button">Navigationsschaltflächen ausblenden</string>
     <string name="close">Schließen</string>
     <string name="go_back">Zurück</string>

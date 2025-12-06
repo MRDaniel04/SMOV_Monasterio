@@ -74,9 +74,9 @@
     <string name="title_monasterio">Monasterio</string>
     <string name="title_entrada">Entrada del Monasterio</string>
     <string name="spanish_language">Español</string>
-    <string name="german_language">Alemán</string>
-    <string name="lang_fr">Francés</string>
-    <string name="english_language">Inglés</string>
+    <string name="german_language">Deutsch</string>
+    <string name="lang_fr">Français</string>
+    <string name="english_language">English</string>
     <string name="navegation_button">Ocultar botones de navegación</string>
     <string name="close">Cerrar</string>
     <string name="go_back">Volver</string>
