@@ -3,6 +3,8 @@ package com.nextapp.monasterio.ui.virtualvisit.screens
 import android.app.Activity
 import android.content.pm.ActivityInfo
 import android.util.Log
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
@@ -41,6 +43,7 @@ import coil.compose.AsyncImage
 import coil.load
 import com.github.chrisbanes.photoview.PhotoView
 import com.nextapp.monasterio.R
+import com.nextapp.monasterio.models.ImagenData
 import com.nextapp.monasterio.models.PinData
 import com.nextapp.monasterio.ui.virtualvisit.components.GenericTutorialOverlay
 import com.nextapp.monasterio.viewModels.AjustesViewModel
@@ -93,8 +96,26 @@ fun PinDetalleScreen(
     // --- Datos del Pin ---
     val imagenes = if (pin.imagenesDetalladas.isNotEmpty()) pin.imagenesDetalladas else emptyList()
     val pagerState = rememberPagerState(pageCount = { imagenes.size })
-    var selectedImageUrl by remember { mutableStateOf<String?>(null) }
-    var selectedImageTitle by remember { mutableStateOf<String?>(null) }
+    var selectedImageIndex by remember { mutableStateOf<Int?>(null)  }
+
+    if (imagenes.size > 1 && selectedImageIndex == null) {
+        // Usamos 'Unit' para que el LaunchedEffect no se reinicie en cada cambio de página
+        LaunchedEffect(Unit) {
+            while (true) {
+                kotlinx.coroutines.delay(5000L) // Espera 5 segundos
+
+                // Verificamos que el usuario no esté tocando el carrusel en este momento
+                if (!pagerState.isScrollInProgress) {
+                    val nextPage = (pagerState.currentPage + 1) % imagenes.size
+                    pagerState.animateScrollToPage(
+                        page = nextPage,
+                        // Animación suave para evitar saltos bruscos
+                        animationSpec = tween(durationMillis = 600, easing = FastOutSlowInEasing)
+                    )
+                }
+            }
+        }
+    }
 
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp
@@ -267,12 +288,7 @@ fun PinDetalleScreen(
                                 modifier = Modifier
                                     .fillMaxSize()
                                     .clickable {
-                                        selectedImageUrl = imagen.url
-                                        selectedImageTitle = when (language) {
-                                            "es" -> imagen.titulo
-                                            "de" -> imagen.tituloAleman
-                                            else -> imagen.tituloIngles
-                                        }
+                                        selectedImageIndex = page
                                     }
                             )
                             Text(
@@ -511,21 +527,27 @@ fun PinDetalleScreen(
         }
 
         // 🔍 Zoom Dialog
-        if (selectedImageUrl != null) {
+        if (selectedImageIndex != null) {
             ZoomableImageDialog(
-                imageUrl = selectedImageUrl!!,
-                label = selectedImageTitle ?: "",
+                imagenes = imagenes,
+                initialIndex = selectedImageIndex!!,
+                languageCode = language,
                 onDismiss = {
-                    selectedImageUrl = null
-                    selectedImageTitle = null
+                    selectedImageIndex = null
                 }
             )
         }
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun ZoomableImageDialog(imageUrl: String, label: String, onDismiss: () -> Unit) {
+private fun ZoomableImageDialog(
+    imagenes: List<ImagenData>,
+    initialIndex: Int,
+    languageCode: String,
+    onDismiss: () -> Unit
+) {
     val view = LocalView.current
     val activity = view.context as? Activity
 
@@ -536,24 +558,54 @@ private fun ZoomableImageDialog(imageUrl: String, label: String, onDismiss: () -
         }
     }
 
+    val zoomPagerState = rememberPagerState(
+        initialPage = initialIndex,
+        pageCount = { imagenes.size }
+    )
+
     Dialog(
         onDismissRequest = onDismiss,
-        properties = DialogProperties(usePlatformDefaultWidth = false, dismissOnClickOutside = true)
+        properties = DialogProperties(
+            usePlatformDefaultWidth = false,
+            dismissOnClickOutside = true
+        )
     ) {
         Box(
-            modifier = Modifier.fillMaxSize().background(Color.Black.copy(alpha = 0.95f))
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black.copy(alpha = 0.95f))
         ) {
-            AndroidView(
-                factory = { context ->
-                    PhotoView(context).apply {
-                        load(imageUrl) { crossfade(true) }
-                    }
-                },
+
+            HorizontalPager(
+                state = zoomPagerState,
                 modifier = Modifier.fillMaxSize()
-            )
+            ) { page ->
+                val imagen = imagenes[page]
+                // Cada página tiene su propio PhotoView para zoom independiente
+                AndroidView(
+                    factory = { context ->
+                        PhotoView(context).apply {
+                            load(imagen.url) {
+                                crossfade(true)
+                            }
+                            maximumScale = 5.0f
+                            mediumScale = 2.5f
+                        }
+                    },
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+
+            // Título de la imagen actual
+            val currentImage = imagenes[zoomPagerState.currentPage]
+            val titulo = when (languageCode) {
+                "es" -> currentImage.titulo
+                "de" -> currentImage.tituloAleman
+                else -> currentImage.tituloIngles
+            }
 
             Text(
-                text = label,
+                text = titulo,
                 color = Color.White,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Medium,
@@ -561,6 +613,17 @@ private fun ZoomableImageDialog(imageUrl: String, label: String, onDismiss: () -
                     .align(Alignment.BottomStart)
                     .background(Color.Black.copy(alpha = 0.7f))
                     .padding(horizontal = 12.dp, vertical = 8.dp)
+                    .padding(bottom = 16.dp)
+            )
+
+            // Indicador de página (opcional)
+            Text(
+                text = "${zoomPagerState.currentPage + 1} / ${imagenes.size}",
+                color = Color.White,
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .padding(top = 16.dp)
+                    .statusBarsPadding()
             )
 
             IconButton(
