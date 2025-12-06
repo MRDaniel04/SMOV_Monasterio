@@ -31,7 +31,6 @@ import com.nextapp.monasterio.ui.screens.pinEdition.EdicionPinesHost
 import com.nextapp.monasterio.ui.theme.MonasteryRed
 import com.nextapp.monasterio.ui.theme.White
 import com.nextapp.monasterio.ui.virtualvisit.screens.DetalleFiguraScreen
-import com.nextapp.monasterio.ui.virtualvisit.screens.EntradaMonasterioFirestoreScreen
 import com.nextapp.monasterio.ui.virtualvisit.screens.PinDetalleScreen
 import com.nextapp.monasterio.viewModels.AjustesViewModel
 import com.nextapp.monasterio.viewModels.InfoViewModel
@@ -106,18 +105,7 @@ fun AppNavigationHost(
             }
         }
 
-        // --- Pantalla de Entrada del Monasterio (desde Firebase Pin)
-        composable(
-            route = AppRoutes.PIN_ENTRADA_MONASTERIO + "/{pinId}",
-            arguments = listOf(navArgument("pinId") { type = NavType.StringType })
-        ) { backStackEntry ->
-            val pinId = backStackEntry.arguments?.getString("pinId") ?: ""
-            EntradaMonasterioFirestoreScreen(
-                pinId = pinId,
-                navController = navController,
-                rootNavController = navController
-            )
-        }
+
 
         // --- FIN DE LA MODIFICACIÓN ---
 
