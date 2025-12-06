@@ -36,7 +36,7 @@ fun PinImageItem(
                 style = MaterialTheme.typography.labelSmall,
                 maxLines = 1,
                 // Alineamos el texto dentro del ancho de la imagen
-                modifier = Modifier.widthIn(max = 120.dp)
+                modifier = Modifier.widthIn(max = 140.dp) // ⬅️ Ajustado al nuevo ancho de la tarjeta
             )
         } else if (pinImage.tag != null) {
             Text(

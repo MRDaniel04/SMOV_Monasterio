@@ -132,19 +132,14 @@ class CreacionPinSharedViewModel : ViewModel() {
 
         ubicacion_es = ""
         pinTitleManualTrads = PinTitleManualTrads()
-
         _area_es_internal = ""
         area_traducciones_automaticas = Triple(null, null, null)
-
         descripcion.reset() // Asumiendo que DescripcionState tiene un reset()
-
         imagenes.images = emptyList()
         imagen360 = null
-
         modoMoverPin = false
         coordenadasFinales = null
         formSubmitted = false
-
         isEditing = false
         editingPinId = null
     }
@@ -182,7 +177,6 @@ class CreacionPinSharedViewModel : ViewModel() {
             descripcion.updateEn(pin.descripcion_en ?: "")
             descripcion.updateDe(pin.descripcion_de ?: "")
             descripcion.updateFr(pin.descripcion_fr ?: "")
-
 
             // 🟦 ÁREA (Simple)
             area_es = pin.area_es ?: ""
@@ -350,8 +344,6 @@ class CreacionPinSharedViewModel : ViewModel() {
     /**
      * Actualiza la ubicación principal y asigna automáticamente las traducciones.
      */
-
-
     fun checkIfModified() {
 
         if (isLoadingInitialData || !isEditing || originalPin == null) {
@@ -373,7 +365,6 @@ class CreacionPinSharedViewModel : ViewModel() {
         // ⚠️ ÁREA (Simple)
         // SOLO necesitamos comparar area_es, ya que las traducciones EN/DE/FR son AUTOMÁTICAS.
         val isAreaModified = area_es != original.area_es
-
 
         // ⚠️ DESCRIPCIÓN
         val isDescModified = descripcion.es != original.descripcion_es ||
@@ -416,14 +407,11 @@ class CreacionPinSharedViewModel : ViewModel() {
         val isImagesModified = originalImageCanonical != currentImageCanonical ||
                 (imagen360?.toString() ?: "") != (original.vista360Url ?: "")
 
-
         // Si cualquier campo es diferente, el pin está modificado
         isModified = isUbicacionModified ||
                 isAreaModified ||
                 isDescModified ||
                 isImagesModified
-
     }
-
 
 }

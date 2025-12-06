@@ -9,7 +9,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.nextapp.monasterio.models.UbicacionDetalladaTag
-import com.nextapp.monasterio.ui.screens.pinCreation.CreacionPinSharedViewModel
 import com.nextapp.monasterio.ui.screens.pinCreation.PinTitleManualTrads
 
 // Lista de opciones se mantiene
@@ -34,7 +33,6 @@ fun PinLocationDropdown(
     currentUbicacion: String,
     onTitleChange: (String) -> Unit,
     onUbicacionChange: (String) -> Unit,
-
     titleManualTrads: PinTitleManualTrads,
     onTitleManualTradsUpdate: (en: String, de: String, fr: String) -> Unit
 

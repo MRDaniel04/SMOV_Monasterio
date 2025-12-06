@@ -44,7 +44,6 @@ fun ImagePreviewCard(
                 onClick = onRemove,
                 modifier = Modifier
                     .align(Alignment.TopEnd)
-                    .offset(x = 18.dp, y = (-4).dp) // Movemos a la derecha
                     .background(Color.Black.copy(alpha = 0.6f), shape = MaterialTheme.shapes.small)
                     .size(24.dp)
             ) {
@@ -59,7 +58,6 @@ fun ImagePreviewCard(
                 onClick = { onEditDetails(pinImage) }, // Disparamos el diálogo
                 modifier = Modifier
                     .align(Alignment.TopStart)
-                    .offset(x = (-4).dp, y = (-4).dp) // Movemos a la izquierda
                     .background(Color.Black.copy(alpha = 0.6f), shape = MaterialTheme.shapes.small)
                     .size(24.dp)
             ) {
@@ -74,7 +72,10 @@ fun ImagePreviewCard(
             pinImage.tag?.let { tag ->
                 AssistChip(
                     onClick = { onEditDetails(pinImage) }, // 🆕 Clic en el chip también edita
-                    label = { Text(tag.displayName) },
+                    label = { Text(
+                        text = tag.displayName,
+                        style = MaterialTheme.typography.labelSmall
+                    ) },
                     colors = AssistChipDefaults.assistChipColors(
                         containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.85f),
                         labelColor = MaterialTheme.colorScheme.onPrimary

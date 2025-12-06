@@ -72,14 +72,11 @@ object PinRepository {
                 else -> emptyList()
             }
 
-
             val audioUrl_es = data["audioUrl_es"] as? String
             val audioUrl_en = data["audioUrl_en"] as? String
             val audioUrl_de = data["audioUrl_de"] as? String
             val audioUrl_fr = data["audioUrl_fr"] as? String
-
-
-            val tapRadius = (data["tapRadius"] as? Number)?.toFloat() ?: 0.04f
+            val tapRadius = (data["tapRadius"] as? Number)?.toFloat() ?: 0.06f
             val tipoDestino = data["tipoDestino"] as? String
             val valorDestino = data["valorDestino"] as? String
 
@@ -130,7 +127,6 @@ object PinRepository {
         val docRef = collection.document()
         val generatedId = docRef.id
         val finalPayload = pinPayload.toMutableMap()
-        finalPayload["id"] = generatedId
         docRef.set(finalPayload).await()
         return generatedId
     }
@@ -192,7 +188,7 @@ object PinRepository {
 
             "x" to x.toDouble(),
             "y" to y.toDouble(),
-            "tapRadius" to tapRadius,
+            "tapRadius" to (tapRadius ?: 0.06f).toDouble(),
             "imagenes" to imagenesRefs,
             "vista360Url" to imagen360,
             "audioUrl_es" to audioUrl_es,
@@ -370,7 +366,7 @@ object PinRepository {
                 "audioUrl_en" to audioUrl_en,
                 "audioUrl_de" to audioUrl_de,
                 "audioUrl_fr" to audioUrl_fr,
-                "tapRadius" to tapRadius?.toDouble(),
+                "tapRadius" to (tapRadius ?: 0.06f).toDouble(),
                 "tipoDestino" to "detalle",
                 "valorDestino" to "auto"
             )

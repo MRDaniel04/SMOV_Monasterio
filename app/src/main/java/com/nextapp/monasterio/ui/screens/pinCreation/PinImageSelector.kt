@@ -21,6 +21,8 @@ import com.nextapp.monasterio.models.ImageTag
 import com.nextapp.monasterio.ui.screens.pinCreation.components.*
 import com.nextapp.monasterio.ui.screens.pinCreation.state.ImagenesState
 import com.nextapp.monasterio.ui.screens.pinCreation.state.PinImage
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 
 @Composable
 fun ImageDetailsDialog( // 🆕 Renombrado
@@ -44,6 +46,11 @@ fun ImageDetailsDialog( // 🆕 Renombrado
     } else {
         "Editar Detalles de Imagen"
     }
+
+    val scrollState = rememberScrollState() // ⬅️ NUEVO
+
+    val initialShow = pinImage.titulo_en.isNotBlank() || pinImage.titulo_de.isNotBlank() || pinImage.titulo_fr.isNotBlank()
+    var showOptionalTitles by remember { mutableStateOf(initialShow) }
 
     Dialog(onDismissRequest = onCancel) {
         Card(modifier = Modifier.padding(16.dp)) {
@@ -84,7 +91,7 @@ fun ImageDetailsDialog( // 🆕 Renombrado
 
                 // --- CAMPOS DE TÍTULO MULTILINGÜE ---
                 Column(
-                    modifier = Modifier.fillMaxWidth().weight(1f, fill = false)
+                    modifier = Modifier.fillMaxWidth().verticalScroll(scrollState).weight(1f, fill = false)
                 ) {
                     Text(
                         text = "Título del Contenido de la Imagen (ES - Obligatorio)",
@@ -100,26 +107,53 @@ fun ImageDetailsDialog( // 🆕 Renombrado
                     )
                     Spacer(Modifier.height(8.dp))
 
-                    OutlinedTextField(
-                        value = tituloEn,
-                        onValueChange = { tituloEn = it },
-                        label = { Text("Título (EN - Opcional)") },
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    Spacer(Modifier.height(8.dp))
-                    OutlinedTextField(
-                        value = tituloDe,
-                        onValueChange = { tituloDe = it },
-                        label = { Text("Título (DE - Opcional)") },
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    Spacer(Modifier.height(8.dp))
-                    OutlinedTextField(
-                        value = tituloFr,
-                        onValueChange = { tituloFr = it },
-                        label = { Text("Título (FR - Opcional)") },
-                        modifier = Modifier.fillMaxWidth()
-                    )
+                    if (showOptionalTitles) {
+
+                        TextButton(
+                            onClick = {
+                                showOptionalTitles = false
+                            },
+                            modifier = Modifier.fillMaxWidth().align(Alignment.Start)
+                        ) {
+                            Text("- OCULTAR TRADUCCIONES OPCIONALES")
+                        }
+                        Spacer(Modifier.height(8.dp))
+
+                        OutlinedTextField(
+                            value = tituloEn,
+                            onValueChange = { tituloEn = it },
+                            label = { Text("Título (EN - Opcional)") },
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                        Spacer(Modifier.height(8.dp))
+                        OutlinedTextField(
+                            value = tituloDe,
+                            onValueChange = { tituloDe = it },
+                            label = { Text("Título (DE - Opcional)") },
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                        Spacer(Modifier.height(8.dp))
+                        OutlinedTextField(
+                            value = tituloFr,
+                            onValueChange = { tituloFr = it },
+                            label = { Text("Título (FR - Opcional)") },
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                        Spacer(Modifier.height(4.dp))
+
+                    } else {
+                        // Botón para desplegar las traducciones
+                        Spacer(Modifier.height(8.dp)) // Espaciado para separarlo del título ES
+                        TextButton(
+                            onClick = { showOptionalTitles = true },
+                            modifier = Modifier.fillMaxWidth().align(Alignment.Start)
+                        ) {
+                            Text("+ AÑADIR TÍTULOS OPCIONALES (EN, DE, FR)")
+                        }
+                        Spacer(Modifier.height(8.dp))
+                    }
+
+
                 }
 
                 Spacer(Modifier.height(16.dp))
@@ -268,7 +302,6 @@ fun PinImageSelector(
             }
         )
     }
-
 
     // --- LÓGICA DEL DIÁLOGO SECUENCIAL (Creación) ---
     if (urisToTag.isNotEmpty() && imageToEdit == null) { // Aseguramos que no se superpongan diálogos

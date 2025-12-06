@@ -42,6 +42,7 @@ import com.nextapp.monasterio.ui.screens.pinEdition.components.MovingPinOverlay
 import com.nextapp.monasterio.ui.screens.pinEdition.components.PinDetailsPanel
 import kotlinx.coroutines.delay
 import com.nextapp.monasterio.ui.screens.pinEdition.components.PinEditionToolbar
+import kotlinx.coroutines.withTimeoutOrNull
 
 @Composable
 fun EdicionPines(
@@ -54,10 +55,7 @@ fun EdicionPines(
 
     Log.d("EdicionPines", "Composición iniciada - Modo Interacción Pin (Panel 35%)")
 
-    DisposableEffect(Unit) {
-        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
-        onDispose { /* Cleanup */ }
-    }
+
 
     // --- Estados de Datos y UI ---
     var pines by remember { mutableStateOf<List<PinData>>(emptyList()) }
@@ -72,6 +70,15 @@ fun EdicionPines(
     var pinDragOffset by remember { mutableStateOf(Offset.Zero) }
     var pinTapScreenPosition by remember { mutableStateOf<Offset?>(null) }
     var photoViewSize by remember { mutableStateOf(IntSize.Zero) }
+
+    DisposableEffect(Unit) {
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+        onDispose {
+            // 🆕 CORRECCIÓN DEL LAG: Asegurar que la referencia a la vista nativa se limpia
+            // cuando el Composable se destruye para prevenir posibles fugas o conflictos de ciclo de vida.
+            photoViewRef = null
+        }
+    }
 
     val parentEntry = remember(navController.currentBackStackEntry) {
         try {
@@ -116,13 +123,28 @@ fun EdicionPines(
         }
 
         Log.d("FLUJO_PIN", "EdicionPines: 🚀 formSubmitted DETECTADO. Iniciando modo de colocación de Pin.")
-        delay(50)
 
-        if (photoViewSize.width == 0 || photoViewSize.height == 0) {
-            Log.e("FLUJO_PIN", "EdicionPines: ❌ ERROR. Tamaño del PhotoView aún no disponible. Abortando inicio de colocación.")
+        // 1. BUCLER DE ESPERA Y VALIDACIÓN CON TIMEOUT
+        val maxWaitTime = 2000L // 2 segundos máximo
+        val isReady = withTimeoutOrNull(maxWaitTime) {
+            while (photoViewSize.width == 0 || photoViewRef == null) {
+                Log.d("FLUJO_PIN", "EdicionPines: ⏳ Esperando PhotoView. Size=${photoViewSize}, Ref=${photoViewRef != null}")
+                delay(100) // Esperar 100ms antes de reintentar
+            }
+            true // Si salimos del while, está listo
+        }
+
+        if (isReady == null || isReady == false) {
+            Log.e("FLUJO_PIN", "EdicionPines: ❌ ERROR. PhotoView no estuvo listo en ${maxWaitTime}ms. Abortando inicio de colocación.")
+            // Resetear el flag para permitir un futuro intento
+            vm.formSubmitted = false
+            Toast.makeText(context, "Error: El mapa no cargó a tiempo para colocar el pin. Inténtelo de nuevo.", Toast.LENGTH_LONG).show()
             return@LaunchedEffect
         }
 
+        Log.d("FLUJO_PIN", "EdicionPines: ✅ PhotoView listo. Iniciando colocación del Pin.")
+
+        // --- 2. Lógica de Colocación (El resto es igual) ---
         selectedPin = null
         photoViewRef?.translationX = 0f
         photoViewRef?.translationY = 0f

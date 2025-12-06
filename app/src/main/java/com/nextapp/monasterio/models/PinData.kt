@@ -32,7 +32,7 @@ data class PinData(
     val valorDestino: String? = null,
     val destino: DestinoPin = DestinoPin.Detalle("pin_detalle"),
 
-    val tapRadius: Float = 0.04f,
+    val tapRadius: Float = 0.06f,
     val vista360Url: String? = null,
 
     // Estos ya usan el sufijo, se mantienen igual
