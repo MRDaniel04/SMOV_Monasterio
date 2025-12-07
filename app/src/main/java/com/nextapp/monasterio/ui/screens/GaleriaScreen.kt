@@ -47,7 +47,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.nextapp.monasterio.R
 import com.nextapp.monasterio.models.ImagenData
-import com.nextapp.monasterio.ui.GalleryType
+import com.nextapp.monasterio.utils.GaleriaType
 import com.nextapp.monasterio.viewModels.GaleriaViewModel
 import java.util.Locale
 
@@ -109,6 +109,7 @@ fun GaleriaScreen(
                             "es" -> selectedImage?.titulo ?: ""
                             "en" -> if (selectedImage?.tituloIngles?.isNotEmpty() == true) selectedImage?.tituloIngles!! else selectedImage?.titulo ?: ""
                             "de" -> if (selectedImage?.tituloAleman?.isNotEmpty() == true) selectedImage?.tituloAleman!! else selectedImage?.titulo ?: ""
+                            "fr" -> if (selectedImage?.tituloFrances?.isNotEmpty() == true) selectedImage?.tituloFrances!! else selectedImage?.titulo ?: ""
                             else -> selectedImage?.titulo ?: ""
                         },
                         color = Color.White,
@@ -129,7 +130,7 @@ fun GaleriaScreen(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier.padding(bottom = 16.dp)
         ) {
-            items(GalleryType.entries) { type ->
+            items(GaleriaType.entries) { type ->
                 val isSelected = type == uiState.selectedType
                 val label = stringResource(id = type.resourceId)
 
@@ -193,6 +194,7 @@ fun GaleriaScreen(
                                         "es" -> image.titulo
                                         "en" -> if (image.tituloIngles.isNotEmpty()) image.tituloIngles else image.titulo
                                         "de" -> if (image.tituloAleman.isNotEmpty()) image.tituloAleman else image.titulo
+                                        "fr" -> if (image.tituloFrances.isNotEmpty()) image.tituloFrances else image.titulo
                                         else -> image.titulo
                                     },
                                     color = Color.White,

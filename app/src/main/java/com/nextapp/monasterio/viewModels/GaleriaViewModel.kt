@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nextapp.monasterio.repository.ImagenRepository
 import com.nextapp.monasterio.models.ImagenData
-import com.nextapp.monasterio.ui.GalleryType
+import com.nextapp.monasterio.utils.GaleriaType
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 data class GaleriaUiState(
     val images: List<ImagenData> = emptyList(),
     val filteredImages: List<ImagenData> = emptyList(),
-    val selectedType: GalleryType = GalleryType.ALL,
+    val selectedType: GaleriaType = GaleriaType.ALL,
     val isLoading: Boolean = false
 )
 
@@ -43,9 +43,9 @@ class GaleriaViewModel(
         }
     }
 
-    fun onTypeSelected(type: GalleryType) {
+    fun onTypeSelected(type: GaleriaType) {
         _uiState.update { currentState ->
-            val filtered = if (type == GalleryType.ALL) {
+            val filtered = if (type == GaleriaType.ALL) {
                 currentState.images
             } else {
                 currentState.images.filter { 

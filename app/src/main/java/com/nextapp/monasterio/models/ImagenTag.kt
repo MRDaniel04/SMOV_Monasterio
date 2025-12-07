@@ -2,10 +2,10 @@ package com.nextapp.monasterio.models
 
 enum class ImageTag(val firestoreValue: String, val displayName: String) {
     // AÑADIDO: displayName
-    PINTURA("Pintura", "Pintura"),
-    ESCULTURA("Escultura", "Escultura"),
-    ARQUITECTURA("Arquitectura", "Arquitec."),
-    OTRO("Otro", "Otro");
+    PINTURA("pintura", "Pintura"),
+    ESCULTURA("escultura", "Escultura"),
+    ARQUITECTURA("arquitectura", "Arquitec."),
+    OTRO("otro", "Otro");
 
 
     fun toFirestoreString(): String = firestoreValue
