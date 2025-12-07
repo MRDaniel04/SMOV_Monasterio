@@ -61,9 +61,9 @@
     <string name="confirm_button">CONFIRM</string>
     <string name="contentimage_confirmation">Confirmed</string>
     <string name="confirmation_appointment">ALMOST DONE!</string>
-    <string name="details_appointment">Your booking request is ready. Please press send in the messaging app that just opened to finalize your request. We will reply to that email to confirm availability.</string>
+    <string name="details_appointment">Your booking request is ready. Please press send in the email app that just opened to finalize your request. We will reply to that email to confirm availability.</string>
     <string name="email_subject">Visit Reservation Request - %1$s</string>
-    <string name="email_message">Hello,\n\nI would like to request a reservation for a visit to the monastery with the following details:\n\n* Name: %1$s\n* Email: %2$s\n* Visit Date: %3$s\n* Visit Time: %4$s\n\nI await your kind confirmation.\n\nThank you very much,\nSincerely,\n\n%1$s</string>
+    <string name="email_message">Hello,\n\nI would like to request a reservation for a visit to the monastery with the following details:\n\n* Name: %1$s\n* Visit Date: %2$s\n* Visit Time: %3$s\n\nI await your kind confirmation.\n\nThank you very much,\nSincerely,\n\n%1$s</string>
     <string name="email_error">No messaging application found</string>
     <string name="history_content_placeholder">Mauris vel nisi id metus vestibulum vehicula nec ac orci. Curabitur massa diam, fermentum sit amet augue sit, volutpat efficitur enim. Phasellus a cursus orci, id laoreet dolor. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</string>
     <string name="language_select">Select language</string>
@@ -187,4 +187,37 @@
     <string name="error_connection_title">Oops! An error occurred</string>
     <string name="error_connection_desc">We couldn\'t load the map. Please check your internet connection and try again.</string>
     <string name="retry">Retry</string>
+    <string-array name="clues">
+        <item>Take a look at the very top of the castle</item>
+        <item>One of the differences is hiding in the sky</item>
+        <item>The horse knows more than it seems&#8230; take a closer look!</item>
+        <item>The knight and his armor are hiding a secret&#8230; can you spot it?</item>
+        <item>The knight’s waist is hiding something mischievous</item>
+
+        <item>Even the man of faith has a change of accessories!</item>
+        <item>A jewel always catches the eye&#8230; especially if it belongs to the queen</item>
+        <item>What happened? The music is gone&#8230;</item>
+        <item>Wow! The king has lost a symbol of power</item>
+        <item>Check out the king’s outfit&#8230; you’re sure to spot something</item>
+
+        <item>Look up and you’ll find what you’re looking for</item>
+        <item>Whoa! It looks like one of the pets has changed</item>
+        <item>Look for a new furry visitor in the room</item>
+        <item>What a blunder! Something has fallen to the ground</item>
+        <item>A clothing detail has changed</item>
+
+        <item>Let’s get to work! Everyone wants to join in</item>
+        <item>What’s happening with the guitarist?</item>
+        <item>Wow, it looks like the village festivities are over!</item>
+        <item>Unexpected harvest! Have more fruits appeared?</item>
+        <item>This elderly lady has the perfect accessories!</item>
+
+        <item>The plants need water, let’s give them a drink!</item>
+        <item>There’s a new buzzing visitor!</item>
+        <item>The main religious symbol is gone</item>
+        <item>Watch out! One of the girls has completely changed</item>
+        <item>More and more flowers are appearing in the scene!</item>
+    </string-array>
+    <string name="clue">CLUE:</string>
+    <string name="clue_button">CLUE</string>
 </resources>

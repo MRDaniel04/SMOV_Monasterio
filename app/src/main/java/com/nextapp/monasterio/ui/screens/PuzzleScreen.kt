@@ -29,7 +29,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.layout.positionInWindow
 import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.platform.LocalConfiguration
@@ -88,7 +90,9 @@ fun PuzzleScreen(
     val imagenCompleta = puzzleSetSeleccionado.imagenCompleta
 
 
-    val factory = remember { PuzzleViewModelFactory(tamaño, listaPiezas,imagenCompleta) }
+    val prefsRepository = remember { UserPreferencesRepository.instance }
+
+    val factory = remember { PuzzleViewModelFactory(tamaño, listaPiezas,prefsRepository,imagenCompleta) }
     val viewModel: PuzzleViewModel = viewModel(factory = factory)
     val state by viewModel.uiState.collectAsState()
     val density = LocalDensity.current
@@ -106,8 +110,15 @@ fun PuzzleScreen(
 
     // Mapa de posiciones iniciales de las piezas SUELTAS en la bandeja (llenado por LazyRow)
     val trayPositionsMap = remember { mutableStateMapOf<Int, Offset>() }
+
     var showImagePreviewDialog by remember { mutableStateOf(false) }
-    var showInstructionsPreviewDialog by remember { mutableStateOf(true) }
+    val showInstructionsPreviewDialog by viewModel.showInstructionsDialog.collectAsState()
+    var showInstructionsPreviewDialogBoton by remember { mutableStateOf(false) }
+
+    var overlayRootCoordinates by remember { mutableStateOf<LayoutCoordinates?>(null) }
+
+    Log.d("INSTRUCCIONES_DBEBUG","valor del showinstructionspreviewdialogboton: ${showInstructionsPreviewDialogBoton}")
+    Log.d("INSTRUCCIONES_DBEBUG","valor del showinstructionspreviewdialog: ${showInstructionsPreviewDialog}")
 
     val screenWidth = LocalConfiguration.current.screenWidthDp
     val isTablet = screenWidth > 600
@@ -121,11 +132,14 @@ fun PuzzleScreen(
         }
     }
 
-    if(showInstructionsPreviewDialog){
+    if(showInstructionsPreviewDialogBoton || showInstructionsPreviewDialog){
         PuzzleDialog(
-            onDismiss = {showInstructionsPreviewDialog=false},
+            onDismiss = {
+                viewModel.markInstructionsAsShown()
+                showInstructionsPreviewDialogBoton = false},
             onConfirm = {
-                showInstructionsPreviewDialog = false},
+                viewModel.markInstructionsAsShown()
+                showInstructionsPreviewDialogBoton = false},
             titulo = stringResource(R.string.title_instructions),
             texto = stringResource(R.string.text_instructions_puzzle)
         )
@@ -135,7 +149,10 @@ fun PuzzleScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp),
+                .padding(16.dp)
+                .onGloballyPositioned { coords ->
+                    overlayRootCoordinates = coords
+                },
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Row(
@@ -146,12 +163,12 @@ fun PuzzleScreen(
                 verticalAlignment = Alignment.CenterVertically
             ){
                 IconButton(
-                    onClick = { showInstructionsPreviewDialog = true },
+                    onClick = { showInstructionsPreviewDialogBoton = true },
                     modifier = Modifier
                         .size(48.dp)
                 ) {
                     Icon(
-                        painter = painterResource(R.drawable.help),
+                        painter = painterResource(R.drawable.question),
                         contentDescription = stringResource(R.string.title_instructions),
                         tint = Color.Black.copy(alpha = 0.7f),
                     )
@@ -204,11 +221,12 @@ fun PuzzleScreen(
                         // Llenar el mapa de posiciones iniciales para el Drag & Drop
                         trayPositionsMap[id] = offset
                     },
-                    onDragStart = { p, absolutePressOffset ->
+                    overlayRootCoordinates = overlayRootCoordinates,
+                    onDragStart = { p, pressPositionInsidePiece  ->
                         // INICIO DEL DRAG: Activar la pieza flotante
                         piezaArrastradaId = p.id
                         desplazamientoPiezaArrastrada = Offset.Zero
-                        dragStartRelativeOffset = absolutePressOffset
+                        dragStartRelativeOffset = pressPositionInsidePiece
                     }
                 )
             }
@@ -259,8 +277,8 @@ fun PuzzleScreen(
                         val piezaActual = state.piezas.find { it.id == piezaArrastradaId }!!
 
                         // Calcular la posición final de la pieza respecto al origen del Grid
-                        val finalTLX = startOffset.x + desplazamientoPiezaArrastrada.x - dragStartRelativeOffset.x
-                        val finalTLY = startOffset.y + desplazamientoPiezaArrastrada.y - dragStartRelativeOffset.y
+                        val finalTLX = startOffset.x + desplazamientoPiezaArrastrada.x
+                        val finalTLY = startOffset.y + desplazamientoPiezaArrastrada.y
 
                         val relativeX = finalTLX - gridOriginOffset.x
                         val relativeY = finalTLY - gridOriginOffset.y
@@ -322,6 +340,7 @@ fun PuzzleTray(
     idPiezaArrastrada : Int?,
     isDragInProgress: Boolean,
     onPiecePositioned: (Int, Offset) -> Unit,
+    overlayRootCoordinates: LayoutCoordinates?,
     onDragStart: (PiezaPuzzle, Offset) -> Unit
 ) {
     Column(
@@ -346,8 +365,12 @@ fun PuzzleTray(
                 Box(
                     modifier = Modifier
                         .size(tamañoPieza)
-                        .onGloballyPositioned { coordinates ->
-                            onPiecePositioned(pieza.id, coordinates.positionInWindow())
+                        .onGloballyPositioned { coords ->
+                            val root = overlayRootCoordinates
+                            if (root != null) {
+                                val posInOverlay = root.localPositionOf(coords, Offset.Zero)
+                                onPiecePositioned(pieza.id, posInOverlay)
+                            }
                         }
                         .pointerInput(isDragInProgress) {
                             detectTapGestures(
@@ -387,7 +410,7 @@ fun DraggableFloatingPiece(
 ) {
     // Calcular la posición absoluta en la pantalla (Base de la Bandeja + Movimiento del dedo)
     val totalOffsetX = startOffset.x + desplazamientoActual.x
-    val totalOffsetY = startOffset.y + desplazamientoActual.y - dragStartRelativeOffset.y
+    val totalOffsetY = startOffset.y + desplazamientoActual.y
 
     Box(
         modifier = Modifier

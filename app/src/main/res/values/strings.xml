@@ -61,9 +61,9 @@
     <string name="confirm_button">CONFIRMAR</string>
     <string name="contentimage_confirmation">Confirmado</string>
     <string name="confirmation_appointment">¡CASI TERMINADO!</string>
-    <string name="details_appointment">Tu solicitud de reserva está lista. Pulsa enviar en la aplicación de mensajería que se acaba de abrir para finalizar tu solicitud. Te responderemos a ese email para confirmarte la disponibilidad.</string>
+    <string name="details_appointment">Tu solicitud de reserva está lista. Pulsa enviar en la aplicación de correo que se acaba de abrir para finalizar tu solicitud. Te responderemos a ese email para confirmarte la disponibilidad.</string>
     <string name="email_subject">Solicitud de Reserva de Visita - %1$s</string>
-    <string name="email_message">Hola,\n\nMe gustaría solicitar una reserva para una visita al monasterio con los siguientes detalles:\n\n* Nombre: %1$s\n* Email: %2$s\n* Fecha de la visita: %3$s\n* Hora de la visita: %4$s\n\nEspero su amable confirmación.\n\nMuchas gracias,\nAtentamente,\n\n%1$s</string>
+    <string name="email_message">Hola,\n\nMe gustaría solicitar una reserva para una visita al monasterio con los siguientes detalles:\n\n* Nombre: %1$s\n* Fecha de la visita: %2$s\n* Hora de la visita: %3$s\n\nEspero su amable confirmación.\n\nMuchas gracias,\nAtentamente,\n\n%1$s</string>
     <string name="email_error">No se ha encontrado ninguna aplicación de mensajería</string>
     <string name="history_content_placeholder">Mauris vel nisi id metus vestibulum vehicula nec ac orci. Curabitur massa diam, fermentum sit amet augue sit, volutpat efficitur enim. Phasellus a cursus orci, id laoreet dolor. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</string>
     <string name="language_select">Seleccionar idioma</string>
@@ -187,4 +187,37 @@
     <string name="error_connection_title">¡Vaya! Ha ocurrido un error</string>
     <string name="error_connection_desc">No hemos podido cargar el mapa. Por favor, comprueba tu conexión a internet y vuelve a intentarlo.</string>
     <string name="retry">Reintentar</string>
+    <string-array name="clues">
+        <item>Echa un vistazo a la parte más alta del castillo</item>
+        <item>Una de las diferencias ocupa el cielo de la imagen</item>
+        <item>El caballo sabe más de lo que parece&#8230; ¡échale un ojo!</item>
+        <item>El caballero y su armadura guardan un secreto&#8230; ¿lo ves?</item>
+        <item>La cintura del caballero esconde algo travieso</item>
+
+        <item>¡Hasta el hombre de fe tiene un cambio de accesorios!</item>
+        <item>Una joya siempre llama la atención&#8230;sobre todo si es de la reina</item>
+        <item>¿Qué ha pasado? La música ya no se escucha&#8230;</item>
+        <item>¡Vaya! El rey ha perdido un símbolo de poder</item>
+        <item>Observa el traje del rey&#8230;seguro que encuentras algo</item>
+
+        <item>Mira hacia arriba y encontraras lo que buscas</item>
+        <item>¡Vaya! Parece que una de las mascotas ha cambiado</item>
+        <item>Busca a un nuevo visitante peludo en la habitación</item>
+        <item>¡Qué despiste! Algo cayó al suelo</item>
+        <item>Un detalle de vestuario ha cambiado</item>
+
+        <item>¡Manos a la obra! Todos quieren participar</item>
+        <item>¿Que le pasa a la guitarrista?</item>
+        <item>¡Vaya parece que las fiestas del pueblo han acabado!</item>
+        <item>¡Cosecha inesperada! ¿Han aparecido más frutas?</item>
+        <item>¡Esta anciana lleva unos accesorios ideales!</item>
+
+        <item>Las plantas necesitan agua, ¡Vamos a regar!</item>
+        <item>¡Hay un nuevo visitante zumbando!</item>
+        <item>El símbolo religioso principal, ya no está</item>
+        <item>¡Atención! Una de las niñas ha cambiado por completo</item>
+        <item>¡Cada vez aparecen más flores en la escena!</item>
+    </string-array>
+    <string name="clue">PISTA:</string>
+    <string name="clue_button">PISTA</string>
 </resources>

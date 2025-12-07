@@ -25,6 +25,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -164,30 +165,29 @@ fun GameOptionButton(
         onClick = onClick,
         colors = ButtonDefaults.buttonColors(containerColor = backgroundColor),
         shape = RoundedCornerShape(20.dp),
-        modifier = modifier.shadow(8.dp, RoundedCornerShape(20.dp)),
-        contentPadding = PaddingValues(16.dp)
+        modifier = modifier,
+        elevation = ButtonDefaults.buttonElevation(8.dp)
     ) {
         Row(
+            modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center,
-            modifier = Modifier.fillMaxSize()
+            horizontalArrangement = Arrangement.Start
         ) {
             Icon(
                 painter = painterResource(id = iconRes),
                 contentDescription = null,
-                modifier = Modifier.size(48.dp),
-                tint = Color.White
+                modifier = Modifier.size(48.dp)
             )
-
-            Spacer(modifier = Modifier.width(24.dp))
-
+            Spacer(modifier = Modifier.width(16.dp))
             Text(
                 text = text,
-                fontSize = 22.sp,
+                fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
-                color = Color.White
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.weight(1f)
             )
+            Spacer(modifier = Modifier.width(10.dp))
         }
     }
 }

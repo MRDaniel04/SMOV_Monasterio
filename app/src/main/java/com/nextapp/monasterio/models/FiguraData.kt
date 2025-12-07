@@ -3,6 +3,9 @@ package com.nextapp.monasterio.models
 data class FiguraData(
     val id: String = "",
     val nombre: String = "",
+    val nombre_en : String = "",
+    val nombre_de : String = "",
+    val nombre_fr : String = "",
     val descripcion: String = "",
     // Cambiamos a List<String> para guardar solo los IDs
     val imagenes: List<String> = emptyList(),

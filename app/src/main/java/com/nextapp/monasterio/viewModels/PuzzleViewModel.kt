@@ -27,15 +27,29 @@ data class puzzleUiState(
 class PuzzleViewModel(
     private val tamañoPuzzle: PuzzleSize,
     private val imagenId: List<Int>,
+    private val prefsRepository: UserPreferencesRepository,
     private val imagenCompleta: Int) : ViewModel() {
 
     private val _uiState = MutableStateFlow(puzzleUiState(size=tamañoPuzzle, imagenCompleta = imagenCompleta))
     val uiState: StateFlow<puzzleUiState> = _uiState
 
+    val showInstructionsDialog : StateFlow<Boolean> = prefsRepository.isInstructionsPuzzleDismissed
+        .map { isDismissed -> !isDismissed }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = false
+        )
     private val gameManager = PuzzleManager(tamañoPuzzle)
 
     init{
         resetGame()
+    }
+
+    fun markInstructionsAsShown() {
+        viewModelScope.launch {
+            prefsRepository.dismissInstructionsPuzzle()
+        }
     }
 
 
@@ -82,12 +96,13 @@ class PuzzleViewModel(
 class PuzzleViewModelFactory(
     private val tamañoPuzzle: PuzzleSize,
     private val imagenesIds: List<Int>,
+    private val prefsRepository: UserPreferencesRepository,
     private val imagenCompleta : Int
 ) : ViewModelProvider.Factory{
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(PuzzleViewModel::class.java)) {
-            return PuzzleViewModel(tamañoPuzzle, imagenesIds,imagenCompleta) as T
+            return PuzzleViewModel(tamañoPuzzle, imagenesIds,prefsRepository,imagenCompleta) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

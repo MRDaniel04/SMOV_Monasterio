@@ -77,6 +77,9 @@ object FiguraRepository {
             return FiguraData(
                 id = id,
                 nombre = data["nombre"] as? String ?: "",
+                nombre_en = data["nombre_en"] as? String ?: "",
+                nombre_de = data["nombre_de"] as? String ?: "",
+                nombre_fr = data["nombre_fr"] as? String ?: "",
                 descripcion = data["descripcion"] as? String ?: "",
                 imagenes = imagenesList, // Ahora es List<String>
 

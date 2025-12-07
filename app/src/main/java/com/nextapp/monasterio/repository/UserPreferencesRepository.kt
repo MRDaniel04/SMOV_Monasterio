@@ -21,6 +21,12 @@ class UserPreferencesRepository private constructor(private val context: Context
         val TUTORIAL_SUB_MAP = booleanPreferencesKey("tut_sub_map")   // Interiores (Claustro, Iglesia...)
         val TUTORIAL_PIN = booleanPreferencesKey("tut_pin_detail")    // Detalle del Pin
 
+        val INSTRUCTIONS_PUZZLE = booleanPreferencesKey("ins_puzzle") // Instrucciones del Puzle
+
+        val INSTRUCTIONS_PAIRS = booleanPreferencesKey("ins_pairs") // Instrucciones de las parejas
+
+        val INSTRUCTIONS_DIFFERENCES = booleanPreferencesKey("ins_differences") // Instrucciones de las diferencias
+
         val ULTIMO_PAR_ID = intPreferencesKey("ultimo_par_id_diferencias")
     }
 
@@ -33,6 +39,17 @@ class UserPreferencesRepository private constructor(private val context: Context
 
     val isPinTutorialDismissed: Flow<Boolean> = context.dataStore.data
         .map { it[PreferencesKeys.TUTORIAL_PIN] ?: false }
+
+    val isInstructionsPuzzleDismissed: Flow<Boolean> = context.dataStore.data
+        .map { it[PreferencesKeys.INSTRUCTIONS_PUZZLE] ?: false }
+
+
+    val isInstructionsPairsDismissed: Flow<Boolean> = context.dataStore.data
+        .map { it[PreferencesKeys.INSTRUCTIONS_PAIRS] ?: false }
+
+
+    val isInstructionsDifferencesDismissed: Flow<Boolean> = context.dataStore.data
+        .map { it[PreferencesKeys.INSTRUCTIONS_DIFFERENCES] ?: false }
 
     suspend fun dismissAllTutorials() {
         context.dataStore.edit { prefs ->
@@ -54,6 +71,17 @@ class UserPreferencesRepository private constructor(private val context: Context
 
     suspend fun dismissPinTutorial() { dismissAllTutorials()    }
 
+    suspend fun dismissInstructionsPuzzle() {
+        context.dataStore.edit { it[PreferencesKeys.INSTRUCTIONS_PUZZLE] = true }
+    }
+
+    suspend fun dismissInstructionsPairs() {
+        context.dataStore.edit { it[PreferencesKeys.INSTRUCTIONS_PAIRS] = true }
+    }
+
+    suspend fun dismissInstructionsDifferences() {
+        context.dataStore.edit { it[PreferencesKeys.INSTRUCTIONS_DIFFERENCES] = true }
+    }
 
     suspend fun getUltimoParID(): Int {
         // Obtenemos el valor actual del DataStore y cancelamos la lectura del Flow
