@@ -18,7 +18,7 @@ import androidx.navigation.NavController
 import com.nextapp.monasterio.ui.screens.pinCreation.components.Image360Selector
 import com.nextapp.monasterio.ui.screens.pinCreation.components.PinLocationDropdown
 import com.nextapp.monasterio.ui.screens.pinCreation.components.PinTopBar
-import androidx.compose.ui.platform.LocalContext // ⬅️ IMPORTANTE: Añadir este import
+import androidx.compose.ui.platform.LocalContext
 import com.nextapp.monasterio.ui.screens.pinCreation.components.getAreaPrincipalForLocation
 
 

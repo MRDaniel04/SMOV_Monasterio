@@ -166,7 +166,6 @@ object PinRepository {
         imagen360: String?,       // URL de la imagen 360 (opcional)
         x: Float,
         y: Float,
-        tapRadius: Float?,
         audioUrl_es: String? = null,
         audioUrl_en: String? = null,
         audioUrl_de: String? = null,
@@ -212,7 +211,7 @@ object PinRepository {
 
             "x" to x.toDouble(),
             "y" to y.toDouble(),
-            "tapRadius" to (tapRadius ?: 0.06f).toDouble(),
+            "tapRadius" to 0.06f,
             "imagenes" to imagenesRefs,
             "vista360Url" to imagen360,
             "audioUrl_es" to audioUrl_es,
@@ -340,7 +339,6 @@ object PinRepository {
         audioUrl_en: String?,
         audioUrl_de: String?,
         audioUrl_fr: String?,
-        tapRadius: Float?,
         imagenes: List<ImagenData>,
         imagen360: String?
     ) {
@@ -401,7 +399,7 @@ object PinRepository {
                 "audioUrl_en" to audioUrl_en,
                 "audioUrl_de" to audioUrl_de,
                 "audioUrl_fr" to audioUrl_fr,
-                "tapRadius" to (tapRadius ?: 0.06f).toDouble(),
+                "tapRadius" to 0.06f,
                 "tipoDestino" to "detalle",
                 "valorDestino" to "auto"
             )

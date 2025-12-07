@@ -48,7 +48,6 @@ private val UBICACION_AUTO_TRADS = mapOf(
 class CreacionPinSharedViewModel : ViewModel() {
 
     private val pinRepository = PinRepository
-
     private var isLoadingInitialData = false
 
     val descripcion = DescripcionState(onChanged = { checkIfModified() })
@@ -339,8 +338,6 @@ class CreacionPinSharedViewModel : ViewModel() {
 
         // TRADUCCIONES DEL TÍTULO (Manuales si es "Otra", o nulas)
 
-        val originalRadius = originalPin!!.tapRadius ?: 0.06f // Si no se cargó, toma el valor original
-
         val descriptionTasks = mapOf(
             "es" to Pair(descripcion.es, original.descripcion_es),
             "en" to Pair(descripcion.en, original.descripcion_en),
@@ -415,8 +412,6 @@ class CreacionPinSharedViewModel : ViewModel() {
                     audioUrl_de = audioUrl_de_final,
                     audioUrl_fr = audioUrl_fr_final,
 
-                    // --- RADIO e IMÁGENES ---
-                    tapRadius = originalRadius,
                     imagenes = imagenesParaGuardar,
                     imagen360 = imagen360Url
                 )
@@ -462,13 +457,10 @@ class CreacionPinSharedViewModel : ViewModel() {
             try {
                 // --- 1. SUBIDA DE IMÁGENES NORMALES ---
                 uploadMessage = "Subiendo imágenes normales..."
-                val uploadedImageUrls = imagenes.uris.mapNotNull { uri ->
-                    CloudinaryService.uploadImage(uri, context).getOrNull()
+                val uploadedImageUrls = imagenes.uris.map { uri ->
+                    CloudinaryService.uploadImage(uri, context).getOrThrow()
                 }
-                // Validar que se subieron todas las imágenes necesarias
-                if (uploadedImageUrls.size != imagenes.uris.size) {
-                    throw Exception("Fallo al subir una o más imágenes a Cloudinary.")
-                }
+
 
                 // --- 2. SUBIDA DE IMAGEN 360 ---
                 uploadMessage = "Subiendo imagen 360 (si existe)..."
@@ -526,8 +518,6 @@ class CreacionPinSharedViewModel : ViewModel() {
                     audioUrl_es = audioUrlsFinal["es"], audioUrl_en = audioUrlsFinal["en"],
                     audioUrl_de = audioUrlsFinal["de"], audioUrl_fr = audioUrlsFinal["fr"],
 
-                    // ARCHIVOS Y COORDENADAS
-                    tapRadius = null,
                     imagenes = imagesWithData,
                     imagen360 = uploaded360Url,
                     x = finalX, y = finalY
