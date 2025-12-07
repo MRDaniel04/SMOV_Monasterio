@@ -1,11 +1,15 @@
 package com.nextapp.monasterio.ui.screens
 
+
+import android.app.Activity
+import android.content.pm.ActivityInfo
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -15,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -32,7 +37,9 @@ fun DiferenciasScreen(navController : NavController
 
     val prefsRepository = remember { UserPreferencesRepository.instance }
 
-    val viewModel: DiferenciasViewModel = viewModel(factory = DiferenciasViewModel.Companion.Factory(prefsRepository))
+    val context = LocalContext.current
+
+    val viewModel: DiferenciasViewModel = viewModel(factory = DiferenciasViewModel.Companion.Factory(prefsRepository,context))
 
     val juegoActual by viewModel.juegoActual.collectAsState()
     val contador by viewModel.diferenciasEncontradas.collectAsState()
@@ -40,15 +47,39 @@ fun DiferenciasScreen(navController : NavController
     val diferenciasList = juegoActual.diferencias
     val juegoTerminado = contador == diferenciasList.size
 
-    var showInstructionsPreviewDialog by remember { mutableStateOf(true) }
+    var showInstructionsPreviewDialogBoton by remember { mutableStateOf(false) }
+    val showInstructionsPreviewDialog by viewModel.showInstructionsDialog.collectAsState()
 
-    if(showInstructionsPreviewDialog){
-        PuzzleDialog(
-            onDismiss = {showInstructionsPreviewDialog =false},
-            onConfirm = {showInstructionsPreviewDialog =false},
+    var mostrarPista by remember { mutableStateOf(false) }
+    var textoPista by remember { mutableStateOf("") }
+    
+    val activity = context as? Activity
+
+    if(showInstructionsPreviewDialogBoton || showInstructionsPreviewDialog){
+        DiferenciasDialog(
+            onDismiss = {
+                viewModel.markInstructionsAsShown()
+                showInstructionsPreviewDialogBoton = false},
+            onConfirm = {
+                viewModel.markInstructionsAsShown()
+                showInstructionsPreviewDialogBoton = false},
             titulo = stringResource(R.string.title_instructions),
             texto = stringResource(R.string.text_instructions_spot_the_difference)
         )
+    }
+
+    if(mostrarPista){
+        DiferenciasDialog(
+            onDismiss = {mostrarPista = false},
+            onConfirm = {mostrarPista = false},
+            titulo = stringResource(R.string.clue),
+            texto = textoPista
+        )
+    }
+
+    DisposableEffect(Unit) {
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        onDispose {}
     }
 
     Column(
@@ -59,25 +90,25 @@ fun DiferenciasScreen(navController : NavController
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 8.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
+                .padding(bottom = 16.dp,top=8.dp),
+            horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
                 text = stringResource(R.string.differences_counter, contador, diferenciasList.size),
-                style = MaterialTheme.typography.titleLarge,
+                style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier
                     .padding(vertical = 8.dp)
             )
+            Spacer(modifier = Modifier.width(16.dp))
             IconButton(
-                onClick = { showInstructionsPreviewDialog = true },
+                onClick = { showInstructionsPreviewDialogBoton = true },
                 modifier = Modifier
-                    .size(48.dp)
+                    .size(28.dp)
             ) {
                 Icon(
-                    painter = painterResource(R.drawable.help),
+                    painter = painterResource(R.drawable.question),
                     contentDescription = stringResource(R.string.title_instructions),
-                    tint = Color.Black.copy(alpha = 0.7f),
                 )
             }
         }
@@ -86,7 +117,8 @@ fun DiferenciasScreen(navController : NavController
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Image(
                 painter = painterResource(juegoActual.imagenOriginal),
@@ -103,6 +135,14 @@ fun DiferenciasScreen(navController : NavController
                 onHit = viewModel::onTouch,
                 modifier = Modifier.weight(1f)
             )
+            Spacer(modifier = Modifier.width(16.dp))
+            Button(
+                onClick = {
+                    textoPista = viewModel.mostrarPistasAleatoria()
+                    mostrarPista = true},
+            ) {
+                Text(stringResource(R.string.clue_button))
+            }
         }
     }
 
@@ -112,7 +152,11 @@ fun DiferenciasScreen(navController : NavController
             text = { Text(stringResource(R.string.message_game_completed)) },
             confirmButton = {
                 Button(onClick = {
-                    navController.navigate(AppRoutes.JUEGO_DIFERENCIAS)
+                    navController.navigate(AppRoutes.JUEGO_DIFERENCIAS) {
+                        popUpTo(AppRoutes.JUEGO_DIFERENCIAS) {
+                            inclusive = true
+                        }
+                    }
                 }) {
                     Text(stringResource(R.string.ready))
                 }
@@ -120,4 +164,29 @@ fun DiferenciasScreen(navController : NavController
             onDismissRequest = { /* No se puede cerrar sin reiniciar */ }
         )
     }
+}
+
+@Composable
+fun DiferenciasDialog(
+    onDismiss: () -> Unit,
+    onConfirm : () -> Unit,
+    titulo: String,
+    texto:String
+){
+    AlertDialog(
+        onDismissRequest=onDismiss,
+        title = {
+            Text(titulo)
+        },
+        text = {
+            Text(texto)
+        },
+        confirmButton = {
+            Button(
+                onClick = onConfirm
+            ) {
+                Text(stringResource(R.string.ready))
+            }
+        },
+    )
 }

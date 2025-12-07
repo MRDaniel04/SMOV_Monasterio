@@ -113,26 +113,23 @@ fun AppNavigationHost(
 
         // --- RESTO DE TUS RUTAS ---
         composable(AppRoutes.OPCIONES_RESERVA) { OpcionesReservaScreen(navController = navController, topPadding = scaffoldPadding) }
-        composable(AppRoutes.RESERVA) { ReservaScreen(navController = navController, topPadding = scaffoldPadding) }
+        composable(AppRoutes.RESERVA) { ReservaScreen(navController = navController, viewModel = infoViewModel,topPadding = scaffoldPadding) }
         composable(
-            route = AppRoutes.CONFIRMACION_RESERVA + "/{nombre}/{email}/{fecha}/{hora}",
+            route = AppRoutes.CONFIRMACION_RESERVA + "/{nombre}/{fecha}/{hora}",
             arguments = listOf(
                 navArgument("nombre") { type = NavType.StringType },
-                navArgument("email") { type = NavType.StringType },
                 navArgument("fecha") { type = NavType.StringType },
                 navArgument("hora") { type = NavType.StringType }
             )
         ) { backStackEntry ->
             val nombre = backStackEntry.arguments?.getString("nombre") ?: ""
-            val email = backStackEntry.arguments?.getString("email") ?: ""
             val fecha = backStackEntry.arguments?.getString("fecha") ?: ""
             val hora = backStackEntry.arguments?.getString("hora") ?: ""
             ConfirmacionReservaScreen(
-                navController = navController,
                 nombre = nombre,
-                email = email,
                 fecha = fecha,
-                hora = hora
+                hora = hora,
+                viewModel = infoViewModel
             )
         }
     }

@@ -61,9 +61,9 @@
     <string name="confirm_button">BESTÄTIGEN</string>
     <string name="contentimage_confirmation">Bestätigt</string>
     <string name="confirmation_appointment">FAST FERTIG!</string>
-    <string name="details_appointment">Ihre Buchungsanfrage ist fertig. Bitte drücken Sie in der gerade geöffneten Messaging-App auf Senden, um Ihre Anfrage abzuschließen. Wir werden Ihnen auf diese E-Mail antworten, um die Verfügbarkeit zu bestätigen.</string>
+    <string name="details_appointment">Ihre Reservierungsanfrage ist hier aufgeführt. Senden Sie uns bitte eine E-Mail an die Korrektheitsanfrage, die Sie zum Abschluss Ihrer Anfrage benötigen. Sie antworten per E-Mail, um die Verfügbarkeit zu bestätigen.</string>
     <string name="email_subject">Anfrage zur Besuchsreservierung - %1$s</string>
-    <string name="email_message">Hallo,\n\nich möchte eine Reservierung für einen Besuch des Klosters mit folgenden Details anfragen:\n\n* Name: %1$s\n* E-Mail: %2$s\n* Besuchsdatum: %3$s\n* Besuchszeit: %4$s\n\nIch erwarte Ihre freundliche Bestätigung.\n\nVielen Dank,\nMit freundlichen Grüßen,\n\n%1$s</string>
+    <string name="email_message">Hallo,\n\nich möchte eine Reservierung für einen Besuch des Klosters mit folgenden Details anfragen:\n\n* Name: %1$s\n* Besuchsdatum: %2$s\n* Besuchszeit: %3$s\n\nIch erwarte Ihre freundliche Bestätigung.\n\nVielen Dank,\nMit freundlichen Grüßen,\n\n%1$s</string>
     <string name="email_error">Keine Messaging-Anwendung gefunden</string>
     <string name="history_content_placeholder">Mauris vel nisi id metus vestibulum vehicula nec ac orci. Curabitur massa diam, fermentum sit amet augue sit, volutpat efficitur enim. Phasellus a cursus orci, id laoreet dolor. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</string>
     <string name="language_select">Sprache auswählen</string>
@@ -187,4 +187,37 @@
     <string name="error_connection_title">Hoppla! Ein Fehler ist aufgetreten</string>
     <string name="error_connection_desc">Wir konnten die Karte nicht laden. Bitte überprüfen Sie Ihre Internetverbindung und versuchen Sie es erneut.</string>
     <string name="retry">Erneut versuchen</string>
+    <string-array name="clues">
+        <item>Wirf einen Blick auf den höchsten Teil der Burg</item>
+        <item>Einer der Unterschiede befindet sich am Himmel im Bild</item>
+        <item>Das Pferd weiß mehr, als es scheint&#8230;schau genau hin!</item>
+        <item>Der Ritter und seine Rüstung verbergen ein Geheimnis&#8230; siehst du es?</item>
+        <item>Die Taille des Ritters verbirgt etwas Freches</item>
+
+        <item>Sogar der Mann des Glaubens hat seine Accessoires gewechselt!</item>
+        <item>Ein Schmuckstück fällt immer auf&#8230; besonders, wenn es der Königin gehört</item>
+        <item>Was ist passiert? Die Musik ist verstummt&#8230;</item>
+        <item>Wow! Der König hat ein Macht-Symbol verloren</item>
+        <item>Schau dir die Kleidung des Königs an&#8230; sicher entdeckst du etwas</item>
+
+        <item>Schau nach oben und du wirst finden, wonach du suchst</item>
+        <item>Oh! Es sieht so aus, als hätte sich eines der Haustiere verändert</item>
+        <item>Halten Sie Ausschau nach einem neuen pelzigen Besucher im Zimmer.</item>
+        <item>Was für ein Versehen! Etwas ist auf den Boden gefallen</item>
+        <item>Ein Kleidungsdetail hat sich verändert</item>
+
+        <item>Ran an die Arbeit! Alle wollen mitmachen</item>
+        <item>Was ist mit der Gitarristin los?</item>
+        <item>Wow, es sieht so aus, als wären die Dorffeste vorbei!</item>
+        <item>Unerwartete Ernte! Sind mehr Früchte erschienen?</item>
+        <item>Diese ältere Dame trägt die perfekten Accessoires!</item>
+
+        <item>Die Pflanzen brauchen Wasser, lass uns gießen!</item>
+        <item>Es gibt einen neuen summenden Besucher!</item>
+        <item>Das wichtigste religiöse Symbol ist verschwunden</item>
+        <item>Achtung! Eines der Mädchen hat sich komplett verändert</item>
+        <item>Immer mehr Blumen erscheinen in der Szene!</item>
+    </string-array>
+    <string name="clue">HINWEIS:</string>
+    <string name="clue_button">HINWEIS</string>
 </resources>

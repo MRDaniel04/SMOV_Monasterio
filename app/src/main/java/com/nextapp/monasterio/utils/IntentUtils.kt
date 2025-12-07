@@ -6,6 +6,7 @@ import android.net.Uri
 import com.nextapp.monasterio.R
 import android.widget.Toast
 
+
 fun Context.llamarTelefono(telefono : String){
     val telefonoMonasterio = telefono
     val intent = Intent(Intent.ACTION_DIAL)
@@ -24,10 +25,9 @@ fun Context.abrirUbicacion(ubicacion: String){
     }
 }
 
-fun Context.crearCorreo(nombre:String, email:String, fecha: String, hora:String,necesitaTexto: Boolean){
-    val correoMonasterio = "smrhv@huelgasreales.es"
+fun Context.crearCorreo(correoMonasterio: String,nombre:String, fecha: String, hora:String,necesitaTexto: Boolean){
     val asunto = getString(R.string.email_subject,nombre)
-    val mensaje =getString(R.string.email_message,nombre,email,fecha,hora).trimIndent()
+    val mensaje =getString(R.string.email_message,nombre,fecha,hora).trimIndent()
     val emailIntent = Intent(Intent.ACTION_SEND).apply {
         type="message/rfc822"
         putExtra(Intent.EXTRA_EMAIL,arrayOf(correoMonasterio))

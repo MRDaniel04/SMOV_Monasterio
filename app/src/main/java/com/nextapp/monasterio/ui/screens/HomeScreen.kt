@@ -293,19 +293,16 @@ fun HomeListButton(
             Icon(
                 painter = painterResource(id = iconRes),
                 contentDescription = null,
-                modifier = Modifier.size(32.dp)
+                modifier = Modifier.size(48.dp)
             )
-            Spacer(modifier = Modifier.weight(1f))
+            Spacer(modifier = Modifier.width(16.dp))
             Text(
                 text = text,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.End,
-                maxLines = 1, // Evita saltos de línea feos en lista
-                overflow = TextOverflow.Ellipsis
+                textAlign = TextAlign.Center,
+                modifier = Modifier.weight(1f)
             )
-            Spacer(modifier = Modifier.weight(1f))
-            Spacer(modifier = Modifier.width(10.dp))
         }
     }
 }
@@ -327,7 +324,9 @@ fun HomeGridButton(
         elevation = CardDefaults.cardElevation(8.dp)
     ) {
         BoxWithConstraints(
-            modifier = Modifier.fillMaxSize().padding(8.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(8.dp),
             contentAlignment = Alignment.Center
         ) {
             // Autoajuste de tamaño según espacio disponible
@@ -353,8 +352,6 @@ fun HomeGridButton(
                     color = Color.White,
                     textAlign = TextAlign.Center,
                     lineHeight = textSize * 1.1,
-                    maxLines = 2, // Permite 2 líneas
-                    overflow = TextOverflow.Ellipsis // Puntos suspensivos si no cabe
                 )
             }
         }

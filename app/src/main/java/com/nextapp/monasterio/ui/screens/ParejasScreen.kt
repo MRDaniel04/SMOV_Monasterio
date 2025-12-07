@@ -2,6 +2,7 @@ package com.nextapp.monasterio.ui.screens
 
 import android.app.Activity
 import android.content.pm.ActivityInfo
+import android.util.Log
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
@@ -64,14 +65,19 @@ fun ParejasScreen(
     imagenes : List<Int>
 ){
 
-    val factory = remember { ParejasViewModelFactory(size, imagenes) }
+    val prefsRepository = remember { UserPreferencesRepository.instance }
+
+    val factory = remember { ParejasViewModelFactory(size, imagenes,prefsRepository) }
     val viewModel: ParejasViewModel = viewModel(factory = factory)
     val state by viewModel.uiState.collectAsState()
 
     val context = LocalContext.current
     val activity = context as? Activity
 
-    var showInstructionsPreviewDialog by remember { mutableStateOf(true) }
+    val showInstructionsPreviewDialogNullable by viewModel.showInstructionsDialog.collectAsState()
+    val showInstructionsPreviewDialog = showInstructionsPreviewDialogNullable ?: true
+
+    var showInstructionsPreviewDialogBoton by remember { mutableStateOf(false) }
 
     val ruta = remember(size){
         when(size.rows * size.columns){
@@ -89,15 +95,24 @@ fun ParejasScreen(
         }
     }
 
-    if(showInstructionsPreviewDialog){
+   if(showInstructionsPreviewDialogNullable == null){
+       return
+   }
+
+    if(showInstructionsPreviewDialogBoton || showInstructionsPreviewDialog){
         ParejaDialog(
-            onDismiss = {showInstructionsPreviewDialog=false},
+            onDismiss = {
+                viewModel.markInstructionsAsShown()
+                showInstructionsPreviewDialogBoton=false},
             onConfirm = {
-                showInstructionsPreviewDialog=false
+                viewModel.markInstructionsAsShown()
+                showInstructionsPreviewDialogBoton=false
                 viewModel.iniciarJuego() },
             titulo = stringResource(R.string.title_instructions),
             texto = stringResource(R.string.text_instructions_pairs)
         )
+    } else if(!showInstructionsPreviewDialog){
+        viewModel.iniciarJuego()
     }
 
     Column(
@@ -113,21 +128,21 @@ fun ParejasScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 8.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
+            horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ){
             Text(
                 text = stringResource(R.string.left_pairs,state.parejas),
                 style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(start = 4.dp)
+                modifier = Modifier.padding(end = 32.dp)
             )
             IconButton(
-                onClick = { showInstructionsPreviewDialog = true },
+                onClick = { showInstructionsPreviewDialogBoton = true },
                 modifier = Modifier
                     .size(48.dp)
             ) {
                 Icon(
-                    painter = painterResource(R.drawable.help),
+                    painter = painterResource(R.drawable.question),
                     contentDescription = stringResource(R.string.title_instructions),
                     tint = Color.Black.copy(alpha = 0.7f),
                 )

@@ -3,6 +3,7 @@ package com.nextapp.monasterio.ui.screens
 import android.app.Activity
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -34,11 +35,14 @@ import java.util.Calendar
 import java.util.Locale
 import android.util.Patterns
 import androidx.compose.ui.draw.shadow
+import com.nextapp.monasterio.viewModels.InfoViewModel
+import java.util.Date
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ReservaScreen(
     navController: NavController,
+    viewModel: InfoViewModel,
     topPadding: PaddingValues = PaddingValues(0.dp)
 ) {
     val context = LocalContext.current
@@ -53,6 +57,8 @@ fun ReservaScreen(
         onDispose { }
     }
 
+    val infoData by viewModel.infoState.collectAsState()
+
     // --- ESTADOS DEL FORMULARIO ---
     var nombre by rememberSaveable { mutableStateOf("") }
     var email by rememberSaveable { mutableStateOf("") }
@@ -60,7 +66,6 @@ fun ReservaScreen(
     var hora by rememberSaveable { mutableStateOf("") }
 
     var nombreError by remember { mutableStateOf<String?>(null) }
-    var emailError by remember { mutableStateOf<String?>(null) }
     var fechaError by remember { mutableStateOf<String?>(null) }
     var horaError by remember { mutableStateOf<String?>(null) }
 
@@ -68,7 +73,81 @@ fun ReservaScreen(
     var mostrarSelectorHora by remember { mutableStateOf(false) }
 
     val formatoFecha = remember { SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()) }
-    val horasDisponibles = listOf("17:00", "18:00", "19:00")
+    val horarioDisponible = infoData.hours.get("es") ?: ""
+
+
+    val partes = horarioDisponible.split(":")
+
+    var rangoHoras = horarioDisponible.substringAfter(":")
+    var rangoDias = horarioDisponible.substringBefore(":")
+
+    val rangoHorasEstandarizado = rangoHoras.replace("–", "-")
+
+    val partesHoras = rangoHorasEstandarizado.split("-")
+    var primeraHora = ""
+    var ultimaHora = ""
+    if (partesHoras.size == 2){
+        primeraHora = partesHoras[0].trim()
+        ultimaHora = partesHoras[1].trim()
+    }
+
+    val partesDias = rangoDias.split("a")
+    var primerDia = ""
+    var ultimoDia = ""
+
+    if(partesDias.size == 2){
+        primerDia = partesDias[0].trim()
+        ultimoDia = partesDias[1].trim()
+    } else if (partesDias.size == 1 && rangoDias.isNotBlank()){
+        primerDia = rangoDias
+        ultimoDia = ""
+    }
+
+
+    val mapaDias = mapOf(
+        "Lunes" to 2, "Martes" to 3, "Miércoles" to 4, "Jueves" to 5, "Viernes" to 6, "Sábado" to 7, "Domingo" to 1
+    )
+
+
+    val listaDiasDisponibles : List<Int> = remember(primerDia,ultimoDia){
+        val diaInicio = mapaDias[primerDia]
+        val diaFinal = mapaDias[ultimoDia]
+
+        Log.d("DiasSemanaDebug", "diaInicio=$diaInicio, diaFinal=$diaFinal, primerDia=$primerDia, ultimoDia=$ultimoDia")
+
+        if(diaInicio != null && diaFinal !=null){
+            (1..7).filter { dia->
+                if(diaInicio<= diaFinal){
+                    dia in diaInicio..diaFinal
+                }else{
+                    dia >= diaInicio || dia <= diaFinal
+                }
+            }
+        } else if(diaInicio !=null ){
+            listOf(diaInicio)
+        } else emptyList()
+    }
+
+
+    val listasHorasDisponibles : List<String> = remember(primeraHora,ultimaHora){
+        val horas = mutableListOf<String>()
+        val formatoHora = SimpleDateFormat("HH:mm", Locale.getDefault())
+        try{
+            val horaInicio : Date = formatoHora.parse(primeraHora) ?: return@remember emptyList()
+            val horaFin : Date = formatoHora.parse(ultimaHora) ?: return@remember emptyList()
+            val calendarioActual = Calendar.getInstance().apply { time = horaInicio }
+            val calendarioFin = Calendar.getInstance().apply { time = horaFin }
+            while (!calendarioActual.after(calendarioFin)){
+                horas.add(formatoHora.format(calendarioActual.time))
+                calendarioActual.add(Calendar.HOUR_OF_DAY,1)
+            }
+        } catch (e:Exception){
+            println("Error parseando horas : ${e.message}")
+        }
+        horas
+    }
+
+
 
     // Lógica de validación de fechas
     val misFechasSeleccionables = object : SelectableDates {
@@ -83,9 +162,9 @@ fun ReservaScreen(
 
             val esDespues = utcTimeMillis >= hoy.timeInMillis
             val diaSemana = calendario.get(Calendar.DAY_OF_WEEK)
-            val esMiercolesOJueves = diaSemana == Calendar.WEDNESDAY || diaSemana == Calendar.THURSDAY
+            val esDiaDisponible = listaDiasDisponibles.contains(diaSemana)
 
-            return esDespues && esMiercolesOJueves
+            return esDespues && esDiaDisponible
         }
         override fun isSelectableYear(year: Int) = year >= Calendar.getInstance().get(Calendar.YEAR)
     }
@@ -101,15 +180,11 @@ fun ReservaScreen(
         if (nombreLimpio.isEmpty()) nombreError = context.getString(R.string.compulsory_name)
         else if (!contieneDigitosValidos) nombreError = context.getString(R.string.valid_name)
 
-        val emailLimpio = email.trim()
-        if (emailLimpio.isEmpty()) emailError = context.getString(R.string.compulsory_email)
-        else if (!Patterns.EMAIL_ADDRESS.matcher(emailLimpio).matches()) emailError = context.getString(R.string.valid_email)
-
         if (fecha == "") fechaError = context.getString(R.string.date_no_selected)
         if (hora == "") horaError = context.getString(R.string.hour_no_selected)
 
-        if (emailError == null && nombreError == null && fecha != "" && hora != "") {
-            navController.navigate(AppRoutes.CONFIRMACION_RESERVA + "/$nombre/$email/$fecha/$hora")
+        if (nombreError == null && fecha != "" && hora != "") {
+            navController.navigate(AppRoutes.CONFIRMACION_RESERVA + "/$nombre/$fecha/$hora")
         }
     }
 
@@ -150,14 +225,6 @@ fun ReservaScreen(
                             onValueChange = { nombre = it; nombreError = null }
                         )
                         Spacer(Modifier.height(16.dp))
-                        ReservaTextField(
-                            value = email,
-                            labelRes = R.string.email_appointment,
-                            placeholderRes = R.string.placeholderemail_appointment,
-                            error = emailError,
-                            keyboardType = KeyboardType.Email,
-                            onValueChange = { email = it; emailError = null }
-                        )
                     }
 
                     // COLUMNA DERECHA: Fecha, Hora y Botón
@@ -188,7 +255,7 @@ fun ReservaScreen(
                                 onDismissRequest = { mostrarSelectorHora = false },
                                 modifier = Modifier.fillMaxWidth(0.4f)
                             ) {
-                                horasDisponibles.forEach { timeSlot ->
+                                listasHorasDisponibles.forEach { timeSlot ->
                                     DropdownMenuItem(
                                         text = { Text(timeSlot) },
                                         onClick = {
@@ -230,12 +297,6 @@ fun ReservaScreen(
                     )
                     Spacer(Modifier.height(24.dp))
 
-                    ReservaTextField(
-                        value = email, labelRes = R.string.email_appointment, placeholderRes = R.string.placeholderemail_appointment,
-                        error = emailError, keyboardType = KeyboardType.Email, onValueChange = { email = it; emailError = null }
-                    )
-                    Spacer(Modifier.height(24.dp))
-
                     ReservaReadOnlyField(
                         value = fecha, labelRes = R.string.date_appointment, placeholderRes = R.string.placeholderdate_appointment,
                         iconRes = R.drawable.calendario, error = fechaError, onClick = { mostrarSelectorFecha = true }
@@ -252,7 +313,7 @@ fun ReservaScreen(
                             onDismissRequest = { mostrarSelectorHora = false },
                             modifier = Modifier.fillMaxWidth(0.8f)
                         ) {
-                            horasDisponibles.forEach { timeSlot ->
+                            listasHorasDisponibles.forEach { timeSlot ->
                                 DropdownMenuItem(
                                     text = { Text(timeSlot) },
                                     onClick = { horaError = null; hora = timeSlot; mostrarSelectorHora = false }
@@ -308,7 +369,7 @@ fun ReservaTextField(
     onValueChange: (String) -> Unit
 ) {
     Column {
-        Text(stringResource(labelRes), style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.Bold, color = Color.White) // Texto blanco para ver sobre el fondo
+        Text(stringResource(labelRes), style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.Bold, color = Color.Black) // Texto blanco para ver sobre el fondo
         Spacer(Modifier.height(8.dp))
         TextField(
             value = value,
@@ -341,7 +402,7 @@ fun ReservaReadOnlyField(
     onClick: () -> Unit
 ) {
     Column {
-        Text(stringResource(labelRes), style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.Bold, color = Color.White)
+        Text(stringResource(labelRes), style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.Bold, color = Color.Black)
         Spacer(Modifier.height(8.dp))
         Box(modifier = Modifier.clickable { onClick() }) {
             TextField(

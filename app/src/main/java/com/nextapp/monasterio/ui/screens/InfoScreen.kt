@@ -147,7 +147,7 @@ fun InfoScreen(
                                 .fillMaxWidth(0.9f)
                                 .height(260.dp)
                                 .clip(RoundedCornerShape(12.dp))
-                                .border(2.dp, Color(0xFF2196F3), RoundedCornerShape(12.dp)),
+                                .border(2.dp, MonasteryRed, RoundedCornerShape(12.dp)),
                             contentAlignment = Alignment.Center
                         ) {
                             Crossfade(
@@ -193,7 +193,7 @@ fun InfoScreen(
                                 .fillMaxWidth(0.9f)
                                 .height(260.dp)
                                 .clip(RoundedCornerShape(12.dp))
-                                .border(2.dp, Color(0xFF2196F3), RoundedCornerShape(12.dp))
+                                .border(2.dp, MonasteryRed, RoundedCornerShape(12.dp))
                                 .background(Color.Gray.copy(alpha = 0.1f)),
                             contentAlignment = Alignment.Center
                         ) {
@@ -256,7 +256,7 @@ fun InfoScreen(
                             isEditing = isEditing,
                             onUpdate = { viewModel.updateEmail(it) },
                             onClick = {
-                                 if (infoData.email.isNotEmpty()) context.crearCorreo(infoData.email, "", "", "", false)
+                                 if (infoData.email.isNotEmpty()) context.crearCorreo( infoData.email,"", "", "", false)
                             }
                         )
                         // Telefono
@@ -318,20 +318,20 @@ private fun EditableStringInfoItem(
                 value = text,
                 onValueChange = onUpdate,
                 modifier = Modifier.fillMaxWidth(),
-                textStyle = LocalTextStyle.current.copy(color = Color(0xFF1976D2)),
+                textStyle = LocalTextStyle.current.copy(color = MonasteryRed),
                 singleLine = true,
                  colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Color(0xFF1976D2),
+                    focusedBorderColor = MonasteryRed,
                     unfocusedBorderColor = Color.Gray,
-                    focusedTextColor = Color(0xFF1976D2),
-                    unfocusedTextColor = Color(0xFF1976D2)
+                    focusedTextColor = MonasteryRed,
+                    unfocusedTextColor = MonasteryRed
                 )
             )
         } else {
             // Modo Lectura: Text Clickable
             Text(
                 text = text,
-                color = Color(0xFF1976D2),
+                color = MonasteryRed,
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier
                     .fillMaxWidth()

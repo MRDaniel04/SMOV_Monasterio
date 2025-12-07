@@ -146,9 +146,16 @@ fun DetalleFiguraScreen(
                         }
                     }
 
+                    val nombreFigura = when (currentLanguageCode) {
+                        "de" -> figura!!.nombre_de
+                        "en" -> figura!!.nombre_en
+                        "fr" -> figura!!.nombre_fr
+                        else -> figura!!.nombre
+                    }
+
                     // 2. Título (Centro)
                     Text(
-                        text = figura!!.nombre.uppercase(),
+                        text = nombreFigura.uppercase(),
                         fontSize = 22.sp,
                         fontWeight = FontWeight.Black,
                         color = Color(figura!!.colorResaltado.toUInt().toInt()),

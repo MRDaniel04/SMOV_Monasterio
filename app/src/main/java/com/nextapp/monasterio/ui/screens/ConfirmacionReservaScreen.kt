@@ -11,6 +11,8 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.Modifier
@@ -26,20 +28,23 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.nextapp.monasterio.R
 import com.nextapp.monasterio.utils.crearCorreo
+import com.nextapp.monasterio.viewModels.InfoViewModel
 import kotlinx.coroutines.delay
 
 @Composable
 fun ConfirmacionReservaScreen(
-    navController: NavController,
     nombre: String,
-    email:String,
     fecha: String,
-    hora:String
+    hora:String,
+    viewModel : InfoViewModel
 ){
     val context= LocalContext.current
+
+    val infoData by viewModel.infoState.collectAsState()
+
     LaunchedEffect(key1=true) {
         delay(500L)
-        context.crearCorreo(nombre,email,fecha,hora,true)
+        context.crearCorreo(infoData.email,nombre,fecha,hora,true)
     }
 
     val activity = (context as? Activity)

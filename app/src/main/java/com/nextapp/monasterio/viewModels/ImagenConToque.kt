@@ -95,7 +95,10 @@ fun ImagenConToque(
                 // Se debe sumar el desplazamiento para que el círculo esté centrado en la imagen visible
                 val circleCenterX = displacementX + mappedX + (mappedW / 2)
                 val circleCenterY = displacementY + mappedY + (mappedH / 2)
-                val radioBase = 10.dp.toPx()
+                var radioBase = 10.dp.toPx()
+                if(diff.id == 301){
+                    radioBase = 20.dp.toPx()
+                }
 
                 drawCircle(
                     color = Color.Red,

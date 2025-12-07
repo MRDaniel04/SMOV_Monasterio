@@ -63,7 +63,7 @@
     <string name="confirmation_appointment">PRESQUE TERMINÉ !</string>
     <string name="details_appointment">Votre demande de réservation est prête. Veuillez appuyer sur envoyer dans l\'application de messagerie qui vient de s\'ouvrir pour finaliser votre demande. Nous vous répondrons à cet e-mail pour confirmer la disponibilité.</string>
     <string name="email_subject">Demande de Réservation de Visite - %1$s</string>
-    <string name="email_message">Bonjour,\n\nJe souhaite demander une réservation pour une visite au monastère avec les détails suivants :\n\n* Nom : %1$s\n* E-mail : %2$s\n* Date de la visite : %3$s\n* Heure de la visite : %4$s\n\nJ\'attends votre aimable confirmation.\n\nMerci beaucoup,\nCordialement,\n\n%1$s</string>
+    <string name="email_message">Bonjour,\n\nJe souhaite demander une réservation pour une visite au monastère avec les détails suivants :\n\n* Nom : %1$s\n* Date de la visite : %2$s\n* Heure de la visite : %3$s\n\nJ\'attends votre aimable confirmation.\n\nMerci beaucoup,\nCordialement,\n\n%1$s</string>
     <string name="email_error">Aucune application de messagerie n\'a été trouvée</string>
     <string name="history_content_placeholder">Mauris vel nisi id metus vestibulum vehicula nec ac orci. Curabitur massa diam, fermentum sit amet augue sit, volutpat efficitur enim. Phasellus a cursus orci, id laoreet dolor. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</string>
     <string name="language_select">Sélectionner la langue</string>
@@ -187,4 +187,37 @@
     <string name="error_connection_title">Oups ! Une erreur est survenue</string>
     <string name="error_connection_desc">Nous n\'avons pas pu charger la carte. Veuillez vérifier votre connexion internet et réessayer.</string>
     <string name="retry">Réessayer</string>
+    <string-array name="clues">
+        <item>Jette un coup d’œil au sommet du château</item>
+        <item>Une des différences se trouve dans le ciel de l’image</item>
+        <item>Le cheval en sait plus qu’il n’y paraît&#8230; regarde bien!</item>
+        <item>Le chevalier et son armure cachent un secret&#8230; le vois-tu ?</item>
+        <item>La taille du chevalier cache quelque chose de coquin</item>
+
+        <item>Même l’homme de foi a changé d’accessoires!</item>
+        <item>Un bijou attire toujours l’attention&#8230; surtout s’il appartient à la reine</item>
+        <item>Que s’est-il passé ? La musique n’est plus audible&#8230;</item>
+        <item>Oh là là ! Le roi a perdu un symbole de pouvoir</item>
+        <item>Regarde la tenue du roi&#8230; tu trouveras sûrement quelque chose</item>
+
+        <item>Regarde en haut et tu trouveras ce que tu cherches</item>
+        <item>Oh ! On dirait qu’un des animaux de compagnie a changé</item>
+        <item>Cherchez un nouveau visiteur à fourrure dans la pièce</item>
+        <item>Quel étourdissement ! Quelque chose est tombé par terre</item>
+        <item>Un détail du costume a changé</item>
+
+        <item>Au travail ! Tout le monde veut participer</item>
+        <item>Que se passe-t-il avec la guitariste?</item>
+        <item>Oh là là, on dirait que les fêtes du village sont terminées!</item>
+        <item>Récolte inattendue ! Plus de fruits sont-ils apparus?</item>
+        <item>Cette vieille dame a des accessoires parfaits!</item>
+
+        <item>Les plantes ont besoin d’eau, allons les arroser!</item>
+        <item>Il y a un nouveau visiteur qui bourdonne!</item>
+        <item>Le symbole religieux principal a disparu</item>
+        <item>Attention ! Une des filles a complètement changé</item>
+        <item>De plus en plus de fleurs apparaissent dans la scène!</item>
+    </string-array>
+    <string name="clue">INDICE:</string>
+    <string name="clue_button">INDICE</string>
 </resources>
