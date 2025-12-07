@@ -38,17 +38,12 @@ data class PinImageCanonical(
 private val UBICACION_AUTO_TRADS = mapOf(
     "Coro" to mapOf("en" to "Choir", "de" to "Chor", "fr" to "Chœur"),
     "Crucero" to mapOf("en" to "Transept", "de" to "Querschiff", "fr" to "Transept"),
-    "Lado Epístola" to mapOf("en" to "Epistle Side", "de" to "Epistelseite", "fr" to "Côté épître"),
+    "Lado de la epistola" to mapOf("en" to "Epistle Side", "de" to "Epistelseite", "fr" to "Côté épître"),
     "Trascoro" to mapOf("en" to "Retrochoir", "de" to "Hinterchor", "fr" to "Derrière le chœur"),
     "Capilla del nacimiento" to mapOf("en" to "Nativity Chapel", "de" to "Geburtskapelle", "fr" to "Chapelle de la Nativité")
     // ⚠️ Importante: Asegúrate de añadir aquí el resto de las ubicaciones predefinidas
 )
 
-// 📌 Mapeo de Auto-Traducciones para Áreas Principales ("Iglesia" / "Monasterio")
-private val AREA_AUTO_TRADS = mapOf(
-    "Iglesia" to mapOf("en" to "Church", "de" to "Kirche", "fr" to "Église"),
-    "Monasterio" to mapOf("en" to "Monastery", "de" to "Kloster", "fr" to "Monastère")
-)
 
 class CreacionPinSharedViewModel : ViewModel() {
 
@@ -58,6 +53,12 @@ class CreacionPinSharedViewModel : ViewModel() {
 
     val descripcion = DescripcionState(onChanged = { checkIfModified() })
     val imagenes = ImagenesState()
+
+
+    var ubicacion_en_auto: String? by mutableStateOf(null)
+    var ubicacion_de_auto: String? by mutableStateOf(null)
+    var ubicacion_fr_auto: String? by mutableStateOf(null)
+
     private var originalAudioUrls: Map<String, String?> = emptyMap()
 
     private var _imagen360 by mutableStateOf<Uri?>(null)
@@ -105,13 +106,14 @@ class CreacionPinSharedViewModel : ViewModel() {
         get() = area_traducciones_automaticas.third
 
     val ubicacion_en: String?
-        get() = pinTitleManualTrads.en.ifBlank { null }
+        get() = pinTitleManualTrads.en.ifBlank { ubicacion_en_auto }
 
     val ubicacion_de: String?
-        get() = pinTitleManualTrads.de.ifBlank { null }
+        get() = pinTitleManualTrads.de.ifBlank { ubicacion_de_auto }
 
     val ubicacion_fr: String?
-        get() = pinTitleManualTrads.fr.ifBlank { null }
+        get() = pinTitleManualTrads.fr.ifBlank { ubicacion_fr_auto }
+
 
     var newPinIdForPlacement by mutableStateOf<String?>(null)
         private set
@@ -126,9 +128,6 @@ class CreacionPinSharedViewModel : ViewModel() {
             "Iglesia" to Triple("Church", "Kirche", "Église"),
             "Monasterio" to Triple("Monastery", "Kloster", "Monastère")
         )
-
-        // Opciones del desplegable fijo (para ayudar en loadPinForEditing)
-        val ubicacionDetalladaOptionsFijas = listOf("Crucero", "Lado de la Epistola", "Trascoro", "Coro", "Capillad del nacimiento")
     }
 
     private fun updatePinArea(newArea: String) {
@@ -154,47 +153,37 @@ class CreacionPinSharedViewModel : ViewModel() {
         _ubicacion_es = newTitleEs
 
         val autoTrads = UBICACION_AUTO_TRADS[newTitleEs]
+        val isManualEntry = autoTrads == null
 
-        val OTRA_UBICACION_DETALLADA = "Otra"
-        val isManualEntry = newTitleEs == OTRA_UBICACION_DETALLADA
+        if (!isManualEntry) {
+            // ---------- UBICACIÓN PREDEFINIDA ----------
+            ubicacion_en_auto = autoTrads["en"]
+            ubicacion_de_auto = autoTrads["de"]
+            ubicacion_fr_auto = autoTrads["fr"]
 
-        // 2. Lógica de Auto-Traducción de Ubicación Detallada (sólo si se encuentra)
-        if (autoTrads != null) {
-            Log.d("FLUJO_PIN_AUTO", "  |-> MAPEO TRADS: ENCONTRADO. Aplicando auto-traducciones.")
-            // Las traducciones de ubicación (PinTitleManualTrads) sólo se auto-rellenan si están vacías.
-            pinTitleManualTrads = pinTitleManualTrads.copy(
-                en = if (pinTitleManualTrads.en.isBlank()) autoTrads["en"].orEmpty() else pinTitleManualTrads.en,
-                de = if (pinTitleManualTrads.de.isBlank()) autoTrads["de"].orEmpty() else pinTitleManualTrads.de,
-                fr = if (pinTitleManualTrads.fr.isBlank()) autoTrads["fr"].orEmpty() else pinTitleManualTrads.fr
-            )
-            Log.d("FLUJO_PIN_AUTO", "  |-> TRADS DESPUÉS: EN='${pinTitleManualTrads.en.take(15)}', DE='${pinTitleManualTrads.de.take(15)}'")
+            // Y limpiamos las manuales
+            pinTitleManualTrads = PinTitleManualTrads()
         } else {
-            Log.d("FLUJO_PIN_AUTO", "  |-> MAPEO TRADS: NO ENCONTRADO. (Las traducciones automáticas NO se aplicarán).")
+            // ---------- UBICACIÓN MANUAL ----------
+            // No toca automáticas
+            ubicacion_en_auto = null
+            ubicacion_de_auto = null
+            ubicacion_fr_auto = null
+
+            // Se usarán las manuales (si las escribe el usuario)
         }
 
-
-        // 3. Lógica de Asignación de Área Principal (AHORA SEPARADA E INDEPENDIENTE)
-        if (newTitleEs.isNotBlank() && !isManualEntry) {
+        // 3. ÁREA AUTOMÁTICA (solo si es fija)
+        if (!isManualEntry) {
             val newAreaEs = getAreaFn(newTitleEs)
-            Log.d("FLUJO_PIN_AUTO", "  |-> ÁREA CALCULADA (getAreaFn): '$newAreaEs'")
-
-            if (newAreaEs != null) {
-                // Si encontramos un área (p.ej., "Monasterio" para "Capilla del nacimiento")
-                area_es = newAreaEs
-                Log.d("FLUJO_PIN_AUTO", "  |-> ÁREA ASIGNADA: '$newAreaEs'")
-            } else {
-                // Si el título es predefinido pero no tiene mapeo de área, se limpia el área.
-                area_es = ""
-                Log.d("FLUJO_PIN_AUTO", "  |-> ÁREA PUESTA A VACÍO (Título predefinido sin mapeo de área).")
-            }
-        } else if (newTitleEs.isBlank() || isManualEntry) {
-            // Si es "Otra" o vacío, limpiar el Área automáticamente asignada
+            area_es = newAreaEs ?: ""
+        } else {
+            // manual → área vacía hasta que usuario elija
             area_es = ""
-            Log.d("FLUJO_PIN_AUTO", "  |-> Limpiando área (Vacío o Otra).")
         }
 
-        // 4. Aseguramos la llamada final a checkIfModified()
         if (!isLoadingInitialData) checkIfModified()
+
         Log.d("FLUJO_PIN_AUTO", "<- UPDATE FINALIZADO: area_es='${area_es}', ubicacion_es='${_ubicacion_es}'")
     }
 
@@ -216,6 +205,9 @@ class CreacionPinSharedViewModel : ViewModel() {
     fun reset() {
 
         ubicacion_es = ""
+        ubicacion_en_auto = null
+        ubicacion_de_auto = null
+        ubicacion_fr_auto = null
         pinTitleManualTrads = PinTitleManualTrads()
         _area_es_internal = ""
         area_traducciones_automaticas = Triple(null, null, null)
@@ -245,11 +237,22 @@ class CreacionPinSharedViewModel : ViewModel() {
             // 🟦 UBICACIÓN (Compleja)
             _ubicacion_es = pin.ubicacion_es ?: ""
 
-            pinTitleManualTrads = PinTitleManualTrads(
-                en = pin.ubicacion_en.orEmpty(),
-                de = pin.ubicacion_de.orEmpty(),
-                fr = pin.ubicacion_fr.orEmpty()
-            )
+            val auto = UBICACION_AUTO_TRADS[_ubicacion_es]
+
+            if (auto != null) {
+                // Ubicación fija → activar auto traducciones
+                ubicacion_en_auto = auto["en"]
+                ubicacion_de_auto = auto["de"]
+                ubicacion_fr_auto = auto["fr"]
+
+                // Limpiar manuales
+                pinTitleManualTrads = PinTitleManualTrads()
+            } else {
+                // Ubicación manual → conservar las manuales cargadas
+                ubicacion_en_auto = null
+                ubicacion_de_auto = null
+                ubicacion_fr_auto = null
+            }
 
             // 🟦 DESCRIPCIÓN
             descripcion.updateEs(pin.descripcion_es ?: "")
@@ -578,10 +581,12 @@ class CreacionPinSharedViewModel : ViewModel() {
         val original = originalPin!!
         val wasModifiedBefore = isModified
 
-        val isUbicacionModified = ubicacion_es != original.ubicacion_es ||
-                pinTitleManualTrads.en != original.ubicacion_en.orEmpty() ||
-                pinTitleManualTrads.de != original.ubicacion_de.orEmpty() ||
-                pinTitleManualTrads.fr != original.ubicacion_fr.orEmpty()
+        val isUbicacionModified =
+            ubicacion_es != original.ubicacion_es ||
+                    ubicacion_en.orEmpty() != original.ubicacion_en.orEmpty() ||
+                    ubicacion_de.orEmpty() != original.ubicacion_de.orEmpty() ||
+                    ubicacion_fr.orEmpty() != original.ubicacion_fr.orEmpty()
+
 
         // ⚠️ ÁREA (Simple)
         // SOLO necesitamos comparar area_es, ya que las traducciones EN/DE/FR son AUTOMÁTICAS.

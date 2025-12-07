@@ -36,8 +36,6 @@ import com.nextapp.monasterio.AppRoutes
 import androidx.compose.ui.zIndex
 import com.nextapp.monasterio.ui.screens.pinCreation.CreacionPinSharedViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.nextapp.monasterio.models.ImagenData
-import com.nextapp.monasterio.services.CloudinaryService
 import com.nextapp.monasterio.ui.screens.pinCreation.components.LoadingOverlay
 import com.nextapp.monasterio.ui.screens.pinEdition.components.InteractivePlanoViewer
 import com.nextapp.monasterio.ui.screens.pinEdition.components.MovingPinOverlay
@@ -57,7 +55,7 @@ fun EdicionPines(
     val isPortrait = configuration.orientation == Configuration.ORIENTATION_PORTRAIT // ⬅️ NEW
 
     val PANEL_HEIGHT_FRACTION = 0.50f
-    val PANEL_WIDTH_FRACTION = 0.40f // ⬅️ NEW
+    val PANEL_WIDTH_FRACTION = 0.40f
 
     Log.d("EdicionPines", "Composición iniciada - Modo Interacción Pin (Panel 35%)")
 
@@ -126,8 +124,6 @@ fun EdicionPines(
             return@LaunchedEffect
         }
 
-        // 🔑 CAMBIO 2: Si el formulario se envió pero estamos en modo EDICIÓN, es un error
-        // o un envío temporal del VM para indicar el inicio de la subida. Lo ignoramos.
         if (vm.isEditing) {
             Log.d("FLUJO_PIN", "EdicionPines: ⚠️ formSubmitted detectado, pero vm.isEditing es TRUE. Ignorando colocación de Pin (flujo de Edición/Actualización).")
             vm.formSubmitted = false // Resetear la bandera para que no se reejecute.

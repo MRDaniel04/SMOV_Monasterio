@@ -239,7 +239,6 @@ object PinRepository {
         // 2. Crear Payload con todos los datos, incluidos los títulos
         val payload = mapOf(
             "url" to image.url,
-            "etiqueta" to image.etiqueta,
             "titulo" to image.titulo,
             "tituloIngles" to image.tituloIngles,
             "tituloAleman" to image.tituloAleman,

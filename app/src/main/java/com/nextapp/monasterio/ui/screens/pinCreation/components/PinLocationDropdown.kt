@@ -1,15 +1,13 @@
 
 package com.nextapp.monasterio.ui.screens.pinCreation.components
 
-import android.R.attr.label
+
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -75,7 +73,6 @@ fun PinLocationDropdown(
                 selectedDropdownLocation = OTRA_UBICACION_DETALLADA
                 manualTitleText = currentTitle
             }
-
             onUbicacionChange(currentUbicacion)
         }
 
@@ -119,9 +116,7 @@ fun PinLocationDropdown(
                             if (location != OTRA_UBICACION_DETALLADA) {
                                 onTitleChange(location)
                                 manualTitleText = ""
-                                // Limpiamos las traducciones manuales si se elige una opción fija
                                 onTitleManualTradsUpdate("", "", "")
-
                                 val areaPrincipal = getAreaPrincipalForLocation(location)
                                 onUbicacionChange(areaPrincipal ?: "")
                             } else {
