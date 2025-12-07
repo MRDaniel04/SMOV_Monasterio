@@ -326,8 +326,7 @@ class CreacionPinSharedViewModel : ViewModel() {
                 tituloIngles = pinImage.titulo_en, // Título en inglés
                 tituloAleman = pinImage.titulo_de, // Título en alemán
                 tituloFrances = pinImage.titulo_fr, // Título en francés
-                foco = 0f, // Mantenemos el valor por defecto
-                etiqueta = "" // Mantenemos vacío si se va a eliminar
+                foco = 0f // Mantenemos el valor por defecto
             )
         }
 
@@ -481,7 +480,7 @@ class CreacionPinSharedViewModel : ViewModel() {
                         id = "", url = uploadedUrl,
                         tipo = pinImage.tag?.toFirestoreString() ?: "", titulo = pinImage.titulo_es,
                         tituloIngles = pinImage.titulo_en, tituloAleman = pinImage.titulo_de,
-                        tituloFrances = pinImage.titulo_fr, foco = 0f, etiqueta = ""
+                        tituloFrances = pinImage.titulo_fr, foco = 0f
                     )
                 }
 

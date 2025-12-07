@@ -214,19 +214,9 @@ fun PinDetailsPanel(
 
                                 AsyncImage(
                                     model = imagen.url,
-                                    contentDescription = imagen.etiqueta,
+                                    contentDescription = imagen.titulo,
                                     contentScale = ContentScale.Crop,
                                     modifier = Modifier.fillMaxSize(),
-                                )
-
-                                Text(
-                                    text = imagen.etiqueta,
-                                    color = Color.White,
-                                    fontSize = 12.sp,
-                                    modifier = Modifier
-                                        .align(Alignment.BottomStart)
-                                        .background(Color.Black.copy(alpha = 0.6f))
-                                        .padding(horizontal = 8.dp, vertical = 4.dp)
                                 )
                             }
                         }

@@ -282,7 +282,7 @@ fun PinDetalleScreen(
 
                             AsyncImage(
                                 model = imagen.url,
-                                contentDescription = imagen.etiqueta,
+                                contentDescription = imagen.titulo,
                                 contentScale = ContentScale.Crop,
                                 alignment = alignment,
                                 modifier = Modifier
@@ -290,15 +290,6 @@ fun PinDetalleScreen(
                                     .clickable {
                                         selectedImageIndex = page
                                     }
-                            )
-                            Text(
-                                text = imagen.etiqueta,
-                                color = Color.White,
-                                fontSize = 14.sp,
-                                modifier = Modifier
-                                    .align(Alignment.BottomStart)
-                                    .background(Color.Black.copy(alpha = 0.6f))
-                                    .padding(horizontal = 10.dp, vertical = 6.dp)
                             )
                         }
                     }

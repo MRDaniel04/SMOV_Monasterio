@@ -43,7 +43,6 @@ class ImagenRepository(
         return ImagenData(
             id = doc.id,
             url = data["url"] as? String ?: "",
-            etiqueta = data["etiqueta"] as? String ?: "",
             titulo = data["titulo"] as? String ?: "",
             tituloIngles = data["tituloIngles"] as? String ?: "",
             tituloAleman = data["tituloAleman"] as? String ?: "",

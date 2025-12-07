@@ -158,7 +158,7 @@ fun InfoScreen(
                                 Box(modifier = Modifier.fillMaxSize()) {
                                     AsyncImage(
                                         model = imagen.url,
-                                        contentDescription = imagen.etiqueta,
+                                        contentDescription = imagen.titulo,
                                         contentScale = ContentScale.Crop,
                                         modifier = Modifier.fillMaxSize()
                                     )
