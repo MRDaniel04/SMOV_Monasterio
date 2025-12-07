@@ -120,14 +120,21 @@ fun EdicionPines(
     }
 
 
-    LaunchedEffect(vm.formSubmitted) {
+    LaunchedEffect(vm.formSubmitted, vm.isEditing) { // ⬅️ CAMBIO 1: Añadir vm.isEditing a la lista de dependencias
         if (!vm.formSubmitted) {
             Log.d("FLUJO_PIN", "EdicionPines: Observando formSubmitted. Estado actual: false. Esperando...")
             return@LaunchedEffect
         }
 
-        Log.d("FLUJO_PIN", "EdicionPines: 🚀 formSubmitted DETECTADO. Iniciando modo de colocación de Pin.")
+        // 🔑 CAMBIO 2: Si el formulario se envió pero estamos en modo EDICIÓN, es un error
+        // o un envío temporal del VM para indicar el inicio de la subida. Lo ignoramos.
+        if (vm.isEditing) {
+            Log.d("FLUJO_PIN", "EdicionPines: ⚠️ formSubmitted detectado, pero vm.isEditing es TRUE. Ignorando colocación de Pin (flujo de Edición/Actualización).")
+            vm.formSubmitted = false // Resetear la bandera para que no se reejecute.
+            return@LaunchedEffect
+        }
 
+        Log.d("FLUJO_PIN", "EdicionPines: 🚀 formSubmitted DETECTADO (Creación). Iniciando modo de colocación de Pin.")
         // 1. BUCLER DE ESPERA Y VALIDACIÓN CON TIMEOUT
         val maxWaitTime = 2000L // 2 segundos máximo
         val isReady = withTimeoutOrNull(maxWaitTime) {

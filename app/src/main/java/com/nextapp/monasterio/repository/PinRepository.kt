@@ -173,6 +173,18 @@ object PinRepository {
         audioUrl_fr: String? = null
     ): String {
 
+        Log.d("REPO-DEBUG", "📌 Guardando PIN (CREACIÓN)...")
+        Log.d("REPO-DEBUG", "--- UBICACIÓN ---")
+        Log.d("REPO-DEBUG", "-> ES: '${ubicacion_es}'")
+        Log.d("REPO-DEBUG", "-> EN: '${ubicacion_en}'") // <-- VERIFICAR ESTE
+        Log.d("REPO-DEBUG", "-> DE: '${ubicacion_de}'") // <-- VERIFICAR ESTE
+        Log.d("REPO-DEBUG", "-> FR: '${ubicacion_fr}'") // <-- VERIFICAR ESTE
+        Log.d("REPO-DEBUG", "--- ÁREA ---")
+        Log.d("REPO-DEBUG", "-> ES: '${area_es}'")
+        Log.d("REPO-DEBUG", "-> EN: '${area_en}'")
+        Log.d("REPO-DEBUG", "-> DE: '${area_de}'")
+        Log.d("REPO-DEBUG", "-> FR: '${area_fr}'")
+
         Log.d("REPO-DEBUG", "📌 Guardando PIN...")
 
         val imagenesRefs: List<DocumentReference> = imagenes.map { image ->
@@ -333,6 +345,17 @@ object PinRepository {
         imagenes: List<ImagenData>,
         imagen360: String?
     ) {
+        Log.d("REPO-DEBUG", "📌 Guardando PIN (ACTUALIZACIÓN)... ID: $pinId")
+        Log.d("REPO-DEBUG", "--- UBICACIÓN ---")
+        Log.d("REPO-DEBUG", "-> ES: '${ubicacion_es}'")
+        Log.d("REPO-DEBUG", "-> EN: '${ubicacion_en}'") // <-- VERIFICAR ESTE
+        Log.d("REPO-DEBUG", "-> DE: '${ubicacion_de}'") // <-- VERIFICAR ESTE
+        Log.d("REPO-DEBUG", "-> FR: '${ubicacion_fr}'") // <-- VERIFICAR ESTE
+        Log.d("REPO-DEBUG", "--- ÁREA ---")
+        Log.d("REPO-DEBUG", "-> ES: '${area_es}'")
+        Log.d("REPO-DEBUG", "-> EN: '${area_en}'")
+        Log.d("REPO-DEBUG", "-> DE: '${area_de}'")
+        Log.d("REPO-DEBUG", "-> FR: '${area_fr}'")
         try {
             val pinRef = collection.document(pinId)
             val pinDoc = pinRef.get().await()
@@ -355,9 +378,10 @@ object PinRepository {
             val updates = mapOf<String, Any?>(
                 // UBICACIÓN (Mapeo de 'ubicacion_es' a "ubicacion" en FB)
                 "ubicacion" to ubicacion_es,
-                "ubicacionIngles" to ubicacion_en,
-                "ubicacionAleman" to ubicacion_de,
-                "ubicacionFrances" to ubicacion_fr,
+                "ubicacionIngles" to ubicacion_en.orEmpty(),
+                "ubicacionAleman" to ubicacion_de.orEmpty(),
+                "ubicacionFrances" to ubicacion_fr.orEmpty(),
+
 
                 // DESCRIPCIÓN
                 "descripcion" to descripcion_es,

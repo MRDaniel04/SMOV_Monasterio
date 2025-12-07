@@ -35,9 +35,25 @@ data class PinImageCanonical(
     val titulo_fr: String
 )
 
+private val UBICACION_AUTO_TRADS = mapOf(
+    "Coro" to mapOf("en" to "Choir", "de" to "Chor", "fr" to "Chœur"),
+    "Crucero" to mapOf("en" to "Transept", "de" to "Querschiff", "fr" to "Transept"),
+    "Lado Epístola" to mapOf("en" to "Epistle Side", "de" to "Epistelseite", "fr" to "Côté épître"),
+    "Trascoro" to mapOf("en" to "Retrochoir", "de" to "Hinterchor", "fr" to "Derrière le chœur"),
+    "Capilla del nacimiento" to mapOf("en" to "Nativity Chapel", "de" to "Geburtskapelle", "fr" to "Chapelle de la Nativité")
+    // ⚠️ Importante: Asegúrate de añadir aquí el resto de las ubicaciones predefinidas
+)
+
+// 📌 Mapeo de Auto-Traducciones para Áreas Principales ("Iglesia" / "Monasterio")
+private val AREA_AUTO_TRADS = mapOf(
+    "Iglesia" to mapOf("en" to "Church", "de" to "Kirche", "fr" to "Église"),
+    "Monasterio" to mapOf("en" to "Monastery", "de" to "Kloster", "fr" to "Monastère")
+)
+
 class CreacionPinSharedViewModel : ViewModel() {
 
     private val pinRepository = PinRepository
+
     private var isLoadingInitialData = false
 
     val descripcion = DescripcionState(onChanged = { checkIfModified() })
@@ -88,6 +104,22 @@ class CreacionPinSharedViewModel : ViewModel() {
     val area_fr: String?
         get() = area_traducciones_automaticas.third
 
+    val ubicacion_en: String?
+        get() = pinTitleManualTrads.en.ifBlank { null }
+
+    val ubicacion_de: String?
+        get() = pinTitleManualTrads.de.ifBlank { null }
+
+    val ubicacion_fr: String?
+        get() = pinTitleManualTrads.fr.ifBlank { null }
+
+    var newPinIdForPlacement by mutableStateOf<String?>(null)
+        private set
+
+    fun clearNewPinIdForPlacement() {
+        newPinIdForPlacement = null
+    }
+
     companion object {
         // Traducciones de las opciones fijas para el ÁREA
         private val AREA_TRADUCCIONES = mapOf(
@@ -114,10 +146,61 @@ class CreacionPinSharedViewModel : ViewModel() {
         if (!isLoadingInitialData) checkIfModified()
     }
 
+    fun updateUbicacionConAutoTraduccion(newTitleEs: String, getAreaFn: (String) -> String?) {
+
+        Log.d("FLUJO_PIN_AUTO", "-> UPDATE INICIADO: newTitleEs='$newTitleEs'")
+
+        // 1. Actualizar el campo principal (ES)
+        _ubicacion_es = newTitleEs
+
+        val autoTrads = UBICACION_AUTO_TRADS[newTitleEs]
+
+        val OTRA_UBICACION_DETALLADA = "Otra"
+        val isManualEntry = newTitleEs == OTRA_UBICACION_DETALLADA
+
+        // 2. Lógica de Auto-Traducción de Ubicación Detallada (sólo si se encuentra)
+        if (autoTrads != null) {
+            Log.d("FLUJO_PIN_AUTO", "  |-> MAPEO TRADS: ENCONTRADO. Aplicando auto-traducciones.")
+            // Las traducciones de ubicación (PinTitleManualTrads) sólo se auto-rellenan si están vacías.
+            pinTitleManualTrads = pinTitleManualTrads.copy(
+                en = if (pinTitleManualTrads.en.isBlank()) autoTrads["en"].orEmpty() else pinTitleManualTrads.en,
+                de = if (pinTitleManualTrads.de.isBlank()) autoTrads["de"].orEmpty() else pinTitleManualTrads.de,
+                fr = if (pinTitleManualTrads.fr.isBlank()) autoTrads["fr"].orEmpty() else pinTitleManualTrads.fr
+            )
+            Log.d("FLUJO_PIN_AUTO", "  |-> TRADS DESPUÉS: EN='${pinTitleManualTrads.en.take(15)}', DE='${pinTitleManualTrads.de.take(15)}'")
+        } else {
+            Log.d("FLUJO_PIN_AUTO", "  |-> MAPEO TRADS: NO ENCONTRADO. (Las traducciones automáticas NO se aplicarán).")
+        }
+
+
+        // 3. Lógica de Asignación de Área Principal (AHORA SEPARADA E INDEPENDIENTE)
+        if (newTitleEs.isNotBlank() && !isManualEntry) {
+            val newAreaEs = getAreaFn(newTitleEs)
+            Log.d("FLUJO_PIN_AUTO", "  |-> ÁREA CALCULADA (getAreaFn): '$newAreaEs'")
+
+            if (newAreaEs != null) {
+                // Si encontramos un área (p.ej., "Monasterio" para "Capilla del nacimiento")
+                area_es = newAreaEs
+                Log.d("FLUJO_PIN_AUTO", "  |-> ÁREA ASIGNADA: '$newAreaEs'")
+            } else {
+                // Si el título es predefinido pero no tiene mapeo de área, se limpia el área.
+                area_es = ""
+                Log.d("FLUJO_PIN_AUTO", "  |-> ÁREA PUESTA A VACÍO (Título predefinido sin mapeo de área).")
+            }
+        } else if (newTitleEs.isBlank() || isManualEntry) {
+            // Si es "Otra" o vacío, limpiar el Área automáticamente asignada
+            area_es = ""
+            Log.d("FLUJO_PIN_AUTO", "  |-> Limpiando área (Vacío o Otra).")
+        }
+
+        // 4. Aseguramos la llamada final a checkIfModified()
+        if (!isLoadingInitialData) checkIfModified()
+        Log.d("FLUJO_PIN_AUTO", "<- UPDATE FINALIZADO: area_es='${area_es}', ubicacion_es='${_ubicacion_es}'")
+    }
+
 
     // --- EDICIÓN ---
     private var originalPin: PinData? = null
-
 
     var isEditing by mutableStateOf(false)
     var isModified by mutableStateOf(false)
@@ -154,24 +237,19 @@ class CreacionPinSharedViewModel : ViewModel() {
         editingPinId = pin.id
         isLoadingInitialData = true
 
+        formSubmitted = false
+        modoMoverPin = false
+        newPinIdForPlacement = null // Limpiar el nuevo flag si se usara
 
         try {
             // 🟦 UBICACIÓN (Compleja)
             _ubicacion_es = pin.ubicacion_es ?: ""
 
-            val isManualEntry = !ubicacionDetalladaOptionsFijas.contains(pin.ubicacion_es)
-
-            if (isManualEntry) {
-                // Carga las traducciones manuales desde PinData
-                pinTitleManualTrads = PinTitleManualTrads(
-                    en = pin.ubicacion_en.orEmpty(),
-                    de = pin.ubicacion_de.orEmpty(),
-                    fr = pin.ubicacion_fr.orEmpty()
-                )
-            } else {
-                // Si es una opción fija, limpiamos las traducciones manuales
-                pinTitleManualTrads = PinTitleManualTrads()
-            }
+            pinTitleManualTrads = PinTitleManualTrads(
+                en = pin.ubicacion_en.orEmpty(),
+                de = pin.ubicacion_de.orEmpty(),
+                fr = pin.ubicacion_fr.orEmpty()
+            )
 
             // 🟦 DESCRIPCIÓN
             descripcion.updateEs(pin.descripcion_es ?: "")
@@ -258,9 +336,6 @@ class CreacionPinSharedViewModel : ViewModel() {
         val (area_en_auto, area_de_auto, area_fr_auto) = area_traducciones_automaticas
 
         // TRADUCCIONES DEL TÍTULO (Manuales si es "Otra", o nulas)
-        val ubicacion_en_manual = if (pinTitleManualTrads.en.isNotBlank()) pinTitleManualTrads.en else null
-        val ubicacion_de_manual = if (pinTitleManualTrads.de.isNotBlank()) pinTitleManualTrads.de else null
-        val ubicacion_fr_manual = if (pinTitleManualTrads.fr.isNotBlank()) pinTitleManualTrads.fr else null
 
         val originalRadius = originalPin!!.tapRadius ?: 0.06f // Si no se cargó, toma el valor original
 
@@ -316,9 +391,9 @@ class CreacionPinSharedViewModel : ViewModel() {
 
                     // --- UBICACIONES (Compleja) ---
                     ubicacion_es = ubicacion_es,
-                    ubicacion_en = ubicacion_en_manual, // Usamos el valor manual si existe
-                    ubicacion_de = ubicacion_de_manual, // Usamos el valor manual si existe
-                    ubicacion_fr = ubicacion_fr_manual, // Usamos el valor manual si existe
+                    ubicacion_en = ubicacion_en, // ⬅️ ¡Usando la nueva propiedad!
+                    ubicacion_de = ubicacion_de, // ⬅️ ¡Usando la nueva propiedad!
+                    ubicacion_fr = ubicacion_fr, // ⬅️ ¡Usando la nueva propiedad!
 
                     // --- ÁREAS (Simple) ---
                     area_es = area_es,
@@ -361,7 +436,6 @@ class CreacionPinSharedViewModel : ViewModel() {
         }
     }
 
-
     /**
      * Se llama cuando el usuario pulsa el botón de Guardar en modo CREACIÓN.
      */
@@ -378,13 +452,8 @@ class CreacionPinSharedViewModel : ViewModel() {
         isUploading = true
         uploadMessage = "Iniciando proceso de creación y subida de archivos..."
 
-
-
         // Mapeo de traducciones y áreas
         val (area_en_auto, area_de_auto, area_fr_auto) = area_traducciones_automaticas
-        val ubicacion_en_manual = if (pinTitleManualTrads.en.isNotBlank()) pinTitleManualTrads.en else null
-        val ubicacion_de_manual = if (pinTitleManualTrads.de.isNotBlank()) pinTitleManualTrads.de else null
-        val ubicacion_fr_manual = if (pinTitleManualTrads.fr.isNotBlank()) pinTitleManualTrads.fr else null
 
 
         viewModelScope.launch {
@@ -440,9 +509,10 @@ class CreacionPinSharedViewModel : ViewModel() {
 
                 val newPinId = pinRepository.createPinFromForm(
                     // UBICACIÓN (Compleja)
-                    ubicacion_es = ubicacion_es, ubicacion_en = ubicacion_en_manual,
-                    ubicacion_de = ubicacion_de_manual, ubicacion_fr = ubicacion_fr_manual,
-
+                    ubicacion_es = ubicacion_es,
+                    ubicacion_en = ubicacion_en, // ⬅️ ¡Usando la nueva propiedad!
+                    ubicacion_de = ubicacion_de, // ⬅️ ¡Usando la nueva propiedad!
+                    ubicacion_fr = ubicacion_fr, // ⬅️ ¡Usando la nueva propiedad!
                     // DESCRIPCIONES
                     descripcion_es = descripcion.es.ifBlank { null }, descripcion_en = descripcion.en.ifBlank { null },
                     descripcion_de = descripcion.de.ifBlank { null }, descripcion_fr = descripcion.fr.ifBlank { null },
@@ -496,7 +566,6 @@ class CreacionPinSharedViewModel : ViewModel() {
         onSuccess() // Esto llama a navController.popBackStack() para ir al mapa (EdicionPines)
     }
 
-
     /**
      * Actualiza la ubicación principal y asigna automáticamente las traducciones.
      */
@@ -507,12 +576,9 @@ class CreacionPinSharedViewModel : ViewModel() {
             return
         }
 
-
         val original = originalPin!!
         val wasModifiedBefore = isModified
 
-        // ⚠️ UBICACIÓN (Compleja - Título)
-        // Comparamos ES y las 3 traducciones manuales (EN/DE/FR)
         val isUbicacionModified = ubicacion_es != original.ubicacion_es ||
                 pinTitleManualTrads.en != original.ubicacion_en.orEmpty() ||
                 pinTitleManualTrads.de != original.ubicacion_de.orEmpty() ||

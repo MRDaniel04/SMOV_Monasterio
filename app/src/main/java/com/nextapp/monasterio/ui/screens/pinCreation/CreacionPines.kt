@@ -19,6 +19,7 @@ import com.nextapp.monasterio.ui.screens.pinCreation.components.Image360Selector
 import com.nextapp.monasterio.ui.screens.pinCreation.components.PinLocationDropdown
 import com.nextapp.monasterio.ui.screens.pinCreation.components.PinTopBar
 import androidx.compose.ui.platform.LocalContext // ⬅️ IMPORTANTE: Añadir este import
+import com.nextapp.monasterio.ui.screens.pinCreation.components.getAreaPrincipalForLocation
 
 
 @Composable
@@ -104,7 +105,11 @@ fun CreacionPinesScreen(
             PinLocationDropdown(
                 currentTitle = vm.ubicacion_es,
                 currentUbicacion = vm.area_es,
-                onTitleChange = { newUbicacion -> vm.ubicacion_es = newUbicacion },
+
+                onTitleChange = { newUbicacion ->
+                    vm.updateUbicacionConAutoTraduccion(newUbicacion, ::getAreaPrincipalForLocation)
+                },
+                // El cambio manual de área sigue usando el setter normal
                 onUbicacionChange = { newArea -> vm.area_es = newArea },
 
                 // Pasamos el estado de las traducciones manuales y el callback
