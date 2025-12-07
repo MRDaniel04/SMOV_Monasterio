@@ -62,6 +62,8 @@ fun PinDetailsPanel(
         isLoading = false
     }
 
+    Log.d("PinDetailsPanel", "Pin ID: ${selectedPin.id}, Area_es recibida: '${selectedPin.area_es}'")
+
     val hasImages = imagenesDetalladas.isNotEmpty()
 
     val panelShape = if (panelAlignment == "RIGHT") {

@@ -193,10 +193,10 @@ object PinRepository {
             "descripcionFrances" to descripcion_fr,
 
             // ÁREA (Mapeo de 'area_es' a "area" en FB, etc.)
-            "area" to area_es,
-            "areaIngles" to area_en,
-            "areaAleman" to area_de,
-            "areaFrances" to area_fr,
+            "area_es" to area_es,
+            "area_en" to area_en,
+            "area_de" to area_de,
+            "area_fr" to area_fr,
 
             "x" to x.toDouble(),
             "y" to y.toDouble(),
@@ -320,7 +320,7 @@ object PinRepository {
         descripcion_fr: String?,
 
         // 🆕 ÁREA (Simple)
-        area_es: String?, // ⬅️ Antes 'ubicacion'
+        area_es: String?,
         area_en: String?,
         area_de: String?,
         area_fr: String?,
@@ -366,10 +366,10 @@ object PinRepository {
                 "descripcionFrances" to descripcion_fr,
 
                 // ÁREA (Mapeo de 'area_es' a "area" en FB)
-                "area" to area_es,
-                "areaIngles" to area_en,
-                "areaAleman" to area_de,
-                "areaFrances" to area_fr,
+                "area_es" to area_es,
+                "area_en" to area_en,
+                "area_de" to area_de,
+                "area_fr" to area_fr,
 
                 // Otros campos
                 "imagenes" to imagenesRefsNuevas,

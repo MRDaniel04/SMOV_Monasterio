@@ -40,6 +40,19 @@ fun ImageDetailsDialog( // 🆕 Renombrado
     var tituloDe by remember { mutableStateOf(pinImage.titulo_de) }
     var tituloFr by remember { mutableStateOf(pinImage.titulo_fr) }
 
+    val initialShow = pinImage.titulo_en.isNotBlank() || pinImage.titulo_de.isNotBlank() || pinImage.titulo_fr.isNotBlank()
+    var showOptionalTitles by remember { mutableStateOf(initialShow) }
+
+    LaunchedEffect(pinImage.uri) {
+        selectedTag = pinImage.tag
+        tituloEs = pinImage.titulo_es
+        tituloEn = pinImage.titulo_en
+        tituloDe = pinImage.titulo_de
+        tituloFr = pinImage.titulo_fr
+        // Reiniciamos el estado de expansión de traducciones para la nueva imagen
+        showOptionalTitles = pinImage.titulo_en.isNotBlank() || pinImage.titulo_de.isNotBlank() || pinImage.titulo_fr.isNotBlank()
+    }
+
     val isFormValid = tituloEs.isNotBlank() && selectedTag != null
     val dialogTitle = if (isInitialTagging) {
         "Etiqueta y Título (Imagen ${index + 1} de $totalImages)"
@@ -49,10 +62,10 @@ fun ImageDetailsDialog( // 🆕 Renombrado
 
     val scrollState = rememberScrollState() // ⬅️ NUEVO
 
-    val initialShow = pinImage.titulo_en.isNotBlank() || pinImage.titulo_de.isNotBlank() || pinImage.titulo_fr.isNotBlank()
-    var showOptionalTitles by remember { mutableStateOf(initialShow) }
 
-    Dialog(onDismissRequest = onCancel) {
+    Dialog(
+        onDismissRequest = { /* Bloquear clics fuera */ } // ⬅️ MODIFICACIÓN CLAVE
+    ) {
         Card(modifier = Modifier.padding(16.dp)) {
             Column(
                 modifier = Modifier
@@ -316,7 +329,7 @@ fun PinImageSelector(
         val currentUri = urisToTag[currentTaggingIndex]
 
         // Creamos un objeto PinImage temporal para el diálogo.
-        val tempPinImage = remember { PinImage(uri = currentUri) }
+        val tempPinImage = PinImage(uri = currentUri) // ⬅️ ¡CAMBIO CLAVE!
 
 
         ImageDetailsDialog(

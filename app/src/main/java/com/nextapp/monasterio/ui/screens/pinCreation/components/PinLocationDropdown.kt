@@ -3,13 +3,20 @@ package com.nextapp.monasterio.ui.screens.pinCreation.components
 
 import android.R.attr.label
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.nextapp.monasterio.models.UbicacionDetalladaTag
 import com.nextapp.monasterio.ui.screens.pinCreation.PinTitleManualTrads
+import com.nextapp.monasterio.R
 
 // Lista de opciones se mantiene
 
@@ -38,6 +45,13 @@ fun PinLocationDropdown(
 
 ) {
     var expanded by remember { mutableStateOf(false) }
+
+    var showManualTrads by remember {
+        // Inicializar a true si ya hay alguna traducción para el modo edición
+        mutableStateOf(titleManualTrads.en.isNotBlank() || titleManualTrads.de.isNotBlank() || titleManualTrads.fr.isNotBlank())
+    }
+
+    val showManualTitleFields = currentUbicacion == OTRA_UBICACION_DETALLADA
 
     var selectedDropdownLocation by remember {
         mutableStateOf(
@@ -81,7 +95,6 @@ fun PinLocationDropdown(
             onExpandedChange = { expanded = !expanded }
         ) {
             OutlinedTextField(
-
                 value = selectedDropdownLocation,
                 onValueChange = { /* Solo cambia a través del DropdownMenuItem */ },
                 readOnly = true,
@@ -112,16 +125,14 @@ fun PinLocationDropdown(
                                 val areaPrincipal = getAreaPrincipalForLocation(location)
                                 onUbicacionChange(areaPrincipal ?: "")
                             } else {
-
                                 onTitleChange(manualTitleText)
-
+                                onUbicacionChange("")
                             }
                         }
                     )
                 }
             }
         }
-
 
         AnimatedVisibility(visible = isManualEntry) {
             Column {
@@ -146,39 +157,71 @@ fun PinLocationDropdown(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // 📌 CAMPO 2: UBICACIÓN/TÍTULO EN INGLÉS (EN)
-                OutlinedTextField(
-                    value = titleManualTrads.en,
-                    onValueChange = { newValue ->
-                        onTitleManualTradsUpdate(newValue, titleManualTrads.de, titleManualTrads.fr)
-                    },
-                    label = { Text("Título (EN)") },
-                    modifier = Modifier.fillMaxWidth()
-                )
+                OutlinedButton(
+                    onClick = { showManualTrads = !showManualTrads },
+                    modifier = Modifier.fillMaxWidth(),
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary), // Aseguramos el borde
+                    shape = RoundedCornerShape(8.dp), // Forma consistente
+                    contentPadding = PaddingValues(12.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(id = if (showManualTrads) R.drawable.ic_arrow_up else R.drawable.ic_arrow_down), // Mantenemos tus iconos de flecha
+                        contentDescription = if (showManualTrads) "Ocultar traducciones" else "Mostrar traducciones",
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Spacer(Modifier.width(8.dp))
+                    Text(
+                        text = if (showManualTrads) "Ocultar Traducciones Opcionales" else "Añadir Traducciones Opcionales",
+                        fontWeight = FontWeight.Medium
+                    )
+                }
 
-                Spacer(modifier = Modifier.height(8.dp))
+                // 🆕 CAMBIO 3: Contenido colapsable (se usa 'showManualTrads' como condición)
+                if (showManualTrads) {
+                    Column(
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(top = 16.dp)
+                    ) {
 
-                // 📌 CAMPO 3: UBICACIÓN/TÍTULO EN ALEMÁN (DE)
-                OutlinedTextField(
-                    value = titleManualTrads.de,
-                    onValueChange = { newValue ->
-                        onTitleManualTradsUpdate(titleManualTrads.en, newValue, titleManualTrads.fr)
-                    },
-                    label = { Text("Título (DE)") },
-                    modifier = Modifier.fillMaxWidth()
-                )
+                        // Campo Inglés (EN)
+                        OutlinedTextField(
+                            value = titleManualTrads.en,
+                            onValueChange = { newValue ->
+                                onTitleManualTradsUpdate(newValue, titleManualTrads.de, titleManualTrads.fr)
+                            },
+                            label = { Text("Título opcional en inglés (EN)") },
+                            singleLine = true,
+                            modifier = Modifier.fillMaxWidth()
+                        )
 
-                Spacer(modifier = Modifier.height(8.dp))
+                        Spacer(Modifier.height(16.dp))
 
-                // 📌 CAMPO 4: UBICACIÓN/TÍTULO EN FRANCÉS (FR)
-                OutlinedTextField(
-                    value = titleManualTrads.fr,
-                    onValueChange = { newValue ->
-                        onTitleManualTradsUpdate(titleManualTrads.en, titleManualTrads.de, newValue)
-                    },
-                    label = { Text("Título (FR)") },
-                    modifier = Modifier.fillMaxWidth()
-                )
+                        // Campo Alemán (DE)
+                        OutlinedTextField(
+                            value = titleManualTrads.de,
+                            onValueChange = { newValue ->
+                                onTitleManualTradsUpdate(titleManualTrads.en, newValue, titleManualTrads.fr)
+                            },
+                            label = { Text("Título opcional en alemán (DE)") },
+                            singleLine = true,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+
+                        Spacer(Modifier.height(16.dp))
+
+                        // Campo Francés (FR)
+                        OutlinedTextField(
+                            value = titleManualTrads.fr,
+                            onValueChange = { newValue ->
+                                onTitleManualTradsUpdate(titleManualTrads.en, titleManualTrads.de, newValue)
+                            },
+                            label = { Text("Título opcional en francés (FR)") },
+                            singleLine = true,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
+                }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
