@@ -228,11 +228,11 @@
     <string name="hint_de_optional">Texte optionnel en allemand</string>
     <string name="hint_fr_optional">Texte optionnel en français</string>
     <string name="dropdown_label">Emplacement détaillé (ES)</string>
-    <string name="manual_title_label">Titre (ES)</string>
+    <string name="manual_title_label">Emplacement (ES)</string>
     <string name="manual_title_helper">Écrivez ici l’emplacement détaillé (Titre du Pin) – ESPAGNOL :</string>
-    <string name="title_en">Titre optionnel en anglais (EN)</string>
-    <string name="title_de">Titre optionnel en allemand (DE)</string>
-    <string name="title_fr">Titre optionnel en français (FR)</string>
+    <string name="title_en">Emplacement optionnel en anglais (EN)</string>
+    <string name="title_de">Emplacement optionnel en allemand (DE)</string>
+    <string name="title_fr">Emplacement optionnel en français (FR)</string>
     <string name="area_select_label">Sélectionnez la zone principale (Emplacement du Pin) :</string>
     <string name="area_church">Église</string>
     <string name="area_monastery">Monastère</string>

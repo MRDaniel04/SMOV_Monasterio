@@ -229,11 +229,11 @@
     <string name="hint_fr_optional">Texto opcional en francés</string>
 
     <string name="dropdown_label">Ubicación Detallada (ES)</string>
-    <string name="manual_title_label">Título (ES)</string>
+    <string name="manual_title_label">Ubicación (ES)</string>
     <string name="manual_title_helper">Escriba aquí la Ubicación Detallada - ESPAÑOL:</string>
-    <string name="title_en">Título opcional en inglés (EN)</string>
-    <string name="title_de">Título opcional en alemán (DE)</string>
-    <string name="title_fr">Título opcional en francés (FR)</string>
+    <string name="title_en">Ubicación opcional en inglés (EN)</string>
+    <string name="title_de">Ubicación opcional en alemán (DE)</string>
+    <string name="title_fr">Ubicación opcional en francés (FR)</string>
     <string name="area_select_label">Seleccione el Área Principal:</string>
     <string name="area_church">Iglesia</string>
     <string name="area_monastery">Monasterio</string>

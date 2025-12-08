@@ -229,11 +229,11 @@
     <string name="hint_fr_optional">Optional text in French</string>
 
     <string name="dropdown_label">Detailed Location (ES)</string>
-    <string name="manual_title_label">Title (ES)</string>
+    <string name="manual_title_label">location (ES)</string>
     <string name="manual_title_helper">Write the Detailed Location - SPANISH:</string>
-    <string name="title_en">Optional title in English (EN)</string>
-    <string name="title_de">Optional title in German (DE)</string>
-    <string name="title_fr">Optional title in French (FR)</string>
+    <string name="title_en">Optional location in English (EN)</string>
+    <string name="title_de">Optional location in German (DE)</string>
+    <string name="title_fr">Optional location in French (FR)</string>
     <string name="area_select_label">Select Main Area:</string>
     <string name="area_church">Church</string>
     <string name="area_monastery">Monastery</string>
