@@ -74,8 +74,9 @@ fun ImageDetailsDialog( // 🆕 Renombrado
                 modifier = Modifier
                     .padding(20.dp)
                     .fillMaxWidth()
-                    .heightIn(max = 600.dp), // Limitar altura para hacer espacio para el scroll
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .heightIn(max = 600.dp) // Limitar altura para hacer espacio para el scroll
+                    .verticalScroll(scrollState),
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
                     text = dialogTitle,
@@ -107,7 +108,7 @@ fun ImageDetailsDialog( // 🆕 Renombrado
 
                 // --- CAMPOS DE TÍTULO MULTILINGÜE ---
                 Column(
-                    modifier = Modifier.fillMaxWidth().verticalScroll(scrollState).weight(1f, fill = false)
+                    modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(
                         text = stringResource(R.string.img_field_title_es_label),

@@ -166,7 +166,7 @@ fun PinLocationDropdown(
                 OutlinedButton(
                     onClick = { showManualTrads = !showManualTrads },
                     modifier = Modifier.fillMaxWidth(),
-                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary), // Aseguramos el borde
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.onBackground), // Aseguramos el borde
                     shape = RoundedCornerShape(8.dp), // Forma consistente
                     contentPadding = PaddingValues(12.dp)
                 ) {
@@ -238,11 +238,13 @@ fun PinLocationDropdown(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 // 📌 SELECTOR DE ÁREA PRINCIPAL
-                Text(
-                    text = stringResource(R.string.area_select_label),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.primary
-                )
+                if(currentUbicacion.isBlank()) {
+                    Text(
+                        text = stringResource(R.string.area_select_label),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
                 Spacer(modifier = Modifier.height(4.dp))
                 AreaPrincipalSelector(
                     selectedArea = currentUbicacion,
@@ -277,6 +279,8 @@ fun AreaPrincipalSelector(
             val areaStringId = areaMap[areaInternalValue]
 
             AssistChip(
+                modifier = Modifier
+                    .heightIn(min=48.dp),
                 onClick = { onAreaSelected(areaInternalValue) },
                 label = { Text(areaStringId?.let { stringResource(it) } ?: areaInternalValue) },
                 colors = if (isSelected) AssistChipDefaults.assistChipColors(

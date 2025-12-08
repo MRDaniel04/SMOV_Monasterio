@@ -225,15 +225,15 @@
     <string name="hint_fr_optional">Optionaler Text auf Französisch</string>
 
     <string name="dropdown_label">Detaillierte Position (ES)</string>
-    <string name="manual_title_label">Titel (ES)</string>
+    <string name="manual_title_label">Standort (ES)</string>
     <string name="manual_title_helper">Geben Sie den detaillierten Standort ein – SPANISCH:</string>
     <string name="translations_show">Optionale Übersetzungen hinzufügen</string>
     <string name="translations_hide">Optionale Übersetzungen ausblenden</string>
     <string name="translations_show_cd">Übersetzungen anzeigen</string>
     <string name="translations_hide_cd">Übersetzungen ausblenden</string>
-    <string name="title_en">Optionaler Titel auf Englisch (EN)</string>
-    <string name="title_de">Optionaler Titel auf Deutsch (DE)</string>
-    <string name="title_fr">Optionaler Titel auf Französisch (FR)</string>
+    <string name="title_en">Optionaler Standort auf Englisch (EN)</string>
+    <string name="title_de">Optionaler Standort auf Deutsch (DE)</string>
+    <string name="title_fr">Optionaler Standort auf Französisch (FR)</string>
     <string name="area_select_label">Wählen Sie den Hauptbereich (Pin-Standort):</string>
     <string name="area_church">Kirche</string>
     <string name="area_monastery">Kloster</string>
