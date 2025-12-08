@@ -236,5 +236,7 @@
         <item>Immer mehr Blumen erscheinen in der Szene!</item>
     </string-array>
     <string name="clue">HINWEIS:</string>
-    <string name="clue_button">HINWEIS</string>
+    <string name="show_pairs">Paar zeigen</string>
+    <string name="clue_button">Spur anzeigen</string>
+    <string name="puzzle_slide">Wischen Sie, um weitere teile zu sehen</string>
 </resources>

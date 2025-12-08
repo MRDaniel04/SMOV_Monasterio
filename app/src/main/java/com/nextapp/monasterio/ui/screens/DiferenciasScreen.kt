@@ -96,19 +96,19 @@ fun DiferenciasScreen(navController : NavController
         ) {
             Text(
                 text = stringResource(R.string.differences_counter, contador, diferenciasList.size),
-                style = MaterialTheme.typography.titleMedium,
+                style = MaterialTheme.typography.titleSmall,
                 modifier = Modifier
-                    .padding(vertical = 8.dp)
+                    .padding(end = 32.dp)
             )
-            Spacer(modifier = Modifier.width(16.dp))
             IconButton(
                 onClick = { showInstructionsPreviewDialogBoton = true },
                 modifier = Modifier
-                    .size(28.dp)
+                    .size(32.dp)
             ) {
                 Icon(
                     painter = painterResource(R.drawable.question),
                     contentDescription = stringResource(R.string.title_instructions),
+                    tint = Color.Black.copy(alpha = 0.7f),
                 )
             }
         }

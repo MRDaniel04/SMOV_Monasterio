@@ -12,10 +12,12 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -127,7 +129,7 @@ fun ParejasScreen(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 8.dp),
+                .padding(bottom = 16.dp),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ){
@@ -139,7 +141,7 @@ fun ParejasScreen(
             IconButton(
                 onClick = { showInstructionsPreviewDialogBoton = true },
                 modifier = Modifier
-                    .size(48.dp)
+                    .size(32.dp)
             ) {
                 Icon(
                     painter = painterResource(R.drawable.question),
@@ -148,7 +150,6 @@ fun ParejasScreen(
                 )
             }
         }
-
         LazyVerticalGrid(
             columns = GridCells.Fixed(size.columns),
             modifier = Modifier
@@ -157,9 +158,9 @@ fun ParejasScreen(
                 .padding(vertical = 8.dp)
                 .then(
                     if(size.rows == 4 ) {
-                        Modifier.width(300.dp)
+                        Modifier.width(270.dp)
                     } else if (size.rows == 5){
-                        Modifier.width(250.dp)
+                        Modifier.width(220.dp)
                     } else{
                         Modifier.fillMaxWidth()
                     }
@@ -173,6 +174,14 @@ fun ParejasScreen(
             ){pieza ->
                 GridCell(pieza = pieza, mostradoInicial = state.mostradoInicial, verificandoPareja = state.verificandoPareja, onClick = { id -> viewModel.onClickPieza(id) })
             }
+        }
+        Spacer(modifier=Modifier.height(16.dp))
+        Button(
+            onClick = {
+                viewModel.volverAMostrarParejas()
+            }
+        ) {
+            Text(stringResource(R.string.show_pairs))
         }
     }
 

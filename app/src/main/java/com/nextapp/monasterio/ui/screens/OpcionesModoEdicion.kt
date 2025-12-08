@@ -127,16 +127,16 @@ fun OpcionesModoEdicion(
                             text = stringResource(id = R.string.edit_home_background),
                             iconRes = R.drawable.ic_photo,
                             backgroundColor = MonasteryOrange,
-                            modifier = Modifier.fillMaxWidth().height(100.dp),
+                            modifier = Modifier.fillMaxWidth().height(110.dp),
                             onClick = { navController.navigate(AppRoutes.EDICION_FONDO_INICIO) }
                         )
 
                         // Parejas (Memory)
                         OpcionEdicionButton(
                             text = stringResource(id = R.string.edit_pins),
-                            iconRes = R.drawable.pin3,
+                            iconRes = R.drawable.pin,
                             backgroundColor = MonasteryBlue,
-                            modifier = Modifier.fillMaxWidth().height(100.dp),
+                            modifier = Modifier.fillMaxWidth().height(110.dp),
                             onClick = { navController.navigate(AppRoutes.EDICION_PINES) }
                         )
                     }
@@ -173,11 +173,9 @@ fun OpcionEdicionButton(
             )
             Spacer(modifier = Modifier.width(16.dp))
             Text(
-                text = text,
-                fontSize = 20.sp,
+                text = text.uppercase(),
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
-                overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.weight(1f)
             )
             Spacer(modifier = Modifier.width(10.dp))

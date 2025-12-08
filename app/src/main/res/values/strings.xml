@@ -236,5 +236,7 @@
         <item>¡Cada vez aparecen más flores en la escena!</item>
     </string-array>
     <string name="clue">PISTA:</string>
-    <string name="clue_button">PISTA</string>
+    <string name="show_pairs">Mostrar parejas</string>
+    <string name="clue_button">Mostrar pista</string>
+    <string name="puzzle_slide">Desliza para ver más piezas</string>
 </resources>

@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Column // ⬅️ Añadir este import
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -38,9 +39,10 @@ fun PinEditionToolbar(
             // Botón 2: Añadir Pin
             IconButton(onClick = onPinAddClick) {
                 Icon(
-                    painter = painterResource(id = R.drawable.pin3),
+                    painter = painterResource(id = R.drawable.pin),
                     contentDescription = "Añadir Pin",
-                    tint = Color.White
+                    tint = Color.White,
+                    modifier = Modifier.size(48.dp)
                 )
             }
             // Botón 3: Modo Cruz (Crosshair)

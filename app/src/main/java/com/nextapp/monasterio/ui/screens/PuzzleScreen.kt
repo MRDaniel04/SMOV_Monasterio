@@ -21,6 +21,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.SegmentedButtonDefaults.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -125,6 +126,8 @@ fun PuzzleScreen(
 
     var dragStartRelativeOffset by remember { mutableStateOf<Offset>(Offset.Zero) }
 
+    val piezasSueltasRestantes = state.piezas.count { !it.encajada }
+
     DisposableEffect(Unit) {
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         onDispose {
@@ -159,13 +162,19 @@ fun PuzzleScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 8.dp),
-                horizontalArrangement = Arrangement.End,
+                horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ){
+                Text(
+                    text = stringResource(R.string.left_pieces,piezasSueltasRestantes),
+                    style = androidx.compose.material3.MaterialTheme.typography.titleMedium,
+                    modifier = Modifier.padding(end = 32.dp)
+                )
+                Spacer(modifier= Modifier.width(16.dp))
                 IconButton(
                     onClick = { showInstructionsPreviewDialogBoton = true },
                     modifier = Modifier
-                        .size(48.dp)
+                        .size(32.dp)
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.question),
@@ -205,6 +214,10 @@ fun PuzzleScreen(
             ) {
                 Text(text = stringResource(R.string.original_image)) // "Mostrar Imagen Original"
             }
+            Text(
+                text = stringResource(R.string.puzzle_slide),
+                style = typography.titleMedium,
+            )
 
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -265,7 +278,6 @@ fun PuzzleScreen(
                 tamañoCelda = tamañoCelda,
                 startOffset = startOffset,
                 desplazamientoActual = desplazamientoPiezaArrastrada,
-                dragStartRelativeOffset = dragStartRelativeOffset,
                 onDrag = { dragAmount ->
                     // MOVIMIENTO: Actualizar el desplazamiento
                     desplazamientoPiezaArrastrada += dragAmount
@@ -347,11 +359,6 @@ fun PuzzleTray(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
-            text = stringResource(R.string.left_pieces,piezas.size),
-            style = androidx.compose.material3.MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
         LazyRow(
             modifier = Modifier
                 .fillMaxWidth()
@@ -404,7 +411,6 @@ fun DraggableFloatingPiece(
     tamañoCelda: Dp,
     startOffset: Offset,
     desplazamientoActual: Offset,
-    dragStartRelativeOffset : Offset,
     onDrag: (Offset) -> Unit,
     onDragEnd: () -> Unit
 ) {

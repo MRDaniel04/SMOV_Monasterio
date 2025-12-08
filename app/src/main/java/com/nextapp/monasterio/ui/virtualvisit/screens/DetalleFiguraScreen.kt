@@ -155,7 +155,7 @@ fun DetalleFiguraScreen(
 
                     // 2. Título (Centro)
                     Text(
-                        text = nombreFigura.uppercase(),
+                        text = nombreFigura,
                         fontSize = 22.sp,
                         fontWeight = FontWeight.Black,
                         color = Color(figura!!.colorResaltado.toUInt().toInt()),

@@ -57,6 +57,18 @@ class ParejasViewModel (
         }
     }
 
+    fun volverAMostrarParejas(){
+        _uiState.update {
+            it.copy(mostradoInicial = true)
+        }
+        viewModelScope.launch {
+            delay(2000)
+            _uiState.update{
+                it.copy(mostradoInicial = false) // 4. Las cartas se giran (FIN de la pausa)
+            }
+        }
+    }
+
     fun resetGame(){
         val piezasIniciales = piezasManager.inicializarParejaPiezas(imagenesIds)
         _uiState.value = parejasUiState(

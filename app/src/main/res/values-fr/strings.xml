@@ -236,5 +236,7 @@
         <item>De plus en plus de fleurs apparaissent dans la scène!</item>
     </string-array>
     <string name="clue">INDICE:</string>
-    <string name="clue_button">INDICE</string>
+    <string name="show_pairs">Afficher les paires</string>
+    <string name="clue_button">Afficher la piste</string>
+    <string name="puzzle_slide">Faites glisser pour voir plus de pièces</string>
 </resources>
