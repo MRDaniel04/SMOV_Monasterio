@@ -97,6 +97,7 @@
     <string name="video_child">VIDÉO</string>
     <string name="game_child">JEUX</string>
     <string name="edit_mode">Mode d\'édition</string>
+    <string name="edit_mode_button">MODE D\' ÉDITION</string>
     <string name="edit_home_background">Édition fond d\'écran d\'accueil</string>
     <string name="edit_pins">Édition des punaises</string>
     <string name="location_error">Aucune application n\'a été trouvée pour ouvrir la localisation.</string>

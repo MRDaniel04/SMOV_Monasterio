@@ -97,6 +97,7 @@
     <string name="video_child">VIDEO</string>
     <string name="game_child">SPIELE</string>
     <string name="edit_mode">Bearbeitungsmodus</string>
+    <string name="edit_mode_button">BEARBEITUNGSMODUS</string>
     <string name="edit_home_background">Bearbeitung des Home-Hintergrunds</string>
     <string name="edit_pins">Pin-Bearbeitung</string>
     <string name="location_error">Keine Anwendung zum Öffnen des Standorts gefunden.</string>

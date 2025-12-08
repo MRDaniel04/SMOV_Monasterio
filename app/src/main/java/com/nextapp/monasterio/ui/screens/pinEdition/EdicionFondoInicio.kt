@@ -76,7 +76,7 @@ fun EdicionFondoInicio(navController: NavController) {
 
 
     DisposableEffect(Unit) {
-        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
         onDispose { }
     }
     ConstraintLayout(

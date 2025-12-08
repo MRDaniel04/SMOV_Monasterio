@@ -1,9 +1,14 @@
 package com.nextapp.monasterio.ui.screens.pinEdition.components
 
+import android.app.Activity
+import android.content.Context
+import android.content.ContextWrapper
 import android.util.Log
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -21,6 +26,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,6 +44,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.nextapp.monasterio.MainLanguageItem
 import com.nextapp.monasterio.R
 import com.nextapp.monasterio.models.ImagenData
 import com.nextapp.monasterio.models.PinData
@@ -58,6 +67,7 @@ fun PinDetailsPanel(
 ) {
     var isDeleteDialogOpen by remember { mutableStateOf(false) }
     val context = LocalContext.current
+    val activity = context.getActivity() as AppCompatActivity
     val coroutineScope = rememberCoroutineScope()
     var isLoading by remember(selectedPin.id) { mutableStateOf(true) }
     val selectedLang = LocalConfiguration.current.locales[0].language
@@ -170,6 +180,7 @@ fun PinDetailsPanel(
 
                         )
                     }
+                    MainLanguageSelector(activity)
                 }
 
                 Row(
@@ -333,5 +344,55 @@ fun PinDetailsPanel(
             }
         )
     }
+}
+
+@Composable
+fun MainLanguageSelector(activity: AppCompatActivity) {
+    var expanded by rememberSaveable { mutableStateOf(false) }
+
+    val configuration = LocalConfiguration.current
+    // Obtenemos idioma actual
+    val currentLanguageCode = configuration.locales[0].language
+    // Determinamos bandera actual
+    val currentFlag = when (currentLanguageCode) {
+        "de" -> R.drawable.alemania
+        "en" -> R.drawable.reinounido
+        "fr" -> R.drawable.francia
+        else -> R.drawable.espanya
+
+    }
+
+    Box {
+        // Botón de la bandera
+        IconButton(onClick = { expanded = true }) {
+            Image(
+                painter = painterResource(id = currentFlag),
+                contentDescription = "Cambiar idioma",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(28.dp)
+                    .clip(RoundedCornerShape(4.dp))
+                    .border(1.dp, Color.White.copy(alpha = 0.5f), RoundedCornerShape(4.dp))
+            )
+        }
+
+        // Menú desplegable
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false },
+            modifier = Modifier.width(150.dp)
+        ) {
+            MainLanguageItem(activity, "es", stringResource(R.string.lang_es), R.drawable.espanya) { expanded = false }
+            MainLanguageItem(activity, "en", stringResource(R.string.lang_en), R.drawable.reinounido) { expanded = false }
+            MainLanguageItem(activity, "de", stringResource(R.string.lang_de), R.drawable.alemania) { expanded = false }
+            MainLanguageItem(activity, "fr", stringResource(R.string.lang_fr), R.drawable.francia) { expanded = false }
+        }
+    }
+}
+
+fun Context.getActivity(): Activity? = when (this) {
+    is Activity -> this
+    is ContextWrapper -> baseContext.getActivity()
+    else -> null
 }
 
