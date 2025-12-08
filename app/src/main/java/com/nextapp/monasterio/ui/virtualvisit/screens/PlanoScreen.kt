@@ -47,6 +47,8 @@ import com.nextapp.monasterio.ui.screens.VirtualVisitRoutes
 import com.nextapp.monasterio.viewModels.AjustesViewModel
 import com.nextapp.monasterio.ui.virtualvisit.components.GenericTutorialOverlay
 import kotlinx.coroutines.delay
+import android.media.MediaPlayer
+
 
 // Clase auxiliar para definir los pasos del tutorial
 private data class TutorialStep(
@@ -65,11 +67,23 @@ fun PlanoScreen(
     rootNavController: NavHostController? = null
 ) {
     val context = LocalContext.current
+    val soundPines = remember {
+        MediaPlayer.create(context, R.raw.piness)
+    }
+
     val activity = (context as? Activity)
 
     DisposableEffect(Unit) {
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
         onDispose {}
+    }
+    val zoomPlayer = remember {
+        // Si no tienes 'zoom_sound', usa R.raw.click_button
+        MediaPlayer.create(context, R.raw.zoom)
+    }
+    val deszoomPlayer = remember {
+        // Si no tienes 'navigation_back', usa R.raw.click_button
+        MediaPlayer.create(context, R.raw.deszoom)
     }
 
     // 1. CÁLCULOS DE PANTALLA (LAYOUT)
@@ -125,6 +139,12 @@ fun PlanoScreen(
         initialValue = 0f, targetValue = 1f,
         animationSpec = infiniteRepeatable(tween(1500), RepeatMode.Reverse)
     )
+    fun playSound(player: MediaPlayer?) {
+        if (player != null) {
+            if (player.isPlaying) player.seekTo(0)
+            player.start()
+        }
+    }
 
     // --- Carga inicial ---
     LaunchedEffect(planoId, retryTrigger) {
@@ -253,15 +273,23 @@ fun PlanoScreen(
                                     "detalle" -> navController.navigate("${VirtualVisitRoutes.DETALLE_GENERICO}/${figura.valorDestino}")
                                     "plano" -> {
                                         val destinoId = figura.valorDestino
-                                        if (destinoId.isNotBlank()) navController.navigate("${VirtualVisitRoutes.PLANO}/$destinoId")
-                                        else Toast.makeText(context, context.getString(R.string.notdefined_destinyplane), Toast.LENGTH_SHORT).show()
-                                    }
+                                        if (destinoId.isNotBlank()) {
+                                            // 👇👇 AQUÍ SUENA AL ENTRAR AL SUBMAPA 👇👇
+                                            playSound(zoomPlayer)
+                                            navController.navigate("${VirtualVisitRoutes.PLANO}/$destinoId")
+                                        } else {
+                                            Toast.makeText(context, context.getString(R.string.notdefined_destinyplane), Toast.LENGTH_SHORT).show()
+                                        }}
                                     else -> Toast.makeText(context, context.getString(R.string.notdefined_destiny), Toast.LENGTH_SHORT).show()
                                 }
                             }, 200)
                         }
 
                         pin != null -> {
+                            if (soundPines.isPlaying) {
+                                soundPines.seekTo(0)
+                            }
+                            soundPines.start()
                             selectedPinId = pin.id
                             Handler(Looper.getMainLooper()).postDelayed({
                                 selectedPinId = null
@@ -360,6 +388,7 @@ fun PlanoScreen(
                     if (planoId == "monasterio_exterior") {
                         rootNavController?.popBackStack()
                     } else {
+                        playSound(deszoomPlayer)
                         navController.navigate("${VirtualVisitRoutes.PLANO}/monasterio_exterior") {
                             popUpTo("${VirtualVisitRoutes.PLANO}/monasterio_exterior") { inclusive = false }
                         }
