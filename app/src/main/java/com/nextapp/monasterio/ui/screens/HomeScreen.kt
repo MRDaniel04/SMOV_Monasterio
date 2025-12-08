@@ -164,7 +164,7 @@ fun PortraitLayout(
         if (currentUser != null) {
             Spacer(modifier = Modifier.height(24.dp))
             HomeListButton(
-                text = stringResource(R.string.edit_mode),
+                text = stringResource(R.string.edit_mode_button),
                 iconRes = R.drawable.lapiz,
                 backgroundColor = Color(0xFF9C27B0),
                 modifier = buttonModifier,
@@ -252,7 +252,7 @@ fun LandscapeLayout(
 
                 if (currentUser != null) {
                     HomeGridButton(
-                        text = stringResource(R.string.edit_mode).uppercase(),
+                        text = stringResource(R.string.edit_mode_button),
                         iconRes = R.drawable.lapiz,
                         backgroundColor = Color(0xFF9C27B0),
                         modifier = Modifier.weight(1f),

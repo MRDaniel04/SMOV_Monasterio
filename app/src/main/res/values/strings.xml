@@ -96,7 +96,8 @@
     <string name="game_view">Juegos</string>
     <string name="video_child">VÍDEO</string>
     <string name="game_child">JUEGOS</string>
-    <string name="edit_mode">MODO EDICIÓN</string>
+    <string name="edit_mode">Modo edición</string>
+    <string name="edit_mode_button">MODO EDICIÓN</string>
     <string name="edit_home_background">Edición fondo de pantalla de inicio</string>
     <string name="edit_pins">Edición de pines</string>
     <string name="location_error">No se ha encontrado ninguna aplicación para abrir la ubicación.</string>

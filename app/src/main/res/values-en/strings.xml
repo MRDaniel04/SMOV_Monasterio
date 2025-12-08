@@ -97,6 +97,7 @@
     <string name="video_child">VIDEO</string>
     <string name="game_child">GAMES</string>
     <string name="edit_mode">Edit mode</string>
+    <string name="edit_mode_button">EDIT MODE</string>
     <string name="edit_home_background">Edit home background</string>
     <string name="edit_pins">Pin editing</string>
     <string name="location_error">No application found to open location.</string>
