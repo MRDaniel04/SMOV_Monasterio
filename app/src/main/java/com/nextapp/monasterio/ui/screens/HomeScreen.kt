@@ -252,7 +252,7 @@ fun LandscapeLayout(
 
                 if (currentUser != null) {
                     HomeGridButton(
-                        text = stringResource(R.string.edit_mode),
+                        text = stringResource(R.string.edit_mode).uppercase(),
                         iconRes = R.drawable.lapiz,
                         backgroundColor = Color(0xFF9C27B0),
                         modifier = Modifier.weight(1f),

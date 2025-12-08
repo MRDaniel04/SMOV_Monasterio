@@ -106,7 +106,7 @@ fun OpcionesModoEdicion(
                         // Botón Juego (50% ancho)
                         OpcionEdicionButton(
                             text = stringResource(id = R.string.edit_pins),
-                            iconRes = R.drawable.pin3,
+                            iconRes = R.drawable.pin,
                             backgroundColor = MonasteryBlue,
                             modifier = Modifier
                                 .weight(1f)
