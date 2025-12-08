@@ -19,7 +19,7 @@ import com.nextapp.monasterio.R
 import com.nextapp.monasterio.ui.components.EditableContent
 import com.nextapp.monasterio.ui.components.EditableText
 import com.nextapp.monasterio.viewModels.AuthViewModel
-
+import com.nextapp.monasterio.ui.components.MonasteryButton
 @Composable
 fun ProfileScreen(
     isEditing: Boolean,
@@ -348,7 +348,7 @@ fun UserInfoCard(user: com.nextapp.monasterio.models.User) {
 
 @Composable
 fun LogoutButton(viewModel: AuthViewModel) {
-    Button(
+    MonasteryButton(
         onClick = { viewModel.logout() },
         colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error),
         modifier = Modifier.widthIn(min = 200.dp) // Ancho mínimo para que se vea bien

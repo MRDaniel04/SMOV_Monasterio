@@ -48,7 +48,7 @@ import com.nextapp.monasterio.models.PinData
 import com.nextapp.monasterio.ui.virtualvisit.components.GenericTutorialOverlay
 import com.nextapp.monasterio.viewModels.AjustesViewModel
 import java.util.Locale
-
+import com.nextapp.monasterio.ui.components.MonasteryButton
 
 private data class PinTutorialStep(
     val description: String,
@@ -403,7 +403,7 @@ fun PinDetalleScreen(
                             button360Layout = position to Size(size.width.toFloat(), size.height.toFloat())
                         }
                 ) {
-                    Button(
+                    MonasteryButton(
                         onClick = it,
                         modifier = Modifier
                             .fillMaxWidth()

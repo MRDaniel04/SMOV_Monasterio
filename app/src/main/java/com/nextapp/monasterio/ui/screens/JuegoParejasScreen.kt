@@ -30,7 +30,7 @@ import androidx.navigation.NavController
 import com.nextapp.monasterio.AppRoutes
 import com.nextapp.monasterio.R
 import com.nextapp.monasterio.ui.theme.MonasteryBlue
-
+import com.nextapp.monasterio.ui.components.MonasteryButton
 @Composable
 fun JuegoParejasScreen(
     navController: NavController,
@@ -161,7 +161,7 @@ fun GameButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
-    Button(
+    MonasteryButton(
         onClick = onClick,
         colors = ButtonDefaults.buttonColors(containerColor = MonasteryBlue),
         shape = RoundedCornerShape(20.dp),

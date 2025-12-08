@@ -35,7 +35,7 @@ import com.nextapp.monasterio.repository.FiguraRepository
 import com.nextapp.monasterio.repository.ImagenRepository
 import kotlinx.coroutines.delay
 import android.util.Log
-
+import com.nextapp.monasterio.ui.components.MonasteryButton
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun DetalleFiguraScreen(
@@ -228,7 +228,7 @@ fun DetalleFiguraScreen(
                 // --- 9. BOTÓN VER 360 (PIE DE PÁGINA) ---
                 // Solo se muestra si la figura tiene URL 360 en Firebase
                 if (!figura!!.vista360Url.isNullOrBlank()) {
-                    Button(
+                    MonasteryButton(
                         onClick = {
                             // Navegamos usando el rootNavController para salir del contexto del mapa
                             rootNavController?.navigate(AppRoutes.PIN_360 + "/${figura!!.id}")

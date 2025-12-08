@@ -37,7 +37,7 @@ import android.util.Patterns
 import androidx.compose.ui.draw.shadow
 import com.nextapp.monasterio.viewModels.InfoViewModel
 import java.util.Date
-
+import com.nextapp.monasterio.ui.components.MonasteryButton
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ReservaScreen(
@@ -270,7 +270,7 @@ fun ReservaScreen(
 
                         Spacer(Modifier.height(32.dp))
 
-                        Button(
+                        MonasteryButton(
                             onClick = { validarYConfirmar() },
                             modifier = Modifier.fillMaxWidth().height(50.dp).shadow(8.dp, RoundedCornerShape(8.dp)),
                             colors = ButtonDefaults.buttonColors(containerColor = colorResource(R.color.MonasteryBlue))

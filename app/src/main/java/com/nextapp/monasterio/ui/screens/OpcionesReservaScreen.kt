@@ -28,7 +28,7 @@ import androidx.navigation.NavController
 import com.nextapp.monasterio.AppRoutes
 import com.nextapp.monasterio.R
 import com.nextapp.monasterio.utils.llamarTelefono
-
+import com.nextapp.monasterio.ui.components.MonasteryButton
 @Composable
 fun OpcionesReservaScreen(
     navController: NavController,
@@ -149,7 +149,7 @@ fun ReservaOptionButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
-    Button(
+    MonasteryButton(
         onClick = onClick,
         enabled = true,
         shape = RoundedCornerShape(16.dp),

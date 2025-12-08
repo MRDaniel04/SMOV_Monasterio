@@ -33,6 +33,7 @@ import com.nextapp.monasterio.AppRoutes
 import com.nextapp.monasterio.R
 import com.nextapp.monasterio.ui.theme.MonasteryBlue
 import com.nextapp.monasterio.ui.theme.MonasteryOrange
+import com.nextapp.monasterio.ui.components.MonasteryButton
 
 @Composable
 fun OpcionesModoNiño(
@@ -153,7 +154,7 @@ fun OpcionNinyoButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
-    Button(
+    MonasteryButton(
         onClick = onClick,
         colors = ButtonDefaults.buttonColors(containerColor = backgroundColor),
         shape = RoundedCornerShape(20.dp),

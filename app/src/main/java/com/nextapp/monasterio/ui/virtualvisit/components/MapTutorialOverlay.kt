@@ -29,7 +29,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.nextapp.monasterio.R
 import kotlin.math.max
-
+import com.nextapp.monasterio.ui.components.MonasteryButton
 @Composable
 fun GenericTutorialOverlay(
     title: String? = null,
@@ -204,7 +204,7 @@ fun GenericTutorialOverlay(
 
                                 Spacer(Modifier.height(16.dp))
 
-                                Button(
+                                MonasteryButton(
                                     onClick = { onCloseClicked(dontShowAgain) },
                                     modifier = Modifier.fillMaxWidth(),
                                     shape = RoundedCornerShape(12.dp)
