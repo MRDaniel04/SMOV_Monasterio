@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.nextapp.monasterio.R
@@ -49,7 +50,7 @@ fun ImagePreviewCard(
             ) {
                 Icon(
                     painterResource(R.drawable.ic_close_24),
-                    contentDescription = "Eliminar imagen",
+                    contentDescription = stringResource(R.string.img_edit_desc),
                     tint = Color.White
                 )
             }
@@ -62,8 +63,8 @@ fun ImagePreviewCard(
                     .size(24.dp)
             ) {
                 Icon(
-                    painterResource(R.drawable.lapiz), // ⚠️ Necesitas un icono ic_edit_24.
-                    contentDescription = "Editar detalles de imagen",
+                    painterResource(R.drawable.lapiz),
+                    contentDescription = stringResource(R.string.img_edit_desc),
                     tint = Color.White
                 )
             }

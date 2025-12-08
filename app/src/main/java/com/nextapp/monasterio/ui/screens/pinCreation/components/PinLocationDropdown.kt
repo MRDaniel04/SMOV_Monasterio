@@ -86,6 +86,12 @@ fun PinLocationDropdown(
     }
 
     val isManualEntry = selectedDropdownLocation == OTRA_UBICACION_DETALLADA
+    val selectedLocationText = remember(selectedDropdownLocation) {
+        UbicacionDetalladaTag.fromDisplayName(selectedDropdownLocation)?.let { tag ->
+            // Si encontramos el tag, usamos el stringResource. Si no (por ejemplo, al inicializar con una cadena vacía), devolvemos el valor en español.
+            tag.stringResId
+        }
+    }?.let { stringResource(it) } ?: selectedDropdownLocation
 
     Column(modifier = Modifier.fillMaxWidth()) {
         ExposedDropdownMenuBox(
@@ -93,7 +99,7 @@ fun PinLocationDropdown(
             onExpandedChange = { expanded = !expanded }
         ) {
             OutlinedTextField(
-                value = selectedDropdownLocation,
+                value = selectedLocationText,
                 onValueChange = { /* Solo cambia a través del DropdownMenuItem */ },
                 readOnly = true,
                 label = { Text(stringResource(R.string.dropdown_label)) },
@@ -107,20 +113,25 @@ fun PinLocationDropdown(
                 expanded = expanded,
                 onDismissRequest = { expanded = false }
             ) {
-                ubicacionDetalladaOptions.forEach { location ->
+                UbicacionDetalladaTag.entries.forEach { tag ->
                     DropdownMenuItem(
-                        text = { Text(location) },
+                        // 🚀 CAMBIO CLAVE: Usamos el stringResource para mostrar la traducción
+                        text = { Text(stringResource(tag.stringResId)) },
                         onClick = {
+                            val location = tag.displayName // El valor en español
+
                             selectedDropdownLocation = location
                             expanded = false
 
-                            if (location != OTRA_UBICACION_DETALLADA) {
+                            if (tag != UbicacionDetalladaTag.OTRA) {
+                                // Devolvemos el valor en español (location)
                                 onTitleChange(location)
                                 manualTitleText = ""
                                 onTitleManualTradsUpdate("", "", "")
                                 val areaPrincipal = getAreaPrincipalForLocation(location)
                                 onUbicacionChange(areaPrincipal ?: "")
                             } else {
+                                // Para OTRA, el manualTitleText ya estará en español
                                 onTitleChange(manualTitleText)
                                 onUbicacionChange("")
                             }
@@ -248,17 +259,26 @@ fun AreaPrincipalSelector(
     selectedArea: String,
     onAreaSelected: (String) -> Unit
 ) {
+    val areaMap = mapOf(
+        "Iglesia" to R.string.area_church,
+        "Monasterio" to R.string.area_monastery
+    )
 
-    val areas = listOf("Iglesia", "Monasterio")
+    // Iteramos sobre los valores en español ("Iglesia", "Monasterio")
+    val areas = areaMap.keys.toList()
+
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        areas.forEach { area ->
-            val isSelected = selectedArea == area
+        areas.forEach { areaInternalValue -> // areaInternalValue es "Iglesia" o "Monasterio"
+            val isSelected = selectedArea == areaInternalValue
+            // Obtenemos el ID del string para el valor interno
+            val areaStringId = areaMap[areaInternalValue]
+
             AssistChip(
-                onClick = { onAreaSelected(area) },
-                label = { Text(area) },
+                onClick = { onAreaSelected(areaInternalValue) },
+                label = { Text(areaStringId?.let { stringResource(it) } ?: areaInternalValue) },
                 colors = if (isSelected) AssistChipDefaults.assistChipColors(
                     containerColor = MaterialTheme.colorScheme.primary,
                     labelColor = MaterialTheme.colorScheme.onPrimary

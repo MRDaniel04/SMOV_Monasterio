@@ -245,6 +245,34 @@
     <string name="loc_capilla_nacimiento">Geburtskapelle</string>
     <string name="loc_other">Andere</string>
 
+    <string name="img_dialog_title_initial">Beschriftung und Titel (Bild %1$d von %2$d)</string>
+    <string name="img_dialog_title_edit">Bilddetails bearbeiten</string>
+    <string name="img_field_title_es_label">Bildinhaltstitel (ES - Pflichtfeld)</string>
+    <string name="img_field_title_es">Titel (ES)</string>
+    <string name="img_optional_titles_hide">- OPTIONALE ÜBERSETZUNGEN AUSBLENDEN</string>
+    <string name="img_optional_titles_show">+ OPTIONALE TITEL HINZUFÜGEN (EN, DE, FR)</string>
+    <string name="img_field_title_en">Titel (EN - Optional)</string>
+    <string name="img_field_title_de">Titel (DE - Optional)</string>
+    <string name="img_field_title_fr">Titel (FR - Optional)</string>
+    <string name="img_btn_discard">VERWERFEN</string>
+    <string name="img_btn_cancel">ABBRECHEN</string>
+    <string name="img_btn_next">WEITER</string>
+    <string name="img_btn_save">SPEICHERN</string>
+    <string name="img_preview_swipe_hint">Zum Anzeigen weiterer Bilder wischen</string>
+    <string name="img_error_mandatory">Sie müssen mindestens ein Bild hinzufügen.</string>
+    <string name="img_error_missing_data">Ein oder mehrere Bilder haben keine Beschriftung oder es fehlt der Titel (ES). Bitte korrigieren.</string>
+
+    <string name="img360_add">Hinzufügen</string>
+    <string name="img360_change">Ändern</string>
+
+    <string name="pinimg_added_count">%1$d hinzugefügt</string>
+    <string name="pinimg_swipe_hint">Wischen, um mehr Bilder zu sehen</string>
+    <string name="pinimg_error_mandatory">Sie müssen mindestens ein Bild hinzufügen.</string>
+    <string name="pinimg_error_missing">Ein oder mehrere Bilder haben kein Etikett oder es fehlt der Titel (ES). Bitte korrigieren.</string>
+
+    <string name="img_delete_desc">Bild löschen</string>
+    <string name="img_edit_desc">Bilddetails bearbeiten</string>
+
 
     <string-array name="clues">
         <item>Wirf einen Blick auf den höchsten Teil der Burg</item>

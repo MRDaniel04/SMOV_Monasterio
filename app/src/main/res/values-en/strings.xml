@@ -245,6 +245,33 @@
     <string name="loc_capilla_nacimiento">Nativity Chapel</string>
     <string name="loc_other">Other</string>
 
+    <string name="img_dialog_title_initial">Label and Title (Image %1$d of %2$d)</string>
+    <string name="img_dialog_title_edit">Edit Image Details</string>
+    <string name="img_field_title_es_label">Image Content Title (ES - Required)</string>
+    <string name="img_field_title_es">Title (ES)</string>
+    <string name="img_optional_titles_hide">- HIDE OPTIONAL TRANSLATIONS</string>
+    <string name="img_optional_titles_show">+ ADD OPTIONAL TITLES (EN, DE, FR)</string>
+    <string name="img_field_title_en">Title (EN - Optional)</string>
+    <string name="img_field_title_de">Title (DE - Optional)</string>
+    <string name="img_field_title_fr">Title (FR - Optional)</string>
+    <string name="img_btn_discard">DISCARD</string>
+    <string name="img_btn_cancel">CANCEL</string>
+    <string name="img_btn_next">NEXT</string>
+    <string name="img_btn_save">SAVE</string>
+    <string name="img_preview_swipe_hint">Swipe to see more images</string>
+    <string name="img_error_mandatory">You must add at least one image.</string>
+    <string name="img_error_missing_data">One or more images have no label or are missing the Title (ES). Please correct it.</string>
+
+    <string name="img360_add">Add</string>
+    <string name="img360_change">Change</string>
+
+    <string name="pinimg_added_count">%1$d added</string>
+    <string name="pinimg_swipe_hint">Swipe to see more images</string>
+    <string name="pinimg_error_mandatory">You must add at least one image.</string>
+    <string name="pinimg_error_missing">One or more images have no tag or are missing the Title (ES). Please fix it.</string>
+
+    <string name="img_delete_desc">Delete image</string>
+    <string name="img_edit_desc">Edit image details</string>
 
     <string-array name="clues">
         <item>Take a look at the very top of the castle</item>

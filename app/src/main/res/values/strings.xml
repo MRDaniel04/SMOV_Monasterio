@@ -245,6 +245,32 @@
     <string name="loc_capilla_nacimiento">Capilla del Nacimiento</string>
     <string name="loc_other">Otra</string>
 
+    <string name="img_dialog_title_initial">Etiqueta y Título (Imagen %1$d de %2$d)</string>
+    <string name="img_dialog_title_edit">Editar Detalles de Imagen</string>
+    <string name="img_field_title_es_label">Título del Contenido de la Imagen (ES - Obligatorio)</string>
+    <string name="img_field_title_es">Título (ES)</string>
+    <string name="img_optional_titles_hide">- OCULTAR TRADUCCIONES OPCIONALES</string>
+    <string name="img_optional_titles_show">+ AÑADIR TÍTULOS OPCIONALES (EN, DE, FR)</string>
+    <string name="img_field_title_en">Título (EN - Opcional)</string>
+    <string name="img_field_title_de">Título (DE - Opcional)</string>
+    <string name="img_field_title_fr">Título (FR - Opcional)</string>
+    <string name="img_btn_discard">DESCARTAR</string>
+    <string name="img_btn_cancel">CANCELAR</string>
+    <string name="img_btn_next">SIGUIENTE</string>
+    <string name="img_btn_save">GUARDAR</string>
+    <string name="img_preview_swipe_hint">Desliza para ver más imágenes</string>
+    <string name="img_error_mandatory">Debe añadir al menos una imagen.</string>
+    <string name="img_error_missing_data">Una o más imágenes no tienen etiqueta o les falta el Título (ES). Por favor, corríjalo.</string>
+
+    <string name="img360_add">Añadir</string>
+    <string name="img360_change">Cambiar</string>
+
+    <string name="pinimg_added_count">%1$d añadidas</string>
+    <string name="pinimg_swipe_hint">Desliza para ver más imágenes</string>
+    <string name="pinimg_error_mandatory">Debe añadir al menos una imagen.</string>
+    <string name="pinimg_error_missing">Una o más imágenes no tienen etiqueta o les falta el Título (ES). Por favor, corríjalo.</string>
+    <string name="img_delete_desc">Eliminar imagen</string>
+    <string name="img_edit_desc">Editar detalles de imagen</string>
 
 
     <string-array name="clues">

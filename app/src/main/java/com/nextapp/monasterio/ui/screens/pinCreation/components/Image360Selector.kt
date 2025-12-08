@@ -13,8 +13,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.nextapp.monasterio.models.ImageTag
 import com.nextapp.monasterio.ui.screens.pinCreation.state.PinImage // NECESARIO
+import androidx.compose.ui.res.stringResource
+import com.nextapp.monasterio.R
 
 @Composable
 fun Image360Selector(
@@ -39,8 +40,13 @@ fun Image360Selector(
 
     Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
         AddImageButton(
-            text = if (uri == null) "Añadir" else "Cambiar"
-        ) { launcher.launch("image/*") }
+            text = if (uri == null)
+                stringResource(R.string.img360_add)
+            else
+                stringResource(R.string.img360_change)
+        ) {
+            launcher.launch("image/*")
+        }
 
         uri?.let {
             val pinImage360 = PinImage(uri = it, tag = null)

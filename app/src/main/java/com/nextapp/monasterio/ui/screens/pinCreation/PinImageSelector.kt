@@ -23,6 +23,8 @@ import com.nextapp.monasterio.ui.screens.pinCreation.state.ImagenesState
 import com.nextapp.monasterio.ui.screens.pinCreation.state.PinImage
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.ui.res.stringResource
+import com.nextapp.monasterio.R
 
 @Composable
 fun ImageDetailsDialog( // 🆕 Renombrado
@@ -55,10 +57,11 @@ fun ImageDetailsDialog( // 🆕 Renombrado
 
     val isFormValid = tituloEs.isNotBlank() && selectedTag != null
     val dialogTitle = if (isInitialTagging) {
-        "Etiqueta y Título (Imagen ${index + 1} de $totalImages)"
+        stringResource(R.string.img_dialog_title_initial, index + 1, totalImages)
     } else {
-        "Editar Detalles de Imagen"
+        stringResource(R.string.img_dialog_title_edit)
     }
+
 
     val scrollState = rememberScrollState() // ⬅️ NUEVO
 
@@ -107,7 +110,7 @@ fun ImageDetailsDialog( // 🆕 Renombrado
                     modifier = Modifier.fillMaxWidth().verticalScroll(scrollState).weight(1f, fill = false)
                 ) {
                     Text(
-                        text = "Título del Contenido de la Imagen (ES - Obligatorio)",
+                        text = stringResource(R.string.img_field_title_es_label),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.primary
                     )
@@ -115,7 +118,7 @@ fun ImageDetailsDialog( // 🆕 Renombrado
                     OutlinedTextField(
                         value = tituloEs,
                         onValueChange = { tituloEs = it },
-                        label = { Text("Título (ES)") },
+                        label = { Text(stringResource(R.string.img_field_title_es)) },
                         modifier = Modifier.fillMaxWidth()
                     )
                     Spacer(Modifier.height(8.dp))
@@ -128,28 +131,28 @@ fun ImageDetailsDialog( // 🆕 Renombrado
                             },
                             modifier = Modifier.fillMaxWidth().align(Alignment.Start)
                         ) {
-                            Text("- OCULTAR TRADUCCIONES OPCIONALES")
+                            Text(stringResource(R.string.img_optional_titles_hide))
                         }
                         Spacer(Modifier.height(8.dp))
 
                         OutlinedTextField(
                             value = tituloEn,
                             onValueChange = { tituloEn = it },
-                            label = { Text("Título (EN - Opcional)") },
+                            label = { Text(stringResource(R.string.img_field_title_en)) },
                             modifier = Modifier.fillMaxWidth()
                         )
                         Spacer(Modifier.height(8.dp))
                         OutlinedTextField(
                             value = tituloDe,
                             onValueChange = { tituloDe = it },
-                            label = { Text("Título (DE - Opcional)") },
+                            label = { Text(stringResource(R.string.img_field_title_en)) },
                             modifier = Modifier.fillMaxWidth()
                         )
                         Spacer(Modifier.height(8.dp))
                         OutlinedTextField(
                             value = tituloFr,
                             onValueChange = { tituloFr = it },
-                            label = { Text("Título (FR - Opcional)") },
+                            label = { Text(stringResource(R.string.img_field_title_en)) },
                             modifier = Modifier.fillMaxWidth()
                         )
                         Spacer(Modifier.height(4.dp))
@@ -161,7 +164,8 @@ fun ImageDetailsDialog( // 🆕 Renombrado
                             onClick = { showOptionalTitles = true },
                             modifier = Modifier.fillMaxWidth().align(Alignment.Start)
                         ) {
-                            Text("+ AÑADIR TÍTULOS OPCIONALES (EN, DE, FR)")
+                            Text(stringResource(R.string.img_optional_titles_show))
+
                         }
                         Spacer(Modifier.height(8.dp))
                     }
@@ -177,7 +181,13 @@ fun ImageDetailsDialog( // 🆕 Renombrado
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     TextButton(onClick = onCancel) {
-                        Text(if (isInitialTagging) "DESCARTAR" else "CANCELAR")
+                        Text(
+                            if (isInitialTagging)
+                                stringResource(R.string.img_btn_discard)
+                            else
+                                stringResource(R.string.img_btn_cancel)
+                        )
+
                     }
 
                     Button(
@@ -190,7 +200,13 @@ fun ImageDetailsDialog( // 🆕 Renombrado
                         enabled = isFormValid,
                         modifier = Modifier.height(40.dp)
                     ) {
-                        Text(if (isInitialTagging && index < totalImages - 1) "SIGUIENTE" else "GUARDAR")
+                        Text(
+                            if (isInitialTagging && index < totalImages - 1)
+                                stringResource(R.string.img_btn_next)
+                            else
+                                stringResource(R.string.img_btn_save)
+                        )
+
                     }
                 }
             }
@@ -223,7 +239,7 @@ fun PinImageSelector(
     }
 
     Text(
-        text = "$label (${state.images.size} añadidas)",
+        text = "$label (${stringResource(R.string.pinimg_added_count, state.images.size)})",
         style = MaterialTheme.typography.titleMedium.copy(
             fontWeight = FontWeight.Bold,
             fontSize = 16.sp
@@ -238,12 +254,14 @@ fun PinImageSelector(
         modifier = Modifier.fillMaxWidth()
     ) {
         AddImageButton(
+            text = stringResource(R.string.img360_add)
         ) {
             if (!isSelecting) {
-                isSelecting = true // Activa el semáforo
+                isSelecting = true
                 launcher.launch("image/*")
             }
         }
+
 
         LazyRow(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
             items(state.images, key = { it.id}) { pinImage ->
@@ -268,7 +286,7 @@ fun PinImageSelector(
 
     if (state.images.size > 2) { // Solo mostrar si hay suficientes imágenes para desbordar (aprox.)
         Text(
-            text = "Desliza para ver más imágenes",
+            text = stringResource(R.string.pinimg_swipe_hint),
             style = MaterialTheme.typography.labelSmall.copy(
                 fontWeight = FontWeight.SemiBold
             ),
@@ -284,14 +302,14 @@ fun PinImageSelector(
 
     if (mandatory && state.images.isEmpty()) {
         Text(
-            text = "Debe añadir al menos una imagen.",
+            text = stringResource(R.string.pinimg_error_mandatory),
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.error,
             modifier = Modifier.padding(top = 4.dp)
         )
     } else if (hasUntaggedOrUntitledImages) {
         Text(
-            text = "Una o más imágenes no tienen etiqueta o les falta el Título (ES). Por favor, corríjalo.",
+            text = stringResource(R.string.pinimg_error_missing),
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.error,
             modifier = Modifier.padding(top = 4.dp)

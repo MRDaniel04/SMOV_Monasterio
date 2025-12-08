@@ -244,6 +244,33 @@
     <string name="loc_capilla_nacimiento">Chapelle de la Nativité</string>
     <string name="loc_other">Autre</string>
 
+    <string name="img_dialog_title_initial">Étiquette et Titre (Image %1$d sur %2$d)</string>
+    <string name="img_dialog_title_edit">Modifier les détails de l\'image</string>
+    <string name="img_field_title_es_label">Titre du contenu de l\'image (ES - Obligatoire)</string>
+    <string name="img_field_title_es">Titre (ES)</string>
+    <string name="img_optional_titles_hide">- MASQUER LES TRADUCTIONS OPTIONNELLES</string>
+    <string name="img_optional_titles_show">+ AJOUTER DES TITRES OPTIONNELS (EN, DE, FR)</string>
+    <string name="img_field_title_en">Titre (EN - Optionnel)</string>
+    <string name="img_field_title_de">Titre (DE - Optionnel)</string>
+    <string name="img_field_title_fr">Titre (FR - Optionnel)</string>
+    <string name="img_btn_discard">IGNORER</string>
+    <string name="img_btn_cancel">ANNULER</string>
+    <string name="img_btn_next">SUIVANT</string>
+    <string name="img_btn_save">ENREGISTRER</string>
+    <string name="img_preview_swipe_hint">Glissez pour voir plus d\'images</string>
+    <string name="img_error_mandatory">Vous devez ajouter au moins une image.</string>
+    <string name="img_error_missing_data">Une ou plusieurs images n\'ont pas d\'étiquette ou il manque le Titre (ES). Veuillez corriger.</string>
+
+    <string name="img360_add">Ajouter</string>
+    <string name="img360_change">Changer</string>
+
+    <string name="pinimg_added_count">%1$d ajoutees</string>
+    <string name="pinimg_swipe_hint">Faites glisser pour voir plus d images</string>
+    <string name="pinimg_error_mandatory">Vous devez ajouter au moins une image.</string>
+    <string name="pinimg_error_missing">Une ou plusieurs images n ont pas d etiquette ou il manque le Titre (ES). Veuillez corriger.</string>
+    <string name="img_delete_desc">Supprimer l’image</string>
+    <string name="img_edit_desc">Modifier les détails de l’image</string>
+
 
     <string-array name="clues">
         <item>Jette un coup d’œil au sommet du château</item>
