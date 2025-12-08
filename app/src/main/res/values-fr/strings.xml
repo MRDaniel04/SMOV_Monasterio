@@ -96,7 +96,7 @@
     <string name="game_view">Jeux</string>
     <string name="video_child">VIDÉO</string>
     <string name="game_child">JEUX</string>
-    <string name="edit_mode">MODE D\'ÉDITION</string>
+    <string name="edit_mode">Mode d\'édition</string>
     <string name="edit_home_background">Édition fond d\'écran d\'accueil</string>
     <string name="edit_pins">Édition des punaises</string>
     <string name="location_error">Aucune application n\'a été trouvée pour ouvrir la localisation.</string>
@@ -174,7 +174,7 @@
     <string name="back_piece">Dos de la pièce</string>
     <string name="left_pairs">Paires restantes : %1$s</string>
     <string name="left_pieces">Pièces restantes : %1$s</string>
-    <string name="background_edit_screen">MODIFIER L\'ARRIÈRE-PLAN</string>
+    <string name="background_edit_screen">Modifier l\'arrière-plan</string>
     <string name="pin_edit_screen">MODIFIER LE NIP</string>
     <string name="gallery_type_all">Tous</string>
     <string name="gallery_type_painting">Peintures</string>
@@ -187,6 +187,23 @@
     <string name="error_connection_title">Oups ! Une erreur est survenue</string>
     <string name="error_connection_desc">Nous n\'avons pas pu charger la carte. Veuillez vérifier votre connexion internet et réessayer.</string>
     <string name="retry">Réessayer</string>
+    <string name="pin_detail_default_title">Détail du Pin</string>
+    <string name="pin_description_not_available">Description non disponible.</string>
+    <string name="loading_images">Chargement des images...</string>
+    <string name="no_images_available">Aucune image détaillée disponible.</string>
+    <string name="confirm_delete_title">Confirmer la Suppression</string>
+    <string name="confirm_delete_message">Vous êtes sur le point de supprimer définitivement le pin. Cette action est irréversible. Voulez-vous continuer ?</string>
+    <string name="delete_pin">Supprimer le Pin</string>
+    <string name="cancel">Annuler</string>
+    <string name="error_no_pin_position">Erreur : Position initiale du pin introuvable.</string>
+    <string name="edit_pin_toast">Modifier le Pin</string>
+    <string name="pin_deleted_success">Pin supprimé avec succès</string>
+    <string name="pin_deleted_error">Erreur lors de la suppression du pin</string>
+    <string name="untitled_pin">SANS TITRE</string>
+    <string name="move_pin">Déplacer le pin</string>
+    <string name="edit_pin">Modifier le pin</string>
+    <string name="delete_pin_cd">Supprimer le pin</string>
+    <string name="close_panel">Fermer le panneau</string>
     <string-array name="clues">
         <item>Jette un coup d’œil au sommet du château</item>
         <item>Une des différences se trouve dans le ciel de l’image</item>

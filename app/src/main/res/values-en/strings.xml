@@ -96,7 +96,7 @@
     <string name="game_view">Games</string>
     <string name="video_child">VIDEO</string>
     <string name="game_child">GAMES</string>
-    <string name="edit_mode">EDIT MODE</string>
+    <string name="edit_mode">Edit mode</string>
     <string name="edit_home_background">Edit home background</string>
     <string name="edit_pins">Pin editing</string>
     <string name="location_error">No application found to open location.</string>
@@ -187,6 +187,23 @@
     <string name="error_connection_title">Oops! An error occurred</string>
     <string name="error_connection_desc">We couldn\'t load the map. Please check your internet connection and try again.</string>
     <string name="retry">Retry</string>
+    <string name="pin_detail_default_title">Pin Details</string>
+    <string name="pin_description_not_available">Description not available.</string>
+    <string name="loading_images">Loading images...</string>
+    <string name="no_images_available">No detailed images available.</string>
+    <string name="confirm_delete_title">Confirm Deletion</string>
+    <string name="confirm_delete_message">You are about to permanently delete the pin. This action cannot be undone. Do you wish to continue?</string>
+    <string name="delete_pin">Delete Pin</string>
+    <string name="cancel">Cancel</string>
+    <string name="error_no_pin_position">Error: Initial pin position not found.</string>
+    <string name="edit_pin_toast">Edit Pin</string>
+    <string name="pin_deleted_success">Pin deleted successfully</string>
+    <string name="pin_deleted_error">Error deleting pin</string>
+    <string name="untitled_pin">UNTITLED</string>
+    <string name="move_pin">Move Pin</string>
+    <string name="edit_pin">Edit Pin</string>
+    <string name="delete_pin_cd">Delete Pin</string>
+    <string name="close_panel">Close Panel</string>
     <string-array name="clues">
         <item>Take a look at the very top of the castle</item>
         <item>One of the differences is hiding in the sky</item>

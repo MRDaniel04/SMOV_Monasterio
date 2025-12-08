@@ -174,7 +174,7 @@
     <string name="back_piece">Parte trasera de la pieza</string>
     <string name="left_pairs">Parejas restantes: %1$s</string>
     <string name="left_pieces">Piezas restantes: %1$s</string>
-    <string name="background_edit_screen">EDITAR FONDO</string>
+    <string name="background_edit_screen">Editar Fondo</string>
     <string name="pin_edit_screen">EDITAR PIN</string>
     <string name="gallery_type_all">Todos</string>
     <string name="gallery_type_painting">Pinturas</string>
@@ -187,6 +187,23 @@
     <string name="error_connection_title">¡Vaya! Ha ocurrido un error</string>
     <string name="error_connection_desc">No hemos podido cargar el mapa. Por favor, comprueba tu conexión a internet y vuelve a intentarlo.</string>
     <string name="retry">Reintentar</string>
+    <string name="pin_detail_default_title">Detalle del Pin</string>
+    <string name="pin_description_not_available">Descripción no disponible.</string>
+    <string name="loading_images">Cargando imágenes...</string>
+    <string name="no_images_available">No hay imágenes detalladas disponibles.</string>
+    <string name="confirm_delete_title">Confirmar Eliminación</string>
+    <string name="confirm_delete_message">Estás a punto de eliminar permanentemente el pin. Esta acción no se puede deshacer. ¿Deseas continuar?</string>
+    <string name="delete_pin">Eliminar Pin</string>
+    <string name="cancel">Cancelar</string>
+    <string name="error_no_pin_position">Error: No se encontró la posición inicial del pin.</string>
+    <string name="edit_pin_toast">Editar Pin</string>
+    <string name="pin_deleted_success">Pin eliminado correctamente</string>
+    <string name="pin_deleted_error">Error eliminando el pin</string>
+    <string name="untitled_pin">SIN TÍTULO</string>
+    <string name="move_pin">Mover Pin</string>
+    <string name="edit_pin">Editar Pin</string>
+    <string name="delete_pin_cd">Borrar Pin</string>
+    <string name="close_panel">Cerrar Panel</string>
     <string-array name="clues">
         <item>Echa un vistazo a la parte más alta del castillo</item>
         <item>Una de las diferencias ocupa el cielo de la imagen</item>

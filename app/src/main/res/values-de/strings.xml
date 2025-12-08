@@ -96,7 +96,7 @@
     <string name="game_view">Spiele</string>
     <string name="video_child">VIDEO</string>
     <string name="game_child">SPIELE</string>
-    <string name="edit_mode">BEARBEITUNGSMODUS</string>
+    <string name="edit_mode">Bearbeitungsmodus</string>
     <string name="edit_home_background">Bearbeitung des Home-Hintergrunds</string>
     <string name="edit_pins">Pin-Bearbeitung</string>
     <string name="location_error">Keine Anwendung zum Öffnen des Standorts gefunden.</string>
@@ -174,7 +174,7 @@
     <string name="back_piece">Rückseite des Teils</string>
     <string name="left_pairs">Verbleibende Paare: %1$s</string>
     <string name="left_pieces">Verbleibende Teile: %1$s</string>
-    <string name="background_edit_screen">HINTERGRUND BEARBEITEN</string>
+    <string name="background_edit_screen">Hintergrund bearbeiten</string>
     <string name="pin_edit_screen">PIN BEARBEITEN</string>
     <string name="gallery_type_all">Alle</string>
     <string name="gallery_type_painting">Gemälde</string>
@@ -187,6 +187,23 @@
     <string name="error_connection_title">Hoppla! Ein Fehler ist aufgetreten</string>
     <string name="error_connection_desc">Wir konnten die Karte nicht laden. Bitte überprüfen Sie Ihre Internetverbindung und versuchen Sie es erneut.</string>
     <string name="retry">Erneut versuchen</string>
+    <string name="pin_detail_default_title">Pindetails</string>
+    <string name="pin_description_not_available">Beschreibung nicht verfügbar.</string>
+    <string name="loading_images">Bilder werden geladen...</string>
+    <string name="no_images_available">Keine detaillierten Bilder verfügbar.</string>
+    <string name="confirm_delete_title">Löschen Bestätigen</string>
+    <string name="confirm_delete_message">Sie sind dabei, den Pin dauerhaft zu löschen. Diese Aktion kann nicht rückgängig gemacht werden. Möchten Sie fortfahren?</string>
+    <string name="delete_pin">Pin Löschen</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="error_no_pin_position">Fehler: Anfangsposition des Pins nicht gefunden.</string>
+    <string name="edit_pin_toast">Pin Bearbeiten</string>
+    <string name="pin_deleted_success">Pin erfolgreich gelöscht</string>
+    <string name="pin_deleted_error">Fehler beim Löschen des Pins</string>
+    <string name="untitled_pin">OHNE TITEL</string>
+    <string name="move_pin">Pin verschieben</string>
+    <string name="edit_pin">Pin bearbeiten</string>
+    <string name="delete_pin_cd">Pin löschen</string>
+    <string name="close_panel">Panel schließen</string>
     <string-array name="clues">
         <item>Wirf einen Blick auf den höchsten Teil der Burg</item>
         <item>Einer der Unterschiede befindet sich am Himmel im Bild</item>

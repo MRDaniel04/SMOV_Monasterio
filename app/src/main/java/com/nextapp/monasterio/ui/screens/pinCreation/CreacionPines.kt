@@ -7,9 +7,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -52,6 +54,7 @@ fun CreacionPinesScreen(
                 imagenesState.allImagesTagged &&
                 vm.ubicacion_es.isNotBlank() && // Campo complejo (antes pinTitle)
                 vm.area_es.isNotBlank() // Campo simple (antes pinUbicacion)
+    var showExitDialog by remember { mutableStateOf(false) }
 
 
     Scaffold(
@@ -81,11 +84,71 @@ fun CreacionPinesScreen(
                         }
                     }
                 },
-                onBack = { navController.popBackStack() }
+                onBack = {
+                    if (isEditing) {
+                        // EDITAR → solo mostrar diálogo si hay cambios
+                        if (vm.isModified) {
+                            showExitDialog = true
+                        } else {
+                            navController.popBackStack()
+                        }
+                    } else {
+                        // CREAR → mostrar diálogo si rellenó algún campo
+                        val hasData =
+                            vm.ubicacion_es.isNotBlank() ||
+                                    vm.area_es.isNotBlank() ||
+                                    vm.descripcion.es.isNotBlank() ||
+                                    vm.imagenes.images.isNotEmpty() ||
+                                    vm.imagen360 != null
+
+                        if (hasData) {
+                            showExitDialog = true
+                        } else {
+                            navController.popBackStack()
+                        }
+                    }
+                }
+
             )
 
         }
     ) { paddingValues ->
+        if (showExitDialog) {
+            AlertDialog(
+                onDismissRequest = { showExitDialog = false },
+                title = {
+                    Text(
+                        if (isEditing)
+                            "Descartar cambios"
+                        else
+                            "Salir sin guardar"
+                    )
+                },
+                text = {
+                    Text(
+                        if (isEditing)
+                            "Has realizado cambios en este pin. Si sales ahora, los perderás. ¿Deseas continuar?"
+                        else
+                            "Has empezado a rellenar el formulario. Si sales ahora, se perderán los datos introducidos. ¿Deseas continuar?"
+                    )
+                },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            showExitDialog = false
+                            navController.popBackStack()
+                        }
+                    ) {
+                        Text("Salir")
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { showExitDialog = false }) {
+                        Text("Cancelar")
+                    }
+                }
+            )
+        }
 
         Column(
             modifier = Modifier

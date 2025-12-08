@@ -2,6 +2,7 @@ package com.nextapp.monasterio.ui.screens.pinEdition.components
 
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -14,6 +15,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -24,8 +27,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -55,6 +60,31 @@ fun PinDetailsPanel(
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     var isLoading by remember(selectedPin.id) { mutableStateOf(true) }
+    val selectedLang = LocalConfiguration.current.locales[0].language
+
+    val titulo = when {
+        selectedLang.startsWith("es") -> selectedPin.ubicacion_es
+        selectedLang.startsWith("en") -> selectedPin.ubicacion_en
+        selectedLang.startsWith("fr") -> selectedPin.ubicacion_fr
+        selectedLang.startsWith("de") -> selectedPin.ubicacion_de
+        else -> selectedPin.ubicacion_es
+    }.orEmpty().ifBlank { stringResource(R.string.pin_detail_default_title) }
+
+    val area = when {
+        selectedLang.startsWith("es") -> selectedPin.area_es
+        selectedLang.startsWith("en") -> selectedPin.area_en
+        selectedLang.startsWith("fr") -> selectedPin.area_fr
+        selectedLang.startsWith("de") -> selectedPin.area_de
+        else -> selectedPin.area_es
+    }.orEmpty()
+
+    val descripcion = when {
+        selectedLang.startsWith("es") -> selectedPin.descripcion_es
+        selectedLang.startsWith("en") -> selectedPin.descripcion_en
+        selectedLang.startsWith("fr") -> selectedPin.descripcion_fr
+        selectedLang.startsWith("de") -> selectedPin.descripcion_de
+        else -> selectedPin.descripcion_es
+    }.orEmpty().ifBlank { stringResource(R.string.pin_description_not_available) }
 
 
     LaunchedEffect(selectedPin.id) {
@@ -105,29 +135,27 @@ fun PinDetailsPanel(
                     IconButton(onClick = {
                         val initialScreenPos = pinTapScreenPosition
                         if (initialScreenPos == null) {
-                            Toast.makeText(
-                                context,
-                                "Error: No se encontró la posición inicial del pin.",
-                                Toast.LENGTH_SHORT
-                            ).show()
+                            Toast.makeText(context, context.getString(R.string.error_no_pin_position), Toast.LENGTH_SHORT).show()
                             return@IconButton
                         }
                         onStartMove(selectedPin, initialScreenPos)
                     }) {
                         Icon(
                             painter = painterResource(R.drawable.ic_move),
-                            contentDescription = "Mover Pin"
+                            contentDescription = stringResource(R.string.move_pin),
+                            modifier = Modifier.size(38.dp)
                         )
                     }
 
                     // Botón 2: Editar Pin
                     IconButton(onClick = {
                         onEdit(selectedPin)
-                        Toast.makeText(context, "Editar Pin", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, context.getString(R.string.edit_pin_toast), Toast.LENGTH_SHORT).show()
                     }) {
                         Icon(
                             painter = painterResource(R.drawable.lapiz),
-                            contentDescription = "Editar Pin"
+                            contentDescription = stringResource(R.string.edit_pin),
+                            modifier = Modifier.size(38.dp)   // ← AQUÍ defines 48x48
                         )
                     }
 
@@ -136,40 +164,49 @@ fun PinDetailsPanel(
                         isDeleteDialogOpen = true
                     }) {
                         Icon(
-                            painter = painterResource(R.drawable.ic_trash),
-                            contentDescription = "Borrar Pin",
-                            tint = Color(0xFFFF5722)
+                            painter = painterResource(R.drawable.borrar),
+                            contentDescription = stringResource(R.string.delete_pin_cd),
+                            modifier = Modifier.size(38.dp)
+
                         )
                     }
                 }
 
-                // Grupo Derecho: Cerrar Panel
-                IconButton(onClick = onClosePanel) {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_close_24),
-                        contentDescription = "Cerrar Panel"
-                    )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+
+                    // --- BOTÓN CERRAR PANEL ---
+                    IconButton(onClick = onClosePanel) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_close_24),
+                            contentDescription = stringResource(R.string.close_panel),
+                            modifier = Modifier.size(38.dp)
+                        )
+                    }
                 }
+
             }
 
-            Spacer(modifier = Modifier.height(4.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
             // ⭐ CORRECCIÓN 1: Manejo seguro de 'area_es' (null safety)
-            val areaText = if (selectedPin.area_es?.isNotBlank() == true) {
-                " (${selectedPin.area_es})"
+            val areaText = if (area.isNotBlank()) {
+                " ($area)"
             } else {
                 ""
             }
 
             Text(
-                // Usa ubicacion_es (con fallback en caso de null o blank) y le añade el texto del área
-                text = (selectedPin.ubicacion_es?.ifBlank { "Detalle del Pin" } ?: "Detalle del Pin") + areaText,
+                text = titulo + areaText,
                 style = TextStyle(
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold
                 ),
                 color = Color.Black
             )
+
 
             Spacer(modifier = Modifier.height(24.dp))
 
@@ -183,13 +220,12 @@ fun PinDetailsPanel(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {
-                        Text("Cargando imágenes...", color = Color.Gray)
+                        Text(stringResource(R.string.loading_images), color = Color.Gray)
                     }
                 }
                 // 2. NO HAY IMÁGENES (Solo si isLoading es false Y la lista está vacía)
                 !hasImages -> {
-                    Text(
-                        text = "No hay imágenes detalladas disponibles.",
+                    Text(stringResource(R.string.no_images_available),
                         color = Color.Gray,
                         modifier = Modifier.padding(bottom = 8.dp)
                     )
@@ -226,33 +262,44 @@ fun PinDetailsPanel(
                 }
             }
 
-
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)
                     .verticalScroll(rememberScrollState())
             ) {
-                // ⭐ CORRECCIÓN 2: Manejo seguro de 'descripcion_es' (usando orEmpty() o Elvis)
                 Text(
-                    text = selectedPin.descripcion_es.orEmpty().ifBlank { "Descripción no disponible." },
+                    text = descripcion,
                     style = TextStyle(fontSize = 12.sp),
                     color = Color.DarkGray
                 )
             }
-            Spacer(modifier = Modifier.height(8.dp))
+
+
+            Spacer(modifier = Modifier.height(12.dp))
         }
     }
 
     // --- DIÁLOGO DE CONFIRMACIÓN DE BORRADO PERMANENTE ---
     if (isDeleteDialogOpen) {
         // ⭐ CORRECCIÓN 3: Manejo seguro de 'ubicacion_es' en el diálogo
-        val pinTitleForDialog = selectedPin.ubicacion_es.orEmpty().ifBlank { "SIN TÍTULO" }
+        val pinTitleForDialog =
+            selectedPin.ubicacion_es.orEmpty().ifBlank { stringResource(R.string.untitled_pin) }
+
 
         AlertDialog(
             onDismissRequest = { isDeleteDialogOpen = false },
-            title = { Text(text = "Confirmar Eliminación") },
-            text = { Text("Estás a punto de eliminar permanentemente el pin '${pinTitleForDialog}'. Esta acción no se puede deshacer. ¿Deseas continuar?") },
+            title = { Text(text = stringResource(R.string.confirm_delete_title)) },
+            text = {
+                Text(
+                    text = stringResource(
+                        R.string.confirm_delete_message,
+                        pinTitleForDialog
+                    )
+                )
+            },
+
+
             confirmButton = {
                 Button(
                     onClick = {
@@ -264,22 +311,25 @@ fun PinDetailsPanel(
                             val ok = PinRepository.deletePinAndImages(pinId)
 
                             if (ok) {
-                                Toast.makeText(ctx, "Pin eliminado correctamente", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(ctx, ctx.getString(R.string.pin_deleted_success), Toast.LENGTH_SHORT).show()
                                 onPinDeleted(pinId)
                                 onClosePanel()
                             } else {
-                                Toast.makeText(ctx, "Error eliminando el pin", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(ctx, ctx.getString(R.string.pin_deleted_error), Toast.LENGTH_SHORT).show()
+
                             }
                         }
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFF44336))
                 ) {
-                    Text("Eliminar Pin")
+                    Text(stringResource(R.string.delete_pin))
                 }
             },
             dismissButton = {
-                Button(onClick = { isDeleteDialogOpen = false }) { Text("Cancelar") }
+                Button(onClick = { isDeleteDialogOpen = false }) { Text(stringResource(R.string.cancel))
+                }
             }
         )
     }
 }
+

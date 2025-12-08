@@ -41,7 +41,6 @@ private val UBICACION_AUTO_TRADS = mapOf(
     "Lado de la epistola" to mapOf("en" to "Epistle Side", "de" to "Epistelseite", "fr" to "Côté épître"),
     "Trascoro" to mapOf("en" to "Retrochoir", "de" to "Hinterchor", "fr" to "Derrière le chœur"),
     "Capilla del nacimiento" to mapOf("en" to "Nativity Chapel", "de" to "Geburtskapelle", "fr" to "Chapelle de la Nativité")
-    // ⚠️ Importante: Asegúrate de añadir aquí el resto de las ubicaciones predefinidas
 )
 
 

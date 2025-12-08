@@ -38,7 +38,7 @@ fun TranslatableTextField(
                 state.updateEs(newValue)
                 onChanged()
             },
-            isError = state.es.isBlank(), // 🛑 CORRECCIÓN: Eliminado .value
+            isError = false, // 🛑 CORRECCIÓN: Eliminado .value
             label = { Text("Introduce el texto en español", fontSize = 10.sp) },
             singleLine = singleLine,
             modifier = Modifier
@@ -47,25 +47,37 @@ fun TranslatableTextField(
             minLines = if (!singleLine) 3 else 1
         )
 
+        if (state.es.isBlank()) {
+            Text(
+                text = "Este campo es obligatorio",
+                color = MaterialTheme.colorScheme.error,
+                fontSize = 11.sp,               // ⬅ más pequeño
+                modifier = Modifier.padding(top = 2.dp) // ⬅ más pegado al campo
+            )
+        }
+
+
         Spacer(Modifier.height(12.dp))
 
         // 2. BOTÓN DE TRADUCCIÓN (Para expandir/colapsar)
         OutlinedButton(
             onClick = { expanded = !expanded },
             modifier = Modifier.fillMaxWidth(),
-            border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary), // Aseguramos el borde
-            shape = RoundedCornerShape(8.dp), // Forma consistente
+            border = BorderStroke(1.dp, MaterialTheme.colorScheme.onBackground), // ⬅ borde negro
+            shape = RoundedCornerShape(8.dp),
             contentPadding = PaddingValues(12.dp)
         ) {
             Icon(
-                painter = painterResource(id = if (expanded) R.drawable.ic_arrow_up else R.drawable.ic_arrow_down), // Mantenemos tus iconos de flecha
+                painter = painterResource(id = if (expanded) R.drawable.ic_arrow_up else R.drawable.ic_arrow_down),
                 contentDescription = if (expanded) "Ocultar traducciones" else "Mostrar traducciones",
-                modifier = Modifier.size(20.dp)
+                modifier = Modifier.size(20.dp),
+                tint = MaterialTheme.colorScheme.onBackground // ⬅ icono negro
             )
             Spacer(Modifier.width(8.dp))
             Text(
                 text = if (expanded) "Ocultar Traducciones Opcionales" else "Añadir Traducciones Opcionales",
-                fontWeight = FontWeight.Medium
+                fontWeight = FontWeight.Medium,
+                color = MaterialTheme.colorScheme.onBackground // ⬅ texto negro
             )
         }
 
