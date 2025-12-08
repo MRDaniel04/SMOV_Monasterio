@@ -69,7 +69,7 @@ fun OpcionesJuegoNinyos(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(topPadding) // 👈 El contenido baja para no chocarse con la barra
+                .padding(topPadding)
         ) {
             // Contenedor interno con margen visual
             Box(

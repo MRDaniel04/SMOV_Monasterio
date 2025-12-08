@@ -2,9 +2,11 @@ package com.nextapp.monasterio.ui.screens
 
 import android.app.Activity
 import android.content.pm.ActivityInfo
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
@@ -21,7 +23,7 @@ object VirtualVisitRoutes {
 }
 
 @Composable
-fun VirtualVisitScreen(navController: NavHostController? = null, viewModel: AjustesViewModel) {
+fun VirtualVisitScreen(navController: NavHostController? = null, viewModel: AjustesViewModel, topPadding: PaddingValues = PaddingValues(0.dp)) {
     val localNavController = rememberNavController()
 
     val context = LocalContext.current
@@ -88,9 +90,9 @@ fun VirtualVisitScreen(navController: NavHostController? = null, viewModel: Ajus
 
             DetalleFiguraScreen(
                 navController = localNavController,
-                // 👇 PÁSALE EL NAV CONTROLLER RAÍZ AQUÍ
                 rootNavController = navController, // (navController de la función VirtualVisitScreen es el raíz)
-                nombre = nombreArg
+                nombre = nombreArg,
+                topPadding = topPadding
             )
         }
     }

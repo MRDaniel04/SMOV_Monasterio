@@ -18,7 +18,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -40,8 +39,9 @@ import com.nextapp.monasterio.ui.components.MonasteryButton
 @Composable
 fun DetalleFiguraScreen(
     navController: NavHostController,
-    rootNavController: NavHostController? = null, // 👈 AÑADIDO: Ahora acepta el navegador raíz
-    nombre: String
+    rootNavController: NavHostController? = null,
+    nombre: String,
+    topPadding: PaddingValues = PaddingValues(0.dp)
 ) {
     // 1. Estados de Datos
     var figura by remember { mutableStateOf<FiguraData?>(null) }
@@ -101,8 +101,8 @@ fun DetalleFiguraScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
+            .padding(topPadding)
             .background(Color.White)
-            .statusBarsPadding()
     ) {
         if (isLoading) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -118,6 +118,7 @@ fun DetalleFiguraScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
+                    .padding(topPadding)
                     .verticalScroll(rememberScrollState())
                     .padding(horizontal = 16.dp)
                     .padding(bottom = 40.dp) // Espacio inferior

@@ -316,28 +316,34 @@ fun HomeGridButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
-    Card(
-        modifier = modifier
-            .fillMaxHeight()
-            .clip(RoundedCornerShape(16.dp))
-            .clickable { onClick() },
-        colors = CardDefaults.cardColors(containerColor = backgroundColor),
-        elevation = CardDefaults.cardElevation(8.dp)
+    MonasteryButton(
+        onClick = onClick,
+        colors = ButtonDefaults.buttonColors(containerColor = backgroundColor),
+        shape = RoundedCornerShape(20.dp),
+        modifier = modifier,
+        elevation = ButtonDefaults.buttonElevation(8.dp)
     ) {
         BoxWithConstraints(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(8.dp),
+                .padding(4.dp), // 1. Reducimos un poco el padding general para ganar espacio
             contentAlignment = Alignment.Center
         ) {
-            // Autoajuste de tamaño según espacio disponible
             val availableHeight = maxHeight
-            val iconSize = if (availableHeight < 100.dp) 24.dp else 40.dp
-            val textSize = if (availableHeight < 100.dp) 14.sp else 18.sp
+
+            // 2. Lógica mejorada: Si es pequeño O el texto es muy largo, usa letra pequeña
+            val isSmallSpace = availableHeight < 100.dp
+            val isLongText = text.length > 10 // Umbral de caracteres
+
+            val iconSize = if (isSmallSpace) 24.dp else 40.dp
+
+            // Si hay poco espacio o el texto es largo, bajamos a 13.sp, si no, 18.sp
+            val textSize = if (isSmallSpace || isLongText) 13.sp else 18.sp
 
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
+                verticalArrangement = Arrangement.Center,
+                modifier = Modifier.fillMaxWidth() // Asegura que la columna use todo el ancho
             ) {
                 Icon(
                     painter = painterResource(id = iconRes),
@@ -345,14 +351,20 @@ fun HomeGridButton(
                     modifier = Modifier.size(iconSize),
                     tint = Color.White
                 )
-                Spacer(modifier = Modifier.height(8.dp))
+
+                // 3. Spacer flexible: Si hay poco espacio, el separador se reduce
+                Spacer(modifier = Modifier.height(if (isSmallSpace) 4.dp else 8.dp))
+
                 Text(
                     text = text,
                     fontSize = textSize,
                     fontWeight = FontWeight.Bold,
                     color = Color.White,
                     textAlign = TextAlign.Center,
-                    lineHeight = textSize * 1.1,
+                    lineHeight = textSize * 1.0, // Línea más compacta
+                    maxLines = 2,                // Permite 2 líneas
+                    overflow = TextOverflow.Ellipsis, // Puntos suspensivos si falla
+                    modifier = Modifier.fillMaxWidth()
                 )
             }
         }

@@ -2,6 +2,7 @@ package com.nextapp.monasterio.ui.screens.pinEdition
 
 import android.app.Activity
 import android.content.pm.ActivityInfo
+import android.content.res.Configuration
 import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -11,6 +12,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -19,54 +21,59 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.nextapp.monasterio.R
 import com.nextapp.monasterio.repository.ImagenRepository
 import com.nextapp.monasterio.services.CloudinaryService
+import com.nextapp.monasterio.ui.screens.pinEdition.components.AppStatus
 import com.nextapp.monasterio.ui.theme.MonasteryBlue
 import com.nextapp.monasterio.ui.theme.MonasteryOrange
 import kotlinx.coroutines.launch
-import com.nextapp.monasterio.ui.screens.pinEdition.components.AppStatus
+import com.nextapp.monasterio.ui.components.MonasteryButton
 
 // COLORES
 val EditModePurple = Color(0xFF9C27B0)
-val RedTopBar = Color(0xFFC00000)
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EdicionFondoInicio(navController: NavController) {
+fun EdicionFondoInicio(
+    navController: NavController,
+    topPadding: PaddingValues = PaddingValues(0.dp) // Recibimos el padding
+) {
     val context = LocalContext.current
     val activity = (context as? Activity)
     val repo = ImagenRepository()
     val coroutineScope = rememberCoroutineScope()
 
-    // 💡 SOLUCIÓN: Declaramos todos los estados al inicio de la función.
+    // Estados
     var imagenFondoInicio by remember { mutableStateOf<String?>(null) }
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
-    var currentSavedImageUrl by remember { mutableStateOf<String?>(null) } // AHORA DISPONIBLE
+    var currentSavedImageUrl by remember { mutableStateOf<String?>(null) }
     val isUploading by AppStatus.isUploading.collectAsState()
     var showConfirmationToast by remember { mutableStateOf(false) }
 
+    // Detectar orientación
+    val configuration = LocalConfiguration.current
+    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
     LaunchedEffect(Unit) {
         val data = repo.getImagenFondoInicio()
-        // Ahora podemos asignar el valor sin error
         imagenFondoInicio = data?.url
         currentSavedImageUrl = data?.url
     }
 
-    // El LaunchedEffect para el Toast también funciona aquí
     LaunchedEffect(showConfirmationToast) {
         if (showConfirmationToast) {
             Toast.makeText(context, "Imagen de fondo actualizada", Toast.LENGTH_LONG).show()
@@ -74,256 +81,155 @@ fun EdicionFondoInicio(navController: NavController) {
         }
     }
 
-
     DisposableEffect(Unit) {
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
         onDispose { }
     }
-    ConstraintLayout(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-    ) {
-        val (background, crest, btnsContainer, actionControls) = createRefs()
 
-        val backgroundModifier = Modifier.constrainAs(background) {
-            top.linkTo(parent.top)
-            bottom.linkTo(parent.bottom)
-            start.linkTo(parent.start)
-            end.linkTo(parent.end)
-            width = Dimension.fillToConstraints
-            height = Dimension.fillToConstraints
+    val imagePickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        selectedImageUri = uri
+    }
+
+    // Determinar qué fondo mostrar (El nuevo seleccionado o el actual)
+    val backgroundUriToDisplay = selectedImageUri
+        ?: currentSavedImageUrl?.let { Uri.parse(it) }
+        ?: imagenFondoInicio?.let { Uri.parse(it) }
+
+    // --- ESTRUCTURA PRINCIPAL ---
+    Box(modifier = Modifier.fillMaxSize()) {
+
+        // 1. FONDO (Ocupa todo)
+        if (backgroundUriToDisplay != null) {
+            AsyncImage(
+                model = backgroundUriToDisplay,
+                contentDescription = "Fondo",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize()
+            )
+        } else {
+            Image(
+                painter = painterResource(id = R.drawable.monastery_background),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize()
+            )
         }
 
-        // ❌ Eliminado el bloque ESTADO redundante que causaba la confusión
-        // Las variables de estado ahora vienen de la parte superior de la función.
-
-        val backgroundUriToDisplay = selectedImageUri
-            ?: currentSavedImageUrl?.let { Uri.parse(it) }
-            ?: imagenFondoInicio?.let { Uri.parse(it) }
-
-
-        val imagePickerLauncher = rememberLauncherForActivityResult(
-            contract = ActivityResultContracts.GetContent()
-        ) { uri: Uri? ->
-            selectedImageUri = uri
-        }
-
-        // Mostrar fondo
-        when (backgroundUriToDisplay) {
-            is Uri -> {
-                AsyncImage(
-                    model = backgroundUriToDisplay,
-                    contentDescription = "Fondo personalizado",
-                    contentScale = ContentScale.Crop,
-                    modifier = backgroundModifier
-                )
-            }
-
-            else -> {
-                // fallback si no hay URI seleccionada ni guardada
-                Image(
-                    painter = painterResource(id = R.drawable.monastery_background),
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    modifier = backgroundModifier
-                )
-            }
-        }
-
-        // LOGO SUPERIOR
-        Image(
-            painter = painterResource(id = R.drawable.huelgas_inicio),
-            contentDescription = "Escudo",
-            contentScale = ContentScale.FillWidth,
-            modifier = Modifier.constrainAs(crest) {
-                top.linkTo(parent.top, margin = 24.dp)
-                start.linkTo(parent.start)
-                end.linkTo(parent.end)
-                width = Dimension.fillToConstraints
-            }
-        )
-
-        // SOLO EL BOTÓN MORADO "Cambiar fondo"
-        if (selectedImageUri == null) Column(
-            modifier = Modifier.constrainAs(btnsContainer) {
-                bottom.linkTo(parent.bottom, margin = 160.dp)
-                start.linkTo(parent.start, margin = 20.dp)
-                end.linkTo(parent.end, margin = 20.dp)
-                width = Dimension.fillToConstraints
-            }
-            ,
-            verticalArrangement = Arrangement.spacedBy(32.dp)
+        // 2. CONTENIDO (Respeta barra superior)
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(topPadding)
         ) {
-            Button(
-                onClick = {
-                    if (selectedImageUri == null) {
-                        imagePickerLauncher.launch("image/*")
-                    } else {
-                        selectedImageUri = null
+            // Contenedor interno con margen
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp)
+            ) {
+                if (isLandscape) {
+                    // --- DISEÑO HORIZONTAL ---
+                    Row(
+                        modifier = Modifier.fillMaxSize(),
+                        horizontalArrangement = Arrangement.spacedBy(24.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        // IZQUIERDA: Logo
+                        Box(
+                            modifier = Modifier.weight(0.4f).fillMaxHeight(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Image(
+                                painter = painterResource(id = R.drawable.huelgas_inicio),
+                                contentDescription = "Escudo",
+                                contentScale = ContentScale.Fit,
+                                modifier = Modifier.fillMaxSize()
+                            )
+                        }
+
+                        // DERECHA: Botones (Morado o Previsualización)
+                        Box(
+                            modifier = Modifier.weight(0.6f).fillMaxHeight(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            if (selectedImageUri == null) {
+                                // MODO SELECCIÓN: Solo botón morado
+                                EditButton(
+                                    text = "Cambiar fondo",
+                                    iconRes = R.drawable.lapiz,
+                                    onClick = { imagePickerLauncher.launch("image/*") }
+                                )
+                            } else {
+                                // MODO PREVISUALIZACIÓN: Botones Fake estilo Home
+                                PreviewButtonsGridLandscape()
+                            }
+                        }
                     }
-                },
-                colors = ButtonDefaults.buttonColors(containerColor = EditModePurple),
-                shape = RoundedCornerShape(20.dp),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Start
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.lapiz),
-                        contentDescription = null,
-                        modifier = Modifier.padding(end = 16.dp).size(48.dp)
-                    )
+                } else {
+                    // --- DISEÑO VERTICAL ---
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .verticalScroll(rememberScrollState()),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        // Logo
+                        Image(
+                            painter = painterResource(id = R.drawable.huelgas_inicio),
+                            contentDescription = "Escudo",
+                            contentScale = ContentScale.FillWidth,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(bottom = 48.dp)
+                        )
 
-                    Spacer(modifier = Modifier.weight(1f))
+                        if (selectedImageUri == null) {
+                            // MODO SELECCIÓN: Botón morado grande
+                            Spacer(Modifier.height(40.dp))
+                            EditButton(
+                                text = "Cambiar fondo",
+                                iconRes = R.drawable.lapiz,
+                                onClick = { imagePickerLauncher.launch("image/*") }
+                            )
+                        } else {
+                            // MODO PREVISUALIZACIÓN: Botones Fake estilo Home
+                            PreviewButtonsListPortrait()
+                        }
 
-                    Text(
-                        "Cambiar fondo",
-                        fontSize = 22.sp,
-                        textAlign = TextAlign.Center
-                    )
-
-                    Spacer(modifier = Modifier.width(64.dp).weight(1f))
+                        // Espacio extra al final para la barra de confirmación
+                        Spacer(Modifier.height(100.dp))
+                    }
                 }
             }
         }
 
-        if (selectedImageUri != null) Column(
-            modifier = Modifier.constrainAs(btnsContainer) {
-                bottom.linkTo(parent.bottom, margin = 160.dp)
-                start.linkTo(parent.start, margin = 20.dp)
-                end.linkTo(parent.end, margin = 20.dp)
-                width = Dimension.fillToConstraints
-            },
-            verticalArrangement = Arrangement.spacedBy(32.dp)
-        ) {
-
-            // 🔶 VISITA VIRTUAL
-            Button(
-                onClick = { /* inactivo */ },
-                colors = ButtonDefaults.buttonColors(containerColor = MonasteryOrange),
-                shape = RoundedCornerShape(20.dp),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Row(
-                    modifier=Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Start
-                )  {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_map_24),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .padding(end = 16.dp)
-                            .size(48.dp)
-                    )
-                    Spacer(modifier = Modifier.weight(1f))
-                    Text(
-                        stringResource(id = R.string.virtual_visit),
-                        fontSize = 22.sp,
-                        textAlign = TextAlign.Center
-                    )
-                    Spacer(modifier = Modifier.width(64.dp).weight(1f))
-                }
-            }
-
-            // 🟩 MODO NIÑOS
-            Button(
-                onClick = { /* inactivo */ },
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6EB017)),
-                shape = RoundedCornerShape(20.dp),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Row(
-                    modifier=Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Start
-                )  {
-                    Icon(
-                        painter = painterResource(id = R.drawable.outline_account_child_invert_24),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .padding(end = 16.dp)
-                            .size(48.dp)
-                    )
-                    Spacer(modifier = Modifier.weight(1f))
-                    Text(
-                        stringResource(id = R.string.child_mode),
-                        fontSize = 22.sp,
-                        textAlign = TextAlign.Center
-                    )
-                    Spacer(modifier = Modifier.width(64.dp).weight(1f))
-                }
-            }
-
-            // 🔵 RESERVA
-            Button(
-                onClick = { /* inactivo */ },
-                colors = ButtonDefaults.buttonColors(containerColor = MonasteryBlue),
-                shape = RoundedCornerShape(20.dp),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Row(
-                    modifier=Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Start
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_time_24),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .padding(end = 16.dp)
-                            .size(48.dp)
-
-                    )
-                    Spacer(modifier = Modifier.weight(1f))
-                    Text(
-                        stringResource(id = R.string.book_appointment),
-                        fontSize = 22.sp,
-                        textAlign = TextAlign.Center,
-                    )
-                    Spacer(modifier = Modifier.width(64.dp).weight(1f))
-                }
-            }
-        }
-
-
-        // BARRA DE ACCIÓN INFERIOR (Confirmar / Cancelar)
+        // 3. BARRA DE CONFIRMACIÓN (Solo si hay imagen seleccionada)
         AnimatedVisibility(
             visible = selectedImageUri != null && !isUploading,
             enter = fadeIn(),
             exit = fadeOut(),
-            modifier = Modifier.constrainAs(actionControls) {
-                bottom.linkTo(parent.bottom)
-                start.linkTo(parent.start)
-                end.linkTo(parent.end)
-                width = Dimension.fillToConstraints
-            }
+            modifier = Modifier.align(Alignment.BottomCenter)
         ) {
             ActionControlBar(
                 onConfirm = {
                     coroutineScope.launch {
                         AppStatus.startUpload()
                         val result = CloudinaryService.uploadImage(selectedImageUri!!, context)
-
                         result.onSuccess { url ->
                             repo.updateImagenFondoInicio(url)
                             currentSavedImageUrl = url
                             selectedImageUri = null
-                            showConfirmationToast = true // 🟢 Mostrar Toast de éxito
+                            showConfirmationToast = true
                         }
-
                         result.onFailure {
                             Toast.makeText(context, "Error subiendo la imagen", Toast.LENGTH_LONG).show()
                         }
-
-                        AppStatus.finishUpload() // 🔴 FINALIZA LA CARGA
+                        AppStatus.finishUpload()
                     }
-                }
-                ,
+                },
                 onCancel = {
                     selectedImageUri = null
                 }
@@ -332,44 +238,130 @@ fun EdicionFondoInicio(navController: NavController) {
     }
 }
 
-// BOTONES INFERIORES RED / GREEN
+// -----------------------------------------------------------
+// COMPONENTES AUXILIARES
+// -----------------------------------------------------------
+
 @Composable
-fun ActionControlBar(
-    onConfirm: () -> Unit,
-    onCancel: () -> Unit,
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(Color.Black.copy(alpha = 0.8f))
-            .padding(16.dp),
-        horizontalArrangement = Arrangement.SpaceAround,
-        verticalAlignment = Alignment.CenterVertically
+fun EditButton(text: String, iconRes: Int, onClick: () -> Unit) {
+    MonasteryButton(
+        onClick = onClick,
+        colors = ButtonDefaults.buttonColors(containerColor = EditModePurple),
+        shape = RoundedCornerShape(20.dp),
+        modifier = Modifier.fillMaxWidth().height(80.dp),
+        elevation = ButtonDefaults.buttonElevation(8.dp)
     ) {
-        // 🔴 CANCELAR
-        Button(
-            onClick = onCancel,
-            colors = ButtonDefaults.buttonColors(containerColor = Color.Red.copy(alpha = 0.8f)),
-            shape = RoundedCornerShape(50),
-            modifier = Modifier.weight(1f).padding(horizontal = 8.dp)
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Start
         ) {
-
-            Spacer(Modifier.width(4.dp))
-            Text("Cancelar", color = Color.White)
-        }
-
-        // 🟢 CONFIRMAR (MISMO TAMAÑO)
-        Button(
-            onClick = onConfirm,
-            colors = ButtonDefaults.buttonColors(containerColor = Color.Green.copy(alpha = 0.8f)),
-            shape = RoundedCornerShape(50),
-            modifier = Modifier.weight(1f).padding(horizontal = 8.dp)
-        ) {
-
-            Spacer(Modifier.width(4.dp))
-            Text("Confirmar", color = Color.White)
+            Icon(
+                painter = painterResource(id = iconRes),
+                contentDescription = null,
+                modifier = Modifier.size(32.dp)
+            )
+            Spacer(modifier = Modifier.weight(1f))
+            Text(
+                text = text,
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center
+            )
+            Spacer(modifier = Modifier.weight(1f))
+            Spacer(modifier = Modifier.width(32.dp))
         }
     }
 }
 
-// ❌ Se elimina la función FullScreenLoadingDialog()
+// Botones "Fake" para previsualizar cómo queda el fondo (Portrait)
+@Composable
+fun PreviewButtonsListPortrait() {
+    Column(verticalArrangement = Arrangement.spacedBy(24.dp)) {
+        MockHomeButton("Visita Virtual", R.drawable.ic_map_24, MonasteryOrange)
+        MockHomeButton("Modo Niños", R.drawable.outline_account_child_invert_24, Color(0xFF6EB017))
+        MockHomeButton("Reserva Cita", R.drawable.ic_time_24, MonasteryBlue)
+    }
+}
+
+// Botones "Fake" para previsualizar (Landscape)
+@Composable
+fun PreviewButtonsGridLandscape() {
+    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            Box(Modifier.weight(1f)) { MockHomeGridButton("Visita Virtual", R.drawable.ic_map_24, MonasteryOrange) }
+            Box(Modifier.weight(1f)) { MockHomeGridButton("Modo Niños", R.drawable.outline_account_child_invert_24, Color(0xFF6EB017)) }
+        }
+        Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            Box(Modifier.weight(1f)) { MockHomeGridButton("Reserva Cita", R.drawable.ic_time_24, MonasteryBlue) }
+            Spacer(Modifier.weight(1f)) // Hueco vacío
+        }
+    }
+}
+
+@Composable
+fun MockHomeButton(text: String, iconRes: Int, color: Color) {
+    Button(
+        onClick = {}, // No hace nada, solo visual
+        colors = ButtonDefaults.buttonColors(containerColor = color),
+        shape = RoundedCornerShape(20.dp),
+        modifier = Modifier.fillMaxWidth().height(80.dp),
+        elevation = ButtonDefaults.buttonElevation(8.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Start
+        ) {
+            Icon(painter = painterResource(id = iconRes), contentDescription = null, modifier = Modifier.size(32.dp))
+            Spacer(Modifier.weight(1f))
+            Text(text = text, fontSize = 20.sp, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center)
+            Spacer(Modifier.weight(1f))
+            Spacer(Modifier.width(32.dp))
+        }
+    }
+}
+
+@Composable
+fun MockHomeGridButton(text: String, iconRes: Int, color: Color) {
+    Card(
+        modifier = Modifier.fillMaxWidth().height(100.dp),
+        colors = CardDefaults.cardColors(containerColor = color),
+        shape = RoundedCornerShape(16.dp),
+        elevation = CardDefaults.cardElevation(8.dp)
+    ) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Icon(painter = painterResource(id = iconRes), contentDescription = null, modifier = Modifier.size(32.dp), tint = Color.White)
+            Text(text = text, fontSize = 16.sp, fontWeight = FontWeight.Bold, color = Color.White, textAlign = TextAlign.Center)
+        }
+    }
+}
+
+@Composable
+fun ActionControlBar(onConfirm: () -> Unit, onCancel: () -> Unit) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(Color.Black.copy(alpha = 0.8f))
+            .padding(16.dp)
+            .navigationBarsPadding(),
+        horizontalArrangement = Arrangement.SpaceAround,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Button(
+            onClick = onCancel,
+            colors = ButtonDefaults.buttonColors(containerColor = Color.Red.copy(alpha = 0.8f)),
+            modifier = Modifier.weight(1f).padding(horizontal = 8.dp)
+        ) { Text("Cancelar", color = Color.White) }
+
+        Button(
+            onClick = onConfirm,
+            colors = ButtonDefaults.buttonColors(containerColor = Color.Green.copy(alpha = 0.8f)),
+            modifier = Modifier.weight(1f).padding(horizontal = 8.dp)
+        ) { Text("Confirmar", color = Color.White) }
+    }
+}

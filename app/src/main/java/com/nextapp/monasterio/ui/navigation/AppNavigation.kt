@@ -67,7 +67,7 @@ fun AppNavigationHost(
         composable(AppRoutes.PUZZLENIVEL4){PuzzleScreen(navController=navController,tamaño= PuzzleSize(5,5))}
         composable(AppRoutes.JUEGO_NINYOS){OpcionesJuegoNinyos(navController=navController, topPadding = scaffoldPadding)}
         composable(route=AppRoutes.MODO_EDICION) { OpcionesModoEdicion(navController = navController)}
-        composable(AppRoutes.EDICION_FONDO_INICIO) { EdicionFondoInicio(navController = navController) }
+        composable(AppRoutes.EDICION_FONDO_INICIO) { EdicionFondoInicio(navController = navController, topPadding = scaffoldPadding) }
         composable(AppRoutes.EDICION_PINES) { EdicionPines(navController) }
         composable(AppRoutes.PERFIL)   { ProfileScreen(isEditing = isEditing, viewModel = authViewModel ) }
         composable(AppRoutes.AJUSTES)  { AjustesScreen(viewModel = ajustesViewModel) }
@@ -81,7 +81,7 @@ fun AppNavigationHost(
 
         // Ruta de Visita Virtual (Mapa)
         composable(AppRoutes.VIRTUAL_VISIT) {
-            VirtualVisitScreen(navController = navController,viewModel = ajustesViewModel)
+            VirtualVisitScreen(navController = navController,viewModel = ajustesViewModel, topPadding = scaffoldPadding)
         }
 
         // Ruta al Edición Pines Host
@@ -134,10 +134,6 @@ fun AppNavigationHost(
         }
     }
 }
-
-//
-// --- EL RESTO DEL ARCHIVO (AppDrawerContent y DrawerMenuItem) SE QUEDA IGUAL ---
-//
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
