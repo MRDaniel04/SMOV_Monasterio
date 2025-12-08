@@ -272,7 +272,10 @@
 
     <string name="img_delete_desc">Bild löschen</string>
     <string name="img_edit_desc">Bilddetails bearbeiten</string>
-
+    <string name="tag_pintura">Gemälde</string>
+    <string name="tag_escultura">Skulptur</string>
+    <string name="tag_arquitectura">Architektur</string>
+    <string name="tag_otro">Andere</string>
 
     <string-array name="clues">
         <item>Wirf einen Blick auf den höchsten Teil der Burg</item>

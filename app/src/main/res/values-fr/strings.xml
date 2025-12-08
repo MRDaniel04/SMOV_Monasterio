@@ -270,7 +270,10 @@
     <string name="pinimg_error_missing">Une ou plusieurs images n ont pas d etiquette ou il manque le Titre (ES). Veuillez corriger.</string>
     <string name="img_delete_desc">Supprimer l’image</string>
     <string name="img_edit_desc">Modifier les détails de l’image</string>
-
+    <string name="tag_pintura">Peinture</string>
+    <string name="tag_escultura">Sculpture</string>
+    <string name="tag_arquitectura">Architecture</string>
+    <string name="tag_otro">Autre</string>
 
     <string-array name="clues">
         <item>Jette un coup d’œil au sommet du château</item>

@@ -74,7 +74,7 @@ fun ImagePreviewCard(
                 AssistChip(
                     onClick = { onEditDetails(pinImage) }, // 🆕 Clic en el chip también edita
                     label = { Text(
-                        text = tag.displayName,
+                        text = stringResource(tag.stringResId),
                         style = MaterialTheme.typography.labelSmall
                     ) },
                     colors = AssistChipDefaults.assistChipColors(

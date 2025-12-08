@@ -5,6 +5,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource // 👈 Necesario
 import androidx.compose.ui.unit.dp
 import com.nextapp.monasterio.models.ImageTag
 
@@ -65,7 +66,8 @@ private fun RowScope.TagChip(
 
     AssistChip(
         onClick = { onTagSelected(tag) },
-        label = { Text(tag.displayName) },
+        // 🚀 CAMBIO CLAVE: Usamos stringResource para obtener el texto traducido
+        label = { Text(stringResource(tag.stringResId)) },
         modifier = modifier,
         colors = if (isSelected)
             AssistChipDefaults.assistChipColors(

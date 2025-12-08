@@ -145,14 +145,14 @@ fun ImageDetailsDialog( // 🆕 Renombrado
                         OutlinedTextField(
                             value = tituloDe,
                             onValueChange = { tituloDe = it },
-                            label = { Text(stringResource(R.string.img_field_title_en)) },
+                            label = { Text(stringResource(R.string.img_field_title_de)) },
                             modifier = Modifier.fillMaxWidth()
                         )
                         Spacer(Modifier.height(8.dp))
                         OutlinedTextField(
                             value = tituloFr,
                             onValueChange = { tituloFr = it },
-                            label = { Text(stringResource(R.string.img_field_title_en)) },
+                            label = { Text(stringResource(R.string.img_field_title_fr)) },
                             modifier = Modifier.fillMaxWidth()
                         )
                         Spacer(Modifier.height(4.dp))

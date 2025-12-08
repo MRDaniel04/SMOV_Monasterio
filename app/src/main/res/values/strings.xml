@@ -271,7 +271,10 @@
     <string name="pinimg_error_missing">Una o más imágenes no tienen etiqueta o les falta el Título (ES). Por favor, corríjalo.</string>
     <string name="img_delete_desc">Eliminar imagen</string>
     <string name="img_edit_desc">Editar detalles de imagen</string>
-
+    <string name="tag_pintura">Pintura</string>
+    <string name="tag_escultura">Escultura</string>
+    <string name="tag_arquitectura">Arquitectura</string>
+    <string name="tag_otro">Otro</string>
 
     <string-array name="clues">
         <item>Echa un vistazo a la parte más alta del castillo</item>
