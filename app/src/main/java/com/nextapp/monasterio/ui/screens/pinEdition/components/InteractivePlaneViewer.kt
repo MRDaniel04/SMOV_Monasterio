@@ -82,9 +82,11 @@ fun InteractivePlanoViewer(
                     // 1. Si este es el pin que está siendo movido (creado o reubicado):
                     // Lo hacemos transparente para que solo se vea el pin amarillo flotante.
                     pin.id == pinBeingMoved?.id -> Color.Transparent
+                    pin.id == selectedPin?.id -> Color.Blue
 
-                    // 2. Todos los demás pines estáticos: ROJO
-                    else -> Color.Red
+
+                    // 2. Todos los demás pines estáticos: WHITE
+                    else -> Color.White
                 }
 
                 val baseColorInt = color.toArgb()
@@ -93,7 +95,7 @@ fun InteractivePlanoViewer(
                     x = pin.x,
                     y = pin.y,
                     iconId = pin.iconRes ?: R.drawable.pin3,
-
+                    pinColor = baseColorInt,
                     // Mantenemos 'isPressed' en false si el pin está siendo movido,
                     // y usamos la propiedad pinColor para el color.
                     isPressed = false,
