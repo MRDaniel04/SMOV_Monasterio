@@ -52,7 +52,7 @@ object PuzzleData{
         ),
         PuzzleSet(
             imagenCompleta = R.drawable.p2_2,
-            piezas = listOf(R.drawable.p2_2_1,R.drawable.p2_2_2,R.drawable.p2_2_3,R.drawable.p2_2_4,R.drawable.p2_2_5,R.drawable.p2_2_6,R.drawable.p2_2_7,R.drawable.p2_2_8,R.drawable.p2_2_9)
+            piezas = listOf(R.drawable.p2_2_1,R.drawable.p2_2_2,R.drawable.p2_2_3,R.drawable.p2_2_4,R.drawable.p2_2_5,R.drawable.p2_2_8,R.drawable.p2_2_7,R.drawable.p2_2_6,R.drawable.p2_2_9)
         ),
         PuzzleSet(
             imagenCompleta = R.drawable.p2_3,
