@@ -10,6 +10,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.nextapp.monasterio.models.UbicacionDetalladaTag
@@ -18,7 +19,7 @@ import com.nextapp.monasterio.R
 
 // Lista de opciones se mantiene
 
-const val OTRA_UBICACION_DETALLADA = "Otra" // ✅ AÑADIDO: Definimos "Otra" aquí
+const val OTRA_UBICACION_DETALLADA = "Otra"
 
 val ubicacionDetalladaOptions = UbicacionDetalladaTag.entries.map { it.displayName }
 
@@ -95,7 +96,7 @@ fun PinLocationDropdown(
                 value = selectedDropdownLocation,
                 onValueChange = { /* Solo cambia a través del DropdownMenuItem */ },
                 readOnly = true,
-                label = { Text("Ubicación Detallada (ES) o Fija") },
+                label = { Text(stringResource(R.string.dropdown_label)) },
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -133,9 +134,8 @@ fun PinLocationDropdown(
             Column {
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // 📌 CAMPO 1: UBICACIÓN/TÍTULO EN ESPAÑOL (ES)
                 Text(
-                    text = "Escriba aquí la Ubicación Detallada (Título del Pin) - ESPAÑOL:",
+                    text = stringResource(R.string.manual_title_helper),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.primary
                 )
@@ -146,7 +146,7 @@ fun PinLocationDropdown(
                         manualTitleText = newValue
                         onTitleChange(newValue) // Actualiza ubicacion_es en el ViewModel
                     },
-                    label = { Text("Título (ES)") },
+                    label = { Text(stringResource(R.string.manual_title_label)) },
                     modifier = Modifier.fillMaxWidth()
                 )
 
@@ -161,17 +161,23 @@ fun PinLocationDropdown(
                 ) {
                     Icon(
                         painter = painterResource(id = if (showManualTrads) R.drawable.ic_arrow_up else R.drawable.ic_arrow_down), // Mantenemos tus iconos de flecha
-                        contentDescription = if (showManualTrads) "Ocultar traducciones" else "Mostrar traducciones",
+                        contentDescription = stringResource(
+                            if (showManualTrads)
+                                R.string.translations_hide
+                            else
+                                R.string.translations_show
+                        ),
                         modifier = Modifier.size(20.dp)
                     )
                     Spacer(Modifier.width(8.dp))
                     Text(
-                        text = if (showManualTrads) "Ocultar Traducciones Opcionales" else "Añadir Traducciones Opcionales",
+                        text = stringResource(
+                            if (showManualTrads) R.string.translations_hide else R.string.translations_show
+                        ),
                         fontWeight = FontWeight.Medium
                     )
                 }
 
-                // 🆕 CAMBIO 3: Contenido colapsable (se usa 'showManualTrads' como condición)
                 if (showManualTrads) {
                     Column(
                         Modifier
@@ -185,7 +191,7 @@ fun PinLocationDropdown(
                             onValueChange = { newValue ->
                                 onTitleManualTradsUpdate(newValue, titleManualTrads.de, titleManualTrads.fr)
                             },
-                            label = { Text("Título opcional en inglés (EN)") },
+                            label = { Text(stringResource(R.string.title_en)) },
                             singleLine = true,
                             modifier = Modifier.fillMaxWidth()
                         )
@@ -198,7 +204,7 @@ fun PinLocationDropdown(
                             onValueChange = { newValue ->
                                 onTitleManualTradsUpdate(titleManualTrads.en, newValue, titleManualTrads.fr)
                             },
-                            label = { Text("Título opcional en alemán (DE)") },
+                            label = { Text(stringResource(R.string.title_de)) },
                             singleLine = true,
                             modifier = Modifier.fillMaxWidth()
                         )
@@ -211,7 +217,7 @@ fun PinLocationDropdown(
                             onValueChange = { newValue ->
                                 onTitleManualTradsUpdate(titleManualTrads.en, titleManualTrads.de, newValue)
                             },
-                            label = { Text("Título opcional en francés (FR)") },
+                            label = { Text(stringResource(R.string.title_fr)) },
                             singleLine = true,
                             modifier = Modifier.fillMaxWidth()
                         )
@@ -222,7 +228,7 @@ fun PinLocationDropdown(
 
                 // 📌 SELECTOR DE ÁREA PRINCIPAL
                 Text(
-                    text = "Seleccione el Área Principal (Ubicación del Pin):",
+                    text = stringResource(R.string.area_select_label),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.primary
                 )

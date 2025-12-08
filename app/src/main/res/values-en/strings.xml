@@ -202,8 +202,49 @@
     <string name="untitled_pin">UNTITLED</string>
     <string name="move_pin">Move Pin</string>
     <string name="edit_pin">Edit Pin</string>
+    <string name="create_pin">Create Pin</string>
     <string name="delete_pin_cd">Delete Pin</string>
     <string name="close_panel">Close Panel</string>
+    <string name="pin_update">Update</string>
+    <string name="pin_create">Create</string>
+    <string name="alert_edit_title">Discard changes</string>
+    <string name="alert_create_title">Exit without saving</string>
+    <string name="alert_edit_message">You have made changes to this pin. If you leave now, they will be lost. Do you want to continue?</string>
+    <string name="alert_create_message">You have started filling out the form. If you leave now, the entered data will be lost. Do you want to continue?</string>
+    <string name="alert_confirm">Exit</string>
+    <string name="alert_cancel">Cancel</string>
+    <string name="pin_location_title">Pin Location</string>
+    <string name="pin_images_label">Pin Images</string>
+    <string name="pin_360_label">360 Image (optional)</string>
+    <string name="pin_description_label">Pin Description</string>
+    <string name="hint_es_required">Enter the text in Spanish</string>
+    <string name="error_required_field">This field is required</string>
+    <string name="translations_show">Add Optional Translations</string>
+    <string name="translations_hide">Hide Optional Translations</string>
+    <string name="translations_show_cd">Show translations</string>
+    <string name="translations_hide_cd">Hide translations</string>
+    <string name="hint_en_optional">Optional text in English</string>
+    <string name="hint_de_optional">Optional text in German</string>
+    <string name="hint_fr_optional">Optional text in French</string>
+
+    <string name="dropdown_label">Detailed Location (ES)</string>
+    <string name="manual_title_label">Title (ES)</string>
+    <string name="manual_title_helper">Write the Detailed Location - SPANISH:</string>
+    <string name="title_en">Optional title in English (EN)</string>
+    <string name="title_de">Optional title in German (DE)</string>
+    <string name="title_fr">Optional title in French (FR)</string>
+    <string name="area_select_label">Select Main Area:</string>
+    <string name="area_church">Church</string>
+    <string name="area_monastery">Monastery</string>
+    <string name="location_custom">Other</string>
+    <string name="loc_crucero">Crossing</string>
+    <string name="loc_lado_epistola">Epistle Side</string>
+    <string name="loc_trascoro">Retrochoir</string>
+    <string name="loc_coro">Choir</string>
+    <string name="loc_capilla_nacimiento">Nativity Chapel</string>
+    <string name="loc_other">Other</string>
+
+
     <string-array name="clues">
         <item>Take a look at the very top of the castle</item>
         <item>One of the differences is hiding in the sky</item>

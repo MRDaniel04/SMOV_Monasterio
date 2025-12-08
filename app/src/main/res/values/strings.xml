@@ -202,8 +202,50 @@
     <string name="untitled_pin">SIN TÍTULO</string>
     <string name="move_pin">Mover Pin</string>
     <string name="edit_pin">Editar Pin</string>
+    <string name="create_pin">Crear Pin</string>
     <string name="delete_pin_cd">Borrar Pin</string>
     <string name="close_panel">Cerrar Panel</string>
+    <string name="pin_update">Actualizar</string>
+    <string name="pin_create">Crear</string>
+    <string name="alert_edit_title">Descartar cambios</string>
+    <string name="alert_create_title">Salir sin guardar</string>
+    <string name="alert_edit_message">Has realizado cambios en este pin. Si sales ahora, los perderás. ¿Deseas continuar?</string>
+    <string name="alert_create_message">Has empezado a rellenar el formulario. Si sales ahora, se perderán los datos introducidos. ¿Deseas continuar?</string>
+    <string name="alert_confirm">Salir</string>
+    <string name="alert_cancel">Cancelar</string>
+    <string name="pin_location_title">Ubicación del Pin</string>
+    <string name="pin_images_label">Imágenes del Pin</string>
+    <string name="pin_360_label">Imagen 360 (opcional)</string>
+    <string name="pin_description_label">Descripción del Pin</string>
+    <string name="hint_es_required">Introduce el texto en español</string>
+    <string name="error_required_field">Este campo es obligatorio</string>
+    <string name="translations_show">Añadir Traducciones Opcionales</string>
+    <string name="translations_hide">Ocultar Traducciones Opcionales</string>
+    <string name="translations_show_cd">Mostrar traducciones</string>
+    <string name="translations_hide_cd">Ocultar traducciones</string>
+    <string name="hint_en_optional">Texto opcional en inglés</string>
+    <string name="hint_de_optional">Texto opcional en alemán</string>
+    <string name="hint_fr_optional">Texto opcional en francés</string>
+
+    <string name="dropdown_label">Ubicación Detallada (ES)</string>
+    <string name="manual_title_label">Título (ES)</string>
+    <string name="manual_title_helper">Escriba aquí la Ubicación Detallada - ESPAÑOL:</string>
+    <string name="title_en">Título opcional en inglés (EN)</string>
+    <string name="title_de">Título opcional en alemán (DE)</string>
+    <string name="title_fr">Título opcional en francés (FR)</string>
+    <string name="area_select_label">Seleccione el Área Principal:</string>
+    <string name="area_church">Iglesia</string>
+    <string name="area_monastery">Monasterio</string>
+    <string name="location_custom">Otra</string>
+    <string name="loc_crucero">Crucero</string>
+    <string name="loc_lado_epistola">Lado de la Epístola</string>
+    <string name="loc_trascoro">Trascoro</string>
+    <string name="loc_coro">Coro</string>
+    <string name="loc_capilla_nacimiento">Capilla del Nacimiento</string>
+    <string name="loc_other">Otra</string>
+
+
+
     <string-array name="clues">
         <item>Echa un vistazo a la parte más alta del castillo</item>
         <item>Una de las diferencias ocupa el cielo de la imagen</item>

@@ -177,6 +177,8 @@ fun PinDetailsPanel(
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
 
+
+
                     // --- BOTÓN CERRAR PANEL ---
                     IconButton(onClick = onClosePanel) {
                         Icon(

@@ -7,6 +7,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -33,13 +34,13 @@ fun TranslatableTextField(
 
         // 1. CAMPO ESPAÑOL (MANDATORIO)
         OutlinedTextField(
-            value = state.es, // 🛑 CORRECCIÓN: Eliminado .value
+            value = state.es,
             onValueChange = { newValue ->
                 state.updateEs(newValue)
                 onChanged()
             },
-            isError = false, // 🛑 CORRECCIÓN: Eliminado .value
-            label = { Text("Introduce el texto en español", fontSize = 10.sp) },
+            isError = false,
+            label = { Text(stringResource(R.string.hint_es_required), fontSize = 10.sp) },
             singleLine = singleLine,
             modifier = Modifier
                 .fillMaxWidth()
@@ -49,7 +50,7 @@ fun TranslatableTextField(
 
         if (state.es.isBlank()) {
             Text(
-                text = "Este campo es obligatorio",
+                text = stringResource(R.string.error_required_field),
                 color = MaterialTheme.colorScheme.error,
                 fontSize = 11.sp,               // ⬅ más pequeño
                 modifier = Modifier.padding(top = 2.dp) // ⬅ más pegado al campo
@@ -69,13 +70,19 @@ fun TranslatableTextField(
         ) {
             Icon(
                 painter = painterResource(id = if (expanded) R.drawable.ic_arrow_up else R.drawable.ic_arrow_down),
-                contentDescription = if (expanded) "Ocultar traducciones" else "Mostrar traducciones",
+                contentDescription = stringResource(
+                    if (expanded) R.string.translations_hide_cd
+                    else R.string.translations_show_cd
+                ),
                 modifier = Modifier.size(20.dp),
                 tint = MaterialTheme.colorScheme.onBackground // ⬅ icono negro
             )
             Spacer(Modifier.width(8.dp))
             Text(
-                text = if (expanded) "Ocultar Traducciones Opcionales" else "Añadir Traducciones Opcionales",
+                text = stringResource(
+                    if (expanded) R.string.translations_hide
+                    else R.string.translations_show
+                ),
                 fontWeight = FontWeight.Medium,
                 color = MaterialTheme.colorScheme.onBackground // ⬅ texto negro
             )
@@ -91,12 +98,12 @@ fun TranslatableTextField(
 
                 // Campo Inglés
                 OutlinedTextField(
-                    value = state.en, // 🛑 CORRECCIÓN: Eliminado .value
+                    value = state.en,
                     onValueChange = { newValue ->
                         state.updateEn(newValue)
                         onChanged()
                     },
-                    label = { Text("Texto opcional en inglés") },
+                    label = { Text(stringResource(R.string.hint_en_optional)) },
                     modifier = Modifier.fillMaxWidth()
                 )
 
@@ -104,12 +111,12 @@ fun TranslatableTextField(
 
                 // Campo Alemán
                 OutlinedTextField(
-                    value = state.de, // 🛑 CORRECCIÓN: Eliminado .value
+                    value = state.de,
                     onValueChange = { newValue ->
                         state.updateDe(newValue)
                         onChanged()
                     },
-                    label = { Text("Texto opcional en alemán") },
+                    label = { Text(stringResource(R.string.hint_de_optional)) },
                     modifier = Modifier.fillMaxWidth()
                 )
 
@@ -117,12 +124,12 @@ fun TranslatableTextField(
 
                 // Campo Francés
                 OutlinedTextField(
-                    value = state.fr, // 🛑 CORRECCIÓN: Eliminado .value
+                    value = state.fr,
                     onValueChange = { newValue ->
                         state.updateFr(newValue)
                         onChanged()
                     },
-                    label = { Text("Texto opcional en francés") },
+                    label = { Text(stringResource(R.string.hint_fr_optional)) },
                     modifier = Modifier.fillMaxWidth()
                 )
             }

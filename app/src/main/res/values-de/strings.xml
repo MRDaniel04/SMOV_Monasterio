@@ -202,8 +202,49 @@
     <string name="untitled_pin">OHNE TITEL</string>
     <string name="move_pin">Pin verschieben</string>
     <string name="edit_pin">Pin bearbeiten</string>
+    <string name="create_pin">Pin erstellen</string>
     <string name="delete_pin_cd">Pin löschen</string>
     <string name="close_panel">Panel schließen</string>
+    <string name="pin_update">Aktualisieren</string>
+    <string name="pin_create">Erstellen</string>
+    <string name="alert_edit_title">Änderungen verwerfen</string>
+    <string name="alert_create_title">Ohne Speichern verlassen</string>
+    <string name="alert_edit_message">Sie haben Änderungen an diesem Pin vorgenommen. Wenn Sie jetzt gehen, gehen diese verloren. Möchten Sie fortfahren?</string>
+    <string name="alert_create_message">Sie haben begonnen, das Formular auszufüllen. Wenn Sie jetzt gehen, gehen die eingegebenen Daten verloren. Möchten Sie fortfahren?</string>
+    <string name="alert_confirm">Verlassen</string>
+    <string name="alert_cancel">Abbrechen</string>
+    <string name="pin_location_title">Pin-Position</string>
+    <string name="pin_images_label">Pin-Bilder</string>
+    <string name="pin_360_label">360-Bild (optional)</string>
+    <string name="pin_description_label">Pin-Beschreibung</string>
+    <string name="hint_es_required">Geben Sie den Text auf Spanisch ein</string>
+    <string name="error_required_field">Dieses Feld ist erforderlich</string>
+    <string name="hint_en_optional">Optionaler Text auf Englisch</string>
+    <string name="hint_de_optional">Optionaler Text auf Deutsch</string>
+    <string name="hint_fr_optional">Optionaler Text auf Französisch</string>
+
+    <string name="dropdown_label">Detaillierte Position (ES)</string>
+    <string name="manual_title_label">Titel (ES)</string>
+    <string name="manual_title_helper">Geben Sie den detaillierten Standort ein – SPANISCH:</string>
+    <string name="translations_show">Optionale Übersetzungen hinzufügen</string>
+    <string name="translations_hide">Optionale Übersetzungen ausblenden</string>
+    <string name="translations_show_cd">Übersetzungen anzeigen</string>
+    <string name="translations_hide_cd">Übersetzungen ausblenden</string>
+    <string name="title_en">Optionaler Titel auf Englisch (EN)</string>
+    <string name="title_de">Optionaler Titel auf Deutsch (DE)</string>
+    <string name="title_fr">Optionaler Titel auf Französisch (FR)</string>
+    <string name="area_select_label">Wählen Sie den Hauptbereich (Pin-Standort):</string>
+    <string name="area_church">Kirche</string>
+    <string name="area_monastery">Kloster</string>
+    <string name="location_custom">Andere</string>
+    <string name="loc_crucero">Vierung</string>
+    <string name="loc_lado_epistola">Epistelseite</string>
+    <string name="loc_trascoro">Chorrückseite</string>
+    <string name="loc_coro">Chor</string>
+    <string name="loc_capilla_nacimiento">Geburtskapelle</string>
+    <string name="loc_other">Andere</string>
+
+
     <string-array name="clues">
         <item>Wirf einen Blick auf den höchsten Teil der Burg</item>
         <item>Einer der Unterschiede befindet sich am Himmel im Bild</item>

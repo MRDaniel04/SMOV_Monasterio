@@ -21,7 +21,9 @@ import com.nextapp.monasterio.ui.screens.pinCreation.components.Image360Selector
 import com.nextapp.monasterio.ui.screens.pinCreation.components.PinLocationDropdown
 import com.nextapp.monasterio.ui.screens.pinCreation.components.PinTopBar
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import com.nextapp.monasterio.ui.screens.pinCreation.components.getAreaPrincipalForLocation
+import com.nextapp.monasterio.R
 
 
 @Composable
@@ -55,6 +57,8 @@ fun CreacionPinesScreen(
                 vm.ubicacion_es.isNotBlank() && // Campo complejo (antes pinTitle)
                 vm.area_es.isNotBlank() // Campo simple (antes pinUbicacion)
     var showExitDialog by remember { mutableStateOf(false) }
+
+
 
 
     Scaffold(
@@ -118,18 +122,22 @@ fun CreacionPinesScreen(
                 onDismissRequest = { showExitDialog = false },
                 title = {
                     Text(
-                        if (isEditing)
-                            "Descartar cambios"
-                        else
-                            "Salir sin guardar"
+                        stringResource(
+                            id = if (isEditing)
+                                R.string.alert_edit_title
+                            else
+                                R.string.alert_create_title
+                        )
                     )
                 },
                 text = {
                     Text(
-                        if (isEditing)
-                            "Has realizado cambios en este pin. Si sales ahora, los perderás. ¿Deseas continuar?"
-                        else
-                            "Has empezado a rellenar el formulario. Si sales ahora, se perderán los datos introducidos. ¿Deseas continuar?"
+                        stringResource(
+                            id = if (isEditing)
+                                R.string.alert_edit_message
+                            else
+                                R.string.alert_create_message
+                        )
                     )
                 },
                 confirmButton = {
@@ -139,13 +147,14 @@ fun CreacionPinesScreen(
                             navController.popBackStack()
                         }
                     ) {
-                        Text("Salir")
+                        Text(stringResource(R.string.alert_confirm))
                     }
                 },
                 dismissButton = {
                     TextButton(onClick = { showExitDialog = false }) {
-                        Text("Cancelar")
+                        Text(stringResource(R.string.alert_cancel))
                     }
+
                 }
             )
         }
@@ -159,9 +168,10 @@ fun CreacionPinesScreen(
 
             Spacer(Modifier.height(12.dp))
             Text(
-                text = "Ubicación del Pin", // Título unificado
+                text = stringResource(R.string.pin_location_title),
                 style = MaterialTheme.typography.titleMedium
             )
+
 
             Spacer(Modifier.height(8.dp))
 
@@ -193,7 +203,7 @@ fun CreacionPinesScreen(
 
             Spacer(Modifier.height(24.dp))
             PinImageSelector(
-                label = "Imágenes del Pin",
+                label = stringResource(R.string.pin_images_label),
                 state = imagenesState,
                 mandatory = true,
                 onChanged = {
@@ -207,11 +217,12 @@ fun CreacionPinesScreen(
             Spacer(Modifier.height(24.dp))
 
             Image360Selector(
-                label = "Imagen 360 (opcional)",
+                label = stringResource(R.string.pin_360_label),
                 uri = imagen360,
                 onPick = { uri -> vm.imagen360 = uri },
                 onRemove = { vm.imagen360 = null }
             )
+
 
             Spacer(Modifier.height(32.dp))
 
