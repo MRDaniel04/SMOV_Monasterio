@@ -59,6 +59,10 @@ fun GaleriaScreen(
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
     val currentLanguage = Locale.getDefault().language
+    
+    androidx.compose.runtime.LaunchedEffect(currentLanguage) {
+        viewModel.setLanguage(currentLanguage)
+    }
 
     // State for full screen image
     var selectedImage by remember { mutableStateOf<ImagenData?>(null) }

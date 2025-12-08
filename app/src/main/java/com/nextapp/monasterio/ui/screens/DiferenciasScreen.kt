@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -38,6 +39,9 @@ fun DiferenciasScreen(navController : NavController
     val prefsRepository = remember { UserPreferencesRepository.instance }
 
     val context = LocalContext.current
+    val winSoundPlayer = remember {
+        android.media.MediaPlayer.create(context, R.raw.juego) // Asegúrate de que el archivo existe
+    }
 
     val viewModel: DiferenciasViewModel = viewModel(factory = DiferenciasViewModel.Companion.Factory(prefsRepository,context))
 
@@ -79,7 +83,7 @@ fun DiferenciasScreen(navController : NavController
 
     DisposableEffect(Unit) {
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-        onDispose {}
+        onDispose {winSoundPlayer.release()}
     }
 
     Column(
@@ -145,7 +149,14 @@ fun DiferenciasScreen(navController : NavController
             }
         }
     }
-
+    LaunchedEffect(juegoTerminado) {
+        if (juegoTerminado) {
+            if (winSoundPlayer != null) {
+                if (winSoundPlayer.isPlaying) winSoundPlayer.seekTo(0)
+                winSoundPlayer.start()
+            }
+        }
+    }
     if (juegoTerminado) {
         AlertDialog(
             title = { Text(stringResource(R.string.congratulations)) },

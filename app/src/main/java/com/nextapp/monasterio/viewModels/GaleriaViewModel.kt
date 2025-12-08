@@ -25,8 +25,17 @@ class GaleriaViewModel(
     private val _uiState = MutableStateFlow(GaleriaUiState())
     val uiState: StateFlow<GaleriaUiState> = _uiState.asStateFlow()
 
+    private var currentLanguage = "es"
+
     init {
         loadImages()
+    }
+
+    fun setLanguage(language: String) {
+        if (currentLanguage != language) {
+            currentLanguage = language
+            applyFilters()
+        }
     }
 
     private fun loadImages() {
@@ -36,24 +45,48 @@ class GaleriaViewModel(
             _uiState.update { 
                 it.copy(
                     images = allImages,
-                    filteredImages = allImages,
                     isLoading = false
                 ) 
             }
+            applyFilters()
         }
     }
 
     fun onTypeSelected(type: GaleriaType) {
+        _uiState.update { it.copy(selectedType = type) }
+        applyFilters()
+    }
+
+    private fun getLocalizedTitle(image: ImagenData): String {
+        return when (currentLanguage) {
+            "en" -> if (image.tituloIngles.isNotEmpty()) image.tituloIngles else image.titulo
+            "de" -> if (image.tituloAleman.isNotEmpty()) image.tituloAleman else image.titulo
+            "fr" -> if (image.tituloFrances.isNotEmpty()) image.tituloFrances else image.titulo
+            else -> image.titulo
+        }
+    }
+
+    private fun applyFilters() {
         _uiState.update { currentState ->
-            val filtered = if (type == GaleriaType.ALL) {
-                currentState.images
-            } else {
-                currentState.images.filter { 
-                    // Normalize strings for comparison (optional but good practice)
-                    it.tipo.equals(type.id, ignoreCase = true)
+            val sortedImages = currentState.images.sortedWith { image1, image2 ->
+                val title1 = getLocalizedTitle(image1).lowercase()
+                val title2 = getLocalizedTitle(image2).lowercase()
+
+                when {
+                    title1.isEmpty() && title2.isNotEmpty() -> 1
+                    title1.isNotEmpty() && title2.isEmpty() -> -1
+                    else -> title1.compareTo(title2)
                 }
             }
-            currentState.copy(selectedType = type, filteredImages = filtered)
+
+            val filtered = if (currentState.selectedType == GaleriaType.ALL) {
+                sortedImages
+            } else {
+                sortedImages.filter { 
+                    it.tipo.equals(currentState.selectedType.id, ignoreCase = true)
+                }
+            }
+            currentState.copy(images = sortedImages, filteredImages = filtered)
         }
     }
 }

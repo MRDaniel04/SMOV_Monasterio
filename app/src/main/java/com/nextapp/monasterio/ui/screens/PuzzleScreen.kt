@@ -99,6 +99,9 @@ fun PuzzleScreen(
     val density = LocalDensity.current
 
     val context = LocalContext.current
+    val winSoundPlayer = remember {
+        android.media.MediaPlayer.create(context, R.raw.juego) // Asegúrate de que el archivo existe
+    }
     val activity = context as? Activity
 
     // Estado del Grid y la celda
@@ -131,7 +134,7 @@ fun PuzzleScreen(
     DisposableEffect(Unit) {
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         onDispose {
-
+            winSoundPlayer.release()
         }
     }
 
@@ -243,7 +246,14 @@ fun PuzzleScreen(
                     }
                 )
             }
-
+            LaunchedEffect(state.solucionado) {
+                if (state.solucionado) {
+                    if (winSoundPlayer != null) {
+                        if (winSoundPlayer.isPlaying) winSoundPlayer.seekTo(0)
+                        winSoundPlayer.start()
+                    }
+                }
+            }
             // --- 3. DIÁLOGO DE SOLUCIONADO ---
             if (state.solucionado) {
                 PuzzleDialog(

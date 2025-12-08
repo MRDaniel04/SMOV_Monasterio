@@ -37,6 +37,7 @@ import com.nextapp.monasterio.ui.theme.MonasteryBlue
 import com.nextapp.monasterio.ui.theme.MonasteryOrange
 import com.nextapp.monasterio.viewModels.AuthViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import android.media.MediaPlayer
 
 @Composable
 fun HomeScreenContent(
@@ -45,6 +46,10 @@ fun HomeScreenContent(
     authViewModel: AuthViewModel = viewModel()
 ) {
     val context = LocalContext.current
+    val buttonSoundPlayer = remember {
+        // Asegúrate de que 'click_button' existe en res/raw, o cambia el nombre
+        MediaPlayer.create(context, R.raw.botones)
+    }
     val activity = (context as? Activity)
     val repo = ImagenRepository()
     var imagenFondoInicio by remember { mutableStateOf<String?>(null) }
@@ -55,6 +60,15 @@ fun HomeScreenContent(
     val userState by authViewModel.currentUser.collectAsState()
     val currentUser = userState
 
+    val playClickSound = {
+        if (buttonSoundPlayer != null) {
+            if (buttonSoundPlayer.isPlaying) {
+                buttonSoundPlayer.seekTo(0)
+            }
+            buttonSoundPlayer.start()
+        }
+    }
+
     LaunchedEffect(Unit) {
         val data = repo.getImagenFondoInicio()
         imagenFondoInicio = data?.url
@@ -62,7 +76,7 @@ fun HomeScreenContent(
 
     DisposableEffect(Unit) {
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
-        onDispose {}
+        onDispose {buttonSoundPlayer?.release()}
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -90,9 +104,9 @@ fun HomeScreenContent(
                 .padding(topPadding)
         ) {
             if (isLandscape) {
-                LandscapeLayout(navController, currentUser)
+                LandscapeLayout(navController, currentUser, playClickSound)
             } else {
-                PortraitLayout(navController, currentUser)
+                PortraitLayout(navController, currentUser, playClickSound)
             }
         }
     }
@@ -104,7 +118,8 @@ fun HomeScreenContent(
 @Composable
 fun PortraitLayout(
     navController: NavController,
-    currentUser: User?
+    currentUser: User?,
+    onPlaySound: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -135,7 +150,8 @@ fun PortraitLayout(
             iconRes = R.drawable.ic_map_24,
             backgroundColor = MonasteryOrange,
             modifier = buttonModifier,
-            onClick = { navController.navigate(AppRoutes.VIRTUAL_VISIT) }
+            onClick = { onPlaySound()
+                navController.navigate(AppRoutes.VIRTUAL_VISIT) }
         )
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -146,7 +162,8 @@ fun PortraitLayout(
             iconRes = R.drawable.outline_account_child_invert_24,
             backgroundColor = Color(0xFF6EB017),
             modifier = buttonModifier,
-            onClick = { navController.navigate(AppRoutes.MODO_NINYOS) }
+            onClick = { onPlaySound()
+                navController.navigate(AppRoutes.MODO_NINYOS) }
         )
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -157,7 +174,8 @@ fun PortraitLayout(
             iconRes = R.drawable.ic_time_24,
             backgroundColor = MonasteryBlue,
             modifier = buttonModifier,
-            onClick = { navController.navigate(AppRoutes.OPCIONES_RESERVA) }
+            onClick = { onPlaySound()
+                navController.navigate(AppRoutes.OPCIONES_RESERVA) }
         )
 
         // 4. Edición
@@ -168,7 +186,8 @@ fun PortraitLayout(
                 iconRes = R.drawable.lapiz,
                 backgroundColor = Color(0xFF9C27B0),
                 modifier = buttonModifier,
-                onClick = { navController.navigate(AppRoutes.MODO_EDICION) }
+                onClick = { onPlaySound()
+                    navController.navigate(AppRoutes.MODO_EDICION) }
             )
         }
         Spacer(modifier = Modifier.height(40.dp))
@@ -181,7 +200,8 @@ fun PortraitLayout(
 @Composable
 fun LandscapeLayout(
     navController: NavController,
-    currentUser: User?
+    currentUser: User?,
+    onPlaySound: () -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -226,14 +246,16 @@ fun LandscapeLayout(
                     iconRes = R.drawable.ic_map_24,
                     backgroundColor = MonasteryOrange,
                     modifier = Modifier.weight(1f),
-                    onClick = { navController.navigate(AppRoutes.VIRTUAL_VISIT) }
+                    onClick = { onPlaySound()
+                        navController.navigate(AppRoutes.VIRTUAL_VISIT) }
                 )
                 HomeGridButton(
                     text = stringResource(R.string.child_mode),
                     iconRes = R.drawable.outline_account_child_invert_24,
                     backgroundColor = Color(0xFF6EB017),
                     modifier = Modifier.weight(1f),
-                    onClick = { navController.navigate(AppRoutes.MODO_NINYOS) }
+                    onClick = { onPlaySound()
+                        navController.navigate(AppRoutes.MODO_NINYOS) }
                 )
             }
 
@@ -247,7 +269,8 @@ fun LandscapeLayout(
                     iconRes = R.drawable.ic_time_24,
                     backgroundColor = MonasteryBlue,
                     modifier = Modifier.weight(1f),
-                    onClick = { navController.navigate(AppRoutes.OPCIONES_RESERVA) }
+                    onClick = { onPlaySound()
+                        navController.navigate(AppRoutes.OPCIONES_RESERVA) }
                 )
 
                 if (currentUser != null) {
@@ -256,7 +279,8 @@ fun LandscapeLayout(
                         iconRes = R.drawable.lapiz,
                         backgroundColor = Color(0xFF9C27B0),
                         modifier = Modifier.weight(1f),
-                        onClick = { navController.navigate(AppRoutes.MODO_EDICION) }
+                        onClick = { onPlaySound()
+                            navController.navigate(AppRoutes.MODO_EDICION) }
                     )
                 } else {
                     Spacer(modifier = Modifier.weight(1f))

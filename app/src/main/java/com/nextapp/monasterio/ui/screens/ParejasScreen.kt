@@ -36,6 +36,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -74,6 +75,9 @@ fun ParejasScreen(
     val state by viewModel.uiState.collectAsState()
 
     val context = LocalContext.current
+    val winSoundPlayer = remember {
+        android.media.MediaPlayer.create(context, R.raw.juego) // Asegúrate de que el archivo existe
+    }
     val activity = context as? Activity
 
     val showInstructionsPreviewDialogNullable by viewModel.showInstructionsDialog.collectAsState()
@@ -93,7 +97,7 @@ fun ParejasScreen(
     DisposableEffect(Unit) {
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         onDispose {
-
+            winSoundPlayer.release()
         }
     }
 
@@ -184,7 +188,14 @@ fun ParejasScreen(
             Text(stringResource(R.string.show_pairs))
         }
     }
-
+    LaunchedEffect(state.solucionado) {
+        if (state.solucionado) {
+            if (winSoundPlayer != null) {
+                if (winSoundPlayer.isPlaying) winSoundPlayer.seekTo(0)
+                winSoundPlayer.start()
+            }
+        }
+    }
     if (state.solucionado) {
         ParejaDialog(
             onDismiss = {},
