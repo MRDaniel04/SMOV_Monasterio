@@ -46,6 +46,7 @@ import com.nextapp.monasterio.R
 import com.nextapp.monasterio.models.ImagenData
 import com.nextapp.monasterio.models.PinData
 import com.nextapp.monasterio.ui.virtualvisit.components.GenericTutorialOverlay
+import com.nextapp.monasterio.ui.components.ZoomableImageDialog
 import com.nextapp.monasterio.viewModels.AjustesViewModel
 import java.util.Locale
 import com.nextapp.monasterio.ui.components.MonasteryButton
@@ -531,106 +532,4 @@ fun PinDetalleScreen(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
-@Composable
-private fun ZoomableImageDialog(
-    imagenes: List<ImagenData>,
-    initialIndex: Int,
-    languageCode: String,
-    onDismiss: () -> Unit
-) {
-    val view = LocalView.current
-    val activity = view.context as? Activity
-
-    DisposableEffect(Unit) {
-        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
-        onDispose {
-            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-        }
-    }
-
-    val zoomPagerState = rememberPagerState(
-        initialPage = initialIndex,
-        pageCount = { imagenes.size }
-    )
-
-    Dialog(
-        onDismissRequest = onDismiss,
-        properties = DialogProperties(
-            usePlatformDefaultWidth = false,
-            dismissOnClickOutside = true
-        )
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.Black.copy(alpha = 0.95f))
-        ) {
-
-            HorizontalPager(
-                state = zoomPagerState,
-                modifier = Modifier.fillMaxSize()
-            ) { page ->
-                val imagen = imagenes[page]
-                // Cada página tiene su propio PhotoView para zoom independiente
-                AndroidView(
-                    factory = { context ->
-                        PhotoView(context).apply {
-                            load(imagen.url) {
-                                crossfade(true)
-                            }
-                            maximumScale = 5.0f
-                            mediumScale = 2.5f
-                        }
-                    },
-                    modifier = Modifier.fillMaxSize()
-                )
-            }
-
-            // Título de la imagen actual
-            val currentImage = imagenes[zoomPagerState.currentPage]
-            val titulo = when (languageCode) {
-                "es" -> currentImage.titulo
-                "de" -> currentImage.tituloAleman
-                else -> currentImage.tituloIngles
-            }
-
-            Text(
-                text = titulo,
-                color = Color.White,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Medium,
-                modifier = Modifier
-                    .align(Alignment.BottomStart)
-                    .background(Color.Black.copy(alpha = 0.7f))
-                    .padding(horizontal = 12.dp, vertical = 8.dp)
-                    .padding(bottom = 16.dp)
-            )
-
-            // Indicador de página (opcional)
-            Text(
-                text = "${zoomPagerState.currentPage + 1} / ${imagenes.size}",
-                color = Color.White,
-                modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .padding(top = 16.dp)
-                    .statusBarsPadding()
-            )
-
-            IconButton(
-                onClick = onDismiss,
-                modifier = Modifier
-                    .align(Alignment.TopStart)
-                    .statusBarsPadding()
-                    .padding(16.dp)
-                    .background(Color.Black.copy(alpha = 0.5f), CircleShape)
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.arrow_back),
-                    contentDescription = stringResource(R.string.close),
-                    tint = Color.White
-                )
-            }
-        }
-    }
-}
+// Removed private ZoomableImageDialog

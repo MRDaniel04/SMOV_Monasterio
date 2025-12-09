@@ -40,8 +40,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
@@ -49,6 +47,7 @@ import com.nextapp.monasterio.R
 import com.nextapp.monasterio.models.ImagenData
 import com.nextapp.monasterio.utils.GaleriaType
 import com.nextapp.monasterio.viewModels.GaleriaViewModel
+import com.nextapp.monasterio.ui.components.ZoomableImageDialog
 import java.util.Locale
 
 @Composable
@@ -65,63 +64,15 @@ fun GaleriaScreen(
     }
 
     // State for full screen image
-    var selectedImage by remember { mutableStateOf<ImagenData?>(null) }
+    var selectedImageIndex by remember { mutableStateOf<Int?>(null) }
 
-    if (selectedImage != null) {
-        Dialog(
-            onDismissRequest = { selectedImage = null },
-            properties = DialogProperties(usePlatformDefaultWidth = false)
-        ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.Black)
-                    .clickable { selectedImage = null }
-            ) {
-                AsyncImage(
-                    model = selectedImage?.url,
-                    contentDescription = selectedImage?.titulo,
-                    contentScale = ContentScale.Fit,
-                    modifier = Modifier.fillMaxSize()
-                )
-                
-                // Close button
-                IconButton(
-                    onClick = { selectedImage = null },
-                    modifier = Modifier
-                        .align(Alignment.TopEnd)
-                        .padding(16.dp)
-                        .background(Color.Black.copy(alpha = 0.5f), CircleShape)
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_close_24),
-                        contentDescription = "Close",
-                        tint = Color.White
-                    )
-                }
-
-                // Title overlay
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .align(Alignment.BottomCenter)
-                        .background(Color.Black.copy(alpha = 0.7f))
-                        .padding(16.dp)
-                ) {
-                    Text(
-                        text = when(currentLanguage) {
-                            "es" -> selectedImage?.titulo ?: ""
-                            "en" -> if (selectedImage?.tituloIngles?.isNotEmpty() == true) selectedImage?.tituloIngles!! else selectedImage?.titulo ?: ""
-                            "de" -> if (selectedImage?.tituloAleman?.isNotEmpty() == true) selectedImage?.tituloAleman!! else selectedImage?.titulo ?: ""
-                            "fr" -> if (selectedImage?.tituloFrances?.isNotEmpty() == true) selectedImage?.tituloFrances!! else selectedImage?.titulo ?: ""
-                            else -> selectedImage?.titulo ?: ""
-                        },
-                        color = Color.White,
-                        style = MaterialTheme.typography.titleMedium
-                    )
-                }
-            }
-        }
+    if (selectedImageIndex != null) {
+        ZoomableImageDialog(
+            imagenes = uiState.filteredImages,
+            initialIndex = selectedImageIndex!!,
+            languageCode = currentLanguage,
+            onDismiss = { selectedImageIndex = null }
+        )
     }
 
     Column(
@@ -175,7 +126,7 @@ fun GaleriaScreen(
                             .fillMaxWidth()
                             .height(200.dp)
                             .clickable {
-                                selectedImage = image
+                                selectedImageIndex = uiState.filteredImages.indexOf(image)
                             },
                         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
                     ) {
