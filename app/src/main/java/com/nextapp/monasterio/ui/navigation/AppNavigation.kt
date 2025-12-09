@@ -112,7 +112,7 @@ fun AppNavigationHost(
         // (La ruta PIN_DETALLE se queda eliminada de aquí, ¡está bien!)
 
         // --- RESTO DE TUS RUTAS ---
-        composable(AppRoutes.OPCIONES_RESERVA) { OpcionesReservaScreen(navController = navController, topPadding = scaffoldPadding) }
+        composable(AppRoutes.OPCIONES_RESERVA) { OpcionesReservaScreen(navController = navController,viewModel= infoViewModel, topPadding = scaffoldPadding) }
         composable(AppRoutes.RESERVA) { ReservaScreen(navController = navController, viewModel = infoViewModel,topPadding = scaffoldPadding) }
         composable(
             route = AppRoutes.CONFIRMACION_RESERVA + "/{nombre}/{fecha}/{hora}",

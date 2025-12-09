@@ -11,6 +11,10 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.collectAsState
+
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -24,19 +28,24 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import com.nextapp.monasterio.AppRoutes
 import com.nextapp.monasterio.R
 import com.nextapp.monasterio.utils.llamarTelefono
 import com.nextapp.monasterio.ui.components.MonasteryButton
+import com.nextapp.monasterio.viewModels.InfoViewModel
+
 @Composable
 fun OpcionesReservaScreen(
     navController: NavController,
+    viewModel: InfoViewModel,
     topPadding: PaddingValues = PaddingValues(0.dp) // Recibimos el padding
 ) {
     val context = LocalContext.current
     val activity = (context as? Activity)
-    val numerodetelefono = "+34983291395"
+    val infoData by viewModel.infoState.collectAsState()
+    val numerodetelefono = infoData.phone
 
     // Detectar orientación
     val configuration = LocalConfiguration.current
