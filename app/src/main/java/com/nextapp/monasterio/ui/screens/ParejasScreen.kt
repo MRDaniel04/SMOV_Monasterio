@@ -46,6 +46,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -84,6 +85,9 @@ fun ParejasScreen(
     val showInstructionsPreviewDialog = showInstructionsPreviewDialogNullable ?: true
 
     var showInstructionsPreviewDialogBoton by remember { mutableStateOf(false) }
+
+    val screenWidth = LocalConfiguration.current.screenWidthDp
+    val isTablet = screenWidth > 600
 
     val ruta = remember(size){
         when(size.rows * size.columns){
@@ -165,7 +169,9 @@ fun ParejasScreen(
                         Modifier.width(270.dp)
                     } else if (size.rows == 5){
                         Modifier.width(220.dp)
-                    } else{
+                    } else if (isTablet && size.rows==3){
+                        Modifier.width(270.dp)
+                    }else{
                         Modifier.fillMaxWidth()
                     }
                 ),
