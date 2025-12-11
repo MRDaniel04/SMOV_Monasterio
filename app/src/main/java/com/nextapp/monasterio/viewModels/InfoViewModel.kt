@@ -90,6 +90,24 @@ class InfoViewModel : ViewModel() {
         }
     }
 
+    fun saveFullInfo(newInfo: InfoModel) {
+        viewModelScope.launch {
+            try {
+                Log.d(TAG, "Saving full info model...")
+                infoCollection.document(documentId)
+                    .set(newInfo) // Sobreescribe todo el documento
+                    .await()
+                
+                _infoState.value = newInfo
+                Log.d(TAG, "Full info saved successfully")
+                
+            } catch (e: Exception) {
+                Log.e(TAG, "Error saving full info", e)
+                _error.value = e.message
+            }
+        }
+    }
+
     private fun <T> updateField(fieldName: String, value: T, updateLocal: (InfoModel) -> InfoModel) {
         viewModelScope.launch {
             try {
