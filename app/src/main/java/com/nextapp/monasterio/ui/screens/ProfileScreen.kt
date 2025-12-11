@@ -23,6 +23,8 @@ import com.nextapp.monasterio.ui.components.MonasteryButton
 @Composable
 fun ProfileScreen(
     isEditing: Boolean,
+    isDiscarding: Boolean = false,
+    onKeepEditing: () -> Unit = {},
     viewModel: AuthViewModel = viewModel(),
 ) {
     val userState by viewModel.currentUser.collectAsState()
@@ -65,8 +67,10 @@ fun ProfileScreen(
         val isSaving = com.nextapp.monasterio.ui.components.EditModeHandler(
             isEditing = isEditing,
             hasChanges = hasChanges,
+            isDiscarding = isDiscarding,
             onSave = saveChanges,
-            onDiscard = cancelChanges
+            onDiscard = cancelChanges,
+            onKeepEditing = onKeepEditing
         )
 
         if (isEditing || isSaving) {

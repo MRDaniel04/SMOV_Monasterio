@@ -50,6 +50,8 @@ fun AppNavigationHost(
     infoViewModel: InfoViewModel = viewModel(),
     navController: NavHostController,
     isEditing: Boolean = false,
+    isDiscarding: Boolean = false,
+    onKeepEditing: () -> Unit = {},
     scaffoldPadding: PaddingValues = PaddingValues(0.dp)
 ) {
     NavHost(
@@ -58,8 +60,8 @@ fun AppNavigationHost(
         modifier = modifier
     ) {
         composable(AppRoutes.INICIO)   { HomeScreenContent(navController = navController, topPadding = scaffoldPadding, authViewModel = authViewModel) }
-        composable(AppRoutes.INFO) { InfoScreen(isEditing = isEditing, viewModel = infoViewModel, topPadding = scaffoldPadding) }
-        composable(AppRoutes.HISTORIA) { HistoriaScreen(isEditing = isEditing, viewModel = historiaViewModel,topPadding = scaffoldPadding) }
+        composable(AppRoutes.INFO) { InfoScreen(isEditing = isEditing, isDiscarding = isDiscarding, onKeepEditing = onKeepEditing, viewModel = infoViewModel, topPadding = scaffoldPadding) }
+        composable(AppRoutes.HISTORIA) { HistoriaScreen(isEditing = isEditing, isDiscarding = isDiscarding, onKeepEditing = onKeepEditing, viewModel = historiaViewModel,topPadding = scaffoldPadding) }
         composable(AppRoutes.GALERIA)  { GaleriaScreen(navController = navController) }
         composable(AppRoutes.MODO_NINYOS)   { OpcionesModoNiño(navController = navController, topPadding = scaffoldPadding) }
         composable(AppRoutes.VIDEO_NINYOS)   { VideoNinyosScreen(topPadding = scaffoldPadding) }
@@ -70,7 +72,7 @@ fun AppNavigationHost(
         composable(AppRoutes.JUEGO_NINYOS){OpcionesJuegoNinyos(navController=navController, topPadding = scaffoldPadding)}
         composable(route=AppRoutes.MODO_EDICION) { OpcionesModoEdicion(navController = navController)}
         composable(AppRoutes.EDICION_FONDO_INICIO) { EdicionFondoInicio(navController = navController, topPadding = scaffoldPadding) }
-        composable(AppRoutes.PERFIL)   { ProfileScreen(isEditing = isEditing, viewModel = authViewModel ) }
+        composable(AppRoutes.PERFIL)   { ProfileScreen(isEditing = isEditing, isDiscarding = isDiscarding, onKeepEditing = onKeepEditing, viewModel = authViewModel ) }
         composable(AppRoutes.AJUSTES)  { AjustesScreen(viewModel = ajustesViewModel) }
         composable(AppRoutes.MANUAL) { PdfViewerScreen(pdfFileName = "Informe_Smov.pdf") }
         composable (AppRoutes.JUEGO_PUZZLE) {JuegoPuzzleScreen(navController = navController, topPadding = scaffoldPadding)}

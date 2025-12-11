@@ -47,6 +47,8 @@ import java.util.Locale
 @Composable
 fun InfoScreen(
     isEditing: Boolean = false,
+    isDiscarding: Boolean = false,
+    onKeepEditing: () -> Unit = {},
     viewModel: InfoViewModel = viewModel(),
     topPadding: PaddingValues = PaddingValues(0.dp)
 ) {
@@ -83,8 +85,10 @@ fun InfoScreen(
     val isSaving = com.nextapp.monasterio.ui.components.EditModeHandler(
         isEditing = isEditing,
         hasChanges = hasChanges,
+        isDiscarding = isDiscarding,
         onSave = saveChanges,
-        onDiscard = discardChanges
+        onDiscard = discardChanges,
+        onKeepEditing = onKeepEditing
     )
 
     // Sincronización al salir de edición

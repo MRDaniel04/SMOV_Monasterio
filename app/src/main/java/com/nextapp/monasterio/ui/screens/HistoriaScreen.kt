@@ -33,6 +33,8 @@ import com.nextapp.monasterio.ui.components.EditModeHandler
 @Composable
 fun HistoriaScreen(
     isEditing: Boolean = false,
+    isDiscarding: Boolean = false,
+    onKeepEditing: () -> Unit = {},
     viewModel: HistoriaViewModel = viewModel(),
     topPadding: PaddingValues = PaddingValues(0.dp) // Recibimos el padding
 ) {
@@ -79,8 +81,10 @@ fun HistoriaScreen(
     val isSaving = EditModeHandler(
         isEditing = isEditing,
         hasChanges = hasChanges,
+        isDiscarding = isDiscarding,
         onSave = saveChanges,
-        onDiscard = discardChanges
+        onDiscard = discardChanges,
+        onKeepEditing = onKeepEditing
     )
 
     // Sincronización inteligente:

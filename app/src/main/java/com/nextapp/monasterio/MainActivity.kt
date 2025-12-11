@@ -70,7 +70,6 @@ class MainActivity : AppCompatActivity() {
                 LocalConfiguration provides newConfiguration
             ) {
                 Smov_monasterioTheme {
-                    // 👇 PASAMOS 'this' (la actividad)
                     MonasteryAppScreen(activity = this@MainActivity)
                 }
             }
@@ -92,6 +91,7 @@ fun MonasteryAppScreen(activity: AppCompatActivity) { // 👈 Recibimos la activ
 
     // Estado global edición
     var isEditing by remember { mutableStateOf(false) }
+    var isDiscarding by remember { mutableStateOf(false) }
 
     val currentTitle = remember { mutableStateOf(context.getString(R.string.title_inicio)) }
 
@@ -226,27 +226,53 @@ fun MonasteryAppScreen(activity: AppCompatActivity) { // 👈 Recibimos la activ
                                         AppRoutes.PERFIL
                                     )
 
+                                    // Estado global edición
+                                    // var isDiscarding necesita ser recordado para pasarlo al NavigationHost
+
                                     if (currentUser != null && currentRoute in editableRoutes) {
-                                        IconButton(onClick = {
-                                            isEditing = !isEditing
-                                            val message = if (isEditing)
-                                                context.getString(R.string.edit_mode_activate_message)
-                                            else
-                                                context.getString(R.string.edit_mode_deactivate_message)
-                                            Toast.makeText(context, message, Toast.LENGTH_SHORT)
-                                                .show()
-                                        }) {
-                                            Icon(
-                                                painter = if (isEditing)
-                                                    painterResource(id = R.drawable.baseline_done_24)
-                                                else
-                                                    painterResource(id = R.drawable.lapiz),
-                                                contentDescription = if (isEditing)
-                                                    stringResource(id = R.string.edit_mode_deactivate_icon)
-                                                else
-                                                    stringResource(id = R.string.edit_mode_activate_icon),
-                                                tint = White
-                                            )
+                                        Row {
+                                            if (isEditing) {
+                                                // Botón X (Descartar cambios y salir sin guardar)
+                                                IconButton(onClick = {
+                                                    isDiscarding = true
+                                                    isEditing = false
+                                                    val message = context.getString(R.string.edit_mode_deactivate_message)
+                                                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                                                }) {
+                                                    Icon(
+                                                        painter = painterResource(id = R.drawable.ic_close_24), // Reusamos el icono de cerrar imágenes
+                                                        contentDescription = stringResource(id = R.string.close),
+                                                        tint = White
+                                                    )
+                                                }
+                                            }
+
+                                            IconButton(onClick = {
+                                                if (isEditing) {
+                                                    // Botón Check (Intentar guardar)
+                                                    isDiscarding = false
+                                                    isEditing = false
+                                                    val message = context.getString(R.string.edit_mode_deactivate_message)
+                                                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                                                } else {
+                                                    // Botón Lápiz (Entrar en edición)
+                                                    isEditing = true
+                                                    val message = context.getString(R.string.edit_mode_activate_message)
+                                                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                                                }
+                                            }) {
+                                                Icon(
+                                                    painter = if (isEditing)
+                                                        painterResource(id = R.drawable.baseline_done_24)
+                                                    else
+                                                        painterResource(id = R.drawable.lapiz),
+                                                    contentDescription = if (isEditing)
+                                                        stringResource(id = R.string.edit_mode_deactivate_icon)
+                                                    else
+                                                        stringResource(id = R.string.edit_mode_activate_icon),
+                                                    tint = White
+                                                )
+                                            }
                                         }
                                     }
 
@@ -289,6 +315,11 @@ fun MonasteryAppScreen(activity: AppCompatActivity) { // 👈 Recibimos la activ
                 authViewModel = authViewModel,
                 navController = navController,
                 isEditing = isEditing,
+                isDiscarding = isDiscarding,
+                onKeepEditing = {
+                    isEditing = true
+                    isDiscarding = false
+                },
                 // TRUCO: Si es Home, NO ponemos padding al contenedor (para que el fondo se estire).
                 // Si es otra pantalla, SÍ ponemos padding.
                 modifier = if (isHome||isModoNinyos||isVideo||isJuegos||isReservas||isReservas2||isParejas||isPuzzle||isHistoria||isEdicionInicio||isInfo||isEdicion) Modifier else Modifier.padding(paddingValues),
