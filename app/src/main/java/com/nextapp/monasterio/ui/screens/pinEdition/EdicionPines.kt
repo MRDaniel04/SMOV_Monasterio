@@ -320,7 +320,6 @@ fun EdicionPines(
                 },
 
                 onStartMove = { movedPin, initialPos ->
-                    Log.d("EdicionPines", "Iniciando modo Mover Pin para ID: ${movedPin.id}")
                     pinBeingMoved = movedPin
                     pinDragOffset = initialPos
                     selectedPin = null
@@ -376,8 +375,6 @@ fun EdicionPines(
                     },
                     onConfirm = {
 
-                        Log.d("FLUJO_PIN", "EdicionPines: Botón CONFIRMAR pulsado. Calculando coordenadas...")
-
                         val currentScreenPos = pinDragOffset
                         var normalizedCoords: PointF? = null
 
@@ -389,7 +386,6 @@ fun EdicionPines(
                         }
 
                         if (normalizedCoords == null) {
-                            Log.e("FLUJO_PIN", "❌ ERROR: normalizedCoords es NULL. Posiblemente PhotoView no está listo.")
                             Toast.makeText(context, "Error al obtener la posición del pin.", Toast.LENGTH_SHORT).show()
                             vm.isUploading = false // Asegurar que se apaga en caso de fallo crítico de coordenadas
                             return@MovingPinOverlay
@@ -408,7 +404,6 @@ fun EdicionPines(
                                         vm.area_es.isNotBlank()
 
                             if (!isPinValid) {
-                                Log.e("FLUJO_PIN", "❌ VALIDACIÓN FALLIDA: Faltan datos obligatorios para crear el Pin. Abortando.")
                                 vm.isUploading = false
                                 vm.uploadMessage = ""
                                 return@MovingPinOverlay // <-- Sale si la validación falla (motivo más probable del fallo reportado)
@@ -553,7 +548,7 @@ fun EdicionPines(
                 Toast.makeText(context, "Bloquear Edición", Toast.LENGTH_SHORT).show()
             },
             onHelpClick = {
-                Toast.makeText(context, "Mostrar Ayuda", Toast.LENGTH_SHORT).show()
+                navController.navigate(AppRoutes.MANUAL_EDICION)
             },
             modifier = toolbarModifier.zIndex(100f),
             isPortrait = isPortrait // ⬅️ Pasar el nuevo parámetro al componente

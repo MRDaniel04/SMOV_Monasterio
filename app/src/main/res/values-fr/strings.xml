@@ -275,6 +275,9 @@
     <string name="tag_arquitectura">Architecture</string>
     <string name="tag_otro">Autre</string>
 
+    <string name="menu_manual_usuario">Manuel d’utilisation</string>
+
+
     <string-array name="clues">
         <item>Jette un coup d’œil au sommet du château</item>
         <item>Une des différences se trouve dans le ciel de l’image</item>

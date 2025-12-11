@@ -54,11 +54,9 @@ fun CreacionPinesScreen(
         descripcionState.es.isNotBlank() &&
                 imagenesState.images.isNotEmpty() &&
                 imagenesState.allImagesTagged &&
-                vm.ubicacion_es.isNotBlank() && // Campo complejo (antes pinTitle)
-                vm.area_es.isNotBlank() // Campo simple (antes pinUbicacion)
+                vm.ubicacion_es.isNotBlank() &&
+                vm.area_es.isNotBlank()
     var showExitDialog by remember { mutableStateOf(false) }
-
-
 
 
     Scaffold(
@@ -90,7 +88,7 @@ fun CreacionPinesScreen(
                 },
                 onBack = {
                     if (isEditing) {
-                        // EDITAR → solo mostrar diálogo si hay cambios
+
                         if (vm.isModified) {
                             showExitDialog = true
                         } else {
@@ -182,10 +180,8 @@ fun CreacionPinesScreen(
                 onTitleChange = { newUbicacion ->
                     vm.updateUbicacionConAutoTraduccion(newUbicacion, ::getAreaPrincipalForLocation)
                 },
-                // El cambio manual de área sigue usando el setter normal
-                onUbicacionChange = { newArea -> vm.area_es = newArea },
 
-                // Pasamos el estado de las traducciones manuales y el callback
+                onUbicacionChange = { newArea -> vm.area_es = newArea },
                 titleManualTrads = vm.pinTitleManualTrads,
                 onTitleManualTradsUpdate = { en, de, fr -> vm.updateTitleManualTrads(en, de, fr) }
             )
@@ -195,9 +191,7 @@ fun CreacionPinesScreen(
                 state = descripcionState,
                 isEditing = isEditing,
                 onChanged = {
-                    Log.d("FLUJO_PIN_UI", "UI: Descripción onChanged() → descripcion.es='${vm.descripcion.es.take(60)}'")
                     vm.checkIfModified()
-                    Log.d("FLUJO_PIN_UI", "UI: tras check: isModified=${vm.isModified}")
                 }
             )
 
@@ -207,9 +201,7 @@ fun CreacionPinesScreen(
                 state = imagenesState,
                 mandatory = true,
                 onChanged = {
-                    Log.d("FLUJO_PIN_UI", "UI: PinImageSelector.onChanged() llamado. imagenes.size=${vm.imagenes.images.size}, allTagged=${vm.imagenes.allImagesTagged}")
                     vm.checkIfModified()
-                    Log.d("FLUJO_PIN_UI", "UI: tras check: isModified=${vm.isModified}")
                 }
 
             )
@@ -223,9 +215,7 @@ fun CreacionPinesScreen(
                 onRemove = { vm.imagen360 = null }
             )
 
-
             Spacer(Modifier.height(32.dp))
-
         }
     }
 }

@@ -18,7 +18,6 @@ import com.nextapp.monasterio.ui.screens.pinCreation.state.*
 import kotlinx.coroutines.launch
 
 
-// --- NUEVO DATA CLASS PARA GESTIÓN DE TRADUCCIONES MANUALES DEL TÍTULO (Ubicación) ---
 data class PinTitleManualTrads(
     var en: String = "",
     var de: String = "",
@@ -67,9 +66,6 @@ class CreacionPinSharedViewModel : ViewModel() {
             if (!isLoadingInitialData) checkIfModified()
         }
 
-    // ===========================================
-    // 🆕 UBICACIÓN (Compleja, antes 'pinTitle')
-    // ===========================================
     var _ubicacion_es by mutableStateOf("")
     var ubicacion_es: String
         get() = _ubicacion_es
@@ -79,21 +75,20 @@ class CreacionPinSharedViewModel : ViewModel() {
         }
 
     var pinTitleManualTrads by mutableStateOf(PinTitleManualTrads())
-        private set // ⚠️ Hacemos el setter privado para forzar el uso de una función.
+        private set
 
     private var _area_es_internal by mutableStateOf("")
 
-    var area_es: String // Campo principal obligatorio
+    var area_es: String
         get() = _area_es_internal
         set(value) {
             _area_es_internal = value
-            updatePinArea(value) // ⬅️ Dispara la traducción automática.
+            updatePinArea(value)
             if (!isLoadingInitialData) checkIfModified()
         }
 
     private var area_traducciones_automaticas: Triple<String?, String?, String?> = Triple(null, null, null)
 
-    // 🆕 Exponemos las traducciones automáticas del Área (para uso en la UI/Repositorio)
     val area_en: String?
         get() = area_traducciones_automaticas.first
 
@@ -121,7 +116,7 @@ class CreacionPinSharedViewModel : ViewModel() {
     }
 
     companion object {
-        // Traducciones de las opciones fijas para el ÁREA
+
         private val AREA_TRADUCCIONES = mapOf(
             "Iglesia" to Triple("Church", "Kirche", "Église"),
             "Monasterio" to Triple("Monastery", "Kloster", "Monastère")
@@ -133,7 +128,6 @@ class CreacionPinSharedViewModel : ViewModel() {
         if (translations != null) {
             area_traducciones_automaticas = Triple(translations.first, translations.second, translations.third)
         } else {
-            // Si es un área no predefinida (Ej: texto manual en un futuro), límpialas.
             area_traducciones_automaticas = Triple(null, null, null)
         }
     }
@@ -147,46 +141,33 @@ class CreacionPinSharedViewModel : ViewModel() {
 
         Log.d("FLUJO_PIN_AUTO", "-> UPDATE INICIADO: newTitleEs='$newTitleEs'")
 
-        // 1. Actualizar el campo principal (ES)
         _ubicacion_es = newTitleEs
 
         val autoTrads = UBICACION_AUTO_TRADS[newTitleEs]
         val isManualEntry = autoTrads == null
 
         if (!isManualEntry) {
-            // ---------- UBICACIÓN PREDEFINIDA ----------
             ubicacion_en_auto = autoTrads["en"]
             ubicacion_de_auto = autoTrads["de"]
             ubicacion_fr_auto = autoTrads["fr"]
-
-            // Y limpiamos las manuales
             pinTitleManualTrads = PinTitleManualTrads()
+
         } else {
-            // ---------- UBICACIÓN MANUAL ----------
-            // No toca automáticas
             ubicacion_en_auto = null
             ubicacion_de_auto = null
             ubicacion_fr_auto = null
-
-            // Se usarán las manuales (si las escribe el usuario)
         }
 
-        // 3. ÁREA AUTOMÁTICA (solo si es fija)
         if (!isManualEntry) {
             val newAreaEs = getAreaFn(newTitleEs)
             area_es = newAreaEs ?: ""
         } else {
-            // manual → área vacía hasta que usuario elija
             area_es = ""
         }
 
         if (!isLoadingInitialData) checkIfModified()
-
-        Log.d("FLUJO_PIN_AUTO", "<- UPDATE FINALIZADO: area_es='${area_es}', ubicacion_es='${_ubicacion_es}'")
     }
 
-
-    // --- EDICIÓN ---
     private var originalPin: PinData? = null
 
     var isEditing by mutableStateOf(false)
@@ -209,7 +190,7 @@ class CreacionPinSharedViewModel : ViewModel() {
         pinTitleManualTrads = PinTitleManualTrads()
         _area_es_internal = ""
         area_traducciones_automaticas = Triple(null, null, null)
-        descripcion.reset() // Asumiendo que DescripcionState tiene un reset()
+        descripcion.reset()
         imagenes.images = emptyList()
         imagen360 = null
         modoMoverPin = false
@@ -218,47 +199,37 @@ class CreacionPinSharedViewModel : ViewModel() {
         editingPinId = null
     }
 
-    /**
-     * Carga un PinData en el ViewModel para editar.
-     * Convierte las URLs a Uri.parse(...) para poder reutilizar el selector de imágenes.
-     */
+
     fun loadPinForEditing(pin: PinData) {
         isEditing = true
         editingPinId = pin.id
         isLoadingInitialData = true
-
         formSubmitted = false
         modoMoverPin = false
-        newPinIdForPlacement = null // Limpiar el nuevo flag si se usara
+        newPinIdForPlacement = null
 
         try {
-            // 🟦 UBICACIÓN (Compleja)
-            _ubicacion_es = pin.ubicacion_es ?: ""
 
+            _ubicacion_es = pin.ubicacion_es ?: ""
             val auto = UBICACION_AUTO_TRADS[_ubicacion_es]
 
             if (auto != null) {
-                // Ubicación fija → activar auto traducciones
                 ubicacion_en_auto = auto["en"]
                 ubicacion_de_auto = auto["de"]
                 ubicacion_fr_auto = auto["fr"]
-
-                // Limpiar manuales
                 pinTitleManualTrads = PinTitleManualTrads()
+
             } else {
-                // Ubicación manual → conservar las manuales cargadas
                 ubicacion_en_auto = null
                 ubicacion_de_auto = null
                 ubicacion_fr_auto = null
             }
 
-            // 🟦 DESCRIPCIÓN
             descripcion.updateEs(pin.descripcion_es ?: "")
             descripcion.updateEn(pin.descripcion_en ?: "")
             descripcion.updateDe(pin.descripcion_de ?: "")
             descripcion.updateFr(pin.descripcion_fr ?: "")
 
-            // 🟦 ÁREA (Simple)
             area_es = pin.area_es ?: ""
             originalAudioUrls = mapOf(
                 "es" to pin.audioUrl_es,
@@ -273,8 +244,8 @@ class CreacionPinSharedViewModel : ViewModel() {
                         try {
                             val tagEnum = ImageTag.fromFirestoreString(img.tipo)
 
-                            PinImage( // ⚠️ Usando la nueva estructura PinImage
-                                id = img.id, // 🆕 Cargamos el ID original
+                            PinImage(
+                                id = img.id,
                                 uri = Uri.parse(img.url),
                                 tag = tagEnum,
                                 titulo_es = img.titulo ?: "",
@@ -290,7 +261,6 @@ class CreacionPinSharedViewModel : ViewModel() {
                 else -> emptyList()
             }
 
-            // Imagen 360
             _imagen360 = pin.vista360Url?.let { Uri.parse(it) }
             originalPin = pin.copy()
         } finally {
@@ -301,13 +271,8 @@ class CreacionPinSharedViewModel : ViewModel() {
     }
 
 
-    /**
-     * Se llama cuando el usuario pulsa el botón de Guardar en modo edición.
-     */
     fun onSaveClicked(context: Context) {
-        // Solo permitimos guardar si estamos en modo edición y no estamos ya subiendo.
         if (!isEditing || isUploading || formSubmitted) {
-            Log.d("FLUJO_PIN", "VM: onSaveClicked ignorado. isEditing=$isEditing, isUploading=$isUploading, formSubmitted=$formSubmitted")
             return
         }
 
@@ -320,22 +285,20 @@ class CreacionPinSharedViewModel : ViewModel() {
 
         val imagenesParaGuardar = imagenes.images.map { pinImage ->
             ImagenData(
-                id = pinImage.id, // ⬅️ CORRECCIÓN: Usar el ID original
-                url = pinImage.uri.toString(), // URL de la imagen
-                tipo = pinImage.tag?.toFirestoreString() ?: "", // Tipo/Tag
-                titulo = pinImage.titulo_es, // Título en español
-                tituloIngles = pinImage.titulo_en, // Título en inglés
-                tituloAleman = pinImage.titulo_de, // Título en alemán
-                tituloFrances = pinImage.titulo_fr, // Título en francés
-                foco = 0f // Mantenemos el valor por defecto
+                id = pinImage.id,
+                url = pinImage.uri.toString(),
+                tipo = pinImage.tag?.toFirestoreString() ?: "",
+                titulo = pinImage.titulo_es,
+                tituloIngles = pinImage.titulo_en,
+                tituloAleman = pinImage.titulo_de,
+                tituloFrances = pinImage.titulo_fr,
+                foco = 0f
             )
         }
 
         val imagen360Url = imagen360?.toString()
-
         val (area_en_auto, area_de_auto, area_fr_auto) = area_traducciones_automaticas
 
-        // TRADUCCIONES DEL TÍTULO (Manuales si es "Otra", o nulas)
 
         val descriptionTasks = mapOf(
             "es" to Pair(descripcion.es, original.descripcion_es),
@@ -344,7 +307,6 @@ class CreacionPinSharedViewModel : ViewModel() {
             "fr" to Pair(descripcion.fr, original.descripcion_fr)
         )
 
-        // 2. Inicializamos las URLs finales con las originales
         val audioUrlsFinal: MutableMap<String, String?> = mutableMapOf(
             "es" to original.audioUrl_es,
             "en" to original.audioUrl_en,
@@ -360,25 +322,20 @@ class CreacionPinSharedViewModel : ViewModel() {
 
                     val textModified = currentText != originalText
                     if (textModified) {
-                        // El texto ha cambiado. Decidimos si subir o borrar.
 
                         if (currentText.isNotBlank()) {
-                            // 1. TEXTO MODIFICADO Y NO VACÍO -> REGENERAR Y SUBIR
+
                             uploadMessage = "Generando y subiendo audio para ${lang.uppercase()}..."
 
-                            // 🚨 LLAMADA CRÍTICA AL REPOSITORIO
                             val generatedUrl = pinRepository.generateAndUploadAudio(context, currentText, lang)
 
                             audioUrlsFinal[lang] = generatedUrl // Guarda la nueva URL
                         } else {
-                            // 2. TEXTO MODIFICADO A VACÍO -> BORRAR
-                            // El original tenía audio, pero el nuevo texto no. Borramos el link.
                             audioUrlsFinal[lang] = null
                         }
                     }
                 }
 
-                // 4. Obtener las URLs finales para la llamada al repositorio
                 val audioUrl_es_final = audioUrlsFinal["es"]
                 val audioUrl_en_final = audioUrlsFinal["en"]
                 val audioUrl_de_final = audioUrlsFinal["de"]
@@ -387,25 +344,21 @@ class CreacionPinSharedViewModel : ViewModel() {
                 pinRepository.updatePin(
                     pinId = id,
 
-                    // --- UBICACIONES (Compleja) ---
                     ubicacion_es = ubicacion_es,
-                    ubicacion_en = ubicacion_en, // ⬅️ ¡Usando la nueva propiedad!
-                    ubicacion_de = ubicacion_de, // ⬅️ ¡Usando la nueva propiedad!
-                    ubicacion_fr = ubicacion_fr, // ⬅️ ¡Usando la nueva propiedad!
+                    ubicacion_en = ubicacion_en,
+                    ubicacion_de = ubicacion_de,
+                    ubicacion_fr = ubicacion_fr,
 
-                    // --- ÁREAS (Simple) ---
                     area_es = area_es,
-                    area_en = area_en_auto, // Usamos el valor automático
-                    area_de = area_de_auto, // Usamos el valor automático
-                    area_fr = area_fr_auto, // Usamos el valor automático
+                    area_en = area_en_auto,
+                    area_de = area_de_auto,
+                    area_fr = area_fr_auto,
 
-                    // --- DESCRIPCIONES ---
-                    descripcion_es = descripcion.es, // ⬅️ Nuevo nombre
+                    descripcion_es = descripcion.es,
                     descripcion_en = descripcion.en,
                     descripcion_de = descripcion.de,
                     descripcion_fr = descripcion.fr,
 
-                    // --- AUDIO ---
                     audioUrl_es = audioUrl_es_final,
                     audioUrl_en = audioUrl_en_final,
                     audioUrl_de = audioUrl_de_final,
@@ -415,7 +368,6 @@ class CreacionPinSharedViewModel : ViewModel() {
                     imagen360 = imagen360Url
                 )
 
-                // Éxito
                 uploadMessage = "Pin actualizado con éxito."
                 updateRequested = true
                 formSubmitted = false
@@ -432,14 +384,10 @@ class CreacionPinSharedViewModel : ViewModel() {
         }
     }
 
-    /**
-     * Se llama cuando el usuario pulsa el botón de Guardar en modo CREACIÓN.
-     */
+
     fun onCreateConfirmed(context: Context, finalX: Float, finalY: Float, onSuccess: () -> Unit) {
 
-        // Solo permitimos crear si NO estamos editando, NO estamos subiendo y tenemos coordenadas.
         if (isEditing || isUploading) {
-            Log.e("FLUJO_PIN", "VM: onCreateConfirmed ignorado. Modo incorrecto o ya subiendo.")
             uploadMessage = "Error interno: Ya subiendo o en edición."
             isUploading = false
             return
@@ -448,26 +396,21 @@ class CreacionPinSharedViewModel : ViewModel() {
         isUploading = true
         uploadMessage = "Iniciando proceso de creación y subida de archivos..."
 
-        // Mapeo de traducciones y áreas
         val (area_en_auto, area_de_auto, area_fr_auto) = area_traducciones_automaticas
 
 
         viewModelScope.launch {
             try {
-                // --- 1. SUBIDA DE IMÁGENES NORMALES ---
                 uploadMessage = "Subiendo imágenes normales..."
                 val uploadedImageUrls = imagenes.uris.map { uri ->
                     CloudinaryService.uploadImage(uri, context).getOrThrow()
                 }
 
-
-                // --- 2. SUBIDA DE IMAGEN 360 ---
                 uploadMessage = "Subiendo imagen 360 (si existe)..."
                 val uploaded360Url: String? = imagen360?.let { uri ->
                     CloudinaryService.uploadImage(uri, context).getOrNull()
                 }
 
-                // Mapear URLs subidas con sus datos de título/tag
                 val imagesWithData = imagenes.images.mapIndexed { index, pinImage ->
                     val uploadedUrl = uploadedImageUrls.getOrNull(index) ?: pinImage.uri.toString()
                     ImagenData(
@@ -478,8 +421,6 @@ class CreacionPinSharedViewModel : ViewModel() {
                     )
                 }
 
-
-                // --- 3. GENERACIÓN Y SUBIDA DE AUDIOS (¡INTEGRADO!) ---
                 val audioUrlsFinal: MutableMap<String, String?> = mutableMapOf()
                 val creationDescriptions = mapOf(
                     "es" to descripcion.es, "en" to descripcion.en,
@@ -497,23 +438,20 @@ class CreacionPinSharedViewModel : ViewModel() {
                 }
 
 
-                // --- 4. CREACIÓN DEL PIN FINAL EN EL REPOSITORIO ---
                 uploadMessage = "Guardando Pin y asociando al plano..."
 
                 val newPinId = pinRepository.createPinFromForm(
-                    // UBICACIÓN (Compleja)
+
                     ubicacion_es = ubicacion_es,
-                    ubicacion_en = ubicacion_en, // ⬅️ ¡Usando la nueva propiedad!
-                    ubicacion_de = ubicacion_de, // ⬅️ ¡Usando la nueva propiedad!
-                    ubicacion_fr = ubicacion_fr, // ⬅️ ¡Usando la nueva propiedad!
-                    // DESCRIPCIONES
+                    ubicacion_en = ubicacion_en,
+                    ubicacion_de = ubicacion_de,
+                    ubicacion_fr = ubicacion_fr,
+
                     descripcion_es = descripcion.es.ifBlank { null }, descripcion_en = descripcion.en.ifBlank { null },
                     descripcion_de = descripcion.de.ifBlank { null }, descripcion_fr = descripcion.fr.ifBlank { null },
 
-                    // ÁREA (Simple)
                     area_es = area_es, area_en = area_en_auto, area_de = area_de_auto, area_fr = area_fr_auto,
 
-                    // AUDIO (USANDO LAS URLS GENERADAS)
                     audioUrl_es = audioUrlsFinal["es"], audioUrl_en = audioUrlsFinal["en"],
                     audioUrl_de = audioUrlsFinal["de"], audioUrl_fr = audioUrlsFinal["fr"],
 
@@ -524,10 +462,9 @@ class CreacionPinSharedViewModel : ViewModel() {
 
                 PlanoRepository.addPinToPlano(planoId = "monasterio_interior", pinId = newPinId)
 
-                // Éxito:
                 uploadMessage = "Pin creado con éxito."
-                formSubmitted = false // Resetear formSubmitted (si lo usa la UI)
-                onSuccess() // Informar a EdicionPines para que recargue
+                formSubmitted = false
+                onSuccess()
 
             } catch (e: Exception) {
                 Log.e("FLUJO_PIN", "❌ ERROR en proceso de creación: ${e.message}", e)
@@ -541,25 +478,16 @@ class CreacionPinSharedViewModel : ViewModel() {
     }
 
     fun onCreateClicked(context: android.content.Context, onSuccess: () -> Unit) {
-        // Aquí puedes añadir alguna validación de formulario si es crítica antes de pasar al mapa.
-        // Por simplicidad, solo chequeamos el estado.
+
         if (isEditing || isUploading || formSubmitted) {
-            Log.w("FLUJO_PIN", "VM: onCreateClicked ignorado. Formulario ya en proceso o en edición.")
             return
         }
 
-        // 1. Marcar el estado del formulario como SUBMITTED
-        // Esto es lo que activará el LaunchedEffect en EdicionPines (el mapa)
         formSubmitted = true
-        Log.d("FLUJO_PIN", "VM: ✅ Formulario listo para posicionamiento. formSubmitted = true.")
-
-        // 2. Llama al callback de navegación.
-        onSuccess() // Esto llama a navController.popBackStack() para ir al mapa (EdicionPines)
+        onSuccess()
     }
 
-    /**
-     * Actualiza la ubicación principal y asigna automáticamente las traducciones.
-     */
+
     fun checkIfModified() {
 
         if (isLoadingInitialData || !isEditing || originalPin == null) {
@@ -577,11 +505,8 @@ class CreacionPinSharedViewModel : ViewModel() {
                     ubicacion_fr.orEmpty() != original.ubicacion_fr.orEmpty()
 
 
-        // ⚠️ ÁREA (Simple)
-        // SOLO necesitamos comparar area_es, ya que las traducciones EN/DE/FR son AUTOMÁTICAS.
         val isAreaModified = area_es != original.area_es
 
-        // ⚠️ DESCRIPCIÓN
         val isDescModified = descripcion.es != original.descripcion_es ||
                 descripcion.en != original.descripcion_en ||
                 descripcion.de != original.descripcion_de ||
@@ -601,7 +526,7 @@ class CreacionPinSharedViewModel : ViewModel() {
                     titulo_fr = img.tituloFrances.orEmpty()
                 )
             }
-            .sortedBy { it.url } // Ordenamos por URL
+            .sortedBy { it.url }
 
         val currentImageCanonical = imagenes.images
             .map { img ->

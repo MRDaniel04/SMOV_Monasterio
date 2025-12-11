@@ -276,6 +276,8 @@
     <string name="tag_arquitectura">Arquitectura</string>
     <string name="tag_otro">Otro</string>
 
+    <string name="menu_manual_usuario">Manual de Usuario</string>
+
     <string-array name="clues">
         <item>Echa un vistazo a la parte más alta del castillo</item>
         <item>Una de las diferencias ocupa el cielo de la imagen</item>

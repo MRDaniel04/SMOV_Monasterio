@@ -106,6 +106,8 @@ fun MonasteryAppScreen(activity: AppCompatActivity) { // 👈 Recibimos la activ
     val isPin360 = currentRoute?.startsWith(AppRoutes.PIN_360) == true
     val isEdicion = currentRoute == AppRoutes.EDICION_PINES
     val isEdicionFondo = currentRoute == AppRoutes.EDICION_FONDO_INICIO
+    val isManualEdicion = currentRoute == AppRoutes.MANUAL_EDICION
+
 
     // 2. Visita Virtual (Mapa General, Submapas y Pines)
     // Usamos 'contains' en lugar de '==' para cubrir todas las variaciones
@@ -117,7 +119,7 @@ fun MonasteryAppScreen(activity: AppCompatActivity) { // 👈 Recibimos la activ
     } ?: false
 
     // La vista es inmersiva si cumple CUALQUIERA de estas condiciones
-    val isImmersive = isPanorama || isPin360 || isEdicion || isMapSection
+    val isImmersive = isPanorama || isPin360 || isEdicion || isMapSection || isManualEdicion
 
     val gesturesEnabled = when(currentRoute){
         AppRoutes.VIRTUAL_VISIT -> false
@@ -164,6 +166,7 @@ fun MonasteryAppScreen(activity: AppCompatActivity) { // 👈 Recibimos la activ
                 AppRoutes.PAREJASNIVEL4 -> context.getString(R.string.memory_screen)
                 AppRoutes.EDICION_FONDO_INICIO -> context.getString(R.string.background_edit_screen)
                 AppRoutes.EDICION_PINES -> context.getString(R.string.pin_edit_screen)
+                AppRoutes.MANUAL_EDICION -> "Manual de edición"
                 AppRoutes.JUEGO_DIFERENCIAS -> context.getString(R.string.differences_screen)
                 else -> context.getString(R.string.title_inicio)
             }
@@ -176,7 +179,8 @@ fun MonasteryAppScreen(activity: AppCompatActivity) { // 👈 Recibimos la activ
             AppDrawerContent(
                 navController = navController,
                 scope = scope,
-                drawerState = drawerState
+                drawerState = drawerState,
+                currentUser = currentUser
             )
         },
         gesturesEnabled = gesturesEnabled && !isImmersive
@@ -215,9 +219,7 @@ fun MonasteryAppScreen(activity: AppCompatActivity) { // 👈 Recibimos la activ
                                     // SELECTOR DE IDIOMA
                                     MainLanguageSelector(activity)
 
-                                    // Edicion de contenido
 
-                                    // Rutas editables
                                     val editableRoutes = listOf(
                                         AppRoutes.INFO,
                                         AppRoutes.HISTORIA,
