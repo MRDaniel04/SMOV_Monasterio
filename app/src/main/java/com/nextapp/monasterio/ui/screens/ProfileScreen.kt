@@ -16,7 +16,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.nextapp.monasterio.R
-import com.nextapp.monasterio.ui.components.EditableContent
+
 import com.nextapp.monasterio.ui.components.EditableText
 import com.nextapp.monasterio.viewModels.AuthViewModel
 import com.nextapp.monasterio.ui.components.MonasteryButton
@@ -61,7 +61,15 @@ fun ProfileScreen(
             editableEmail = user.email ?: ""
         }
 
-        if (isEditing) {
+        // Manejador reutilizable para guardar cambios al salir de modo edición
+        val isSaving = com.nextapp.monasterio.ui.components.EditModeHandler(
+            isEditing = isEditing,
+            hasChanges = hasChanges,
+            onSave = saveChanges,
+            onDiscard = cancelChanges
+        )
+
+        if (isEditing || isSaving) {
             // MODO EDICIÓN (Lo mantenemos simple en vertical con scroll para no complicar)
             EditableProfileView(
                 isEditing = true,
@@ -83,10 +91,6 @@ fun ProfileScreen(
         }
     }
 }
-
-// =============================================================================
-// COMPONENTES DE LOGIN
-// =============================================================================
 
 @Composable
 fun LoginScreenPortrait(viewModel: AuthViewModel, error: String?) {
@@ -207,10 +211,6 @@ fun LoginForm(email: String, onEmailChange: (String) -> Unit, pass: String, onPa
     )
 }
 
-// =============================================================================
-// COMPONENTES DE PERFIL (LECTURA)
-// =============================================================================
-
 @Composable
 fun ProfileViewPortrait(user: com.nextapp.monasterio.models.User, viewModel: AuthViewModel) {
     Column(
@@ -253,7 +253,6 @@ fun ProfileViewLandscape(user: com.nextapp.monasterio.models.User, viewModel: Au
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        // 1. ESCUDO (30%)
         Box(
             modifier = Modifier.weight(0.3f),
             contentAlignment = Alignment.Center
@@ -265,8 +264,6 @@ fun ProfileViewLandscape(user: com.nextapp.monasterio.models.User, viewModel: Au
                 tint = androidx.compose.ui.graphics.Color.Unspecified
             )
         }
-
-        // 2. DATOS USUARIO (40%)
         Box(
             modifier = Modifier
                 .weight(0.4f)
@@ -275,8 +272,6 @@ fun ProfileViewLandscape(user: com.nextapp.monasterio.models.User, viewModel: Au
         ) {
             UserInfoCard(user)
         }
-
-        // 3. BOTÓN LOGOUT (30%)
         Box(
             modifier = Modifier.weight(0.3f),
             contentAlignment = Alignment.Center
@@ -363,10 +358,6 @@ fun LogoutButton(viewModel: AuthViewModel) {
     }
 }
 
-// =============================================================================
-// MODO EDICIÓN (COMPONENTE EXISTENTE REUTILIZADO)
-// =============================================================================
-
 @Composable
 fun EditableProfileView(
     isEditing: Boolean,
@@ -378,6 +369,7 @@ fun EditableProfileView(
     onNameChange: (String) -> Unit,
     onEmailChange: (String) -> Unit
 ) {
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -385,55 +377,29 @@ fun EditableProfileView(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        EditableContent(
-            isEditing = isEditing,
-            hasChanges = hasChanges,
-            onSave = onSave,
-            onCancel = onCancel,
-            modifier = Modifier.fillMaxWidth()
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
+            Text(
+                text = stringResource(id = R.string.title_profile),
+                style = MaterialTheme.typography.titleLarge
+            )
+            // Campo Nombre
+            Column {
                 Text(
-                    text = stringResource(id = R.string.title_profile),
-                    style = MaterialTheme.typography.titleLarge
+                    text = stringResource(id = R.string.profile_name),
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-
-                // Campo Nombre
-                Column {
-                    Text(
-                        text = stringResource(id = R.string.profile_name),
-                        style = MaterialTheme.typography.labelMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                    Spacer(modifier = Modifier.height(4.dp))
-                    EditableText(
-                        text = name,
-                        isEditing = isEditing,
-                        onTextChange = onNameChange,
-                        label = stringResource(id = R.string.profile_name),
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
-
-                // Campo Email
-                Column {
-                    Text(
-                        text = stringResource(id = R.string.profile_email),
-                        style = MaterialTheme.typography.labelMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                    Spacer(modifier = Modifier.height(4.dp))
-                    EditableText(
-                        text = email,
-                        isEditing = isEditing,
-                        onTextChange = onEmailChange,
-                        label = stringResource(id = R.string.profile_email),
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
+                Spacer(modifier = Modifier.height(4.dp))
+                EditableText(
+                    text = name,
+                    isEditing = isEditing,
+                    onTextChange = onNameChange,
+                    label = stringResource(id = R.string.profile_name),
+                    modifier = Modifier.fillMaxWidth()
+                )
             }
         }
     }
