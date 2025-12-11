@@ -152,6 +152,39 @@ class HistoriaViewModel : ViewModel() {
     }
 
     /**
+     * Actualiza un período completo (título y contenido)
+     * Usado para guardar cambios en bloque o individualmente
+     */
+    fun updatePeriod(updatedPeriod: HistoriaPeriod) {
+        viewModelScope.launch {
+            try {
+                Log.d(TAG, "Actualizando período completo: ${updatedPeriod.id}")
+                
+                // Actualizar en FireStore
+                historyCollection.document(updatedPeriod.id)
+                    .update(
+                        mapOf(
+                            "title" to updatedPeriod.title,
+                            "content" to updatedPeriod.content
+                        )
+                    )
+                    .await()
+                
+                // Actualizar estado local
+                _historyPeriods.value = _historyPeriods.value.map { 
+                    if (it.id == updatedPeriod.id) updatedPeriod else it 
+                }
+                
+                Log.d(TAG, "Período actualizado exitosamente")
+
+            } catch (e: Exception) {
+                Log.e(TAG, "Error al actualizar período", e)
+                _error.value = e.message
+            }
+        }
+    }
+
+    /**
      * Sube una imagen a Cloudinary y la añade al array de imágenes en Firebase
      * @param uri URI de la imagen seleccionada
      * @param context Contexto de la aplicación
