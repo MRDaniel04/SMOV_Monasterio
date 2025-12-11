@@ -117,13 +117,14 @@ fun DetalleFiguraScreen(
             }
         } else {
             // CONTENIDO PRINCIPAL
+            val has360 = !figura!!.vista360Url.isNullOrBlank()
+
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(topPadding)
-                    .verticalScroll(rememberScrollState())
                     .padding(horizontal = 16.dp)
-                    .padding(bottom = 40.dp) // Espacio inferior
+                    .padding(bottom = if (has360) 40.dp else 16.dp)
             ) {
 
                 // --- CABECERA (Atrás + Título) ---
@@ -221,17 +222,32 @@ fun DetalleFiguraScreen(
                     color = Color(figura!!.colorResaltado.toUInt().toInt()),
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
-                Text(
-                    text = infoText ?: "",
-                    fontSize = 16.sp,
-                    color = Color.Black
-                )
 
-                Spacer(modifier = Modifier.height(32.dp))
+                // Scrollable Box for Description
+                val textScrollState = rememberScrollState()
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f) // Takes remaining space
+                        .border(1.dp, Color.LightGray.copy(alpha = 0.5f), RoundedCornerShape(8.dp))
+                        .clip(RoundedCornerShape(8.dp))
+                ) {
+                    Text(
+                        text = infoText ?: "",
+                        fontSize = 16.sp,
+                        color = Color.Black,
+                        lineHeight = 22.sp,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(horizontal = 12.dp, vertical = 8.dp)
+                            .verticalScroll(textScrollState)
+                    )
+                }
 
                 // --- 9. BOTÓN VER 360 (PIE DE PÁGINA) ---
                 // Solo se muestra si la figura tiene URL 360 en Firebase
                 if (!figura!!.vista360Url.isNullOrBlank()) {
+                    Spacer(modifier = Modifier.height(16.dp))
                     MonasteryButton(
                         onClick = {
                             // Navegamos usando el rootNavController para salir del contexto del mapa
@@ -250,8 +266,6 @@ fun DetalleFiguraScreen(
                             fontWeight = FontWeight.Bold
                         )
                     }
-                    // Espacio extra al final
-                    Spacer(modifier = Modifier.height(16.dp))
                 }
             }
         }
