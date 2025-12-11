@@ -277,6 +277,9 @@
     <string name="tag_arquitectura">Architecture</string>
     <string name="tag_otro">Other</string>
 
+    <string name="menu_manual_usuario">User Manual</string>
+
+
     <string-array name="clues">
         <item>Take a look at the very top of the castle</item>
         <item>One of the differences is hiding in the sky</item>

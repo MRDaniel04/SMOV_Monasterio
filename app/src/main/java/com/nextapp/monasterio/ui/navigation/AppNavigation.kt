@@ -24,10 +24,12 @@ import com.nextapp.monasterio.models.ParejasData
 import com.nextapp.monasterio.models.ParejasSize
 /*import com.nextapp.monasterio.models.ParejasData*/
 import com.nextapp.monasterio.models.PuzzleSize
+import com.nextapp.monasterio.models.User
 import com.nextapp.monasterio.ui.screens.* // Asegúrate de importar PanoramaScreen y GaleriaScreen
 import com.nextapp.monasterio.ui.screens.pinEdition.EdicionFondoInicio
 import com.nextapp.monasterio.ui.screens.pinEdition.EdicionPines
 import com.nextapp.monasterio.ui.screens.pinEdition.EdicionPinesHost
+import com.nextapp.monasterio.ui.screens.pinEdition.ManualEdicionScreen
 import com.nextapp.monasterio.ui.theme.MonasteryRed
 import com.nextapp.monasterio.ui.theme.White
 import com.nextapp.monasterio.ui.virtualvisit.screens.DetalleFiguraScreen
@@ -68,9 +70,9 @@ fun AppNavigationHost(
         composable(AppRoutes.JUEGO_NINYOS){OpcionesJuegoNinyos(navController=navController, topPadding = scaffoldPadding)}
         composable(route=AppRoutes.MODO_EDICION) { OpcionesModoEdicion(navController = navController)}
         composable(AppRoutes.EDICION_FONDO_INICIO) { EdicionFondoInicio(navController = navController, topPadding = scaffoldPadding) }
-        composable(AppRoutes.EDICION_PINES) { EdicionPines(navController) }
         composable(AppRoutes.PERFIL)   { ProfileScreen(isEditing = isEditing, viewModel = authViewModel ) }
         composable(AppRoutes.AJUSTES)  { AjustesScreen(viewModel = ajustesViewModel) }
+        composable(AppRoutes.MANUAL) { PdfViewerScreen(pdfFileName = "Informe_Smov.pdf") }
         composable (AppRoutes.JUEGO_PUZZLE) {JuegoPuzzleScreen(navController = navController, topPadding = scaffoldPadding)}
         composable(AppRoutes.JUEGO_PAREJAS) {JuegoParejasScreen(navController = navController, topPadding = scaffoldPadding)}
         composable(AppRoutes.PAREJASNIVEL1){ParejasScreen(navController=navController, size = ParejasSize(3,2),imagenes= ParejasData.IMAGENES_NIVEL1)}
@@ -90,8 +92,6 @@ fun AppNavigationHost(
         }
 
 
-        // --- ¡¡AQUÍ ESTÁ LA NUEVA RUTA!! ---
-        // Ruta inmersiva para el 360 de un Pin (desde Firebase URL)
         composable(
             route = AppRoutes.PIN_360 + "/{pinId}",
             arguments = listOf(navArgument("pinId") { type = NavType.StringType })
@@ -140,7 +140,8 @@ fun AppNavigationHost(
 fun AppDrawerContent(
     navController: NavHostController,
     scope: CoroutineScope,
-    drawerState: DrawerState
+    drawerState: DrawerState,
+    currentUser: User?
 ) {
     val navigateTo: (String) -> Unit = { route ->
         navController.navigate(route) {
@@ -175,6 +176,14 @@ fun AppDrawerContent(
             DrawerMenuItem(text = stringResource(id = R.string.menu_gallery)) { navigateTo(AppRoutes.GALERIA) }
             DrawerMenuItem(text = stringResource(id = R.string.menu_profile)) { navigateTo(AppRoutes.PERFIL) }
             DrawerMenuItem(text = stringResource(id = R.string.menu_settings)) { navigateTo(AppRoutes.AJUSTES) }
+            if(currentUser != null) {
+                DrawerMenuItem(text = stringResource(id = R.string.menu_manual_usuario)) {
+                    navigateTo(
+                        AppRoutes.MANUAL
+                    )
+                }
+            }
+
         }
     }
 }

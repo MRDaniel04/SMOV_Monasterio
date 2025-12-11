@@ -45,6 +45,13 @@ fun EdicionPinesHost(navController: NavHostController) {
             composable(AppRoutes.CREACION_PINES) {
                 CreacionPinesScreen(navController = localNav)
             }
+
+            composable(AppRoutes.MANUAL_EDICION) {
+                ManualEdicionScreen(
+                    navController = localNav
+                )
+            }
+
         }
     }
 

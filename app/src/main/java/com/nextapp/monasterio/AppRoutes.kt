@@ -11,6 +11,7 @@ object AppRoutes {
     const val GALERIA = "galeria"
     const val PERFIL = "perfil"
     const val AJUSTES = "ajustes"
+    const val MANUAL= "manual"
     const val OPCIONES_RESERVA = "opciones_reserva"
     const val RESERVA = "reserva"
     const val CONFIRMACION_RESERVA = "confirmacion_reserva"
@@ -38,6 +39,7 @@ object AppRoutes {
     const val MODO_EDICION = "modo_edicion"
     const val EDICION_FONDO_INICIO = "edicion_fondo_inicio"
     const val EDICION_PINES = "edicion_pines"
+    const val MANUAL_EDICION = "manual_edicion"
 
     const val CREACION_PINES = "creacion_pines"
 
