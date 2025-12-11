@@ -31,6 +31,7 @@ fun EditableImageGallery(
     title: String? = null
 ) {
     var imageToDelete by remember { mutableStateOf<String?>(null) }
+    var selectedImageIndex by remember { mutableStateOf<Int?>(null) }
 
     Column(modifier = modifier.fillMaxWidth()) {
         // Título opcional
@@ -58,11 +59,17 @@ fun EditableImageGallery(
             }
 
             // Imágenes existentes
-            items(imageUrls) { imageUrl ->
+            items(imageUrls.size) { index ->
+                val imageUrl = imageUrls[index]
                 ImageItem(
                     imageUrl = imageUrl,
                     isEditing = isEditing,
-                    onDelete = { imageToDelete = imageUrl }
+                    onDelete = { imageToDelete = imageUrl },
+                    onClick = {
+                        // Solo permitimos abrir zoom si NO estamos subiendo (y preferiblemente en modo lectura,
+                        // pero el usuario pidió verlas en grande, así que permitimos siempre clic salvo borrar)
+                        selectedImageIndex = index
+                    }
                 )
             }
         }
@@ -92,11 +99,29 @@ fun EditableImageGallery(
             imageToDelete = null
         }
     )
+
+    // Dialogo de imagen
+    if (selectedImageIndex != null) {
+        val zoomImages = remember(imageUrls) {
+            imageUrls.map { url ->
+                com.nextapp.monasterio.models.ImagenData(
+                    url = url,
+                    titulo = "", // Sin título
+                    id = "temp"
+                )
+            }
+        }
+        ZoomableImageDialog(
+            imagenes = zoomImages,
+            initialIndex = selectedImageIndex!!,
+            languageCode = "es", 
+            onDismiss = { selectedImageIndex = null }
+        )
+    }
 }
 
-/**
- * Botón para añadir nueva imagen
- */
+
+// Botón para añadir nueva imagen
 @Composable
 private fun AddImageButton(
     onClick: () -> Unit,
@@ -143,12 +168,14 @@ private fun AddImageButton(
 private fun ImageItem(
     imageUrl: String,
     isEditing: Boolean,
-    onDelete: () -> Unit
+    onDelete: () -> Unit,
+    onClick: () -> Unit
 ) {
     Box(
         modifier = Modifier
             .size(120.dp)
             .clip(RoundedCornerShape(12.dp))
+            .clickable(onClick = onClick)
     ) {
         // Imagen
         AsyncImage(
