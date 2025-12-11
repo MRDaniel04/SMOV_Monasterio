@@ -34,6 +34,7 @@ import com.nextapp.monasterio.R
 import com.nextapp.monasterio.models.PinData
 import com.nextapp.monasterio.repository.PinRepository
 import com.nextapp.monasterio.ui.components.EditableText
+import com.nextapp.monasterio.ui.components.ZoomableImageDialog
 import com.nextapp.monasterio.ui.theme.MonasteryRed // Usado por si acaso
 import com.nextapp.monasterio.ui.theme.White
 import com.nextapp.monasterio.utils.abrirUbicacion
@@ -83,6 +84,7 @@ fun InfoScreen(
     // --- CAROUSEL LOGIC ---
     val imagenes = pin?.imagenesDetalladas?.ifEmpty { emptyList() } ?: emptyList()
     var currentIndex by remember { mutableIntStateOf(0) }
+    var selectedImageIndex by remember { mutableStateOf<Int?>(null) }
 
     if (imagenes.size > 1) {
         LaunchedEffect(currentIndex, imagenes.size) {
@@ -161,6 +163,7 @@ fun InfoScreen(
                                         contentDescription = imagen.titulo,
                                         contentScale = ContentScale.Crop,
                                         modifier = Modifier.fillMaxSize()
+                                            .clickable { selectedImageIndex = page }
                                     )
                                 }
                             }
@@ -290,6 +293,21 @@ fun InfoScreen(
                     }
                 }
             }
+        }
+
+        // ZoomableImage
+        if (selectedImageIndex != null) {
+            val config = LocalConfiguration.current
+            val locale = config.locales[0].language
+            
+            ZoomableImageDialog(
+                imagenes = imagenes,
+                initialIndex = selectedImageIndex!!,
+                languageCode = locale,
+                onDismiss = {
+                    selectedImageIndex = null
+                }
+            )
         }
     }
 }

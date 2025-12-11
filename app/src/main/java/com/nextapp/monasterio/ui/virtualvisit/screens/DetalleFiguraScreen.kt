@@ -35,6 +35,7 @@ import com.nextapp.monasterio.repository.ImagenRepository
 import kotlinx.coroutines.delay
 import android.util.Log
 import com.nextapp.monasterio.ui.components.MonasteryButton
+import com.nextapp.monasterio.ui.components.ZoomableImageDialog
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun DetalleFiguraScreen(
@@ -55,6 +56,7 @@ fun DetalleFiguraScreen(
 
     // 3. ESTADO DEL CARRUSEL
     var currentIndex by remember { mutableStateOf(0) }
+    var selectedImageIndex by remember { mutableStateOf<Int?>(null) }
 
     // Repositorios
     val figuraRepository = remember { FiguraRepository }
@@ -185,6 +187,7 @@ fun DetalleFiguraScreen(
                                 contentDescription = null,
                                 contentScale = ContentScale.Crop,
                                 modifier = Modifier.fillMaxSize()
+                                    .clickable { selectedImageIndex = page }
                             )
                         }
                         // Puntos indicadores
@@ -251,6 +254,17 @@ fun DetalleFiguraScreen(
                     Spacer(modifier = Modifier.height(16.dp))
                 }
             }
+        }
+        // Zoomable Image
+        if (selectedImageIndex != null) {
+            ZoomableImageDialog(
+                imagenes = imagenes,
+                initialIndex = selectedImageIndex!!,
+                languageCode = currentLanguageCode,
+                onDismiss = {
+                    selectedImageIndex = null
+                }
+            )
         }
     }
 }
