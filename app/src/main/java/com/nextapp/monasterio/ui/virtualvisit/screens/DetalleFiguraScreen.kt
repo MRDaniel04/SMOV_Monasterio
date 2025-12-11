@@ -87,7 +87,7 @@ fun DetalleFiguraScreen(
             }
             imagenes = loadedImages
         } else {
-            Log.e("DetalleFigura", "❌ No se encontró ninguna figura con clave: $nombre")
+            Log.e("DetalleFigura", "No se encontró ninguna figura con clave: $nombre")
         }
         isLoading = false
     }
@@ -124,7 +124,7 @@ fun DetalleFiguraScreen(
                     .fillMaxSize()
                     .padding(topPadding)
                     .padding(horizontal = 16.dp)
-                    .padding(bottom = if (has360) 40.dp else 16.dp)
+                    .padding(bottom = if (has360) 90.dp else 16.dp)
             ) {
 
                 // --- CABECERA (Atrás + Título) ---
@@ -244,28 +244,37 @@ fun DetalleFiguraScreen(
                     )
                 }
 
-                // --- 9. BOTÓN VER 360 (PIE DE PÁGINA) ---
-                // Solo se muestra si la figura tiene URL 360 en Firebase
-                if (!figura!!.vista360Url.isNullOrBlank()) {
-                    Spacer(modifier = Modifier.height(16.dp))
-                    MonasteryButton(
-                        onClick = {
-                            // Navegamos usando el rootNavController para salir del contexto del mapa
-                            rootNavController?.navigate(AppRoutes.PIN_360 + "/${figura!!.id}")
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(56.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = Color.Black),
-                        shape = RoundedCornerShape(12.dp)
-                    ) {
-                        Text(
-                            text = stringResource(R.string.see_360),
-                            color = Color.White,
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
+            }
+        }
+        
+        // --- BOTÓN 360 FLOTANTE ---
+        // Solo se muestra si la figura tiene URL 360 en Firebase
+        if (!figura!!.vista360Url.isNullOrBlank()) {
+             Box(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .fillMaxWidth()
+                    .background(Color.White)
+                    .navigationBarsPadding() // Padding para barra de navegación del sitema
+                    .padding(horizontal = 16.dp, vertical = 16.dp)
+            ) {
+                MonasteryButton(
+                    onClick = {
+                        // Navegamos usando el rootNavController para salir del contexto del mapa
+                        rootNavController?.navigate(AppRoutes.PIN_360 + "/${figura!!.id}")
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Black),
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Text(
+                        text = stringResource(R.string.see_360),
+                        color = Color.White,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold
+                    )
                 }
             }
         }

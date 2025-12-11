@@ -54,19 +54,59 @@ fun InfoScreen(
     val activity = (context as? Activity)
     val view = LocalView.current
 
-    // 1. Fetch data from ViewModel
     val infoData by viewModel.infoState.collectAsState()
 
-    // 2. Fetch Pin Data for Carousel (Pin ID: "pin_entrada")
-    // We maintain simple internal state for this, consistent with EntradaMonasterioFirestoreScreen pattern
+    // --- ESTADO LOCAL (DRAFT) ---
+    var draftInfo by remember { mutableStateOf<com.nextapp.monasterio.models.InfoModel?>(null) }
+    
+    if (draftInfo == null && infoData != null) {
+        draftInfo = infoData
+    }
+
+    val hasChanges = remember(draftInfo, infoData) {
+        draftInfo != null && draftInfo != infoData
+    }
+
+    val saveChanges = {
+        draftInfo?.let { 
+             android.util.Log.d("InfoScreen", "Guardando cambios en Info...")
+             viewModel.saveFullInfo(it) 
+        }
+        Unit
+    }
+
+    val discardChanges = {
+         android.util.Log.d("InfoScreen", "Descartando cambios en Info...")
+         draftInfo = infoData
+    }
+
+    val isSaving = com.nextapp.monasterio.ui.components.EditModeHandler(
+        isEditing = isEditing,
+        hasChanges = hasChanges,
+        onSave = saveChanges,
+        onDiscard = discardChanges
+    )
+
+    // Sincronización al salir de edición
+    LaunchedEffect(infoData, isEditing, isSaving) {
+        if (!isEditing && !isSaving) {
+             if (draftInfo != infoData) {
+                 android.util.Log.d("InfoScreen", "Sync estricto: reseteando draft al original")
+                 draftInfo = infoData
+             }
+        } else {
+            // Si estamos editando y llega una actualización externa actualizamos el draft solo si no hemos tocado nada o si es la inicialización
+             if (draftInfo == null) {
+                 draftInfo = infoData
+             }
+        }
+    }
+
     val (pin, setPin) = remember { mutableStateOf<PinData?>(null) }
     
     LaunchedEffect(Unit) {
-        // Ensure status bar transparency logic from EntradaMonasterioScreen
         val window = (view.context as? Activity)?.window
         window?.let { WindowCompat.setDecorFitsSystemWindows(it, false) }
-
-        // Load the pin
         try {
             val loadedPin = PinRepository.getPinById("pin_entrada")
             setPin(loadedPin)
@@ -102,6 +142,9 @@ fun InfoScreen(
     val tHorarios = stringResource(R.string.visit_schedule)
     val tLunesViernes = stringResource(R.string.monday_to_friday)
 
+    // Objeto a mostrar: draft si existe, sino el original (fallback seguro)
+    val currentInfo = draftInfo ?: infoData
+
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -123,7 +166,6 @@ fun InfoScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 contentPadding = PaddingValues(top = 0.dp, bottom = 40.dp)
             ) {
-                // TÍTULO SUPERIOR
                 item {
                     Box(
                         modifier = Modifier
@@ -224,9 +266,11 @@ fun InfoScreen(
                     ) {
                         // Descripcion
                         EditableText(
-                            textMap = infoData.mainContent,
-                            isEditing = isEditing,
-                            onTextMapChange = { viewModel.updateMainContent(it) },
+                            textMap = currentInfo.mainContent,
+                            isEditing = isEditing || isSaving, // Mantenemos UI editable durante diálogo
+                            onTextMapChange = { 
+                                draftInfo = draftInfo?.copy(mainContent = it) 
+                            },
                             readOnlyStyle = MaterialTheme.typography.bodyLarge.copy(
                                 color = Color.Black.copy(alpha = 0.8f),
                                 fontSize = 16.sp
@@ -245,31 +289,37 @@ fun InfoScreen(
                         // Ubicacion
                         EditableStringInfoItem(
                             label = tUbicacion,
-                            text = infoData.location,
-                            isEditing = isEditing,
-                            onUpdate = { viewModel.updateLocation(it) },
+                            text = currentInfo.location,
+                            isEditing = isEditing || isSaving,
+                            onUpdate = { 
+                                draftInfo = draftInfo?.copy(location = it)
+                            },
                             onClick = {
-                                if (infoData.location.isNotEmpty()) context.abrirUbicacion(infoData.location)
+                                if (currentInfo.location.isNotEmpty()) context.abrirUbicacion(currentInfo.location)
                             }
                         )
                         // Email
                         EditableStringInfoItem(
                             label = tCorreo,
-                            text = infoData.email,
-                            isEditing = isEditing,
-                            onUpdate = { viewModel.updateEmail(it) },
+                            text = currentInfo.email,
+                            isEditing = isEditing || isSaving,
+                            onUpdate = { 
+                                draftInfo = draftInfo?.copy(email = it)
+                            },
                             onClick = {
-                                 if (infoData.email.isNotEmpty()) context.crearCorreo( infoData.email,"", "", "", false)
+                                 if (currentInfo.email.isNotEmpty()) context.crearCorreo( currentInfo.email,"", "", "", false)
                             }
                         )
                         // Telefono
                         EditableStringInfoItem(
                             label = tTelefono,
-                            text = infoData.phone,
-                            isEditing = isEditing,
-                            onUpdate = { viewModel.updatePhone(it) },
+                            text = currentInfo.phone,
+                            isEditing = isEditing || isSaving,
+                            onUpdate = { 
+                                draftInfo = draftInfo?.copy(phone = it)
+                            },
                             onClick = {
-                                if (infoData.phone.isNotEmpty()) context.llamarTelefono(infoData.phone)
+                                if (currentInfo.phone.isNotEmpty()) context.llamarTelefono(currentInfo.phone)
                             }
                         )
                         Spacer(modifier = Modifier.height(30.dp))
@@ -285,9 +335,11 @@ fun InfoScreen(
                         )
                         Text(text = tLunesViernes, fontWeight = FontWeight.SemiBold)
                         EditableText(
-                            textMap = infoData.hours,
-                            isEditing = isEditing,
-                            onTextMapChange = { viewModel.updateHours(it) },
+                            textMap = currentInfo.hours,
+                            isEditing = isEditing || isSaving,
+                            onTextMapChange = { 
+                                draftInfo = draftInfo?.copy(hours = it)
+                            },
                             readOnlyStyle = MaterialTheme.typography.bodyLarge.copy(color = Color.Black)
                         )
                     }
