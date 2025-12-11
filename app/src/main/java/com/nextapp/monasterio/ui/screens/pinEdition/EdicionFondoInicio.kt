@@ -43,6 +43,7 @@ import com.nextapp.monasterio.ui.theme.MonasteryBlue
 import com.nextapp.monasterio.ui.theme.MonasteryOrange
 import kotlinx.coroutines.launch
 import com.nextapp.monasterio.ui.components.MonasteryButton
+import androidx.compose.ui.res.stringResource
 
 // COLORES
 val EditModePurple = Color(0xFF9C27B0)
@@ -157,7 +158,7 @@ fun EdicionFondoInicio(
                             if (selectedImageUri == null) {
                                 // MODO SELECCIÓN: Solo botón morado
                                 EditButton(
-                                    text = "Cambiar fondo",
+                                    text = stringResource(id = R.string.preview_change_background),
                                     iconRes = R.drawable.lapiz,
                                     onClick = { imagePickerLauncher.launch("image/*") }
                                 )
@@ -190,7 +191,7 @@ fun EdicionFondoInicio(
                             // MODO SELECCIÓN: Botón morado grande
                             Spacer(Modifier.height(40.dp))
                             EditButton(
-                                text = "Cambiar fondo",
+                                text = stringResource(id = R.string.preview_change_background),
                                 iconRes = R.drawable.lapiz,
                                 onClick = { imagePickerLauncher.launch("image/*") }
                             )
@@ -225,7 +226,7 @@ fun EdicionFondoInicio(
                             showConfirmationToast = true
                         }
                         result.onFailure {
-                            Toast.makeText(context, "Error subiendo la imagen", Toast.LENGTH_LONG).show()
+                            Toast.makeText(context, context.getString(R.string.preview_error_uploading), Toast.LENGTH_LONG).show()
                         }
                         AppStatus.finishUpload()
                     }
@@ -263,7 +264,7 @@ fun EditButton(text: String, iconRes: Int, onClick: () -> Unit) {
             )
             Spacer(modifier = Modifier.weight(1f))
             Text(
-                text = text,
+                text = text.uppercase(),
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center
@@ -278,9 +279,9 @@ fun EditButton(text: String, iconRes: Int, onClick: () -> Unit) {
 @Composable
 fun PreviewButtonsListPortrait() {
     Column(verticalArrangement = Arrangement.spacedBy(24.dp)) {
-        MockHomeButton("Visita Virtual", R.drawable.ic_map_24, MonasteryOrange)
-        MockHomeButton("Modo Niños", R.drawable.outline_account_child_invert_24, Color(0xFF6EB017))
-        MockHomeButton("Reserva Cita", R.drawable.ic_time_24, MonasteryBlue)
+        MockHomeButton(stringResource(id = R.string.preview_virtual_visit), R.drawable.ic_map_24, MonasteryOrange)
+        MockHomeButton(stringResource(id = R.string.preview_kids_mode), R.drawable.outline_account_child_invert_24, Color(0xFF6EB017))
+        MockHomeButton(stringResource(id = R.string.preview_book_appointment), R.drawable.ic_time_24, MonasteryBlue)
     }
 }
 
@@ -289,11 +290,11 @@ fun PreviewButtonsListPortrait() {
 fun PreviewButtonsGridLandscape() {
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            Box(Modifier.weight(1f)) { MockHomeGridButton("Visita Virtual", R.drawable.ic_map_24, MonasteryOrange) }
-            Box(Modifier.weight(1f)) { MockHomeGridButton("Modo Niños", R.drawable.outline_account_child_invert_24, Color(0xFF6EB017)) }
+            Box(Modifier.weight(1f)) { MockHomeGridButton(stringResource(id = R.string.preview_virtual_visit), R.drawable.ic_map_24, MonasteryOrange) }
+            Box(Modifier.weight(1f)) { MockHomeGridButton(stringResource(id = R.string.preview_kids_mode), R.drawable.outline_account_child_invert_24, Color(0xFF6EB017)) }
         }
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            Box(Modifier.weight(1f)) { MockHomeGridButton("Reserva Cita", R.drawable.ic_time_24, MonasteryBlue) }
+            Box(Modifier.weight(1f)) { MockHomeGridButton(stringResource(id = R.string.preview_book_appointment), R.drawable.ic_time_24, MonasteryBlue) }
             Spacer(Modifier.weight(1f)) // Hueco vacío
         }
     }
@@ -315,7 +316,7 @@ fun MockHomeButton(text: String, iconRes: Int, color: Color) {
         ) {
             Icon(painter = painterResource(id = iconRes), contentDescription = null, modifier = Modifier.size(32.dp))
             Spacer(Modifier.weight(1f))
-            Text(text = text, fontSize = 20.sp, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center)
+            Text(text = text.uppercase(), fontSize = 20.sp, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center)
             Spacer(Modifier.weight(1f))
             Spacer(Modifier.width(32.dp))
         }
@@ -336,7 +337,7 @@ fun MockHomeGridButton(text: String, iconRes: Int, color: Color) {
             verticalArrangement = Arrangement.Center
         ) {
             Icon(painter = painterResource(id = iconRes), contentDescription = null, modifier = Modifier.size(32.dp), tint = Color.White)
-            Text(text = text, fontSize = 16.sp, fontWeight = FontWeight.Bold, color = Color.White, textAlign = TextAlign.Center)
+            Text(text = text.uppercase(), fontSize = 16.sp, fontWeight = FontWeight.Bold, color = Color.White, textAlign = TextAlign.Center)
         }
     }
 }
@@ -356,12 +357,12 @@ fun ActionControlBar(onConfirm: () -> Unit, onCancel: () -> Unit) {
             onClick = onCancel,
             colors = ButtonDefaults.buttonColors(containerColor = Color.Red.copy(alpha = 0.8f)),
             modifier = Modifier.weight(1f).padding(horizontal = 8.dp)
-        ) { Text("Cancelar", color = Color.White) }
+        ) { Text(stringResource(id = R.string.preview_cancel).uppercase(), color = Color.White) }
 
         Button(
             onClick = onConfirm,
             colors = ButtonDefaults.buttonColors(containerColor = Color.Green.copy(alpha = 0.8f)),
             modifier = Modifier.weight(1f).padding(horizontal = 8.dp)
-        ) { Text("Confirmar", color = Color.White) }
+        ) { Text(stringResource(id = R.string.preview_confirm).uppercase(), color = Color.White) }
     }
 }

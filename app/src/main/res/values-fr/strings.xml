@@ -310,4 +310,13 @@
     <string name="show_pairs">Afficher les paires</string>
     <string name="clue_button">Afficher la piste</string>
     <string name="puzzle_slide">Faites glisser pour voir plus de pièces</string>
+    <string name="editar_fondo">Modifier l\'arrière-plan</string>
+    <string name="preview_change_background">Changer l\'arrière-plan</string>
+    <string name="preview_virtual_visit">Visite Virtuelle</string>
+    <string name="preview_kids_mode">Mode Enfants</string>
+    <string name="preview_book_appointment">Réserver un Rendez-vous</string>
+    <string name="preview_confirm">Confirmer</string>
+    <string name="preview_cancel">Annuler</string>
+    <string name="preview_background_updated">Image d\'arrière-plan mise à jour</string>
+    <string name="preview_error_uploading">Erreur lors du téléchargement de l\'image</string>
 </resources>

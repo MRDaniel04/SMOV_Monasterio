@@ -312,4 +312,13 @@
     <string name="show_pairs">Paar zeigen</string>
     <string name="clue_button">Spur anzeigen</string>
     <string name="puzzle_slide">Wischen Sie, um weitere teile zu sehen</string>
+    <string name="editar_fondo">Hintergrund bearbeiten</string>
+    <string name="preview_change_background">Hintergrund ändern</string>
+    <string name="preview_virtual_visit">Virtueller Besuch</string>
+    <string name="preview_kids_mode">Kindermodus</string>
+    <string name="preview_book_appointment">Termin buchen</string>
+    <string name="preview_confirm">Bestätigen</string>
+    <string name="preview_cancel">Abbrechen</string>
+    <string name="preview_background_updated">Hintergrundbild aktualisiert</string>
+    <string name="preview_error_uploading">Fehler beim Hochladen des Bildes</string>
 </resources>

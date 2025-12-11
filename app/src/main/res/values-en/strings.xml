@@ -312,4 +312,13 @@
     <string name="show_pairs">Show pairs</string>
     <string name="clue_button">Show clue</string>
     <string name="puzzle_slide">Swipe to see more pieces</string>
+    <string name="editar_fondo">Edit Background</string>
+    <string name="preview_change_background">Change background</string>
+    <string name="preview_virtual_visit">Virtual Visit</string>
+    <string name="preview_kids_mode">Kids Mode</string>
+    <string name="preview_book_appointment">Book Appointment</string>
+    <string name="preview_confirm">Confirm</string>
+    <string name="preview_cancel">Cancel</string>
+    <string name="preview_background_updated">Background image updated</string>
+    <string name="preview_error_uploading">Error uploading image</string>
 </resources>

@@ -311,4 +311,13 @@
     <string name="show_pairs">Mostrar parejas</string>
     <string name="clue_button">Mostrar pista</string>
     <string name="puzzle_slide">Desliza para ver más piezas</string>
+    <string name="editar_fondo">Editar Fondo</string>
+    <string name="preview_change_background">Cambiar fondo</string>
+    <string name="preview_virtual_visit">Visita Virtual</string>
+    <string name="preview_kids_mode">Modo Niños</string>
+    <string name="preview_book_appointment">Reserva Cita</string>
+    <string name="preview_confirm">Confirmar</string>
+    <string name="preview_cancel">Cancelar</string>
+    <string name="preview_background_updated">Imagen de fondo actualizada</string>
+    <string name="preview_error_uploading">Error subiendo la imagen</string>
 </resources>
