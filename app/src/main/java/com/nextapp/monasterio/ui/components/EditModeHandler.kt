@@ -15,28 +15,27 @@ fun EditModeHandler(
     var showSaveDialog by remember { mutableStateOf(false) }
     val previousIsEditing = remember { mutableStateOf(isEditing) }
 
-    if (previousIsEditing.value && !isEditing) {
-        if (isDiscarding) {
-            // Si estamos descartando explícitamente, ignoramos cambios y procedemos
-        } else if (hasChanges) {
-             showSaveDialog = true
-        }
+    val currentHasChanges by rememberUpdatedState(hasChanges)
+    val currentIsDiscarding by rememberUpdatedState(isDiscarding)
+    val currentOnDiscard by rememberUpdatedState(onDiscard)
+
+    // Detectar transición de editing -> not editing de forma síncrona para retorno inmediato
+    val justStoppedEditing = previousIsEditing.value && !isEditing
+    val shouldPromptSave = justStoppedEditing && currentHasChanges && !currentIsDiscarding
+    val shouldDiscard = justStoppedEditing && !currentHasChanges && !currentIsDiscarding // Or if discarding explicitly? No, if discarding, value is ignored in parent usually, but here we handle it.
+
+    // Persistir el estado del diálogo
+    if (shouldPromptSave) {
+        SideEffect { showSaveDialog = true }
+    }
+    
+    // Manejar descarte automático
+    if (shouldDiscard || (justStoppedEditing && currentIsDiscarding)) {
+        SideEffect { currentOnDiscard() }
     }
 
-    // Efecto para actualizar el estado previo
-    LaunchedEffect(isEditing, isDiscarding) {
-        // Si volvemos a editar (cancelaron el diálogo), cerramos el diálogo
-        if (isEditing && showSaveDialog) {
-            showSaveDialog = false
-        }
-
-        if (previousIsEditing.value && !isEditing) {
-             if (isDiscarding) {
-                 onDiscard()
-             } else if (!hasChanges) {
-                 onDiscard()
-             }
-        }
+    // Actualizar estado previo
+    LaunchedEffect(isEditing) {
         previousIsEditing.value = isEditing
     }
 
@@ -54,5 +53,5 @@ fun EditModeHandler(
         )
     }
     
-    return showSaveDialog
+    return showSaveDialog || shouldPromptSave
 }

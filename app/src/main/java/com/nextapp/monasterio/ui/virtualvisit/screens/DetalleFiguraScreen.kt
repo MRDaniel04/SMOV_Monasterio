@@ -249,7 +249,7 @@ fun DetalleFiguraScreen(
         
         // --- BOTÓN 360 FLOTANTE ---
         // Solo se muestra si la figura tiene URL 360 en Firebase
-        if (!figura!!.vista360Url.isNullOrBlank()) {
+        if (figura != null && !figura?.vista360Url.isNullOrBlank()) {
              Box(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
