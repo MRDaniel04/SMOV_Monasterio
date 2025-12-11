@@ -216,7 +216,15 @@ fun MonasteryAppScreen(activity: AppCompatActivity) { // 👈 Recibimos la activ
                                     MainLanguageSelector(activity)
 
                                     // Edicion de contenido
-                                    if (currentUser != null && currentRoute != AppRoutes.INICIO) {
+
+                                    // Rutas editables
+                                    val editableRoutes = listOf(
+                                        AppRoutes.INFO,
+                                        AppRoutes.HISTORIA,
+                                        AppRoutes.PERFIL
+                                    )
+
+                                    if (currentUser != null && currentRoute in editableRoutes) {
                                         IconButton(onClick = {
                                             isEditing = !isEditing
                                             val message = if (isEditing)
