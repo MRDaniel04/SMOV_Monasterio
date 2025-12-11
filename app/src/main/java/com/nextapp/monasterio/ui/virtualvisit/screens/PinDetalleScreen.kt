@@ -207,10 +207,9 @@ fun PinDetalleScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = 16.dp)
-                .padding(bottom = 40.dp),
+                .padding(bottom = if (onVer360 != null) 90.dp else 40.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // --- CABECERA UNIFICADA (Flecha + Título) ---
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -219,8 +218,7 @@ fun PinDetalleScreen(
                 // 1. BOTÓN ATRÁS (Alineado a la Izquierda)
                 Box(
                     modifier = Modifier
-                        .align(Alignment.CenterStart) // 👈 Lo pegamos a la izquierda
-                        // 👇 MANTENEMOS TU LÓGICA DE POSICIÓN PARA EL TUTORIAL
+                        .align(Alignment.CenterStart)
                         .onGloballyPositioned { coordinates ->
                             val position = coordinates.positionInRoot()
                             val size = coordinates.size
@@ -249,8 +247,8 @@ fun PinDetalleScreen(
                     textAlign = TextAlign.Center,
                     lineHeight = 26.sp,
                     modifier = Modifier
-                        .align(Alignment.Center) // 👈 Lo centramos en la pantalla
-                        .padding(horizontal = 48.dp) // 👈 Importante: Margen para no escribir encima de la flecha si el texto es largo
+                        .align(Alignment.Center)
+                        .padding(horizontal = 48.dp)
                 )
             }
 
@@ -265,7 +263,6 @@ fun PinDetalleScreen(
                         .height(carouselHeight)
                         .clip(RoundedCornerShape(16.dp))
                         .border(3.dp, Color.Black, RoundedCornerShape(16.dp))
-                        // 👇 CAPTURAMOS POSICIÓN REAL
                         .onGloballyPositioned { coordinates ->
                             val position = coordinates.positionInRoot()
                             val size = coordinates.size
@@ -339,7 +336,6 @@ fun PinDetalleScreen(
                                 if (isPlaying) exoPlayer.pause() else exoPlayer.play()
                             },
                             modifier = Modifier
-                                // 👇 CAPTURAMOS POSICIÓN REAL
                                 .onGloballyPositioned { coordinates ->
                                     val position = coordinates.positionInRoot()
                                     val size = coordinates.size
@@ -391,34 +387,38 @@ fun PinDetalleScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // 4. BOTÓN 360
-            onVer360?.let {
-                Box(
-                    modifier = Modifier
-                        .background(Color.White)
-                        .navigationBarsPadding()
-                        .padding(horizontal = 16.dp, vertical = 2.dp)
-                        .onGloballyPositioned { coordinates ->
-                            val position = coordinates.positionInRoot()
-                            val size = coordinates.size
-                            button360Layout = position to Size(size.width.toFloat(), size.height.toFloat())
-                        }
-                ) {
-                    MonasteryButton(
-                        onClick = it,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(56.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = Color.Black),
-                        shape = RoundedCornerShape(12.dp)
-                    ) {
-                        Text(
-                            text = stringResource(R.string.see_360),
-                            color = Color.White,
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold,
-                        )
+        }
+
+        // BOTÓN 360 FLOTANTE
+        onVer360?.let {
+            Box(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .fillMaxWidth()
+                    .background(Color.White) // Fondo blanco para tapar scroll
+                    // Padding seguro para navigation bars
+                    .navigationBarsPadding()
+                    .padding(horizontal = 16.dp, vertical = 16.dp)
+                    .onGloballyPositioned { coordinates ->
+                        val position = coordinates.positionInRoot()
+                        val size = coordinates.size
+                        button360Layout = position to Size(size.width.toFloat(), size.height.toFloat())
                     }
+            ) {
+                MonasteryButton(
+                    onClick = it,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Black),
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Text(
+                        text = stringResource(R.string.see_360),
+                        color = Color.White,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                    )
                 }
             }
         }
@@ -518,7 +518,7 @@ fun PinDetalleScreen(
             }
         }
 
-        // 🔍 Zoom Dialog
+        // Zoom Dialog
         if (selectedImageIndex != null) {
             ZoomableImageDialog(
                 imagenes = imagenes,
