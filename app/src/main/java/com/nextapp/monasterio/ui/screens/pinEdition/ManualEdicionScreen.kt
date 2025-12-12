@@ -21,23 +21,29 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.nextapp.monasterio.R
 import java.io.File
 import java.io.FileOutputStream
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.ui.layout.onSizeChanged
 
 @Composable
 fun ManualEdicionScreen(navController: NavHostController) {
 
     val context = LocalContext.current
-    val pdfFileName = "Informe_Smov.pdf"
-
+    val pdfFileName = "manual_edicion.pdf"
 
     var scale by remember { mutableFloatStateOf(1.1f) }
+    var offsetX by remember { mutableFloatStateOf(0f) }
+    var offsetY by remember { mutableFloatStateOf(0f) }
 
-    val minZoom = 1.0f
-    val maxZoom = 4.0f
+    val minZoom = 1f
+    val maxZoom = 4f
+
+    var containerSize by remember { mutableStateOf(IntSize.Zero) }
 
     val tempFile = remember(pdfFileName) {
         try {
@@ -61,6 +67,8 @@ fun ManualEdicionScreen(navController: NavHostController) {
         PdfRenderer(fd)
     }
 
+    val listState = rememberLazyListState()
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -70,30 +78,66 @@ fun ManualEdicionScreen(navController: NavHostController) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = 60.dp)
+                .onSizeChanged { containerSize = it }
                 .pointerInput(Unit) {
-                    detectTransformGestures { _, _, zoom, _ ->
-                        scale = (scale * zoom).coerceIn(minZoom, maxZoom)
+                    detectTransformGestures { _, pan, zoom, _ ->
+
+                        val newScale = (scale * zoom).coerceIn(minZoom, maxZoom)
+
+                        if (newScale == scale) {
+                            var newOffsetX = offsetX + pan.x
+                            var newOffsetY = offsetY + pan.y
+
+
+                            val scaledContentWidth = containerSize.width * newScale
+                            val scaledContentHeight = containerSize.height * newScale
+
+                            val maxPanX = if (newScale > 1) (scaledContentWidth - containerSize.width) / 2 else 0f
+                            newOffsetX = newOffsetX.coerceIn(-maxPanX, maxPanX)
+
+
+                            val maxPanY = if (newScale > 1) (scaledContentHeight - containerSize.height) / 2 else 0f
+                            newOffsetY = newOffsetY.coerceIn(-maxPanY, maxPanY)
+
+                            if (newScale <= 1f) {
+                                newOffsetX = 0f
+                                newOffsetY = 0f
+                            }
+
+                            offsetX = newOffsetX
+                            offsetY = newOffsetY
+                        } else {
+
+                            if (newScale == minZoom) {
+                                offsetX = 0f
+                                offsetY = 0f
+                            }
+                        }
+
+                        scale = newScale
                     }
                 }
         ) {
-
             LazyColumn(
+                state = listState,
                 modifier = Modifier
                     .fillMaxSize()
                     .graphicsLayer(
                         scaleX = scale,
-                        scaleY = scale
+                        scaleY = scale,
+                        translationX = offsetX,
+                        translationY = offsetY
                     )
             ) {
+                // ... (El contenido de LazyColumn es el mismo)
                 items(renderer.pageCount) { index ->
 
                     val bitmap = remember(index) {
                         try {
                             val page = renderer.openPage(index)
                             val bmp = Bitmap.createBitmap(
-                                page.width * 2,
-                                page.height * 2,
+                                page.width,
+                                page.height,
                                 Bitmap.Config.ARGB_8888
                             )
                             page.render(bmp, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)

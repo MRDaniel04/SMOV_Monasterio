@@ -74,7 +74,7 @@ fun AppNavigationHost(
         composable(AppRoutes.EDICION_FONDO_INICIO) { EdicionFondoInicio(navController = navController, topPadding = scaffoldPadding) }
         composable(AppRoutes.PERFIL)   { ProfileScreen(isEditing = isEditing, isDiscarding = isDiscarding, onKeepEditing = onKeepEditing, viewModel = authViewModel ) }
         composable(AppRoutes.AJUSTES)  { AjustesScreen(viewModel = ajustesViewModel) }
-        composable(AppRoutes.MANUAL) { PdfViewerScreen(pdfFileName = "Informe_Smov.pdf") }
+        composable(AppRoutes.MANUAL) { PdfViewerScreen(pdfFileName = "manual_usuario.pdf") }
         composable (AppRoutes.JUEGO_PUZZLE) {JuegoPuzzleScreen(navController = navController, topPadding = scaffoldPadding)}
         composable(AppRoutes.JUEGO_PAREJAS) {JuegoParejasScreen(navController = navController, topPadding = scaffoldPadding)}
         composable(AppRoutes.PAREJASNIVEL1){ParejasScreen(navController=navController, size = ParejasSize(3,2),imagenes= ParejasData.IMAGENES_NIVEL1)}
