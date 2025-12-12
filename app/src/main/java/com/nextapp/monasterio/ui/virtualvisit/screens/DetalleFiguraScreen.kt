@@ -124,7 +124,7 @@ fun DetalleFiguraScreen(
                     .fillMaxSize()
                     .padding(topPadding)
                     .padding(horizontal = 16.dp)
-                    .padding(bottom = if (has360) 90.dp else 16.dp)
+                    .padding(bottom = if (has360) 74.dp else 16.dp)
             ) {
 
                 // --- CABECERA (Atrás + Título) ---
@@ -256,7 +256,7 @@ fun DetalleFiguraScreen(
                     .fillMaxWidth()
                     .background(Color.White)
                     .navigationBarsPadding() // Padding para barra de navegación del sitema
-                    .padding(horizontal = 16.dp, vertical = 16.dp)
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
             ) {
                 MonasteryButton(
                     onClick = {
