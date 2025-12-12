@@ -26,7 +26,6 @@ fun ConfirmSaveDialog(
                 Button(
                     onClick = {
                         onConfirm()
-                        onDismiss()
                     }
                 ) {
                     Text(stringResource(id = R.string.confirm_save_button))

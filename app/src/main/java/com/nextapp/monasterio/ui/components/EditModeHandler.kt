@@ -44,6 +44,7 @@ fun EditModeHandler(
         ConfirmSaveDialog(
             showDialog = true,
             onDismiss = {
+                showSaveDialog = false
                 onKeepEditing()
             },
             onConfirm = {
