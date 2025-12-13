@@ -278,7 +278,8 @@
     <string name="tag_otro">Andere</string>
 
     <string name="menu_manual_usuario">Benutzerhandbuch</string>
-
+    <string name="error_loading_pdf">Fehler beim Laden des PDFs</string>
+    <string name="back_button">Zurück</string>
 
     <string-array name="clues">
         <item>Wirf einen Blick auf den höchsten Teil der Burg</item>

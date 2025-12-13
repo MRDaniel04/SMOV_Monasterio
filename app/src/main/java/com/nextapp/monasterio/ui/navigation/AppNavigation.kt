@@ -22,18 +22,14 @@ import com.nextapp.monasterio.AppRoutes
 import com.nextapp.monasterio.R
 import com.nextapp.monasterio.models.ParejasData
 import com.nextapp.monasterio.models.ParejasSize
-/*import com.nextapp.monasterio.models.ParejasData*/
 import com.nextapp.monasterio.models.PuzzleSize
 import com.nextapp.monasterio.models.User
-import com.nextapp.monasterio.ui.screens.* // Asegúrate de importar PanoramaScreen y GaleriaScreen
+import com.nextapp.monasterio.ui.components.GenericPdfViewer
+import com.nextapp.monasterio.ui.screens.*
 import com.nextapp.monasterio.ui.screens.pinEdition.EdicionFondoInicio
-import com.nextapp.monasterio.ui.screens.pinEdition.EdicionPines
 import com.nextapp.monasterio.ui.screens.pinEdition.EdicionPinesHost
-import com.nextapp.monasterio.ui.screens.pinEdition.ManualEdicionScreen
 import com.nextapp.monasterio.ui.theme.MonasteryRed
 import com.nextapp.monasterio.ui.theme.White
-import com.nextapp.monasterio.ui.virtualvisit.screens.DetalleFiguraScreen
-import com.nextapp.monasterio.ui.virtualvisit.screens.PinDetalleScreen
 import com.nextapp.monasterio.viewModels.AjustesViewModel
 import com.nextapp.monasterio.viewModels.InfoViewModel
 import com.nextapp.monasterio.viewModels.HistoriaViewModel
@@ -74,7 +70,7 @@ fun AppNavigationHost(
         composable(AppRoutes.EDICION_FONDO_INICIO) { EdicionFondoInicio(navController = navController, topPadding = scaffoldPadding) }
         composable(AppRoutes.PERFIL)   { ProfileScreen(isEditing = isEditing, isDiscarding = isDiscarding, onKeepEditing = onKeepEditing, viewModel = authViewModel ) }
         composable(AppRoutes.AJUSTES)  { AjustesScreen(viewModel = ajustesViewModel) }
-        composable(AppRoutes.MANUAL) { PdfViewerScreen(pdfFileName = "manual_usuario.pdf") }
+        composable(AppRoutes.MANUAL) { GenericPdfViewer(pdfFileName = "manual_usuario.pdf", initialZoom = 1.25f)}
         composable (AppRoutes.JUEGO_PUZZLE) {JuegoPuzzleScreen(navController = navController, topPadding = scaffoldPadding)}
         composable(AppRoutes.JUEGO_PAREJAS) {JuegoParejasScreen(navController = navController, topPadding = scaffoldPadding)}
         composable(AppRoutes.PAREJASNIVEL1){ParejasScreen(navController=navController, size = ParejasSize(3,2),imagenes= ParejasData.IMAGENES_NIVEL1)}

@@ -277,6 +277,8 @@
     <string name="tag_otro">Otro</string>
 
     <string name="menu_manual_usuario">Manual de Usuario</string>
+    <string name="error_loading_pdf">Error al cargar el PDF</string>
+    <string name="back_button">Volver</string>
 
     <string-array name="clues">
         <item>Echa un vistazo a la parte más alta del castillo</item>
