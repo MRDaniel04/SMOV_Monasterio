@@ -310,7 +310,7 @@ fun PinDetalleScreen(
                         }
                     }
                 }
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(4.dp))
             }
 
             // 3. BOTÓN DE AUDIO
@@ -361,6 +361,8 @@ fun PinDetalleScreen(
                 }
             }
 
+            Spacer(modifier = Modifier.height(8.dp))
+
             // Descripción Deslizable
             val descripcion = descripcion_pin ?: ""
             if (descripcion.isNotBlank()) {
@@ -368,7 +370,7 @@ fun PinDetalleScreen(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .weight(1f)
+                        .weight(1f, fill = false)
                         .border(1.dp, Color.LightGray.copy(alpha = 0.5f), RoundedCornerShape(8.dp))
                         .clip(RoundedCornerShape(8.dp))
                 ) {
@@ -378,7 +380,7 @@ fun PinDetalleScreen(
                         color = Color.DarkGray,
                         lineHeight = 22.sp,
                         modifier = Modifier
-                            .fillMaxSize()
+                            .fillMaxWidth()
                             .padding(horizontal = 12.dp, vertical = 8.dp)
                             .verticalScroll(textScrollState)
                     )

@@ -103,7 +103,6 @@ fun DetalleFiguraScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(topPadding)
             .background(Color.White)
     ) {
         if (isLoading) {
@@ -228,7 +227,7 @@ fun DetalleFiguraScreen(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .weight(1f) // Takes remaining space
+                        .weight(1f, fill = false) // Takes remaining space but shrinks if content is smaller
                         .border(1.dp, Color.LightGray.copy(alpha = 0.5f), RoundedCornerShape(8.dp))
                         .clip(RoundedCornerShape(8.dp))
                 ) {
@@ -238,7 +237,7 @@ fun DetalleFiguraScreen(
                         color = Color.Black,
                         lineHeight = 22.sp,
                         modifier = Modifier
-                            .fillMaxSize()
+                            .fillMaxWidth()
                             .padding(horizontal = 12.dp, vertical = 8.dp)
                             .verticalScroll(textScrollState)
                     )
