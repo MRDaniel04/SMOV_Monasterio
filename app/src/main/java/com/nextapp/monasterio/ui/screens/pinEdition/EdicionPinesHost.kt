@@ -11,6 +11,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.nextapp.monasterio.AppRoutes
+import com.nextapp.monasterio.ui.components.GenericPdfViewer
 import com.nextapp.monasterio.ui.screens.pinCreation.CreacionPinesScreen
 
 
@@ -47,8 +48,10 @@ fun EdicionPinesHost(navController: NavHostController) {
             }
 
             composable(AppRoutes.MANUAL_EDICION) {
-                ManualEdicionScreen(
-                    navController = localNav
+                GenericPdfViewer(
+                    pdfFileName = "manual_edicion_pines.pdf",
+                    initialZoom = 1.25f,
+                    onBackClick = { localNav.popBackStack() }
                 )
             }
 

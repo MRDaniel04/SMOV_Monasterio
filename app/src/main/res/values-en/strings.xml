@@ -278,6 +278,8 @@
     <string name="tag_otro">Other</string>
 
     <string name="menu_manual_usuario">User Manual</string>
+    <string name="error_loading_pdf">Error loading PDF</string>
+    <string name="back_button">Back</string>
 
 
     <string-array name="clues">
