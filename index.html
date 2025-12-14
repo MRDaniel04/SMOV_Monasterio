@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App Oficial - Santa María la Real de Huelgas</title>
+    <meta name="description" content="Descarga la guía oficial interactiva del Monasterio. Visitas 360, audioguía y modo niños.">
+    <style>
+        :root {
+            /* Colores de la App */
+            --primary-red: #C00000;
+            --primary-blue: #303F9F;
+            --bg-color: #F5F5F5;
+            --card-bg: #FFFFFF;
+            --text-main: #222222;
+            --text-secondary: #555555;
+            --success-green: #1E8E3E;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* --- HERO SECTION --- */
+        header {
+            background-color: var(--card-bg);
+            padding: 2rem 1.5rem;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-bottom: 4px solid var(--primary-red);
+        }
+
+        .logo-container {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 1.5rem;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid var(--primary-red);
+            background-color: #eee;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            color: var(--primary-red);
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* --- DOWNLOAD BUTTON --- */
+        .download-area {
+            padding: 2rem 1.5rem;
+            text-align: center;
+            background: linear-gradient(180deg, var(--card-bg) 0%, var(--bg-color) 100%);
+        }
+
+        .btn-download {
+            display: inline-block;
+            background-color: var(--primary-blue);
+            color: white;
+            text-decoration: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(48, 63, 159, 0.3);
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+            max-width: 320px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-download:active {
+            transform: scale(0.98);
+            box-shadow: 0 2px 8px rgba(48, 63, 159, 0.3);
+        }
+
+        .btn-download span {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 400;
+            opacity: 0.9;
+            margin-top: 2px;
+        }
+
+        .version-info {
+            margin-top: 1rem;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        /* --- FEATURES --- */
+        .features {
+            padding: 1rem 1.5rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background: var(--card-bg);
+            padding: 1rem;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .feature-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .feature-text {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        /* --- INSTALLATION GUIDE (Crucial) --- */
+        .guide-section {
+            padding: 2rem 1.5rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .guide-title {
+            text-align: center;
+            color: var(--text-main);
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+        }
+
+        .step {
+            background: var(--card-bg);
+            margin-bottom: 1rem;
+            padding: 1rem;
+            border-radius: 12px;
+            display: flex;
+            align-items: flex-start;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+        }
+
+        .step-number {
+            background-color: var(--primary-red);
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-right: 1rem;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .step-content h3 {
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .step-content p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        /* --- SECURITY NOTICE --- */
+        .security-box {
+            background-color: #E8F5E9; /* Verde muy suave */
+            border: 1px solid #C8E6C9;
+            color: #2E7D32;
+            padding: 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            margin: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            max-width: 600px;
+        }
+        
+        .security-icon {
+            font-size: 1.5rem;
+            margin-right: 1rem;
+        }
+
+        @media (min-width: 600px) {
+            .security-box { margin: 1rem auto; }
+        }
+
+        footer {
+            margin-top: auto;
+            text-align: center;
+            padding: 2rem;
+            background-color: #333;
+            color: #aaa;
+            font-size: 0.8rem;
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-container">
+            <!-- ⚠️ REEMPLAZA ESTE SRC CON LA URL DE TU LOGO (puedes usar la de Cloudinary) -->
+            <img src="https://via.placeholder.com/150/C00000/FFFFFF?text=Monasterio" alt="Escudo Monasterio">
+        </div>
+        <h1>Santa María la Real de Huelgas</h1>
+        <p class="subtitle">Guía oficial interactiva, audioguías y visita virtual 360º.</p>
+    </header>
+
+    <div class="download-area">
+        <!-- ⚠️ REEMPLAZA EL HREF CON EL ENLACE DIRECTO A TU APK EN GITHUB RELEASES -->
+        <!-- Ejemplo: https://github.com/TU_USUARIO/TU_REPO/releases/download/v1.0.0/app-release.apk -->
+        <a href="#" class="btn-download" id="downloadBtn">
+            Descargar App Android
+            <span>Versión 1.0.0 • Archivo Seguro</span>
+        </a>
+        <p class="version-info">Compatible con Android 8.0+</p>
+    </div>
+
+    <div class="features">
+        <div class="feature-card">
+            <span class="feature-icon">🎧</span>
+            <span class="feature-text">Audioguía Multilingüe</span>
+        </div>
+        <div class="feature-card">
+            <span class="feature-icon">🏰</span>
+            <span class="feature-text">Visita Virtual 360º</span>
+        </div>
+        <div class="feature-card">
+            <span class="feature-icon">🧸</span>
+            <span class="feature-text">Modo Niños</span>
+        </div>
+        <div class="feature-card">
+            <span class="feature-icon">📅</span>
+            <span class="feature-text">Reservas</span>
+        </div>
+    </div>
+
+    <div class="security-box">
+        <span class="security-icon">🛡️</span>
+        <div>
+            <strong>Aplicación Oficial Verificada</strong><br>
+            Desarrollada exclusivamente para la visita al Monasterio. Libre de publicidad.
+        </div>
+    </div>
+
+    <section class="guide-section">
+        <h2 class="guide-title">¿Cómo instalar la App?</h2>
+        
+        <div class="step">
+            <div class="step-number">1</div>
+            <div class="step-content">
+                <h3>Pulsa "Descargar"</h3>
+                <p>El archivo <code>monasterio.apk</code> comenzará a bajarse en tu dispositivo.</p>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-number">2</div>
+            <div class="step-content">
+                <h3>Abre el archivo</h3>
+                <p>Al finalizar, pulsa sobre la notificación de descarga o busca el archivo en tu carpeta de Descargas.</p>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-number">3</div>
+            <div class="step-content">
+                <h3>Permite la instalación</h3>
+                <p>Si tu móvil avisa sobre "Orígenes desconocidos" o "Fuentes externas", pulsa en <strong>Ajustes</strong> y activa el permiso para tu navegador. Es totalmente seguro.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        © 2025 Patrimonio Nacional<br>
+        Monasterio de las Huelgas Reales
+    </footer>
+
+</body>
+</html>
