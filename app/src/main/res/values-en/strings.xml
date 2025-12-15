@@ -326,4 +326,15 @@
     <string name="preview_cancel">Cancel</string>
     <string name="preview_background_updated">Background image updated</string>
     <string name="preview_error_uploading">Error uploading image</string>
+
+    <string name="error_map_timeout">Error: The map did not load in time to place the pin. Please try again.</string>
+    <string name="error_pin_position">Error obtaining the pin position.</string>
+    <string name="pin_created_success">Pin created and saved successfully.</string>
+    <string name="pin_updated_success">Pin updated successfully.</string>
+    <string name="move_cancelled">Movement cancelled. Pin restored.</string>
+    <string name="map_reset_success">Map reset to the initial position.</string>
+    <string name="lock_edition">Lock Edition</string>
+    <string name="plane_loading">Loading map…</string>
+    <string name="pin_moved_success">Pin relocated successfully.</string>
+
 </resources>

@@ -325,4 +325,15 @@
     <string name="preview_cancel">Abbrechen</string>
     <string name="preview_background_updated">Hintergrundbild aktualisiert</string>
     <string name="preview_error_uploading">Fehler beim Hochladen des Bildes</string>
+
+    <string name="error_map_timeout">Fehler: Die Karte wurde nicht rechtzeitig geladen, um den Pin zu setzen. Bitte versuchen Sie es erneut.</string>
+    <string name="error_pin_position">Fehler beim Abrufen der Pin-Position.</string>
+    <string name="pin_created_success">Pin erfolgreich erstellt und gespeichert.</string>
+    <string name="pin_updated_success">Pin erfolgreich aktualisiert.</string>
+    <string name="move_cancelled">Vorgang abgebrochen. Pin wiederhergestellt.</string>
+    <string name="map_reset_success">Karte auf die Ausgangsposition zurückgesetzt.</string>
+    <string name="lock_edition">Bearbeitung sperren</string>
+    <string name="plane_loading">Karte wird geladen…</string>
+    <string name="pin_moved_success">Pin erfolgreich neu positioniert.</string>
+
 </resources>

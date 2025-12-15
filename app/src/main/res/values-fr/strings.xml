@@ -324,4 +324,15 @@
     <string name="preview_cancel">Annuler</string>
     <string name="preview_background_updated">Image d\'arrière-plan mise à jour</string>
     <string name="preview_error_uploading">Erreur lors du téléchargement de l\'image</string>
+
+    <string name="error_map_timeout">Erreur : La carte n\'a pas chargé à temps pour placer le pin. Veuillez réessayer.</string>
+    <string name="error_pin_position">Erreur lors de l\'obtention de la position du pin.</string>
+    <string name="pin_created_success">Pin créé et enregistré avec succès.</string>
+    <string name="pin_updated_success">Pin mis à jour avec succès.</string>
+    <string name="move_cancelled">Mouvement annulé. Pin restauré.</string>
+    <string name="map_reset_success">Plan réinitialisé à la position initiale.</string>
+    <string name="lock_edition">Verrouiller l\'édition</string>
+    <string name="plane_loading">Chargement du plan…</string>
+    <string name="pin_moved_success">Pin repositionné avec succès.</string>
+
 </resources>

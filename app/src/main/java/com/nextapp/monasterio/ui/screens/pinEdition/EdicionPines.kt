@@ -31,6 +31,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.layout.onGloballyPositioned // Necesario para obtener el tamaño de la caja
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntSize // Necesario para obtener el tamaño de la caja
 import com.nextapp.monasterio.AppRoutes
 import androidx.compose.ui.zIndex
@@ -51,15 +52,13 @@ fun EdicionPines(
 ) {
     val context = LocalContext.current
     val activity = context as? Activity
-    val configuration = LocalConfiguration.current // ⬅️ NEW
-    val isPortrait = configuration.orientation == Configuration.ORIENTATION_PORTRAIT // ⬅️ NEW
+    val configuration = LocalConfiguration.current
+    val isPortrait = configuration.orientation == Configuration.ORIENTATION_PORTRAIT
 
     val PANEL_HEIGHT_FRACTION = 0.50f
     val PANEL_WIDTH_FRACTION = 0.40f
 
-    Log.d("EdicionPines", "Composición iniciada - Modo Interacción Pin (Panel 35%)")
 
-    // --- Estados de Datos y UI ---
     var pines by remember { mutableStateOf<List<PinData>>(emptyList()) }
     var isLoading by remember { mutableStateOf(true) }
     var photoViewRef by remember { mutableStateOf<DebugPhotoView?>(null) }
@@ -76,9 +75,7 @@ fun EdicionPines(
     DisposableEffect(Unit) {
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
         onDispose {
-            // 🆕 CORRECCIÓN DEL LAG: Asegurar que la referencia a la vista nativa se limpia
-            // cuando el Composable se destruye para prevenir posibles fugas o conflictos de ciclo de vida.
-            photoViewRef = null
+           photoViewRef = null
         }
     }
 
@@ -97,7 +94,6 @@ fun EdicionPines(
 
     var isNewPinMode by remember { mutableStateOf(false) }
 
-    // --- Carga inicial del plano y pines ---
     LaunchedEffect(Unit) {
         isLoading = true
         scope.launch {
@@ -118,48 +114,35 @@ fun EdicionPines(
     }
 
 
-    LaunchedEffect(vm.formSubmitted, vm.isEditing) { // ⬅️ CAMBIO 1: Añadir vm.isEditing a la lista de dependencias
+    LaunchedEffect(vm.formSubmitted, vm.isEditing) {
         if (!vm.formSubmitted) {
-            Log.d("FLUJO_PIN", "EdicionPines: Observando formSubmitted. Estado actual: false. Esperando...")
             return@LaunchedEffect
         }
 
         if (vm.isEditing) {
-            Log.d("FLUJO_PIN", "EdicionPines: ⚠️ formSubmitted detectado, pero vm.isEditing es TRUE. Ignorando colocación de Pin (flujo de Edición/Actualización).")
-            vm.formSubmitted = false // Resetear la bandera para que no se reejecute.
+            vm.formSubmitted = false
             return@LaunchedEffect
         }
 
-        Log.d("FLUJO_PIN", "EdicionPines: 🚀 formSubmitted DETECTADO (Creación). Iniciando modo de colocación de Pin.")
-        // 1. BUCLER DE ESPERA Y VALIDACIÓN CON TIMEOUT
-        val maxWaitTime = 2000L // 2 segundos máximo
+        val maxWaitTime = 2000L
         val isReady = withTimeoutOrNull(maxWaitTime) {
             while (photoViewSize.width == 0 || photoViewRef == null) {
-                Log.d("FLUJO_PIN", "EdicionPines: ⏳ Esperando PhotoView. Size=${photoViewSize}, Ref=${photoViewRef != null}")
-                delay(100) // Esperar 100ms antes de reintentar
+                delay(100)
             }
-            true // Si salimos del while, está listo
+            true
         }
 
         if (isReady == null || isReady == false) {
-            Log.e("FLUJO_PIN", "EdicionPines: ❌ ERROR. PhotoView no estuvo listo en ${maxWaitTime}ms. Abortando inicio de colocación.")
-            // Resetear el flag para permitir un futuro intento
             vm.formSubmitted = false
-            Toast.makeText(context, "Error: El mapa no cargó a tiempo para colocar el pin. Inténtelo de nuevo.", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, context.getString(R.string.error_map_timeout), Toast.LENGTH_LONG).show()
             return@LaunchedEffect
         }
 
-        Log.d("FLUJO_PIN", "EdicionPines: ✅ PhotoView listo. Iniciando colocación del Pin.")
-
-        // --- 2. Lógica de Colocación (El resto es igual) ---
         selectedPin = null
         photoViewRef?.translationX = 0f
         photoViewRef?.translationY = 0f
         isNewPinMode = true
 
-        Log.d("FLUJO_PIN", "EdicionPines: Pin temporal creado en el centro. PinMoving=true, NewPinMode=true.")
-
-        // 🆕 Pin Being Moved: Usando los nuevos campos del ViewModel
         pinBeingMoved = PinData(
             id = "temp",
             ubicacion_es = vm.ubicacion_es,
@@ -167,14 +150,14 @@ fun EdicionPines(
             ubicacion_de = vm.pinTitleManualTrads.de.ifBlank { null },
             ubicacion_fr = vm.pinTitleManualTrads.fr.ifBlank { null },
             area_es = vm.area_es,
-            area_en = vm.area_en, // Usando nuevo getter
-            area_de = vm.area_de, // Usando nuevo getter
-            area_fr = vm.area_fr, // Usando nuevo getter
+            area_en = vm.area_en,
+            area_de = vm.area_de,
+            area_fr = vm.area_fr,
             x = 0.5f,
             y = 0.5f,
             iconRes = R.drawable.pin3,
             imagenes = vm.imagenes.uris.map { it.toString() },
-            descripcion_es = vm.descripcion.es // Acceso directo (sin .value)
+            descripcion_es = vm.descripcion.es
         )
 
         pinDragOffset = Offset(
@@ -200,27 +183,23 @@ fun EdicionPines(
 
         val pinId = vm.editingPinId
         if (pinId == null) {
-            Log.e("EdicionPines", "❌ updateRequested pero editingPinId es null")
             return@LaunchedEffect
         }
 
         scope.launch {
             try {
-                // Recargar pines
                 val plano = PlanoRepository.getPlanoById("monasterio_interior")
                 val allPins = PinRepository.getAllPins()
                 val pinRefs = plano?.pines?.map { it.substringAfterLast("/") } ?: emptyList()
                 pines = allPins.filter { pinRefs.contains(it.id) }
-
-                Toast.makeText(context, "Pin actualizado correctamente", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, context.getString(R.string.pin_updated_success), Toast.LENGTH_SHORT).show()
 
             } catch (e: Exception) {
                 Log.e("EdicionPines", "❌ Error al recargar el plano/pines tras la actualización", e)
-                Toast.makeText(context, "Error al recargar el mapa tras la actualización.", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, context.getString(R.string.error_loading_plane), Toast.LENGTH_LONG).show()
             }
         }
 
-        // Reset final del modo edición
         vm.isEditing = false
         vm.editingPinId = null
 
@@ -237,7 +216,7 @@ fun EdicionPines(
 
         if (isLoading) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text("Cargando plano…")
+                Text(stringResource(R.string.plane_loading))
             }
             return@Box
         }
@@ -250,11 +229,9 @@ fun EdicionPines(
             pinBeingMoved = pinBeingMoved,
             ignoreNextMatrixChange = ignoreNextMatrixChange,
 
-            // Callbacks
             onRefReady = { photoView -> photoViewRef = photoView },
             onSizeChange = { size -> photoViewSize = size },
             onMatrixChange = {
-                Log.e("MATRIX", "❌ MatrixChange REAL → cancelando modo mover/panel")
                 isPinMoving = false
                 selectedPin = null
             },
@@ -266,43 +243,36 @@ fun EdicionPines(
                     val fullPin = PinRepository.getPinById(pin.id)
                     selectedPin = fullPin ?: selectedPin
                     if (fullPin == null) {
-                        Log.e("EdicionPines", "❌ No se pudo cargar el pin detallado: ${pin.id}")
                         selectedPin = null
                     }
                 }
             },
             onBackgroundTap = {
                 if (selectedPin != null) {
-                    Log.d("EdicionPines", "❌ Toque estático fuera de Pin. Ocultando panel y RESTAURANDO POSICIONES.")
                     photoViewRef?.translationY = 0f
                     photoViewRef?.translationX = 0f
                     selectedPin = null
-                } else {
-                    Log.d("EdicionPines", "Toque fuera y no había Pin seleccionado. Ignorando.")
                 }
             },
 
-            isPortrait = isPortrait // ⬅️ ¡AÑADIR ESTA LÍNEA!
+            isPortrait = isPortrait
         )
 
-        // -------------------------
-        // ⭐ PANEL INFORMATIVO (Estructura fija/scroll de descripción) ⭐
-        // -------------------------
+
         selectedPin?.let { pin ->
 
             val panelModifier = if (isPortrait) {
-                // MODO VERTICAL (Portrait): Panel ABAJO (comportamiento que quieres para vertical)
                 Modifier
                     .align(Alignment.BottomCenter)
                     .fillMaxWidth()
                     .fillMaxHeight(PANEL_HEIGHT_FRACTION)
             } else {
-                // MODO HORIZONTAL (Landscape): Panel a la DERECHA (comportamiento que quieres para horizontal)
+
                 Modifier
-                    .align(Alignment.CenterEnd) // Usar CenterEnd en lugar de TopEnd
-                    .fillMaxHeight(1f) // ⬅️ Ocupa 100% de la altura
+                    .align(Alignment.CenterEnd)
+                    .fillMaxHeight(1f)
                     .fillMaxWidth(PANEL_WIDTH_FRACTION)
-                    .padding(end = 12.dp, top = 12.dp, bottom = 12.dp) // ⬅️ Padding uniforme, sin los 70.dp
+                    .padding(end = 12.dp, top = 12.dp, bottom = 12.dp)
             }
 
             PinDetailsPanel(
@@ -311,8 +281,8 @@ fun EdicionPines(
                 selectedPin = pin,
                 imagenesDetalladas = pin.imagenesDetalladas,
                 pinTapScreenPosition = pinTapScreenPosition,
-                panelHeightFraction = PANEL_HEIGHT_FRACTION, // Se mantiene por si se usa internamente
-                panelAlignment = if (isPortrait) "BOTTOM" else "RIGHT", // ⬅️ CAMBIO: La lógica de orientación se invierte
+                panelHeightFraction = PANEL_HEIGHT_FRACTION,
+                panelAlignment = if (isPortrait) "BOTTOM" else "RIGHT",
                 onClosePanel = {
                     photoViewRef?.translationY = 0f
                     photoViewRef?.translationX = 0f
@@ -326,7 +296,7 @@ fun EdicionPines(
                     isPinMoving = true
                     photoViewRef?.translationY = 0f
                     photoViewRef?.translationX = 0f
-                    Toast.makeText(context, "Modo Mover Pin activado. Arrastre.", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, context.getString(R.string.move_pin), Toast.LENGTH_LONG).show()
                 },
 
                 onEdit = {
@@ -367,11 +337,7 @@ fun EdicionPines(
                         selectedPin = pinBeingMoved
                         pinBeingMoved = null
                         pinDragOffset = Offset.Zero
-                        Toast.makeText(
-                            context,
-                            "Movimiento cancelado. Pin restaurado.",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        Toast.makeText(context, context.getString(R.string.move_cancelled), Toast.LENGTH_SHORT).show()
                     },
                     onConfirm = {
 
@@ -386,8 +352,8 @@ fun EdicionPines(
                         }
 
                         if (normalizedCoords == null) {
-                            Toast.makeText(context, "Error al obtener la posición del pin.", Toast.LENGTH_SHORT).show()
-                            vm.isUploading = false // Asegurar que se apaga en caso de fallo crítico de coordenadas
+                            Toast.makeText(context, context.getString(R.string.error_pin_position), Toast.LENGTH_SHORT).show()
+                            vm.isUploading = false
                             return@MovingPinOverlay
                         }
 
@@ -406,34 +372,29 @@ fun EdicionPines(
                             if (!isPinValid) {
                                 vm.isUploading = false
                                 vm.uploadMessage = ""
-                                return@MovingPinOverlay // <-- Sale si la validación falla (motivo más probable del fallo reportado)
+                                return@MovingPinOverlay
                             }
 
 
-
-                            // 3. Llamar al VM para iniciar el proceso de guardado ASÍNCRONO
                             vm.onCreateConfirmed(context, finalX, finalY) {
-                                // Callback de ÉXITO del ViewModel (se ejecuta cuando el Pin ya está en Firebase/Cloudinary)
 
                                 vm.isUploading = false
                                 vm.uploadMessage = ""
 
-                                // 4. Resetear el estado de la UI (MOVIDO AQUÍ DENTRO)
                                 isPinMoving = false
                                 isNewPinMode = false
                                 pinBeingMoved = null
                                 pinDragOffset = Offset.Zero
-                                selectedPin = null // Asegurar que no hay pin seleccionado
+                                selectedPin = null
 
-                                // Recargar la lista de pines y limpiar el formulario
                                 scope.launch {
                                     try {
                                         val plano = PlanoRepository.getPlanoById("monasterio_interior")
                                         val allPins = PinRepository.getAllPins()
                                         val pinRefs = plano?.pines?.map { it.substringAfterLast("/") } ?: emptyList()
                                         pines = allPins.filter { pinRefs.contains(it.id) }
-                                        vm.reset() // Limpiamos el formulario tras el éxito.
-                                        Toast.makeText(context, "Pin Creado y guardado con éxito.", Toast.LENGTH_LONG).show()
+                                        vm.reset()
+                                        Toast.makeText(context, context.getString(R.string.pin_created_success), Toast.LENGTH_LONG).show()
                                     } catch (e: Exception) {
                                         Log.e("EdicionPines", "Error recargando pines: ${e.message}")
                                     }
@@ -443,7 +404,7 @@ fun EdicionPines(
                             return@MovingPinOverlay
 
                         } else {
-                            // Este bloque para mover un pin existente sigue usando la función de posición
+
                             scope.launch {
                                 try {
                                     PinRepository.updatePinPosition(
@@ -459,11 +420,11 @@ fun EdicionPines(
                                             pin
                                         }
                                     }
-                                    Toast.makeText(context, "Pin ${pinToUpdate.id} movido a (x=$finalX, y=$finalY)", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(context, context.getString(R.string.pin_moved_success), Toast.LENGTH_SHORT).show()
 
                                 } catch (e: Exception) {
                                     Log.e("EdicionPines", "Error al guardar posición en Firebase", e)
-                                    Toast.makeText(context, "Error al mover el pin existente.", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(context, context.getString(R.string.error_pin_position), Toast.LENGTH_SHORT).show()
                                 } finally {
                                     vm.isUploading = false
                                     vm.uploadMessage = ""
@@ -471,8 +432,6 @@ fun EdicionPines(
                             }
                         }
 
-
-                        // 2. Salir del modo movimiento
                         isPinMoving = false
                         selectedPin = null
                         pinBeingMoved = null
@@ -483,9 +442,7 @@ fun EdicionPines(
             }
         }
 
-        // -------------------------
-        // ⭐ TOOLBARS (No afectadas por los cambios de nombre) ⭐
-        // -------------------------
+
         Box(
             modifier = Modifier
                 .align(Alignment.TopStart)
@@ -503,18 +460,16 @@ fun EdicionPines(
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.arrow_back),
-                    contentDescription = "Volver",
+                    contentDescription = stringResource(R.string.go_back),
                     tint = Color.White
                 )
             }
         }
 
         val toolbarModifier = if (isPortrait) {
-            // MODO VERTICAL (Portrait): Arriba a la derecha (Horizontal)
             Modifier.align(Alignment.TopEnd)
         } else {
-            // MODO HORIZONTAL (Landscape): Centrada a la Izquierda (Vertical)
-            Modifier.align(Alignment.CenterStart) // ⬅️ CAMBIO: Alineación a la izquierda, centrada
+            Modifier.align(Alignment.CenterStart)
         }
 
         PinEditionToolbar(
@@ -523,10 +478,7 @@ fun EdicionPines(
                 navController.navigate(AppRoutes.CREACION_PINES)
             },
             onCrosshairClick = {
-                Log.d(
-                    "EdicionPines",
-                    "Botón Reajustar Plano pulsado. Restaurando posición inicial."
-                )
+
                 selectedPin = null
                 isPinMoving = false
 
@@ -536,22 +488,17 @@ fun EdicionPines(
                     photoView.attacher.setScaleType(ImageView.ScaleType.FIT_END)
                     photoView.translationY = 0f
                     photoView.translationX = 0f
-
-                    Toast.makeText(
-                        context,
-                        "Plano reajustado a la posición inicial.",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    Toast.makeText(context, context.getString(R.string.map_reset_success), Toast.LENGTH_SHORT).show()
                 }
             },
             onCancelEditClick = {
-                Toast.makeText(context, "Bloquear Edición", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, context.getString(R.string.lock_edition), Toast.LENGTH_SHORT).show()
             },
             onHelpClick = {
                 navController.navigate(AppRoutes.MANUAL_EDICION)
             },
             modifier = toolbarModifier.zIndex(100f),
-            isPortrait = isPortrait // ⬅️ Pasar el nuevo parámetro al componente
+            isPortrait = isPortrait
         )
 
         if (vm.isUploading) {

@@ -324,4 +324,15 @@
     <string name="preview_cancel">Cancelar</string>
     <string name="preview_background_updated">Imagen de fondo actualizada</string>
     <string name="preview_error_uploading">Error subiendo la imagen</string>
+
+    <string name="error_map_timeout">Error: El mapa no cargó a tiempo para colocar el pin. Inténtelo de nuevo.</string>
+    <string name="error_pin_position">Error al obtener la posición del pin.</string>
+    <string name="pin_created_success">Pin Creado y guardado con éxito.</string>
+    <string name="pin_updated_success">Pin actualizado correctamente.</string>
+    <string name="move_cancelled">Movimiento cancelado. Pin restaurado.</string>
+    <string name="map_reset_success">Plano reajustado a la posición inicial.</string>
+    <string name="lock_edition">Bloquear Edición</string>
+    <string name="plane_loading">Cargando plano…</string>
+    <string name="pin_moved_success">Pin reubicado correctamente.</string>
+
 </resources>
