@@ -46,10 +46,6 @@ object ParejasData{
 }
 
 class ParejasManager(val size: ParejasSize){
-
-    private val allPositions : List<Posicion> = generarPosiciones()
-
-
     fun inicializarParejaPiezas(imagenes: List<Int>) : List<ParejasPieza>{
         require(imagenes.size == size.rows*size.columns/2)
         val imagenesDuplicadas = (imagenes+imagenes).shuffled()
@@ -66,17 +62,5 @@ class ParejasManager(val size: ParejasSize){
             )
         }
         return piezas
-    }
-
-
-    fun generarPosiciones(): List<Posicion>{
-        val posiciones = ArrayList<Posicion>(size.rows*size.columns)
-        for(i in 0 until size.rows){
-            for(j in 0 until size.columns){
-                val posicion= Posicion(i,j)
-                posiciones.add(posicion)
-            }
-        }
-        return posiciones
     }
 }

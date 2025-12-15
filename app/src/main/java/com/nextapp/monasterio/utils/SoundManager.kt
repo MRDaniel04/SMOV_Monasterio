@@ -20,11 +20,4 @@ object SoundManager {
 
         mediaPlayer?.start()
     }
-
-    // Llamar a esto en el onDestroy del MainActivity si quieres ser muy estricto,
-    // aunque para sonidos cortos de UI no es crítico.
-    fun release() {
-        mediaPlayer?.release()
-        mediaPlayer = null
-    }
 }

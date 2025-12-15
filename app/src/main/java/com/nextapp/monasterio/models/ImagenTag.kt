@@ -6,9 +6,8 @@ import com.nextapp.monasterio.R
 enum class ImageTag(
     val firestoreValue: String,
     val displayName: String,
-    @StringRes val stringResId: Int // 👈 NUEVA PROPIEDAD
+    @StringRes val stringResId: Int
 ) {
-    // Usamos los strings que nos has proporcionado
     PINTURA("pintura", "Pintura", R.string.tag_pintura),
     ESCULTURA("escultura", "Escultura", R.string.tag_escultura),
     ARQUITECTURA("arquitectura", "Arquitectura", R.string.tag_arquitectura),
@@ -19,7 +18,7 @@ enum class ImageTag(
 
 
     companion object {
-        fun fromFirestoreString(value: String?): ImageTag? {
+        fun fromFirestoreString(value: String?): ImageTag {
 
 
             if (value.isNullOrBlank()) {

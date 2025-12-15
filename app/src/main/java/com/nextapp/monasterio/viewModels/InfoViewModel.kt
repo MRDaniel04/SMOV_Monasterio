@@ -1,6 +1,5 @@
 package com.nextapp.monasterio.viewModels
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.firestore.FirebaseFirestore
@@ -27,10 +26,6 @@ class InfoViewModel : ViewModel() {
     private val _error = MutableStateFlow<String?>(null)
     val error: StateFlow<String?> = _error.asStateFlow()
 
-    companion object {
-        private const val TAG = "InfoViewModel"
-    }
-
     init {
         loadInfo()
     }
@@ -52,7 +47,6 @@ class InfoViewModel : ViewModel() {
                     _infoState.value = defaultInfo
                 }
             } catch (e: Exception) {
-                Log.e(TAG, "Error loading info", e)
                 _error.value = e.message
             } finally {
                 _isLoading.value = false
@@ -93,16 +87,13 @@ class InfoViewModel : ViewModel() {
     fun saveFullInfo(newInfo: InfoModel) {
         viewModelScope.launch {
             try {
-                Log.d(TAG, "Saving full info model...")
                 infoCollection.document(documentId)
                     .set(newInfo) // Sobreescribe todo el documento
                     .await()
                 
                 _infoState.value = newInfo
-                Log.d(TAG, "Full info saved successfully")
-                
+
             } catch (e: Exception) {
-                Log.e(TAG, "Error saving full info", e)
                 _error.value = e.message
             }
         }
@@ -118,7 +109,6 @@ class InfoViewModel : ViewModel() {
                 _infoState.value = updateLocal(_infoState.value)
                 
             } catch (e: Exception) {
-                Log.e(TAG, "Error updating $fieldName", e)
                 _error.value = e.message
             }
         }

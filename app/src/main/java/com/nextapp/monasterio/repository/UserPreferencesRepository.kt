@@ -62,15 +62,6 @@ class UserPreferencesRepository private constructor(private val context: Context
         }
     }
 
-
-
-    // --- FUNCIONES DE ESCRITURA ---
-    suspend fun dismissMainMapTutorial() { dismissAllTutorials()    }
-
-    suspend fun dismissSubMapTutorial() { dismissAllTutorials()    }
-
-    suspend fun dismissPinTutorial() { dismissAllTutorials()    }
-
     suspend fun dismissInstructionsPuzzle() {
         context.dataStore.edit { it[PreferencesKeys.INSTRUCTIONS_PUZZLE] = true }
     }

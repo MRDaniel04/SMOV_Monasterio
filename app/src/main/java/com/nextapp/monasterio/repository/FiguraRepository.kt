@@ -1,6 +1,5 @@
 package com.nextapp.monasterio.repository
 
-import android.util.Log
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.nextapp.monasterio.models.FiguraData
@@ -8,8 +7,6 @@ import com.nextapp.monasterio.models.Punto
 import kotlinx.coroutines.tasks.await
 
 object FiguraRepository {
-
-    private const val TAG = "FiguraRepository"
 
     suspend fun getAllFiguras(): List<FiguraData> {
         val db = FirebaseFirestore.getInstance()
@@ -19,7 +16,6 @@ object FiguraRepository {
                 mapDocumentToFigura(doc.id, doc.data)
             }
         } catch (e: Exception) {
-            Log.e(TAG, "Error getAllFiguras", e)
             emptyList()
         }
     }
@@ -37,8 +33,7 @@ object FiguraRepository {
                 val doc = snapshot.documents[0]
                 mapDocumentToFigura(doc.id, doc.data)
             } else null
-        } catch (e: Exception) {
-            Log.e(TAG, "Error getFiguraByNombre", e)
+        } catch (e:Exception) {
             null
         }
     }
@@ -51,7 +46,6 @@ object FiguraRepository {
                 mapDocumentToFigura(doc.id, doc.data)
             } else null
         } catch (e: Exception) {
-            Log.e(TAG, "Error getFiguraById", e)
             null
         }
     }
@@ -102,11 +96,9 @@ object FiguraRepository {
                 audioUrl_de = data["audioUrl_de"] as? String ?: data["audioUrl_ge"] as? String, // Soporte doble
                 audioUrl_fr = data["audioUrl_fr"] as? String,
 
-                // 👇 AHORA SÍ LO LEEMOS CORRECTAMENTE
                 vista360Url = data["vista360Url"] as? String
             )
         } catch (e: Exception) {
-            Log.e(TAG, "Error mapeando figura $id", e)
             return null
         }
     }

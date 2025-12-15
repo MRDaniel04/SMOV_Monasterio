@@ -2,7 +2,6 @@ package com.nextapp.monasterio.viewModels
 
 import android.content.Context
 import android.net.Uri
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.firestore.FieldValue
@@ -27,17 +26,12 @@ class HistoriaViewModel : ViewModel() {
     val historyPeriods: StateFlow<List<HistoriaPeriod>> = _historyPeriods.asStateFlow()
 
     private val _isUploading = MutableStateFlow(false)
-    val isUploading: StateFlow<Boolean> = _isUploading.asStateFlow()
 
     private val _uploadingPeriodId = MutableStateFlow<String?>(null)
     val uploadingPeriodId: StateFlow<String?> = _uploadingPeriodId.asStateFlow()
 
     private val _error = MutableStateFlow<String?>(null)
     val error: StateFlow<String?> = _error.asStateFlow()
-
-    companion object {
-        private const val TAG = "HistoryViewModel"
-    }
 
     init {
         loadHistoryPeriods()
@@ -49,7 +43,6 @@ class HistoriaViewModel : ViewModel() {
     fun loadHistoryPeriods() {
         viewModelScope.launch {
             try {
-                Log.d(TAG, "Cargando períodos históricos...")
 
                 val snapshot = historyCollection
                     .orderBy("order")
@@ -82,71 +75,14 @@ class HistoriaViewModel : ViewModel() {
                             order = doc.getLong("order")?.toInt() ?: 0
                         )
                     } catch (e: Exception) {
-                        Log.e(TAG, "Error al parsear período ${doc.id}", e)
                         null
                     }
                 }
 
                 _historyPeriods.value = periods
-                Log.d(TAG, "Períodos cargados: ${periods.size}")
 
             } catch (e: Exception) {
-                Log.e(TAG, "Error al cargar períodos históricos", e)
                 _error.value = e.message
-            }
-        }
-    }
-
-    /**
-     * Actualiza el contenido (textos) de un período histórico
-     */
-    fun updatePeriodContent(periodId: String, newContent: Map<String, String>) {
-        // Actualizar estado local optimísticamente INMEDIATAMENTE
-        _historyPeriods.value = _historyPeriods.value.map { 
-            if (it.id == periodId) it.copy(content = newContent) else it 
-        }
-
-        viewModelScope.launch {
-            try {
-                Log.d(TAG, "Actualizando contenido para período: $periodId")
-                
-                historyCollection.document(periodId)
-                    .update("content", newContent)
-                    .await()
-                
-                Log.d(TAG, "Contenido actualizado exitosamente en Firebase")
-            } catch (e: Exception) {
-                Log.e(TAG, "Error al actualizar contenido", e)
-                _error.value = e.message
-                // Opcional: Revertir el cambio local si falla
-                loadHistoryPeriods() 
-            }
-        }
-    }
-
-    /**
-     * Actualiza el título de un período histórico
-     */
-    fun updatePeriodTitle(periodId: String, newTitle: Map<String, String>) {
-        // Actualizar estado local optimísticamente INMEDIATAMENTE
-        _historyPeriods.value = _historyPeriods.value.map {
-            if (it.id == periodId) it.copy(title = newTitle) else it
-        }
-
-        viewModelScope.launch {
-            try {
-                Log.d(TAG, "Actualizando título para período: $periodId")
-
-                historyCollection.document(periodId)
-                    .update("title", newTitle)
-                    .await()
-
-                Log.d(TAG, "Título actualizado exitosamente en Firebase")
-            } catch (e: Exception) {
-                Log.e(TAG, "Error al actualizar título", e)
-                _error.value = e.message
-                // Opcional: Revertir el cambio local si falla
-                loadHistoryPeriods()
             }
         }
     }
@@ -158,8 +94,7 @@ class HistoriaViewModel : ViewModel() {
     fun updatePeriod(updatedPeriod: HistoriaPeriod) {
         viewModelScope.launch {
             try {
-                Log.d(TAG, "Actualizando período completo: ${updatedPeriod.id}")
-                
+
                 // Actualizar en FireStore
                 historyCollection.document(updatedPeriod.id)
                     .update(
@@ -175,10 +110,8 @@ class HistoriaViewModel : ViewModel() {
                     if (it.id == updatedPeriod.id) updatedPeriod else it 
                 }
                 
-                Log.d(TAG, "Período actualizado exitosamente")
 
             } catch (e: Exception) {
-                Log.e(TAG, "Error al actualizar período", e)
                 _error.value = e.message
             }
         }
@@ -196,7 +129,6 @@ class HistoriaViewModel : ViewModel() {
                 _isUploading.value = true
                 _uploadingPeriodId.value = periodId
                 _error.value = null
-                Log.d(TAG, "Subiendo imagen para período: $periodId")
 
                 // 1. Subir a Cloudinary
                 val uploadResult = CloudinaryService.uploadImage(uri, context)
@@ -206,21 +138,16 @@ class HistoriaViewModel : ViewModel() {
                 }
 
                 val imageUrl = uploadResult.getOrThrow()
-                Log.d(TAG, "Imagen subida a Cloudinary: $imageUrl")
 
                 // 2. Añadir al array de imageUrls en Firebase
                 historyCollection
                     .document(periodId)
                     .update("imageUrls", FieldValue.arrayUnion(imageUrl))
                     .await()
-
-                Log.d(TAG, "URL de imagen añadida al array en Firebase")
-
                 // 3. Recargar períodos
                 loadHistoryPeriods()
 
             } catch (e: Exception) {
-                Log.e(TAG, "Error al subir imagen", e)
                 _error.value = e.message
             } finally {
                 _isUploading.value = false
@@ -237,7 +164,6 @@ class HistoriaViewModel : ViewModel() {
     fun deleteImage(periodId: String, imageUrl: String) {
         viewModelScope.launch {
             try {
-                Log.d(TAG, "Eliminando imagen del período: $periodId")
 
                 // Eliminar URL específica del array imageUrls en Firebase
                 historyCollection
@@ -245,22 +171,13 @@ class HistoriaViewModel : ViewModel() {
                     .update("imageUrls", FieldValue.arrayRemove(imageUrl))
                     .await()
 
-                Log.d(TAG, "Imagen eliminada exitosamente")
 
                 // Recargar períodos
                 loadHistoryPeriods()
 
             } catch (e: Exception) {
-                Log.e(TAG, "Error al eliminar imagen", e)
                 _error.value = e.message
             }
         }
-    }
-
-    /**
-     * Limpia el error actual
-     */
-    fun clearError() {
-        _error.value = null
     }
 }

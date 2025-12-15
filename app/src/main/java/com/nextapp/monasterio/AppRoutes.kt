@@ -18,13 +18,9 @@ object AppRoutes {
     const val VIRTUAL_VISIT = "virtual_visit"
     const val PIN_DETALLE = "pin_detalle"
     const val PANORAMA = "panorama"
-
     const val MODO_NINYOS = "modo_niños"
-
     const val VIDEO_NINYOS = "video_modo_niños"
-
     const val JUEGO_PUZZLE = "juego_puzzle"
-
     const val JUEGO_PAREJAS = "juego_parejas"
     const val PUZZLENIVEL1 ="puzzle_nivel_1"
     const val PUZZLENIVEL2 ="puzzle_nivel_2"
@@ -34,17 +30,13 @@ object AppRoutes {
     const val PAREJASNIVEL2 ="parejas_nivel_2"
     const val PAREJASNIVEL3 ="parejas_nivel_3"
     const val PAREJASNIVEL4 ="parejas_nivel_4"
-
     const val JUEGO_NINYOS = "juego_modo_niños"
     const val MODO_EDICION = "modo_edicion"
     const val EDICION_FONDO_INICIO = "edicion_fondo_inicio"
     const val EDICION_PINES = "edicion_pines"
     const val MANUAL_EDICION = "manual_edicion"
-
     const val CREACION_PINES = "creacion_pines"
-
     const val JUEGO_DIFERENCIAS ="juego_diferencias"
-
     const val PIN_360 = "pin_360"
     const val PIN_ENTRADA_MONASTERIO = "entrada_monasterio"
 }

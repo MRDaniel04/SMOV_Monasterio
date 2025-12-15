@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
-import android.util.Log
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
@@ -28,7 +27,6 @@ object PinRepository {
     suspend fun getPinById(id: String): PinData? {
         val doc = collection.document(id).get().await()
         if (!doc.exists()) {
-            Log.w("PinRepository", "⚠️ Pin $id no encontrado.")
             return null
         }
 
@@ -130,7 +128,6 @@ object PinRepository {
             )
 
         } catch (e: Exception) {
-            Log.e("PinRepository", "❌ Error mapeando pin $docId", e)
             null
         }
     }
@@ -171,20 +168,6 @@ object PinRepository {
         audioUrl_de: String? = null,
         audioUrl_fr: String? = null
     ): String {
-
-        Log.d("REPO-DEBUG", "📌 Guardando PIN (CREACIÓN)...")
-        Log.d("REPO-DEBUG", "--- UBICACIÓN ---")
-        Log.d("REPO-DEBUG", "-> ES: '${ubicacion_es}'")
-        Log.d("REPO-DEBUG", "-> EN: '${ubicacion_en}'") // <-- VERIFICAR ESTE
-        Log.d("REPO-DEBUG", "-> DE: '${ubicacion_de}'") // <-- VERIFICAR ESTE
-        Log.d("REPO-DEBUG", "-> FR: '${ubicacion_fr}'") // <-- VERIFICAR ESTE
-        Log.d("REPO-DEBUG", "--- ÁREA ---")
-        Log.d("REPO-DEBUG", "-> ES: '${area_es}'")
-        Log.d("REPO-DEBUG", "-> EN: '${area_en}'")
-        Log.d("REPO-DEBUG", "-> DE: '${area_de}'")
-        Log.d("REPO-DEBUG", "-> FR: '${area_fr}'")
-
-        Log.d("REPO-DEBUG", "📌 Guardando PIN...")
 
         val imagenesRefs: List<DocumentReference> = imagenes.map { image ->
             createImagenDocument(image)
@@ -262,7 +245,6 @@ object PinRepository {
                 .await()
 
         } catch (e: Exception) {
-            Log.e("PinRepository", "❌ Error al actualizar posición del pin $pinId", e)
             throw e // Propagar el error para manejo en la UI
         }
     }
@@ -275,7 +257,6 @@ object PinRepository {
             // 1) Obtener documento del pin
             val pinDoc = firestore.collection("pines").document(pinId).get().await()
             if (!pinDoc.exists()) {
-                Log.w("PinRepository", "⚠️ deletePinAndImages: pin $pinId no existe")
                 return false
             }
 
@@ -284,9 +265,8 @@ object PinRepository {
             imagenesRefs.forEach { ref ->
                 try {
                     ref.delete().await()
-                    Log.d("PinRepository", "🗑 Imagen eliminada: ${ref.path}")
+
                 } catch (e: Exception) {
-                    Log.e("PinRepository", "❌ Error eliminando imagen ${ref.path}", e)
                 }
             }
 
@@ -297,19 +277,15 @@ object PinRepository {
                     .document("monasterio_interior")
                     .update("pines", FieldValue.arrayRemove(pinRef))
                     .await()
-                Log.d("PinRepository", "🗑 Referencia del pin $pinId eliminada en plano monastery_interior")
             } catch (e: Exception) {
-                Log.e("PinRepository", "❌ Error eliminando referencia en plano para pin $pinId", e)
                 // no abortamos: seguimos intentando borrar el documento del pin
             }
 
             // 4) Eliminar el propio documento del pin
             firestore.collection("pines").document(pinId).delete().await()
-            Log.d("PinRepository", "🗑 Pin eliminado correctamente: $pinId")
 
             true
         } catch (e: Exception) {
-            Log.e("PinRepository", "❌ Error eliminando pin completo $pinId", e)
             false
         }
     }
@@ -342,17 +318,7 @@ object PinRepository {
         imagenes: List<ImagenData>,
         imagen360: String?
     ) {
-        Log.d("REPO-DEBUG", "📌 Guardando PIN (ACTUALIZACIÓN)... ID: $pinId")
-        Log.d("REPO-DEBUG", "--- UBICACIÓN ---")
-        Log.d("REPO-DEBUG", "-> ES: '${ubicacion_es}'")
-        Log.d("REPO-DEBUG", "-> EN: '${ubicacion_en}'") // <-- VERIFICAR ESTE
-        Log.d("REPO-DEBUG", "-> DE: '${ubicacion_de}'") // <-- VERIFICAR ESTE
-        Log.d("REPO-DEBUG", "-> FR: '${ubicacion_fr}'") // <-- VERIFICAR ESTE
-        Log.d("REPO-DEBUG", "--- ÁREA ---")
-        Log.d("REPO-DEBUG", "-> ES: '${area_es}'")
-        Log.d("REPO-DEBUG", "-> EN: '${area_en}'")
-        Log.d("REPO-DEBUG", "-> DE: '${area_de}'")
-        Log.d("REPO-DEBUG", "-> FR: '${area_fr}'")
+
         try {
             val pinRef = collection.document(pinId)
             val pinDoc = pinRef.get().await()
@@ -363,7 +329,7 @@ object PinRepository {
                     // ⚠️ NOTA: Si una imagen antigua no está en la nueva lista, aquí se elimina.
                     // Si la quieres reutilizar, deberías omitir la eliminación aquí.
                     try { ref.delete().await() }
-                    catch (e: Exception) { Log.e("PinRepository", "❌ Advertencia: No se pudo eliminar la imagen antigua ${ref.id}.", e) }
+                    catch (e: Exception) { }
                 }
             }
 
@@ -408,10 +374,8 @@ object PinRepository {
                 .set(updates, SetOptions.merge())
                 .await()
 
-            Log.d("PinRepository", "✅ Pin $pinId actualizado correctamente.")
 
         } catch (e: Exception) {
-            Log.e("PinRepository", "❌ Error al actualizar pin $pinId", e)
             throw e
         }
     }
@@ -426,13 +390,11 @@ object PinRepository {
      */
     suspend fun generateAndUploadAudio(context: Context, text: String, langCode: String): String? {
         if (text.isBlank()) return null
-        Log.d("AUDIO_FLOW", "Iniciando proceso de generación y subida para $langCode.")
 
         // 1. Generar el archivo de audio TTS (usando la función que acabamos de corregir)
         val audioFile = generateTtsFile(context, text, langCode)
 
         if (audioFile == null || !audioFile.exists() || audioFile.length() == 0L) {
-            Log.e("AUDIO_UPLOAD", "Error: Archivo TTS no válido o vacío para $langCode.")
             return null
         }
 
@@ -445,20 +407,17 @@ object PinRepository {
             return result.getOrThrow()
 
         } catch (e: Exception) {
-            Log.e("AUDIO_UPLOAD", "Fallo al subir audio $langCode a Cloudinary", e)
             return null
         } finally {
             // 3. Limpiar el archivo temporal
             if (audioFile.exists()) {
                 audioFile.delete()
-                Log.d("AUDIO_FLOW", "Archivo temporal limpiado: ${audioFile.name}")
             }
         }
     }
 
     private suspend fun generateTtsFile(context: Context, text: String, langCode: String): File? = withContext(Dispatchers.IO) {
         if (text.isBlank()) return@withContext null
-        Log.d("TTS_REAL", "REAL: Iniciando generación de TTS para idioma=$langCode, texto='${text.take(30)}...'")
 
         val tempFile = File.createTempFile("tts_pin_${langCode}_", ".mp3", context.cacheDir)
         tempFile.delete() // Aseguramos que el archivo no exista antes de la síntesis
@@ -489,7 +448,6 @@ object PinRepository {
                     val result = initializedTts.setLanguage(locale)
 
                     if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
-                        Log.e("TTS_REAL", "Idioma $langCode no soportado por TTS. Fallando.")
                         initializedTts.shutdown()
                         if (continuation.isActive) continuation.resume(null)
                         return@TextToSpeech
@@ -501,13 +459,11 @@ object PinRepository {
                         override fun onStart(utteranceId: String?) {}
 
                         override fun onDone(utteranceId: String?) {
-                            Log.d("TTS_REAL", "REAL: TTS de $langCode completado. Tamaño: ${tempFile.length()} bytes.")
                             initializedTts.shutdown()
                             if (continuation.isActive) continuation.resume(tempFile)
                         }
 
                         override fun onError(utteranceId: String?, errorCode: Int) {
-                            Log.e("TTS_REAL", "Error al generar TTS para $langCode: $errorCode")
                             initializedTts.shutdown()
                             tempFile.delete()
                             if (continuation.isActive) continuation.resume(null)
@@ -523,13 +479,11 @@ object PinRepository {
                     val resultSynthesis = initializedTts.synthesizeToFile(text, bundle, tempFile, "tts_synthesis")
 
                     if (resultSynthesis == TextToSpeech.ERROR) {
-                        Log.e("TTS_REAL", "Fallo inmediato al llamar a synthesizeToFile.")
                         initializedTts.shutdown()
                         if (continuation.isActive) continuation.resume(null)
                     }
 
                 } else {
-                    Log.e("TTS_REAL", "Fallo al inicializar TTS: $status")
                     tts?.shutdown() // Intentamos cerrar si es que se llegó a inicializar parcialmente
                     if (continuation.isActive) continuation.resume(null)
                 }

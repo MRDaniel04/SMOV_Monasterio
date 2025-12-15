@@ -2,7 +2,6 @@ package com.nextapp.monasterio.services
 
 import android.content.Context
 import android.net.Uri
-import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -36,7 +35,6 @@ object CloudinaryService {
      */
     suspend fun uploadImage(imageUri: Uri, context: Context): Result<String> = withContext(Dispatchers.IO) {
         try {
-            Log.d(TAG, "Iniciando subida de imagen: $imageUri")
 
             // Convertir URI a File temporal
             val file = uriToFile(imageUri, context)
@@ -58,25 +56,20 @@ object CloudinaryService {
             val response = client.newCall(request).execute()
 
             if (!response.isSuccessful) {
-                Log.e(TAG, "Error en la respuesta: ${response.code}")
                 return@withContext Result.failure(Exception("Error al subir imagen: ${response.code}"))
             }
 
             // Parsear respuesta JSON con JSONObject nativo
-            val responseBody = response.body?.string()
-            Log.d(TAG, "Respuesta de Cloudinary: $responseBody")
+            val responseBody = response.body.string()
 
-            val jsonResponse = JSONObject(responseBody ?: "{}")
+            val jsonResponse = JSONObject(responseBody)
             val imageUrl = jsonResponse.getString("secure_url")
 
-            // Limpiar archivo temporal
             file.delete()
 
-            Log.d(TAG, "Imagen subida exitosamente: $imageUrl")
             Result.success(imageUrl)
 
         } catch (e: Exception) {
-            Log.e(TAG, "Error al subir imagen", e)
             Result.failure(e)
         }
     }
@@ -96,7 +89,6 @@ object CloudinaryService {
             inputStream.close()
             tempFile
         } catch (e: Exception) {
-            Log.e(TAG, "Error al convertir URI a File", e)
             null
         }
     }
@@ -104,7 +96,6 @@ object CloudinaryService {
 
     suspend fun uploadFile(file: File, mimeType: String): Result<String> = withContext(Dispatchers.IO) {
         try {
-            Log.d(TAG, "Iniciando subida de archivo: ${file.name} con MIME: $mimeType")
 
             // Crear request multipart
             val requestBody = MultipartBody.Builder()
@@ -122,20 +113,17 @@ object CloudinaryService {
             val response = client.newCall(request).execute()
 
             if (!response.isSuccessful) {
-                Log.e(TAG, "Error en la respuesta: ${response.code}")
                 return@withContext Result.failure(Exception("Error al subir archivo: ${response.code}"))
             }
 
             // Parsear respuesta JSON
-            val responseBody = response.body?.string()
-            val jsonResponse = JSONObject(responseBody ?: "{}")
+            val responseBody = response.body.string()
+            val jsonResponse = JSONObject(responseBody)
             val fileUrl = jsonResponse.getString("secure_url")
 
-            Log.d(TAG, "Archivo subido exitosamente: $fileUrl")
             Result.success(fileUrl)
 
         } catch (e: Exception) {
-            Log.e(TAG, "Error al subir archivo", e)
             Result.failure(e)
         }
     }

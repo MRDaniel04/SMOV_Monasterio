@@ -12,10 +12,7 @@ object LanguageHelper {
     private const val PREF_KEY_LANGUAGE = "language_code"
 
     private fun getPrefs(context: Context): SharedPreferences {
-        // --- INICIO DE LA CORRECCIÓN ---
-        // Usa SIEMPRE el contexto de la aplicación para evitar inconsistencias
         return context.applicationContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        // --- FIN DE LA CORRECCIÓN ---
     }
 
     fun loadLocale(context: Context) {

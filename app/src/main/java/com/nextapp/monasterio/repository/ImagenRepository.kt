@@ -20,7 +20,6 @@ class ImagenRepository(
             val snapshot = collection.get().await()
             snapshot.documents.mapNotNull { doc -> mapDocToImagenData(doc) }
         } catch (e: Exception) {
-            Log.e("ImagenRepository", "Error getting all images", e)
             emptyList()
         }
     }
@@ -78,7 +77,6 @@ class ImagenRepository(
                 .await()
             true
         } catch (e: Exception) {
-            Log.e("ImagenRepository", "❌ Error al guardar/actualizar imagen ${image.id}", e)
             false
         }
     }

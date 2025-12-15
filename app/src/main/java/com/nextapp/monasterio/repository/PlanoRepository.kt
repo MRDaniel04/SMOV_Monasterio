@@ -11,20 +11,6 @@ object PlanoRepository {
     private val firestore = FirebaseFirestore.getInstance()
     private val collection = firestore.collection("planos")
 
-    // 🔹 Obtener todos los planos
-    suspend fun getAllPlanos(): List<PlanoData> {
-        return try {
-            val snapshot = collection.get().await()
-            snapshot.documents.mapNotNull { doc ->
-                val data = doc.data ?: return@mapNotNull null
-                mapDocToPlanoData(doc.id, data)
-            }
-        } catch (e: Exception) {
-            Log.e("PlanoRepository", "Error obteniendo planos", e)
-            emptyList()
-        }
-    }
-
     // 🔹 Obtener un plano por ID
     suspend fun getPlanoById(id: String): PlanoData? {
         return try {
@@ -41,30 +27,6 @@ object PlanoRepository {
         } catch (e: Exception) {
             Log.e("PlanoRepository", "Error obteniendo plano con id=$id", e)
             null
-        }
-    }
-
-    // 🔹 Crear o actualizar un plano
-    suspend fun createOrUpdatePlano(plano: PlanoData) {
-        try {
-            val payload = mapOf(
-                "nombre" to plano.nombre,
-                "plano" to plano.plano,
-                "figuras" to plano.figuras,
-                "pines" to plano.pines
-            )
-            collection.document(plano.id.ifEmpty { collection.document().id }).set(payload).await()
-        } catch (e: Exception) {
-            Log.e("PlanoRepository", "Error guardando plano", e)
-        }
-    }
-
-    // 🔹 Eliminar un plano
-    suspend fun deletePlano(id: String) {
-        try {
-            collection.document(id).delete().await()
-        } catch (e: Exception) {
-            Log.e("PlanoRepository", "Error eliminando plano con id=$id", e)
         }
     }
 
@@ -103,20 +65,5 @@ object PlanoRepository {
             .update("pines", FieldValue.arrayUnion(pinRef))
             .await()
     }
-
-    suspend fun removePinFromPlano(planoId: String, pinId: String) {
-        try {
-            val firestore = FirebaseFirestore.getInstance()
-            val pinRef = firestore.collection("pines").document(pinId)
-            firestore.collection("planos")
-                .document(planoId)
-                .update("pines", FieldValue.arrayRemove(pinRef))
-                .await()
-
-        } catch (e: Exception) {
-            Log.e("PlanoRepository", "❌ Error eliminando referencia del pin $pinId en plano $planoId", e)
-        }
-    }
-
 
 }

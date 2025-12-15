@@ -1,7 +1,5 @@
 package com.nextapp.monasterio
 
-import android.R.attr.text
-import android.app.Activity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.compose.setContent
@@ -234,7 +232,6 @@ fun MonasteryAppScreen(activity: AppCompatActivity) { // 👈 Recibimos la activ
                                             if (isEditing) {
                                                 // Botón X (Descartar cambios y salir sin guardar)
                                                 IconButton(onClick = {
-                                                    isDiscarding = true
                                                     isEditing = false
                                                     val message = context.getString(R.string.edit_mode_deactivate_message)
                                                     Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
@@ -250,7 +247,6 @@ fun MonasteryAppScreen(activity: AppCompatActivity) { // 👈 Recibimos la activ
                                             IconButton(onClick = {
                                                 if (isEditing) {
                                                     // Botón Check (Intentar guardar)
-                                                    isDiscarding = false
                                                     isEditing = false
                                                     val message = context.getString(R.string.edit_mode_deactivate_message)
                                                     Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
@@ -308,7 +304,6 @@ fun MonasteryAppScreen(activity: AppCompatActivity) { // 👈 Recibimos la activ
             val isInfo = currentRoute == AppRoutes.INFO
             val isEdicionInicio = currentRoute == AppRoutes.EDICION_FONDO_INICIO
             val isEdicion = currentRoute == AppRoutes.MODO_EDICION
-            val isVirtualVisit = currentRoute == AppRoutes.VIRTUAL_VISIT
 
 
             AppNavigationHost(
@@ -316,10 +311,6 @@ fun MonasteryAppScreen(activity: AppCompatActivity) { // 👈 Recibimos la activ
                 navController = navController,
                 isEditing = isEditing,
                 isDiscarding = isDiscarding,
-                onKeepEditing = {
-                    isEditing = true
-                    isDiscarding = false
-                },
                 // TRUCO: Si es Home, NO ponemos padding al contenedor (para que el fondo se estire).
                 // Si es otra pantalla, SÍ ponemos padding.
                 modifier = if (isHome||isModoNinyos||isVideo||isJuegos||isReservas||isReservas2||isParejas||isPuzzle||isHistoria||isEdicionInicio||isInfo||isEdicion) Modifier else Modifier.padding(paddingValues),

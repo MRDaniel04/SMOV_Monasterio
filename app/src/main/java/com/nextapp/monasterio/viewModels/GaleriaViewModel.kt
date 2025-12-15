@@ -59,9 +59,9 @@ class GaleriaViewModel(
 
     private fun getLocalizedTitle(image: ImagenData): String {
         return when (currentLanguage) {
-            "en" -> if (image.tituloIngles.isNotEmpty()) image.tituloIngles else image.titulo
-            "de" -> if (image.tituloAleman.isNotEmpty()) image.tituloAleman else image.titulo
-            "fr" -> if (image.tituloFrances.isNotEmpty()) image.tituloFrances else image.titulo
+            "en" -> image.tituloIngles.ifEmpty { image.titulo }
+            "de" -> image.tituloAleman.ifEmpty { image.titulo }
+            "fr" -> image.tituloFrances.ifEmpty { image.titulo }
             else -> image.titulo
         }
     }

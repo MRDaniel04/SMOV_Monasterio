@@ -155,8 +155,7 @@ class ParejasViewModel (
             }
             this@ParejasViewModel.piezasVolteadas.clear()
             _uiState.update { it.copy(piezas = piezasCompletas, verificandoPareja = false, parejas=parejasRestantes) }
-            val todasPiezasConPareja = estaTerminado()
-            _uiState.update { it.copy(solucionado = estaTerminado()) }
+                  _uiState.update { it.copy(solucionado = estaTerminado()) }
         }
     }
 
