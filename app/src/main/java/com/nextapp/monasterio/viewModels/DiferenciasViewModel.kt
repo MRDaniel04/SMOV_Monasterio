@@ -2,7 +2,6 @@ package com.nextapp.monasterio.viewModels
 
 import android.content.Context
 import android.content.res.Resources
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nextapp.monasterio.models.NivelJuego
@@ -102,8 +101,6 @@ class DiferenciasViewModel(
                 pista.idDiferencia != diferenciaEncontrada.id
             }
 
-            Log.d("DEPURACION_TOUCH", "Pistas después del filtro: ${nuevaListaPistas.map { it.idDiferencia }}")
-
             _juegoActual.value = juego.copy(
                 diferencias = nuevaListaDiferencias,
                 pistas = nuevaListaPistas
@@ -124,7 +121,6 @@ class DiferenciasViewModel(
             idsDiferenciasNoEncontradas.contains(pista.idDiferencia)
         }
 
-        Log.d("PISTAS_DEBUG", "Pistas disponibles para mostrar: $pistasDisponibles")
 
         if (pistasDisponibles.isEmpty()) {
             return ""

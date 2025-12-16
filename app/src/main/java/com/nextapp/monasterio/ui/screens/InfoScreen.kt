@@ -70,15 +70,13 @@ fun InfoScreen(
     }
 
     val saveChanges = {
-        draftInfo?.let { 
-             android.util.Log.d("InfoScreen", "Guardando cambios en Info...")
+        draftInfo?.let {
              viewModel.saveFullInfo(it) 
         }
         Unit
     }
 
     val discardChanges = {
-         android.util.Log.d("InfoScreen", "Descartando cambios en Info...")
          draftInfo = infoData
     }
 
@@ -95,7 +93,6 @@ fun InfoScreen(
     LaunchedEffect(infoData, isEditing, isSaving) {
         if (!isEditing && !isSaving) {
              if (draftInfo != infoData) {
-                 android.util.Log.d("InfoScreen", "Sync estricto: reseteando draft al original")
                  draftInfo = infoData
              }
         } else {

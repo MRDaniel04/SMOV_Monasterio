@@ -77,7 +77,6 @@ fun MovingPinOverlay(
 
                     currentOffset = Offset(boundedX, boundedY)
                     onPinDrag(currentOffset)
-                    Log.v("FLUJO_PIN", "Overlay: Pin arrastrado a pantalla (X=${currentOffset.x.toInt()}, Y=${currentOffset.y.toInt()})") // ✅ LOG
                 }
             }
     ) {
@@ -109,7 +108,6 @@ fun MovingPinOverlay(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 IconButton(onClick = {
-                    Log.d("FLUJO_PIN", "Overlay: ↩️ CANCELAR pulsado.") // ✅ LOG
                     onCancel()
                 }, modifier = Modifier.size(buttonSize)) {
                     Icon(
@@ -121,7 +119,6 @@ fun MovingPinOverlay(
                 }
                 // Botón de Confirmación (✔️)
                 IconButton(onClick = {
-                    Log.d("FLUJO_PIN", "Overlay: ✅ CONFIRMAR pulsado.") // ✅ LOG
                     onConfirm()
                 }, modifier = Modifier.size(buttonSize)) {
                     Icon(

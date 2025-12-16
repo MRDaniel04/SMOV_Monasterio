@@ -195,7 +195,6 @@ fun EdicionPines(
                 Toast.makeText(context, context.getString(R.string.pin_updated_success), Toast.LENGTH_SHORT).show()
 
             } catch (e: Exception) {
-                Log.e("EdicionPines", "❌ Error al recargar el plano/pines tras la actualización", e)
                 Toast.makeText(context, context.getString(R.string.error_loading_plane), Toast.LENGTH_LONG).show()
             }
         }
@@ -396,7 +395,6 @@ fun EdicionPines(
                                         vm.reset()
                                         Toast.makeText(context, context.getString(R.string.pin_created_success), Toast.LENGTH_LONG).show()
                                     } catch (e: Exception) {
-                                        Log.e("EdicionPines", "Error recargando pines: ${e.message}")
                                     }
                                 }
                             }
@@ -423,7 +421,6 @@ fun EdicionPines(
                                     Toast.makeText(context, context.getString(R.string.pin_moved_success), Toast.LENGTH_SHORT).show()
 
                                 } catch (e: Exception) {
-                                    Log.e("EdicionPines", "Error al guardar posición en Firebase", e)
                                     Toast.makeText(context, context.getString(R.string.error_pin_position), Toast.LENGTH_SHORT).show()
                                 } finally {
                                     vm.isUploading = false

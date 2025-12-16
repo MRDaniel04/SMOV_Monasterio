@@ -50,7 +50,7 @@ object FiguraRepository {
         }
     }
 
-    // 👇 FUNCIÓN DE MAPEO MANUAL PARA EVITAR ERRORES DE TIPO 👇
+    // FUNCIÓN DE MAPEO MANUAL PARA EVITAR ERRORES DE TIPO
     private fun mapDocumentToFigura(id: String, data: Map<String, Any>?): FiguraData? {
         if (data == null) return null
         try {

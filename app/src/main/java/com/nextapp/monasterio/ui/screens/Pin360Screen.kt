@@ -153,7 +153,6 @@ fun Pin360Screen(
     LaunchedEffect(pin) {
         if (pin != null) {
             val url = pin!!.vista360Url
-            Log.d("Pin360", "Iniciando descarga de: $url")
 
             val customOkHttpClient = OkHttpClient.Builder()
                 .connectTimeout(30, TimeUnit.SECONDS)
@@ -170,9 +169,8 @@ fun Pin360Screen(
                 .data(url)
                 .allowHardware(false)
                 .listener(
-                    onSuccess = { _, _ -> Log.d("Pin360", "✅ Imagen descargada correctamente") },
+                    onSuccess = { _, _ ->  },
                     onError = { _, result ->
-                        Log.e("Pin360", "❌ Error descarga: ${result.throwable.message}")
                         errorMessage = "Error de carga"
                         isLoading = false
                     }
@@ -300,7 +298,6 @@ class PanoramaView(context: Context) : FrameLayout(context) {
             isInit = true
             startRenderWatchdog()
         } catch (e: Throwable) {
-            Log.e("PanoramaView", "Error inicial setBitmap", e)
         }
     }
 
@@ -316,14 +313,12 @@ class PanoramaView(context: Context) : FrameLayout(context) {
     private val renderRunnable = object : Runnable {
         override fun run() {
             if (retryCount < maxRetries && isAttachedToWindow) {
-                Log.d("PanoramaView", "🔄 Watchdog: Forzando onResume (Intento ${retryCount + 1})")
                 plManager.onResume()
                 invalidate()
                 requestLayout()
                 retryCount++
                 watchdogHandler.postDelayed(this, 500)
             } else {
-                Log.d("PanoramaView", "✅ Watchdog finalizado.")
             }
         }
     }
@@ -336,14 +331,12 @@ class PanoramaView(context: Context) : FrameLayout(context) {
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        Log.d("PanoramaView", "onAttachedToWindow -> Reiniciando Watchdog")
         plManager.onResume()
         startRenderWatchdog()
     }
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
-        Log.d("PanoramaView", "onDetachedFromWindow -> Limpiando")
         watchdogHandler.removeCallbacks(renderRunnable)
         plManager.onPause()
         plManager.onDestroy()
@@ -354,7 +347,6 @@ class PanoramaView(context: Context) : FrameLayout(context) {
         return try {
             plManager.onTouchEvent(event)
         } catch (e: Exception) {
-            Log.w("PanoramaView", "Ignorando crash táctil interno: ${e.message}")
             true
         }
     }

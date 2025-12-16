@@ -121,7 +121,6 @@ class DebugPhotoView @JvmOverloads constructor(
                         drawableCache[iconId] = icon
                     }
                 } catch (e: Exception) {
-                    Log.e(TAG, "Error cargando icono $iconId", e)
                 }
             }
 
@@ -205,11 +204,9 @@ class DebugPhotoView @JvmOverloads constructor(
 
     fun moveVerticalFree(deltaY: Float) {
         this.translationY += deltaY
-        Log.d("MOVE_FREE", "Desplazamiento aplicado: $deltaY. Nueva translationY: ${this.translationY}")
     }
 
     fun moveHorizontalFree(deltaX: Float) {
         this.translationX += deltaX
-        Log.d("MOVE_FREE_H", "Desplazamiento aplicado: $deltaX. Nueva translationX: ${this.translationX}")
     }
 }

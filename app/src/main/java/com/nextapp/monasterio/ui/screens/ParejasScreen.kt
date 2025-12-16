@@ -2,7 +2,6 @@ package com.nextapp.monasterio.ui.screens
 
 import android.app.Activity
 import android.content.pm.ActivityInfo
-import android.util.Log
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image

@@ -2,7 +2,6 @@ package com.nextapp.monasterio.ui.screens
 
 import android.app.Activity
 import android.content.pm.ActivityInfo
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -121,8 +120,6 @@ fun PuzzleScreen(
 
     var overlayRootCoordinates by remember { mutableStateOf<LayoutCoordinates?>(null) }
 
-    Log.d("INSTRUCCIONES_DBEBUG","valor del showinstructionspreviewdialogboton: ${showInstructionsPreviewDialogBoton}")
-    Log.d("INSTRUCCIONES_DBEBUG","valor del showinstructionspreviewdialog: ${showInstructionsPreviewDialog}")
 
     val screenWidth = LocalConfiguration.current.screenWidthDp
     val isTablet = screenWidth > 600
@@ -280,8 +277,6 @@ fun PuzzleScreen(
         piezaArrastradaId?.let { id ->
             val piezaFlotante = state.piezas.find { it.id == id }!!
             val startOffset = trayPositionsMap[id] ?: Offset.Zero
-
-            Log.d("PUZZLE_DRAG", "TrayPosition (Esquina): ${startOffset.x}, ${startOffset.y}")
 
             DraggableFloatingPiece(
                 pieza = piezaFlotante,

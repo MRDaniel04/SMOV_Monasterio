@@ -106,7 +106,6 @@ fun InteractivePlanoViewer(
             // 3. Lógica: OCULTAR PANEL AL DESPLAZAR/HACER ZOOM (MATRIX CHANGE)
             photoView.attacher.setOnMatrixChangeListener {
                 if (ignoreNextMatrixChange) {
-                    Log.e("MATRIX", "🟩 MatrixChange ignorado por TIEMPO (protección al activar modo mover)")
                     return@setOnMatrixChangeListener
                 }
 
@@ -121,7 +120,6 @@ fun InteractivePlanoViewer(
             photoView.setOnPhotoTapListener { _, tapX, tapY ->
 
                 if (isPinMoving) {
-                    Log.d("InteractivePlanoViewer", "Tap ignorado: Pin en movimiento.")
                     return@setOnPhotoTapListener
                 }
                 val drawable = photoView.drawable ?: return@setOnPhotoTapListener
@@ -166,10 +164,6 @@ fun InteractivePlanoViewer(
                     if (selectedPin != null || photoView.translationY != 0f || photoView.translationX != 0f) {
                         photoViewRef.value?.translationY = 0f
                         photoViewRef.value?.translationX = 0f
-                        Log.d(
-                            "InteractivePlanoViewer",
-                            "Restaurando translationY/X a 0f antes de aplicar nuevo shift."
-                        )
                     }
 
                     // ⭐ AVISO AL PADRE: Se ha tocado un pin
@@ -187,10 +181,6 @@ fun InteractivePlanoViewer(
                             // Mover a la izquierda (valor negativo) para que el pin se vea
                             photoViewRef.value?.moveHorizontalFree(-neededShiftX)
 
-                            Log.w(
-                                "InteractivePlanoViewer",
-                                "Pin oculto por panel lateral. Desplazando X: -${String.format("%.0f", neededShiftX)}px."
-                            )
                         }
 
                     } else { // Si es Portrait (Vertical) -> Panel ABAJO
@@ -224,10 +214,6 @@ fun InteractivePlanoViewer(
                             val neededShiftY = pinScreenYCoord - pinTargetY
                             photoViewRef.value?.moveVerticalFree(-neededShiftY)
 
-                            Log.w(
-                                "InteractivePlanoViewer",
-                                "Pin oculto por panel inferior. Desplazando Y: -${String.format("%.0f", neededShiftY)}px."
-                            )
                         } else if (neededShiftX != 0f) {
                             Toast.makeText(
                                 context,

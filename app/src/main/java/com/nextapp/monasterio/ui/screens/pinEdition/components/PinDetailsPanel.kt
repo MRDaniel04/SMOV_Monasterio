@@ -102,7 +102,6 @@ fun PinDetailsPanel(
         isLoading = false
     }
 
-    Log.d("PinDetailsPanel", "Pin ID: ${selectedPin.id}, Area_es recibida: '${selectedPin.area_es}'")
 
     val hasImages = imagenesDetalladas.isNotEmpty()
 
@@ -124,7 +123,7 @@ fun PinDetailsPanel(
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null,
-                onClick = { Log.d("EdicionPines", "Toque en el panel consumido.") }
+                onClick = { }
             )
     ) {
 

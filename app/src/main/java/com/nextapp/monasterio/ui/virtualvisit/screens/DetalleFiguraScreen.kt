@@ -65,14 +65,12 @@ fun DetalleFiguraScreen(
     // 4. LÓGICA DE CARGA ROBUSTA (DOBLE INTENTO)
     LaunchedEffect(nombre, currentLanguageCode) {
         isLoading = true
-        Log.d("DetalleFigura", "Buscando figura con clave: $nombre")
 
         // INTENTO 1: Buscar por campo 'nombre'
         var loadedFigura = figuraRepository.getFiguraByNombre(nombre)
 
         // INTENTO 2: Si falla, buscar por ID del documento
         if (loadedFigura == null) {
-            Log.d("DetalleFigura", "No encontrada por nombre. Probando por ID...")
             loadedFigura = figuraRepository.getFiguraById(nombre)
         }
 
@@ -80,14 +78,12 @@ fun DetalleFiguraScreen(
 
         // Cargar imágenes referenciadas
         if (loadedFigura != null) {
-            Log.d("DetalleFigura", "Figura encontrada: ${loadedFigura.nombre}")
             val loadedImages = loadedFigura.imagenes.mapNotNull { imageId ->
                 // Asumimos que la lista 'imagenes' contiene IDs de string
                 imagenRepository.getImageById(imageId)
             }
             imagenes = loadedImages
         } else {
-            Log.e("DetalleFigura", "No se encontró ninguna figura con clave: $nombre")
         }
         isLoading = false
     }

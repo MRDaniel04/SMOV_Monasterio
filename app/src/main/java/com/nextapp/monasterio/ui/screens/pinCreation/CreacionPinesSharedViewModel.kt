@@ -139,7 +139,6 @@ class CreacionPinSharedViewModel : ViewModel() {
 
     fun updateUbicacionConAutoTraduccion(newTitleEs: String, getAreaFn: (String) -> String?) {
 
-        Log.d("FLUJO_PIN_AUTO", "-> UPDATE INICIADO: newTitleEs='$newTitleEs'")
 
         _ubicacion_es = newTitleEs
 
@@ -467,7 +466,6 @@ class CreacionPinSharedViewModel : ViewModel() {
                 onSuccess()
 
             } catch (e: Exception) {
-                Log.e("FLUJO_PIN", "❌ ERROR en proceso de creación: ${e.message}", e)
                 uploadMessage = "Error: " + (e.message ?: "Fallo desconocido en el guardado.")
 
                 formSubmitted = false // Resetear en caso de fallo

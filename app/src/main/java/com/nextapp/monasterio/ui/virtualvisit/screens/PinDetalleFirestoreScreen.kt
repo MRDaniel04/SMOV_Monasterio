@@ -49,10 +49,6 @@ fun PinDetalleFirestoreScreen(
         pin != null -> {
             val currentPin = pin
 
-            Log.d(
-                "Pin360Debug",
-                "Pin cargado: '${currentPin?.ubicacion_es}'. URL 360: [${currentPin?.vista360Url}]"
-            )
             val onVer360: (() -> Unit)? =
                 if (!pin!!.vista360Url.isNullOrBlank()) {
                     {

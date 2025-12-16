@@ -155,17 +155,14 @@ fun PlanoScreen(
         try {
             plano = PlanoRepository.getPlanoById(planoId)
             if (plano != null) {
-                Log.d("PlanoUniversal", "✅ Plano cargado: ${plano!!.nombre}")
                 val figuraRefs = plano!!.figuras.map { it.substringAfterLast("/") }
                 figuras = FiguraRepository.getAllFiguras().filter { figuraRefs.contains(it.id) }
                 val pinRefs = plano!!.pines.map { it.substringAfterLast("/") }
                 pines = PinRepository.getAllPins().filter { pinRefs.contains(it.id) }
             } else {
-                Log.e("PlanoUniversal", "⚠️ Plano no encontrado con id=$planoId")
                 isError = true
             }
         } catch (e: Exception) {
-            Log.e("PlanoUniversal", "❌ Error cargando plano", e)
             isError = true
         } finally {
             isLoading = false

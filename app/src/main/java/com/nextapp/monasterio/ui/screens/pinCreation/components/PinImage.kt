@@ -29,12 +29,10 @@ class ImagenesState(
 
     fun addTaggedImage(pinImage: PinImage) {
         images = images + pinImage
-        Log.d("FLUJO_PIN_IMAGES", "Imagen añadida: ${pinImage.uri}. now size=${images.size}")
     }
 
     fun remove(uriString: String) {
         images = images.filter { it.uri.toString() != uriString }
-        Log.d("FLUJO_PIN_IMAGES", "Imagen eliminada: $uriString. now size=${images.size}")
     }
 
     // ⚠️ Esta función (updateTag) ya no es la principal, pero la dejamos por compatibilidad si no se elimina.
@@ -45,7 +43,6 @@ class ImagenesState(
                 pinImage.copy(tag = newTag)
             } else pinImage
         }
-        Log.d("FLUJO_PIN_IMAGES", "Imagen tag actualizada: ${uri} -> $newTag. canonical now: ${images.map { it.uri.toString() to it.tag }}")
     }
 
     // 🆕 FUNCIÓN CLAVE: Actualiza la etiqueta y los 4 títulos de la imagen.
@@ -68,7 +65,6 @@ class ImagenesState(
                 )
             } else pinImage
         }
-        Log.d("FLUJO_PIN_IMAGES", "Detalles de imagen actualizados para: $targetUri")
     }
 
 

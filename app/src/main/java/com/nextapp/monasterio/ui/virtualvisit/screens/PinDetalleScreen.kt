@@ -163,7 +163,6 @@ fun PinDetalleScreen(
         else -> pin.audioUrl_es
     }
 
-    Log.d("AudioDebug", "Pin: '${pin.ubicacion_es}', Idioma: $language, URL Audio: [$audioUrl]")
 
     val exoPlayer = remember { ExoPlayer.Builder(context).build() }
     var isPlaying by remember { mutableStateOf(false) }

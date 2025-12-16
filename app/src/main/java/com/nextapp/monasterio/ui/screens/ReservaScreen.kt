@@ -112,9 +112,6 @@ fun ReservaScreen(
     val listaDiasDisponibles : List<Int> = remember(primerDia,ultimoDia){
         val diaInicio = mapaDias[primerDia]
         val diaFinal = mapaDias[ultimoDia]
-
-        Log.d("DiasSemanaDebug", "diaInicio=$diaInicio, diaFinal=$diaFinal, primerDia=$primerDia, ultimoDia=$ultimoDia")
-
         if(diaInicio != null && diaFinal !=null){
             (1..7).filter { dia->
                 if(diaInicio<= diaFinal){

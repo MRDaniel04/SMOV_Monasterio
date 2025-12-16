@@ -34,7 +34,7 @@ data class FiguraData(
     val audioUrl_de: String? = null,
     val audioUrl_fr: String? = null,
 
-    // 👇👇 AÑADE ESTO PARA ARREGLAR EL ERROR "Unresolved reference" 👇👇
+    //  AÑADE ESTO PARA ARREGLAR EL ERROR "Unresolved reference"
     val vista360Url: String? = null
 )
 

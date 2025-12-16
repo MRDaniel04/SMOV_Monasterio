@@ -61,11 +61,8 @@ fun CreacionPinesScreen(
 
     Scaffold(
         topBar = {
-            Log.d("FLUJO_PIN_UI", "UI: pinUbicacion='${vm.area_es}'")
             val isSaveEnabled = if (isEditing) {
-                Log.d("FLUJO_PIN_UI", "UI: pinUbicacion='${vm.area_es}'")
                 val enabled = isFormValid && isModified
-                Log.d("FLUJO_PIN_UI", "UI: isFormValid=$isFormValid, isModified=$isModified, isSaveEnabled=$enabled, ubicacion='${vm.ubicacion_es}', descripcion_es_len=${vm.descripcion.es.length}, imagenes_count=${vm.imagenes.images.size}, allTagged=${vm.imagenes.allImagesTagged}")
                 enabled
             } else {
                 isFormValid.also { Log.d("FLUJO_PIN_UI", "UI: CREACIÓN isFormValid=$it") }
@@ -76,11 +73,9 @@ fun CreacionPinesScreen(
                 isEditing = isEditing,
                 onSave = {
                     if (isEditing) {
-                        Log.d("FLUJO_PIN", "CreacionPinesScreen: Guardar en modo EDICIÓN.")
                         vm.onSaveClicked(context)
                         navController.popBackStack()
                     } else {
-                        Log.d("FLUJO_PIN", "CreacionPinesScreen: Botón CREAR pulsado. Llamando a vm.onCreateClicked().")
                         vm.onCreateClicked(context) {
                              navController.popBackStack()
                         }

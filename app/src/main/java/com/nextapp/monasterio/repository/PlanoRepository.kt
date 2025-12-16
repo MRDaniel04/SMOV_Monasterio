@@ -18,14 +18,8 @@ object PlanoRepository {
             if (!doc.exists()) return null
             val plano = mapDocToPlanoData(doc.id, doc.data ?: emptyMap())
 
-            // Log de depuración
-            Log.d("PlanoRepository", "📄 Plano cargado: ${plano.nombre}")
-            Log.d("PlanoRepository", "📌 Figuras: ${plano.figuras}")
-            Log.d("PlanoRepository", "📍 Pines: ${plano.pines}")
-
             plano
         } catch (e: Exception) {
-            Log.e("PlanoRepository", "Error obteniendo plano con id=$id", e)
             null
         }
     }
