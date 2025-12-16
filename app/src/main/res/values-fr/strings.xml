@@ -88,7 +88,6 @@
     <string name="out_interactive_area">Hors zone interactive</string>
     <string name="notdefined_destiny">Destination non définie</string>
     <string name="notdefined_destinyplane">Plan de destination non défini</string>
-    <string name="plane_loading">Chargement du plan…</string>
     <string name="error_loading_plane">Erreur de chargement des données du plan</string>
     <string name="child_mode">MODE ENFANTS</string>
     <string name="child_mode_view">Mode Enfants</string>

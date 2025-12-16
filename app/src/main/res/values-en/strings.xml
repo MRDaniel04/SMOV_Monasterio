@@ -88,7 +88,6 @@
     <string name="out_interactive_area">Out of interactive area</string>
     <string name="notdefined_destiny">Destination not defined</string>
     <string name="notdefined_destinyplane">Destination plan not defined</string>
-    <string name="plane_loading">Loading plan…</string>
     <string name="error_loading_plane">Error loading plan data</string>
     <string name="child_mode">CHILD MODE</string>
     <string name="child_mode_view">Children\'s Mode</string>

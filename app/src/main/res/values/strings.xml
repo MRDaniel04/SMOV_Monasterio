@@ -332,7 +332,6 @@
     <string name="move_cancelled">Movimiento cancelado. Pin restaurado.</string>
     <string name="map_reset_success">Plano reajustado a la posición inicial.</string>
     <string name="lock_edition">Bloquear Edición</string>
-    <string name="plane_loading">Cargando plano…</string>
     <string name="pin_moved_success">Pin reubicado correctamente.</string>
 
 </resources>
