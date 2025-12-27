@@ -3,9 +3,7 @@ package com.nextapp.monasterio.ui.screens
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
-import android.util.Log
 import android.view.MotionEvent
-import android.view.View
 import android.widget.FrameLayout
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -26,9 +24,9 @@ import androidx.navigation.NavController
 import com.nextapp.monasterio.R
 import com.nextapp.monasterio.models.PinData
 import com.nextapp.monasterio.repository.PinRepository
-import com.panoramagl.PLImage
-import com.panoramagl.PLSphericalPanorama
 import com.panoramagl.PLManager
+import com.panoramagl.PLSphericalPanorama
+import com.panoramagl.PLImage
 import coil.ImageLoader
 import coil.request.CachePolicy
 import coil.request.ImageRequest

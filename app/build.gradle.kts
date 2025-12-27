@@ -79,8 +79,8 @@ dependencies {
     implementation("io.github.chrisbanes:PhotoView:2.3.0")
     implementation("com.github.bumptech.glide:glide:4.16.0")
 
-    // Panoramica
-    implementation("com.github.hannesa2:panoramagl:1.14")
+    //panoramagl
+    implementation(project(":panoramagl-library"))
     // Cloudinary
     implementation("io.coil-kt:coil-compose:2.7.0")
 

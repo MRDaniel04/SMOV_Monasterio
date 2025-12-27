@@ -41,12 +41,15 @@ fun GenericTutorialOverlay(
     buttonText: String,
     onCloseClicked: (Boolean) -> Unit
 ) {
+    //Quitar mas adelante
+    if(true) return
     var dontShowAgain by remember { mutableStateOf(false) }
     // El estado del scroll ahora solo afecta a la descripción
     val descriptionScrollState = rememberScrollState()
 
     val parentDensity = LocalDensity.current
     val parentConfiguration = LocalConfiguration.current
+
 
     Dialog(
         onDismissRequest = { },

@@ -23,4 +23,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "SMOV_Monasterio"
 include(":app")
- 
+include(":panoramagl-library")

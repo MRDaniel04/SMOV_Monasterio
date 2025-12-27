@@ -59,8 +59,8 @@ object CloudinaryService {
                 return@withContext Result.failure(Exception("Error al subir imagen: ${response.code}"))
             }
 
-            // Parsear respuesta JSON con JSONObject nativo
-            val responseBody = response.body.string()
+
+            val responseBody = response.body?.string() ?: ""
 
             val jsonResponse = JSONObject(responseBody)
             val imageUrl = jsonResponse.getString("secure_url")
@@ -116,8 +116,8 @@ object CloudinaryService {
                 return@withContext Result.failure(Exception("Error al subir archivo: ${response.code}"))
             }
 
-            // Parsear respuesta JSON
-            val responseBody = response.body.string()
+            // El resultado será el contenido o un string vacío si algo falla
+            val responseBody = response.body?.string() ?: ""
             val jsonResponse = JSONObject(responseBody)
             val fileUrl = jsonResponse.getString("secure_url")
 
