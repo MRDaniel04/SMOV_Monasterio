@@ -282,39 +282,62 @@ class CreacionPinSharedViewModel : ViewModel() {
         isUploading = true
         uploadMessage = "Actualizando pin..."
 
-        val imagenesParaGuardar = imagenes.images.map { pinImage ->
-            ImagenData(
-                id = pinImage.id,
-                url = pinImage.uri.toString(),
-                tipo = pinImage.tag?.toFirestoreString() ?: "",
-                titulo = pinImage.titulo_es,
-                tituloIngles = pinImage.titulo_en,
-                tituloAleman = pinImage.titulo_de,
-                tituloFrances = pinImage.titulo_fr,
-                foco = 0f
-            )
-        }
-
-        val imagen360Url = imagen360?.toString()
-        val (area_en_auto, area_de_auto, area_fr_auto) = area_traducciones_automaticas
-
-
-        val descriptionTasks = mapOf(
-            "es" to Pair(descripcion.es, original.descripcion_es),
-            "en" to Pair(descripcion.en, original.descripcion_en),
-            "de" to Pair(descripcion.de, original.descripcion_de),
-            "fr" to Pair(descripcion.fr, original.descripcion_fr)
-        )
-
-        val audioUrlsFinal: MutableMap<String, String?> = mutableMapOf(
-            "es" to original.audioUrl_es,
-            "en" to original.audioUrl_en,
-            "de" to original.audioUrl_de,
-            "fr" to original.audioUrl_fr
-        )
-
         viewModelScope.launch {
             try {
+                val imagenesParaGuardar = imagenes.images.map { pinImage ->
+                    val uriStr = pinImage.uri.toString()
+
+                    // Si es una URL remota
+                    if (uriStr.startsWith("http")) {
+                        ImagenData(
+                            id = pinImage.id,
+                            url = uriStr,
+                            tipo = pinImage.tag?.toFirestoreString() ?: "",
+                            titulo = pinImage.titulo_es,
+                            tituloIngles = pinImage.titulo_en,
+                            tituloAleman = pinImage.titulo_de,
+                            tituloFrances = pinImage.titulo_fr,
+                            foco = 0f
+                        )
+                    } else {
+                        // Subir a Cloudinary
+                        val uploadedUrl = CloudinaryService.uploadImage(pinImage.uri, context).getOrThrow()
+                        ImagenData(
+                            id = pinImage.id,
+                            url = uploadedUrl,
+                            tipo = pinImage.tag?.toFirestoreString() ?: "",
+                            titulo = pinImage.titulo_es,
+                            tituloIngles = pinImage.titulo_en,
+                            tituloAleman = pinImage.titulo_de,
+                            tituloFrances = pinImage.titulo_fr,
+                            foco = 0f
+                        )
+                    }
+                }
+
+
+                var imagen360Url = imagen360?.toString()
+                // Si no es una URL remota subir a Cloudinary
+                if (imagen360 != null && !imagen360!!.toString().startsWith("http")) {
+                    uploadMessage = "Subiendo imagen 360..."
+                    imagen360Url = CloudinaryService.uploadImage(imagen360!!, context).getOrThrow()
+                }
+
+                val (area_en_auto, area_de_auto, area_fr_auto) = area_traducciones_automaticas
+
+                val descriptionTasks = mapOf(
+                    "es" to Pair(descripcion.es, original.descripcion_es),
+                    "en" to Pair(descripcion.en, original.descripcion_en),
+                    "de" to Pair(descripcion.de, original.descripcion_de),
+                    "fr" to Pair(descripcion.fr, original.descripcion_fr)
+                )
+
+                val audioUrlsFinal: MutableMap<String, String?> = mutableMapOf(
+                    "es" to original.audioUrl_es,
+                    "en" to original.audioUrl_en,
+                    "de" to original.audioUrl_de,
+                    "fr" to original.audioUrl_fr
+                )
 
                 for ((lang, texts) in descriptionTasks) {
                     val (currentText, originalText) = texts
