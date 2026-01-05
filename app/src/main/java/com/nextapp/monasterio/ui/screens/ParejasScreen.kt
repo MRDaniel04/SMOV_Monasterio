@@ -120,8 +120,12 @@ fun ParejasScreen(
             titulo = stringResource(R.string.title_instructions),
             texto = stringResource(R.string.text_instructions_pairs)
         )
-    } else if(!showInstructionsPreviewDialog){
-        viewModel.iniciarJuego()
+    }
+
+    LaunchedEffect(showInstructionsPreviewDialog) {
+        if (showInstructionsPreviewDialog == false) {
+            viewModel.iniciarJuego()
+        }
     }
 
     Column(
@@ -188,7 +192,8 @@ fun ParejasScreen(
         Button(
             onClick = {
                 viewModel.volverAMostrarParejas()
-            }
+            },
+            enabled = !state.mostradoInicial && !state.verificandoPareja
         ) {
             Text(stringResource(R.string.show_pairs))
         }
