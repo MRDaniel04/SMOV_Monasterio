@@ -152,12 +152,34 @@ class DebugPhotoView @JvmOverloads constructor(
             canvas.save()
             // Movemos el "papel" a la posición del pin
             canvas.translate(screenX, screenY)
+            if (android.os.Build.VERSION.SDK_INT > android.os.Build.VERSION_CODES.R) {
+                // Definimos los límites centrados en (0,0) local.
+                // El pin se dibuja hacia arri  ba desde el punto (0,0) que es la punta.
+                icon.setBounds((-halfSize).toInt(), (-sizePx).toInt(), (halfSize).toInt(), 0)
 
-            // Definimos los límites centrados en (0,0) local.
-            // El pin se dibuja hacia arri  ba desde el punto (0,0) que es la punta.
-            icon.setBounds((-halfSize).toInt(), (-sizePx).toInt(), (halfSize).toInt(), 0)
+                icon.draw(canvas)
+            }
+            else{
+                val originalW = if (icon.intrinsicWidth > 0) icon.intrinsicWidth.toFloat() else 100f
+                val originalH = if (icon.intrinsicHeight > 0) icon.intrinsicHeight.toFloat() else 100f
+                val scaleFactor = sizePx / originalH
 
-            icon.draw(canvas)
+                val moveX_dp = -20f
+                val moveY_dp = -40f
+
+                canvas.translate(moveX_dp * density, moveY_dp * density)
+
+                canvas.scale(scaleFactor, scaleFactor)
+
+                icon.setBounds(
+                    (-originalW / 2).toInt(),
+                    (-originalH).toInt(),
+                    (originalW / 2).toInt(),
+                    0
+                )
+
+                icon.draw(canvas)
+            }
             canvas.restore()
         }
     }

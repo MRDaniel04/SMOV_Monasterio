@@ -355,8 +355,6 @@ fun PuzzleTray(
                             detectDragGesturesAfterLongPress(
                                 onDragStart = { _ ->
 
-                                    Log.d("PuzzleDebug", "LONG PRESS detectado en pieza ${pieza.id}")
-
 
                                     view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
 
@@ -367,7 +365,6 @@ fun PuzzleTray(
                                         val posInOverlay = rootCoords.localPositionOf(currentCoords, Offset.Zero)
                                         onDragStart(pieza, posInOverlay)
                                     } else {
-                                        Log.e("PuzzleDebug", "ERROR: Coordenadas nulas o no adjuntas")
                                     }
                                 },
                                 onDrag = { change, dragAmount ->
@@ -375,18 +372,16 @@ fun PuzzleTray(
                                     onDrag(dragAmount)
                                 },
                                 onDragEnd = {
-                                    Log.d("PuzzleDebug", "Drag End")
                                     onDragEnd()
                                 },
                                 onDragCancel = {
-                                    Log.d("PuzzleDebug", "Drag Cancelled")
                                     onDragEnd()
                                 }
                             )
                         }
                 ) {
                     if (isBeingDragged) {
-                        Box(modifier = Modifier.fillMaxSize().background(Color.Transparent))
+                        Box(modifier = Modifier.fillMaxSize())
                     } else {
                         Image(
                             painter = painterResource(id = pieza.imagen),
@@ -427,7 +422,6 @@ fun DraggableFloatingPiece(
             contentDescription = "Pieza flotante ${pieza.id}",
             modifier = Modifier
                 .fillMaxSize()
-                .alpha(0.85f)
         )
     }
 }
