@@ -299,10 +299,10 @@ fun PlanoScreen(
                             }, 200)
                         }
 
-                        else -> {
+                        /*else -> {
                             selectedPinId = null
                             Toast.makeText(context, context.getString(R.string.out_interactive_area), Toast.LENGTH_SHORT).show()
-                        }
+                        }*/
                     }
                 }
                 photoViewRef = photoView
