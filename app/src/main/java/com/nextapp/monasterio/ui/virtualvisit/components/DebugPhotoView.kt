@@ -78,10 +78,20 @@ class DebugPhotoView @JvmOverloads constructor(
         drawMatrix.setScale(scaleX * d.intrinsicWidth, scaleY * d.intrinsicHeight)
         drawMatrix.postTranslate(transX, transY)
 
+        // CALCULAR FACTOR DE ESCALA PARA EL GROSOR DE LINEA
+        // Si escalamos el canvas, el grosor de línea también se escala.
+        // Para mantenerlo constante en pantalla (20px), dividimos por el factor de escala.
+        val scaleFactor = scaleX * d.intrinsicWidth
+        val safeScale = if (scaleFactor > 0.1f) scaleFactor else 1f
+
         // 2. Dibujar Zonas Interactivas
         if (staticZones.isNotEmpty()) {
             canvas.save()
             canvas.concat(drawMatrix)
+
+            // Ajustar grosor inversamente a la escala
+            zonePaint.strokeWidth = 20f / safeScale
+
             staticZones.forEach { zone ->
                 val baseColor = zone.color
                 // Calculamos el alpha basado en el parpadeo
@@ -99,6 +109,10 @@ class DebugPhotoView @JvmOverloads constructor(
             if (highlightColor != Color.TRANSPARENT) {
                 canvas.save()
                 canvas.concat(drawMatrix)
+
+                // Ajustar grosor inversamente a la escala
+                highlightPaint.strokeWidth = 15f / safeScale
+
                 highlightPaint.color = highlightColor
                 canvas.drawPath(path, highlightPaint)
                 canvas.restore()
