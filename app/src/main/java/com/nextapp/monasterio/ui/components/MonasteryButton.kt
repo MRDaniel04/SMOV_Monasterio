@@ -3,6 +3,10 @@ package com.nextapp.monasterio.ui.components
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalContext
@@ -21,13 +25,18 @@ fun MonasteryButton(
     content: @Composable RowScope.() -> Unit
 ) {
     val context = LocalContext.current
+    var lastClickTime by remember { mutableLongStateOf(0L) }
 
     Button(
         onClick = {
-            // 1. Reproducir sonido automáticamente
-            SoundManager.playClickSound(context)
-            // 2. Ejecutar la acción real del botón
-            onClick()
+            val currentTime = android.os.SystemClock.uptimeMillis()
+            if (currentTime - lastClickTime > 500L) {
+                lastClickTime = currentTime
+                // 1. Reproducir sonido automáticamente
+                SoundManager.playClickSound(context)
+                // 2. Ejecutar la acción real del botón
+                onClick()
+            }
         },
         modifier = modifier,
         enabled = enabled,

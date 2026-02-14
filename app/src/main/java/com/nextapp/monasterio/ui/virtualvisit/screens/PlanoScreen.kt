@@ -123,6 +123,9 @@ fun PlanoScreen(
     // 👇 ESTADO PARA ANIMACIÓN DE PINES (GIF)
     var animatingPinId by remember { mutableStateOf<String?>(null) }
 
+    // 👇 Estado para evitar doble click en pines/figuras
+    var lastTapTime by remember { mutableLongStateOf(0L) }
+
     // --- LOGICA DE TUTORIAL ---
     val isMainDismissed by viewModel.isMainMapDismissed.collectAsState()
     val isSubDismissed by viewModel.isSubMapDismissed.collectAsState()
@@ -258,6 +261,10 @@ fun PlanoScreen(
                 photoView.invalidate()
 
                 photoView.setOnPhotoTapListener { _, x, y ->
+                    val now = android.os.SystemClock.uptimeMillis()
+                    if (now - lastTapTime < 500) return@setOnPhotoTapListener
+                    lastTapTime = now
+
                     val figura = figuras.find { isPointInPath(x, y, createPathFromFirebase(it)) }
                     val pin = pines.find { isPointInPinArea(x, y, it.x, it.y, it.tapRadius) }
                     when {
