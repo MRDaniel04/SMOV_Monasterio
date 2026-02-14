@@ -532,5 +532,3 @@ fun PinDetalleScreen(
         }
     }
 }
-
-// Removed private ZoomableImageDialog

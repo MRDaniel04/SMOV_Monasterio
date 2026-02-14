@@ -2,22 +2,31 @@ package com.nextapp.monasterio.ui.screens
 
 import android.app.Activity
 import android.content.pm.ActivityInfo
+import android.util.Log
 import androidx.compose.animation.Crossfade
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
@@ -124,13 +133,27 @@ fun InfoScreen(
 
     // --- CAROUSEL LOGIC ---
     val imagenes = pin?.imagenesDetalladas?.ifEmpty { emptyList() } ?: emptyList()
-    var currentIndex by remember { mutableIntStateOf(0) }
     var selectedImageIndex by remember { mutableStateOf<Int?>(null) }
 
-    if (imagenes.size > 1) {
-        LaunchedEffect(currentIndex, imagenes.size) {
-            delay(4000L)
-            currentIndex = (currentIndex + 1) % imagenes.size
+
+    val pagerState = rememberPagerState(pageCount = { imagenes.size })
+
+    if (imagenes.size > 1 && selectedImageIndex == null) {
+        // Usamos 'Unit' para que el LaunchedEffect no se reinicie en cada cambio de página
+        LaunchedEffect(Unit) {
+            while (true) {
+                kotlinx.coroutines.delay(5000L) // Espera 5 segundos
+
+                // Verificamos que el usuario no esté tocando el carrusel en este momento
+                if (!pagerState.isScrollInProgress) {
+                    val nextPage = (pagerState.currentPage + 1) % imagenes.size
+                    pagerState.animateScrollToPage(
+                        page = nextPage,
+                        // Animación suave para evitar saltos bruscos
+                        animationSpec = tween(durationMillis = 600, easing = FastOutSlowInEasing)
+                    )
+                }
+            }
         }
     }
 
@@ -195,67 +218,57 @@ fun InfoScreen(
                                 .border(2.dp, MonasteryRed, RoundedCornerShape(12.dp)),
                             contentAlignment = Alignment.Center
                         ) {
-                            Crossfade(
-                                targetState = currentIndex,
-                                label = "imageFade"
+                            HorizontalPager(
+                                state = pagerState,
+                                modifier = Modifier.fillMaxSize(),
+                                // CLAVE 1: Precarga la siguiente imagen para suavidad total
+                                beyondViewportPageCount = 1,
+                                // CLAVE 2: Asegura que el espacio entre páginas sea cero
+                                pageSpacing = 0.dp
                             ) { page ->
                                 val imagen = imagenes[page]
+                                // CLAVE 3: El contenedor de la imagen DEBE llenar todo el espacio del Pager
                                 Box(modifier = Modifier.fillMaxSize()) {
+                                    val alignment = remember {
+                                        BiasAlignment(horizontalBias = 0f, verticalBias = imagen.foco)
+                                    }
+
                                     AsyncImage(
                                         model = imagen.url,
                                         contentDescription = imagen.titulo,
                                         contentScale = ContentScale.Crop,
-                                        modifier = Modifier.fillMaxSize()
-                                            .clickable { selectedImageIndex = page }
+                                        alignment = alignment,
+                                        modifier = Modifier
+                                            .fillMaxSize() // Ocupa todo el ancho de la página del pager
+                                            .clickable {
+                                                selectedImageIndex = page
+                                            }
                                     )
                                 }
                             }
-                            if (imagenes.size > 1) {
-                                Row(
-                                    Modifier
-                                        .align(Alignment.BottomCenter)
-                                        .padding(bottom = 6.dp)
-                                ) {
-                                    repeat(imagenes.size) { index ->
-                                        val selected = currentIndex == index
-                                        Box(
-                                            Modifier
-                                                .padding(3.dp)
-                                                .size(if (selected) 9.dp else 7.dp)
-                                                .background(
-                                                    if (selected) Color.White
-                                                    else Color.White.copy(alpha = 0.4f),
-                                                    shape = CircleShape
-                                                )
-                                        )
-                                    }
+
+                            // Indicadores (Dots)
+                            Row(
+                                Modifier
+                                    .align(Alignment.BottomCenter)
+                                    .padding(bottom = 6.dp)
+                            ) {
+                                repeat(imagenes.size) { index ->
+                                    val selected = pagerState.currentPage == index
+                                    Box(
+                                        Modifier
+                                            .padding(3.dp)
+                                            .size(if (selected) 8.dp else 6.dp)
+                                            .background(
+                                                Color.White.copy(alpha = if (selected) 1f else 0.6f),
+                                                CircleShape
+                                            )
+                                    )
                                 }
                             }
                         }
-                    } else {
-                        // Fallback visual
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth(0.9f)
-                                .height(260.dp)
-                                .clip(RoundedCornerShape(12.dp))
-                                .border(2.dp, MonasteryRed, RoundedCornerShape(12.dp))
-                                .background(Color.Gray.copy(alpha = 0.1f)),
-                            contentAlignment = Alignment.Center
-                        ) {
-                           if (pin == null) {
-                               CircularProgressIndicator()
-                           } else {
-                               Image(
-                                   painter = painterResource(id = R.drawable.fondo_desplegable),
-                                   contentDescription = "Monasterio",
-                                   contentScale = ContentScale.Crop,
-                                   modifier = Modifier.fillMaxSize()
-                               )
-                           }
-                        }
+                        Spacer(modifier = Modifier.height(18.dp))
                     }
-                    Spacer(modifier = Modifier.height(18.dp))
                 }
     
                 // DATOS EDITABLES
