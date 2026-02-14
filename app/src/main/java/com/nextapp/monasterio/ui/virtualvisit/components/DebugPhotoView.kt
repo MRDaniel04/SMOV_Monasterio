@@ -58,46 +58,50 @@ class DebugPhotoView @JvmOverloads constructor(
 
     private val density = context.resources.displayMetrics.density
 
+    // Objetos reutilizables para optimizar onDraw
+    private val drawMatrix = Matrix()
+    private val matrixValues = FloatArray(9)
+
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
         val d = drawable ?: return
 
         // 1. Obtener matriz de la imagen (Zoom y Pan)
-        val matrixValues = FloatArray(9)
         imageMatrix.getValues(matrixValues)
         val scaleX = matrixValues[Matrix.MSCALE_X]
         val scaleY = matrixValues[Matrix.MSCALE_Y]
         val transX = matrixValues[Matrix.MTRANS_X]
         val transY = matrixValues[Matrix.MTRANS_Y]
 
-        val drawMatrix = Matrix().apply {
-            setScale(scaleX * d.intrinsicWidth, scaleY * d.intrinsicHeight)
-            postTranslate(transX, transY)
-        }
+        drawMatrix.reset()
+        drawMatrix.setScale(scaleX * d.intrinsicWidth, scaleY * d.intrinsicHeight)
+        drawMatrix.postTranslate(transX, transY)
 
         // 2. Dibujar Zonas Interactivas
         if (staticZones.isNotEmpty()) {
+            canvas.save()
+            canvas.concat(drawMatrix)
             staticZones.forEach { zone ->
                 val baseColor = zone.color
                 // Calculamos el alpha basado en el parpadeo
                 val newAlpha = (Color.alpha(baseColor) * blinkingAlpha).toInt().coerceIn(0, 255)
 
                 zonePaint.color = Color.argb(newAlpha, Color.red(baseColor), Color.green(baseColor), Color.blue(baseColor))
-
-                val pathCopy = Path(zone.path)
-                pathCopy.transform(drawMatrix)
-                canvas.drawPath(pathCopy, zonePaint)
+                // Dibujamos el path original transformado por la matriz del canvas
+                canvas.drawPath(zone.path, zonePaint)
             }
+            canvas.restore()
         }
 
         // 3. Dibujar Resaltado (Click)
         interactivePath?.let { path ->
             if (highlightColor != Color.TRANSPARENT) {
-                val pathCopy = Path(path)
-                pathCopy.transform(drawMatrix)
+                canvas.save()
+                canvas.concat(drawMatrix)
                 highlightPaint.color = highlightColor
-                canvas.drawPath(pathCopy, highlightPaint)
+                canvas.drawPath(path, highlightPaint)
+                canvas.restore()
             }
         }
 
