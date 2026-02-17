@@ -16,13 +16,16 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ContentCopy
+import androidx.compose.material.icons.filled.List
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -58,20 +61,19 @@ fun GaleriaScreen(
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
     val currentLanguage = Locale.getDefault().language
-    
+
     androidx.compose.runtime.LaunchedEffect(currentLanguage) {
         viewModel.setLanguage(currentLanguage)
     }
 
-    // State for full screen image
-    var selectedImageIndex by remember { mutableStateOf<Int?>(null) }
+    var selectedImagesForDialog by remember { mutableStateOf<List<ImagenData>?>(null) }
 
-    if (selectedImageIndex != null) {
+    if (selectedImagesForDialog != null) {
         ZoomableImageDialog(
-            imagenes = uiState.filteredImages,
-            initialIndex = selectedImageIndex!!,
+            imagenes = selectedImagesForDialog!!,
+            initialIndex = 0,
             languageCode = currentLanguage,
-            onDismiss = { selectedImageIndex = null }
+            onDismiss = { selectedImagesForDialog = null }
         )
     }
 
@@ -80,7 +82,6 @@ fun GaleriaScreen(
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        // Category Selector
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier.padding(bottom = 16.dp)
@@ -114,29 +115,46 @@ fun GaleriaScreen(
                 CircularProgressIndicator()
             }
         } else {
-            // Image Grid
             LazyVerticalGrid(
                 columns = GridCells.Adaptive(minSize = 150.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                items(uiState.filteredImages) { image ->
+                items(uiState.obrasFiltradas) { obra ->
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(200.dp)
                             .clickable {
-                                selectedImageIndex = uiState.filteredImages.indexOf(image)
+                                selectedImagesForDialog = obra.fotos
                             },
                         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
                     ) {
                         Box(modifier = Modifier.fillMaxSize()) {
                             AsyncImage(
-                                model = image.url,
-                                contentDescription = image.titulo,
+                                model = obra.portada.url,
+                                contentDescription = obra.portada.titulo,
                                 contentScale = ContentScale.Crop,
                                 modifier = Modifier.fillMaxSize()
                             )
+
+                            if (obra.fotos.size > 1) {
+                                Box(
+                                    modifier = Modifier
+                                        .align(Alignment.TopEnd)
+                                        .padding(8.dp)
+                                        .background(Color.Black.copy(alpha = 0.6f), CircleShape)
+                                        .padding(4.dp)
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.ContentCopy,
+                                        contentDescription = null,
+                                        tint = Color.White,
+                                        modifier = Modifier.size(16.dp)
+                                    )
+                                }
+                            }
+
                             Box(
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -146,11 +164,11 @@ fun GaleriaScreen(
                             ) {
                                 Text(
                                     text = when(currentLanguage) {
-                                        "es" -> image.titulo
-                                        "en" -> if (image.tituloIngles.isNotEmpty()) image.tituloIngles else image.titulo
-                                        "de" -> if (image.tituloAleman.isNotEmpty()) image.tituloAleman else image.titulo
-                                        "fr" -> if (image.tituloFrances.isNotEmpty()) image.tituloFrances else image.titulo
-                                        else -> image.titulo
+                                        "es" -> obra.portada.titulo
+                                        "en" -> if (obra.portada.tituloIngles.isNotEmpty()) obra.portada.tituloIngles else obra.portada.titulo
+                                        "de" -> if (obra.portada.tituloAleman.isNotEmpty()) obra.portada.tituloAleman else obra.portada.titulo
+                                        "fr" -> if (obra.portada.tituloFrances.isNotEmpty()) obra.portada.tituloFrances else obra.portada.titulo
+                                        else -> obra.portada.titulo
                                     },
                                     color = Color.White,
                                     style = MaterialTheme.typography.bodySmall,

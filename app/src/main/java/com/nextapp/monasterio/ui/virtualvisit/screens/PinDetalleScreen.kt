@@ -373,20 +373,25 @@ fun PinDetalleScreen(
                         .border(1.dp, Color.LightGray.copy(alpha = 0.5f), RoundedCornerShape(8.dp))
                         .clip(RoundedCornerShape(8.dp))
                 ) {
-                    Text(
-                        text = descripcion,
-                        fontSize = 16.sp,
-                        color = Color.DarkGray,
-                        lineHeight = 22.sp,
+                    Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 12.dp, vertical = 8.dp)
                             .verticalScroll(textScrollState)
-                    )
+                    ) {
+                        Text(
+                            text = descripcion,
+                            fontSize = 16.sp,
+                            color = Color.DarkGray,
+                            lineHeight = 22.sp,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 12.dp, vertical = 8.dp)
+                        )
+                    }
                 }
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(32.dp))
 
         }
 
@@ -399,7 +404,7 @@ fun PinDetalleScreen(
                     .background(Color.White) // Fondo blanco para tapar scroll
                     // Padding seguro para navigation bars
                     .navigationBarsPadding()
-                    .padding(horizontal = 16.dp, vertical = 16.dp)
+                    .padding(horizontal = 16.dp)
                     .onGloballyPositioned { coordinates ->
                         val position = coordinates.positionInRoot()
                         val size = coordinates.size

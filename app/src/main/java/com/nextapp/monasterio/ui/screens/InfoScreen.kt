@@ -221,9 +221,7 @@ fun InfoScreen(
                             HorizontalPager(
                                 state = pagerState,
                                 modifier = Modifier.fillMaxSize(),
-                                // CLAVE 1: Precarga la siguiente imagen para suavidad total
                                 beyondViewportPageCount = 1,
-                                // CLAVE 2: Asegura que el espacio entre páginas sea cero
                                 pageSpacing = 0.dp
                             ) { page ->
                                 val imagen = imagenes[page]

@@ -99,6 +99,8 @@ dependencies {
     //video ninyos
     implementation("io.sanghun:compose-video:1.2.0")
 
+    implementation("androidx.compose.material:material-icons-extended:1.7.0")
+
 
 
 }

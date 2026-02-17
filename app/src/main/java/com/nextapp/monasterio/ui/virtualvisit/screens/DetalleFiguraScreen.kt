@@ -34,8 +34,15 @@ import com.nextapp.monasterio.repository.FiguraRepository
 import com.nextapp.monasterio.repository.ImagenRepository
 import kotlinx.coroutines.delay
 import android.util.Log
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.ui.BiasAlignment
 import com.nextapp.monasterio.ui.components.MonasteryButton
 import com.nextapp.monasterio.ui.components.ZoomableImageDialog
+import com.nextapp.monasterio.ui.theme.MonasteryRed
+
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun DetalleFiguraScreen(
@@ -88,11 +95,24 @@ fun DetalleFiguraScreen(
         isLoading = false
     }
 
-    // 5. LÓGICA DE TRANSICIÓN AUTOMÁTICA DEL CARRUSEL
-    if (imagenes.size > 1) {
-        LaunchedEffect(currentIndex, imagenes.size) {
-            delay(4000L)
-            currentIndex = (currentIndex + 1) % imagenes.size
+    val pagerState = rememberPagerState(pageCount = { imagenes.size })
+
+    if (imagenes.size > 1 && selectedImageIndex == null) {
+        // Usamos 'Unit' para que el LaunchedEffect no se reinicie en cada cambio de página
+        LaunchedEffect(Unit) {
+            while (true) {
+                kotlinx.coroutines.delay(5000L) // Espera 5 segundos
+
+                // Verificamos que el usuario no esté tocando el carrusel en este momento
+                if (!pagerState.isScrollInProgress) {
+                    val nextPage = (pagerState.currentPage + 1) % imagenes.size
+                    pagerState.animateScrollToPage(
+                        page = nextPage,
+                        // Animación suave para evitar saltos bruscos
+                        animationSpec = tween(durationMillis = 600, easing = FastOutSlowInEasing)
+                    )
+                }
+            }
         }
     }
 
@@ -171,35 +191,60 @@ fun DetalleFiguraScreen(
                 if (imagenes.isNotEmpty()) {
                     Box(
                         modifier = Modifier
-                            .fillMaxWidth()
+                            .fillMaxWidth(0.9f)
                             .height(260.dp)
                             .clip(RoundedCornerShape(12.dp))
                             .border(2.dp, Color(figura!!.colorResaltado.toUInt().toInt()), RoundedCornerShape(12.dp)),
                         contentAlignment = Alignment.Center
                     ) {
-                        Crossfade(targetState = currentIndex, label = "img") { page ->
-                            AsyncImage(
-                                model = imagenes[page].url,
-                                contentDescription = null,
-                                contentScale = ContentScale.Crop,
-                                modifier = Modifier.fillMaxSize()
-                                    .clickable { selectedImageIndex = page }
-                            )
+                        HorizontalPager(
+                            state = pagerState,
+                            modifier = Modifier.fillMaxSize(),
+                            beyondViewportPageCount = 1,
+                            pageSpacing = 0.dp
+                        ) { page ->
+                            val imagen = imagenes[page]
+                            // CLAVE 3: El contenedor de la imagen DEBE llenar todo el espacio del Pager
+                            Box(modifier = Modifier.fillMaxSize()) {
+                                val alignment = remember {
+                                    BiasAlignment(horizontalBias = 0f, verticalBias = imagen.foco)
+                                }
+
+                                AsyncImage(
+                                    model = imagen.url,
+                                    contentDescription = imagen.titulo,
+                                    contentScale = ContentScale.Crop,
+                                    alignment = alignment,
+                                    modifier = Modifier
+                                        .fillMaxSize() // Ocupa todo el ancho de la página del pager
+                                        .clickable {
+                                            selectedImageIndex = page
+                                        }
+                                )
+                            }
                         }
-                        // Puntos indicadores
+
+                        // Indicadores (Dots)
                         Row(
-                            Modifier.align(Alignment.BottomCenter).padding(6.dp)
+                            Modifier
+                                .align(Alignment.BottomCenter)
+                                .padding(bottom = 6.dp)
                         ) {
                             repeat(imagenes.size) { index ->
-                                val selected = currentIndex == index
+                                val selected = pagerState.currentPage == index
                                 Box(
-                                    Modifier.padding(3.dp).size(if (selected) 8.dp else 6.dp)
-                                        .background(if (selected) Color.White else Color.White.copy(0.5f), CircleShape)
+                                    Modifier
+                                        .padding(3.dp)
+                                        .size(if (selected) 8.dp else 6.dp)
+                                        .background(
+                                            Color.White.copy(alpha = if (selected) 1f else 0.6f),
+                                            CircleShape
+                                        )
                                 )
                             }
                         }
                     }
-                    Spacer(modifier = Modifier.height(24.dp))
+                    Spacer(modifier = Modifier.height(18.dp))
                 }
 
                 // --- 8. INFORMACIÓN ---
@@ -261,6 +306,7 @@ fun DetalleFiguraScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(56.dp),
+                    //colors = ButtonDefaults.buttonColors(containerColor = Color(figura!!.colorResaltado.toUInt().toInt())),
                     colors = ButtonDefaults.buttonColors(containerColor = Color.Black),
                     shape = RoundedCornerShape(12.dp)
                 ) {

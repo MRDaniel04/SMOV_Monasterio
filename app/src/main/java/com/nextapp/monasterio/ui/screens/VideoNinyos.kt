@@ -52,35 +52,41 @@ fun VideoNinyosScreen(
         "de" -> videoAleman
         else -> videoIngles
     }
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White) // Fondo blanco detrás
+            .padding(topPadding)
+    ) {
+        VideoPlayer(
+            mediaItems = listOf(
+                VideoPlayerMediaItem.NetworkMediaItem(
+                    url = videoUrlActual,
+                    mediaMetadata = MediaMetadata.EMPTY,
+                    mimeType = "null"
+                )
+            ),
+            handleLifecycle = true,
+            autoPlay = true,
+            usePlayerController = true,
+            enablePip = false,
+            handleAudioFocus = true,
 
-    VideoPlayer(
-        mediaItems = listOf(
-            VideoPlayerMediaItem.NetworkMediaItem(
-                url = videoUrlActual,
-                mediaMetadata = MediaMetadata.EMPTY,
-                mimeType = "null"
-            )
-        ),
-        handleLifecycle = true,
-        autoPlay = true,
-        usePlayerController = true,
-        enablePip = false,
-        handleAudioFocus = true,
-
-        controllerConfig = VideoPlayerControllerConfig(
-            showSpeedAndPitchOverlay = false,
-            showSubtitleButton = false,
-            showCurrentTimeAndTotalTime = true,
-            showBufferingProgress = true,
-            showForwardIncrementButton = true,
-            showBackwardIncrementButton = true,
-            showBackTrackButton = false,
-            showNextTrackButton = false,
-            showRepeatModeButton = false,
-            showFullScreenButton = true,
-            controllerShowTimeMilliSeconds = 3_000,
-            controllerAutoShow = true,
-        ),
-        modifier = Modifier.fillMaxSize().padding(topPadding)
-    )
+            controllerConfig = VideoPlayerControllerConfig(
+                showSpeedAndPitchOverlay = false,
+                showSubtitleButton = false,
+                showCurrentTimeAndTotalTime = true,
+                showBufferingProgress = true,
+                showForwardIncrementButton = true,
+                showBackwardIncrementButton = true,
+                showBackTrackButton = false,
+                showNextTrackButton = false,
+                showRepeatModeButton = false,
+                showFullScreenButton = true,
+                controllerShowTimeMilliSeconds = 3_000,
+                controllerAutoShow = true,
+            ),
+            modifier = Modifier.fillMaxSize().padding(topPadding)
+        )
+    }
 }

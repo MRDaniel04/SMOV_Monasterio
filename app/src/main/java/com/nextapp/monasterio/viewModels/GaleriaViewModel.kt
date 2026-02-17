@@ -11,9 +11,16 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+data class ObraAgrupada(
+    val titulo:String,
+    val portada: ImagenData,
+    val fotos:List<ImagenData>
+)
+
+
 data class GaleriaUiState(
     val images: List<ImagenData> = emptyList(),
-    val filteredImages: List<ImagenData> = emptyList(),
+    val obrasFiltradas: List<ObraAgrupada> = emptyList(),
     val selectedType: GaleriaType = GaleriaType.ALL,
     val isLoading: Boolean = false
 )
@@ -68,9 +75,28 @@ class GaleriaViewModel(
 
     private fun applyFilters() {
         _uiState.update { currentState ->
-            val sortedImages = currentState.images.sortedWith { image1, image2 ->
-                val title1 = getLocalizedTitle(image1).lowercase()
-                val title2 = getLocalizedTitle(image2).lowercase()
+
+            val imagenesFiltradasPorTipo = if (currentState.selectedType == GaleriaType.ALL) {
+                currentState.images
+            } else {
+                currentState.images.filter {
+                    it.tipo.equals(currentState.selectedType.id, ignoreCase = true)
+                }
+            }
+
+            val obrasAgrupadas = imagenesFiltradasPorTipo
+                .groupBy { it.titulo } // Esto crea un mapa: "La Piedad" -> [Foto1, Foto2]
+                .map { (titulo, listaFotos) ->
+                    ObraAgrupada(
+                        titulo = titulo,
+                        portada = listaFotos.first(), // Usamos la primera como portada
+                        fotos = listaFotos
+                    )
+                }
+
+            val obrasOrdenadas = obrasAgrupadas.sortedWith { obra1, obra2 ->
+                val title1 = getLocalizedTitle(obra1.portada).lowercase()
+                val title2 = getLocalizedTitle(obra2.portada).lowercase()
 
                 when {
                     title1.isEmpty() && title2.isNotEmpty() -> 1
@@ -79,14 +105,7 @@ class GaleriaViewModel(
                 }
             }
 
-            val filtered = if (currentState.selectedType == GaleriaType.ALL) {
-                sortedImages
-            } else {
-                sortedImages.filter { 
-                    it.tipo.equals(currentState.selectedType.id, ignoreCase = true)
-                }
-            }
-            currentState.copy(images = sortedImages, filteredImages = filtered)
+            currentState.copy(obrasFiltradas = obrasOrdenadas)
         }
     }
 }
